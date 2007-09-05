@@ -1,0 +1,14 @@
+NOTES
+
+Expand gm.thumb to return the date taken as well for use in sorting
+	MySQL format would be nice, as that is string-sortable
+
+Offer a preference to not create thumbnails in the name of speed
+	Accomplish this with special case param of thumbSize = 0 to gm.thumb
+	This will still return the date taken but will not actually do the thumbing
+
+As of 8-21-2007
+	Thumbing 127 8 MP JPEGs
+		Uploadr 3 Mac		97 seconds
+		Uploadr 3 Win		278 seconds
+		Uploadr 2.5 Win		312 seconds

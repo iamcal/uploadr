@@ -1,0 +1,100 @@
+Flickr Uploadr 3
+README
+Richard Crowley
+rcrowley@yahoo-inc.com
+7-10-2007
+
+Development environment
+------------------------------------------------------------------------
+
+Checkout the flickrUploadr project from CVS.
+
+XULRunner trunk builds can be found at
+ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
+
+If you are on Windows, download a version of XULRunner trunk and put
+it in flickrUploadr/uploadr/.
+
+If you are fortunate enough to be on a Mac you have two more steps.
+First install the Mac version of XULRunner, which will live in
+/Library/Frameworks.  Then run `make setup` to symlink the skeleton
+Mac app (flickrUploadr/MacUploadr.app) into the source code and the
+XULRunner framework.  Should you ever need to unlink things run
+`make teardown`.  Don't commit the symlinks to CVS (God knows what
+would happen).
+
+Also included in the source is the Gecko SDK for both Windows and Mac.
+These are used by the XPCOM extension build scripts.  The Windows
+XPCOM extension can be built using Visual Studio 2005.  The Mac XPCOM
+extension can be built using the included Makefile.  After rebuilding
+the XPCOM extensions you must copy the new XPT file (identical for
+Windows and Mac) as well as the new DLL (Windows) and DyLib (Mac) and
+increment the BuildID defined in flickrUploadr/uploadr/application.ini.
+
+
+
+GraphicsMagick
+------------------------------------------------------------------------
+
+Windows
+-------
+
+Go to the VisualMagick/configure directory of the GraphicsMagick Windows
+source directory.  Edit the project configuration as follows:
+  o Set the active configuration to "Release"
+  o Change the Use of MFC under Configuration Properties > General to
+    "Use MFC in a Static Library"
+  o Change the Runtime Library under Configuration Properties > C/C++ >
+    Code Generation to "Multi-threaded (/MT)"
+
+Build and run the configuration program, selecting "Static
+Multi-threaded runtimes" and otherwise accepting defaults.  This will
+create your solution for Visual Studio.
+
+Open the solution and let Visual Studio 8 have its way with the Visual
+Studio 7 solution file.  Make the following changes:
+  o Change the Runtime Library for the CORE_Magick++ project under
+    Configuration Properties > C/C++ > Code Generation to
+    "Multi-threaded DLL (/MD)"
+
+Build it to see where the problems are.  As of 1.1.8, 18 out of 20
+projects build properly.  The two that do not are utilities that are
+extraneous.  In 1.1.7, the errors that will likely show up in a
+try/catch block can be fixed by changing "exception" to "std::exception"
+and adding "&" to make all of the catches happen by reference.
+
+Add the path to your GraphicsMagick build's VisualMagick\lib directory
+to your library path.  Add the path to VisualMagick\include to your
+include path.
+
+Mac
+---
+
+First make sure you install libjpeg et. al. using MacPorts, then run
+these commands.
+
+./configure LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
+CPPFLAGS="-I/opt/local/include -I/usr/local/include" --without-perl \
+--disable-installed
+make && sudo make install
+
+Linux
+-----
+
+Building on Ubuntu is identical to the Mac but doesn't require the
+inclusion of /opt directories.
+
+./configure --without-perl && make && sudo make install
+
+Currently this will build in Linux but will not work.
+
+
+
+Packaging for deployment
+------------------------------------------------------------------------
+
+Windows packaging will likely be handed by NSIS.
+
+Mac packaging will be scripted to create a DMG.
+
+Stay tuned.
