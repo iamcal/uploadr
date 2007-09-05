@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://uploadr/locale/main.dtd">
+<overlay id="overlay_photos"
+xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+xmlns:html="http://www.w3.org/1999/xhtml">
+	<script src="chrome://uploadr/content/events_photos.js" />
+	<hbox id="page_photos" flex="1">
+		<vbox class="newest" flex="1">
+			<vbox id="photos" class="oldest" flex="1" onclick="events.photos.click(event);"
+			ondragenter="nsDragAndDrop.dragEnter(event, drag.observer); event.stopPropagation();"
+			ondragover="nsDragAndDrop.dragOver(event, drag.observer); event.stopPropagation();"
+			ondragexit="nsDragAndDrop.dragExit(event, drag.observer); event.stopPropagation();"
+			ondragdrop="nsDragAndDrop.drop(event, drag.observer); event.stopPropagation();">
+				<html:ul id="list">
+				</html:ul>
+			</vbox>
+		</vbox>
+		<vbox id="meta">
+			<html:div id="meta_div"></html:div>
+			<vbox id="meta_primary">
+				<label control="p_title" value="&meta.title;" />
+				<textbox id="p_title" disabled="true" />
+				<label control="p_description" value="&meta.description;" />
+				<textbox id="p_description" multiline="true" rows="2" disabled="true" />
+				<label control="p_tags" value="&meta.tags;" />
+				<textbox id="p_tags" disabled="true" />
+				<label control="p_is_public" value="&settings.privacy.who;" />
+				<radiogroup id="p_is_public" value="1" disabled="true"
+				oncommand="events.photos.is_public(this.value);">
+					<radio value="0" label="&settings.privacy.private;" />
+						<checkbox id="p_is_friend" label="&settings.privacy.friend;"
+						disabled="true" />
+						<checkbox id="p_is_family" label="&settings.privacy.family;"
+						disabled="true" />
+					<radio value="1" label="&settings.privacy.public;" />
+				</radiogroup>
+			</vbox>
+			<vbox id="meta_secondary">
+				<label control="p_content_type" value="&settings.content_type;" />
+				<menulist id="p_content_type">
+					<menupopup>
+						<menuitem value="1" label="&settings.content_type.photo;"
+						selected="true" />
+						<menuitem value="2" label="&settings.content_type.screenshot;" />
+						<menuitem value="3" label="&settings.content_type.other;" />
+					</menupopup>
+				</menulist>
+				<label control="p_hidden" value="&settings.hidden;" />
+				<menulist id="p_hidden">
+					<menupopup>
+						<menuitem value="1" label="&settings.hidden.no;"
+						selected="true" />
+						<menuitem value="2" label="&settings.hidden.yes;" />
+					</menupopup>
+				</menulist>
+				<label control="p_safety_level" value="&settings.safety_level;" />
+				<menulist id="p_safety_level">
+					<menupopup>
+						<menuitem value="1" label="&settings.safety_level.safe;"
+						selected="true" />
+						<menuitem value="2" label="&settings.safety_level.moderate;" />
+						<menuitem value="3" label="&settings.safety_level.restricted;" />
+					</menupopup>
+				</menulist>
+			</vbox>
+			<spacer flex="1" />
+			<button id="meta_more" label="&meta.more;" oncommand="events.photos.toggle();" />
+		</vbox>
+	</hbox>
+</overlay>

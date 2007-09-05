@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://uploadr/locale/main.dtd">
+<overlay id="overlay_users"
+xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+xmlns:html="http://www.w3.org/1999/xhtml">
+	<script src="chrome://uploadr/content/events_users.js" />
+	<vbox id="page_users" class="page" flex="1">
+		<html:h1>&users;</html:h1>
+		<html:p id="u_current">&notloggedin;</html:p>
+		<hbox flex="1">
+			<vbox flex="1">
+				<html:h2>&users.user;</html:h2>
+				<menulist id="u_user">
+					<menupopup />
+				</menulist>
+				<vbox>
+					<hbox><button id="u_remove" label="&users.remove;"
+					oncommand="events.users.remove();" /></hbox>
+					<hbox><button id="u_add" label="&users.add;"
+					oncommand="events.users.add();" /></hbox>
+				</vbox>
+			</vbox>
+		</hbox>
+	</vbox>
+</overlay>

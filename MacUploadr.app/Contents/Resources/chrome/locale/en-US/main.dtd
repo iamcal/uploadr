@@ -1,0 +1,66 @@
+<!ENTITY title "Flickr Uploadr">
+
+<!ENTITY menu.file "File">
+<!ENTITY menu.file.add "Add">
+<!ENTITY menu.file.exit "Quit">
+
+<!ENTITY notloggedin "Not logged in">
+<!ENTITY login "Login">
+
+<!ENTITY buttons.login "Login">
+<!ENTITY buttons.back "Back">
+<!ENTITY buttons.ok "OK">
+<!ENTITY buttons.upload "Upload">
+<!ENTITY buttons.cancel "Cancel">
+
+<!ENTITY bandwidth "Bandwidth:">
+<!ENTITY bandwidth.go_pro "Go Pro!">
+
+<!ENTITY progress.overall "Overall:">
+<!ENTITY progress.this_file "This file:">
+
+<!ENTITY users "Users">
+<!ENTITY users.user "Select a user to change to:">
+<!ENTITY users.remove "Remove selected user">
+<!ENTITY users.add "Add new user">
+
+<!ENTITY settings "Settings">
+<!ENTITY settings.tags "Batch tags">
+<!ENTITY settings.set "Add these photos to a set">
+<!ENTITY settings.set.none "No sets">
+<!ENTITY settings.set.add "Add a set">
+<!ENTITY settings.privacy "Privacy">
+<!ENTITY settings.privacy.who "Who can see this photo?">
+<!ENTITY settings.privacy.private "Only you">
+<!ENTITY settings.privacy.friend "Your friends">
+<!ENTITY settings.privacy.family "Your family">
+<!ENTITY settings.privacy.public "Anyone">
+<!ENTITY settings.melons "Melons settings">
+<!ENTITY settings.content_type "Content type:">
+<!ENTITY settings.content_type.photo "Photo">
+<!ENTITY settings.content_type.screenshot "Screenshot">
+<!ENTITY settings.content_type.other "Other">
+<!ENTITY settings.safety_level "Safety Level:">
+<!ENTITY settings.safety_level.safe "Safe">
+<!ENTITY settings.safety_level.moderate "Moderate">
+<!ENTITY settings.safety_level.restricted "Restricted">
+<!ENTITY settings.hidden "Hide from search:">
+<!ENTITY settings.hidden.no "No">
+<!ENTITY settings.hidden.yes "Yes">
+<!ENTITY settings.resize "Resizing">
+<!ENTITY settings.resize.prompt "Flickr Uploadr can automatically resize large photos for faster uploading.">
+<!ENTITY settings.resize.dont "Don't resize my photos">
+<!ENTITY settings.resize.800 "800 pixels (suitable for on-screen viewing)">
+<!ENTITY settings.resize.1280 "1280 pixels (suitable for small prints)">
+<!ENTITY settings.resize.1600 "1600 pixels (suitable for larger prints)">
+<!ENTITY settings.resize.2048 "2048 pixels (best for archiving)">
+
+<!ENTITY meta.title "Title:">
+<!ENTITY meta.description "Description:">
+<!ENTITY meta.tags "Tags:">
+<!ENTITY meta.more "More">
+
+<!ENTITY dialog.bandwidth "Available bandwidth exceeded!">
+<!ENTITY dialog.bandwidth.text "You're out of bandwidth for this month.  You can either switch to a different Flickr account to keep uploading or upgrade to a Pro account to get unlimited uploads.  If you upgrade to a Pro account you'll have to restart Flickr Uploadr.">
+<!ENTITY dialog.bandwidth.switch "Switch users">
+<!ENTITY dialog.bandwidth.go_pro "Go Pro!">

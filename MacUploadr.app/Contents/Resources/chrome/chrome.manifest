@@ -1,0 +1,6 @@
+content uploadr file:content/uploadr/
+content hacks file:content/hacks/ platform
+locale branding en-US file:locale/branding/
+locale uploadr en-US file:locale/en-US/
+skin uploadr default file:skin/uploadr/
+skin hacks default file:skin/hacks/
