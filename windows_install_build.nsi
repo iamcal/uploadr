@@ -47,7 +47,18 @@ Section "Install" SecInstall
 	SetOutPath "$INSTDIR"
 
 	SetOverwrite on  
-	File /r ".\Flickr Uploadr ${VERSION_SHORT}\*"
+
+	File /r /x CVS /x *.psd MacUploadr.app\Contents\Resources\chrome
+	CreateDirectory "$INSTDIR\components"
+	File /oname=components\gm.dll MacUploadr.app\Contents\Resources\components\gm.dll
+	File /oname=components\gm.xpt MacUploadr.app\Contents\Resources\components\gm.xpt
+	File /r /x CVS MacUploadr.app\Contents\Resources\defaults
+	File /r /x CVS MacUploadr.app\Contents\Resources\xulrunner
+	File MacUploadr.app\Contents\Resources\application.ini
+	File MacUploadr.app\Contents\Resources\icons.ico
+	File MacUploadr.app\Contents\Resources\magic.mgk
+	File MacUploadr.app\Contents\Resources\modules.mgk
+
 	CreateShortCut "$INSTDIR\Flickr Uploadr.lnk" "$INSTDIR\xulrunner\xulrunner.exe" "application.ini" "$INSTDIR\icons.ico"
 
 	WriteRegStr HKCU "Software\Flickr Uploadr" "" $INSTDIR
@@ -68,8 +79,7 @@ SectionEnd
 
 Section "Start Menu Shortcuts"
 
-	CreateDirectory "$SMPROGRAMS\Flickr Uploadr"
-	CreateShortCut "$SMPROGRAMS\Flickr Uploadr\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.lnk" "" "$INSTDIR\Flickr Uploadr.lnk" 0
+	CreateShortCut "$SMPROGRAMS\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.lnk" "" "$INSTDIR\Flickr Uploadr.lnk" 0
 
 	!insertmacro MUI_INSTALLOPTIONS_READ $INI_VALUE "io.ini" "Field 1" "State"
 
@@ -96,7 +106,7 @@ LangString DESC_SecInstall ${LANG_ENGLISH} "Install"
 !insertmacro MUI_DESCRIPTION_TEXT ${SecInstall} $(DESC_SecInstall)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
-UninstallIcon ".\Flickr Uploadr 3.0\icons.ico"
+UninstallIcon ".\MacUploadr.app\Contents\Resources\icons.ico"
 
 Section "Uninstall"
 
@@ -118,4 +128,4 @@ DeleteRegKey /ifempty HKCU "Software\Flickr Uploadr"
 
 SectionEnd  
 
-Icon ".\Flickr Uploadr 3.0\icons.ico"   
+Icon ".\MacUploadr.app\Contents\Resources\icons.ico"   
