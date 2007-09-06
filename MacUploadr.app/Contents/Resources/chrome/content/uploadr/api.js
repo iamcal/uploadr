@@ -530,7 +530,9 @@ Components.utils.reportError('API CALL: ' + params.toSource());
 		var uri = io.newURI(url, null, null);
 		var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
 			Ci.nsIExternalProtocolService);
-		eps.loadURI(uri, null);
+		var launcher = eps.getProtocolHandlerInfo('http');
+		launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
+		launcher.launchWithURI(uri, null);
 	}
 
 	// Use XHR
