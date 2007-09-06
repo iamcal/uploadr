@@ -54,7 +54,8 @@ build:
 	cp $(SRC)/Resources/chrome/skin/uploadr/*.gif $(BUILD)/Resources/chrome/skin/uploadr/
 	cp $(SRC)/Resources/chrome/skin/uploadr/*.png $(BUILD)/Resources/chrome/skin/uploadr/
 	mkdir $(BUILD)/Resources/components
-	cp $(SRC)/Resources/components/*.* $(BUILD)/Resources/components/
+	cp $(SRC)/Resources/components/*.xpt $(BUILD)/Resources/components/
+	cp $(SRC)/Resources/components/*.dylib $(BUILD)/Resources/components/
 	mkdir $(BUILD)/Resources/defaults
 	mkdir $(BUILD)/Resources/defaults/preferences
 	cp $(SRC)/Resources/defaults/preferences/*.js $(BUILD)/Resources/defaults/preferences/

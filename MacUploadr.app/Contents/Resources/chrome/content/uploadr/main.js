@@ -21,7 +21,7 @@ events.tools = {
 			li.parentNode.removeChild(li);
 
 			// Free the size of this file
-			if (!users.is_pro) {
+			if (users.username && !users.is_pro) {
 				var size = uploadr.fsize(photos.list[id].path);
 				photos.batch_size -= size;
 				if (users.bandwidth.remaining - photos.batch_size) {
