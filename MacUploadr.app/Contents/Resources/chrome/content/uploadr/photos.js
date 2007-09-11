@@ -106,12 +106,12 @@ var photos = {
 		var resizing = false;
 		for each (var p in photos.list) {
 			if (null != p) {
-				if (null != settings.resize && -1 != settings.resize &&
-					p.square > settings.resize) {
+				if (null != p.resize && -1 != p.resize &&
+					p.square > p.resize) {
 					resizing = true;
-					threads.worker.dispatch(new Resize(p.id, settings.resize, p.path),
+					threads.worker.dispatch(new Resize(p.id, p.resize, p.path),
 						threads.worker.DISPATCH_NORMAL);
-				} else if (uploadr.fsize(p.path) > users.filesize && p.square > settings.resize) {
+				} else if (uploadr.fsize(p.path) > users.filesize && p.square > p.resize) {
 					resizing = true;
 					threads.worker.dispatch(new Resize(p.id, -1, p.path),
 						threads.worker.DISPATCH_NORMAL);
@@ -187,4 +187,5 @@ var Photo = function(id, path) {
 	this.content_type = settings.content_type;
 	this.safety_level = settings.safety_level;
 	this.hidden = settings.hidden;
+	this.resize = settings.resize;
 };

@@ -96,7 +96,7 @@ persist="screenX screenY width height sizemode">
 				<box id="no_tools" class="fill" flex="1" />
 			</vbox>
 			<box class="fill" flex="1" />
-			<box class="logo" />
+			<box id="logo" />
 		</hbox>
 
 		<!-- Placeholders for page overlays -->

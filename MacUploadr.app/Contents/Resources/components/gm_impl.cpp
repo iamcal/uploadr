@@ -153,6 +153,7 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		// Create the actual thumbnail
 		img.scale(dim.str());
 		img.sharpen(1, sigma);
+		img.compressType(NoCompression);
 		img.write(thumb);
 
 		// If all went well, return stuff
@@ -175,6 +176,7 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 	}
 	delete [] s;
 	return NS_OK;
+
 }
 
 // Create a thumbnail of the image, preserving aspect ratio
@@ -200,6 +202,7 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 		//   TODO: Save EXIF and IPTC profiles
 		Image img(str);
 		img.rotate(degrees);
+		img.compressType(NoCompression);
 		img.write(str);
 
 		// If all went well, return ok
@@ -218,6 +221,7 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 	}
 	delete [] s;
 	return NS_OK;
+
 }
 
 NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _retval) {
@@ -283,6 +287,7 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 		//   TODO: Save EXIF and IPTC profiles
 		img.scale(dim);
 		img.sharpen(1, sigma);
+		img.compressType(NoCompression);
 		img.write(str);
 
 		// If all went well, return ok
@@ -301,4 +306,5 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 	}
 	delete [] s;
 	return NS_OK;
+
 }

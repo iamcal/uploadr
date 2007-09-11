@@ -12,3 +12,30 @@ As of 8-21-2007
 		Uploadr 3 Mac		97 seconds
 		Uploadr 3 Win		278 seconds
 		Uploadr 2.5 Win		312 seconds
+
+
+
+9-7-2007 meeting with Gino & Stewart
+
+Make sure it's smart when network drops
+*** Partial batch tagging - tag a >1 photo selection all at once - append to individual tags
+Tooltips on toolbar buttons
+Save state of unuploaded photos on exit
+Tabs for batches (two total - the uploading batch and the editing batch)
+	When you start upload, create a new tab for the next batch
+	jUploadr/Chronic style photo progress indication
+	User must DO SOMETHING to get to the new batch once uploading starts (button to switch tabs)
+Ordering options instead of a default
+	Date taken (fallback to alpha if date taken not available)
+	Let me order them
+	Reverse the current thing
+
+Twiki page!
+
+Look into embedding Flash into the Uploadr - Picnik
+
+
+
+Drag selecting photos
+	I couldn't figure out any way other than hardcoding the offsets to make the box actually
+	track the cursor.  document.getElementById('photos').offsetTop isn't set?!

@@ -17,7 +17,7 @@ var settings = {
 	content_type: null,
 	hidden: null,
 	safety_level: null,
-	resize: null,
+	resize: -1,
 
 	// Update settings
 	//   This is smart about pushing data from DOM to JS or vice-versa, gets user permission
@@ -26,7 +26,8 @@ var settings = {
 		var page = pages.current();
 
 		// Kills nulls and NaNs before they kill us
-		//   This is basically crash-recovery code
+		//   This is basically crash-recovery code, and might not be necessary anymore
+		/*
 		if (isNaN(settings.is_public) || null == settings.is_public) {
 			settings.is_public = 1;
 		}
@@ -48,6 +49,7 @@ var settings = {
 		if ('' == settings.resize || null == settings.resize) {
 			settings.resize = -1;
 		}
+		*/
 
 		// On the settings page, update settings object and photos
 		if ('settings' == page) {
@@ -65,11 +67,14 @@ var settings = {
 				settings.safety_level !=
 					document.getElementById('s_safety_level').selectedIndex + 1
 			);
+			var changed_resize = 'settings' == page &&
+				settings.resize != document.getElementById('s_resize').value;
 	
 			// Get permission to overwrite any changes that were made
-			if (0 < photos.list.length && (changed_privacy || changed_melons) &&
+			if (0 < photos.count &&
+				(changed_privacy || changed_melons || changed_resize) &&
 				!confirm(locale.getString('settings.overwrite'),
-				locale.getString('settings.overwrite.title'))) {
+					locale.getString('settings.overwrite.title'))) {
 				return;
 			}
 	
@@ -86,7 +91,9 @@ var settings = {
 				settings.hidden = document.getElementById('s_hidden').selectedIndex + 1;
 				settings.safety_level = document.getElementById('s_safety_level').selectedIndex + 1;
 			}
-			settings.resize = parseInt(document.getElementById('s_resize').value);
+			if (changed_resize) {
+				settings.resize = parseInt(document.getElementById('s_resize').value);
+			}
 
 		}
 
@@ -111,6 +118,9 @@ var settings = {
 					if (changed_melons || null == photo[k]) {
 						photo[k] = settings[k];
 					}
+				}
+				if (changed_resize || null == photo.resize) {
+					photo.resize = settings.resize;
 				}
 			}
 		}

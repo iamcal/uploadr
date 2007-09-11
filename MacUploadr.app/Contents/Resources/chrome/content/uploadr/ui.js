@@ -159,6 +159,41 @@ var findr = {
 			}
 		}
 		return 0;
+	},
+
+	// Get photos in a bounding box
+	bounding_box: function(x1, y1, x2, y2) {
+		const OFFSET_X = events.photos.OFFSET_X;
+		const OFFSET_Y = events.photos.OFFSET_Y;
+
+		// Get our points in order
+		if (x2 < x1) {
+			var tmp = x2;
+			x2 = x1;
+			x1 = tmp;
+		}
+		if (y2 < y1) {
+			var tmp = y2;
+			y2 = y1;
+			y1 = tmp;
+		}
+
+		// Walk the photos and see which are in the box
+		var p = photos.list;
+		for (var i = p.length; i >= 0; --i) {
+			if (null != p[i]) {
+				var img = document.getElementById('photo' + i).getElementsByTagName('img')[0];
+				if (img.offsetLeft + OFFSET_X + img.width >= x1 &&
+					img.offsetLeft + OFFSET_X <= x2 &&
+					img.offsetTop + OFFSET_Y + img.height >= y1 &&
+					img.offsetTop + OFFSET_Y <= y2) {
+					img.className = 'selecting';
+				} else {
+					img.className = '';
+				}
+			}
+		}
+
 	}
 
 };
@@ -173,8 +208,10 @@ var drag = {
 		onDragEnter: function(e, flavor, session) {
 		},
 		onDragOver: function(e, data) {
+			document.getElementById('photos').className = 'drag oldest';
 		},
 		onDragExit: function(e, flavor, session) {
+			document.getElementById('photos').className = 'no_drag oldest';
 		},
 		onDrop: function(e, data) {
 

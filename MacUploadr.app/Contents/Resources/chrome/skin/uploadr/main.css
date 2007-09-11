@@ -3,6 +3,7 @@
 box, toolbox, hbox, vbox {
 	margin: 0;
 	padding: 0;
+	border: 0;
 }
 #menu {
 	display: none;
@@ -18,7 +19,7 @@ h1, h2 {
 .fill {
 	border-bottom: 1px solid #999;
 }
-.logo {
+#logo {
 	width: 120px;
 	height: 67px;
 	background: url(logo.png) no-repeat scroll 0 10px;
@@ -163,7 +164,6 @@ toolbarseparator {
  */
 #photos {
 	margin: 0;
-	padding: 0;
 	overflow: auto;
 }
 .newest {
@@ -172,9 +172,16 @@ toolbarseparator {
 .oldest {
 	background: url(oldest.gif) no-repeat bottom right;
 }
+.no_drag {
+	padding: 5px;
+}
+.drag {
+	padding: 0;
+	border: 5px solid #ff0084;
+}
 #list {
 	margin: 0;
-	padding: 5px;
+	padding: 0;
 	list-style-type: none;
 }
 #list li {
@@ -193,6 +200,10 @@ toolbarseparator {
 	background: white;
 	border: 1px solid #ddd;
 }
+#list li img.selecting {
+	padding: 2px;
+	border: 1px solid #ff0084;
+}
 #list li img.loading {
 	background: transparent;
 	border-color: white;
@@ -201,10 +212,19 @@ toolbarseparator {
 	padding: 1px;
 	border: 2px solid #ff0084;
 }
-#meta {
+#drag_select {
+	display: none;
+	position: absolute;
+	border: 1px solid #0063dc;
+	background: url(drag_select.png);
+}
+#meta, #partial_meta, #no_meta {
 	width: 160px;
 	padding: 5px;
 	background: #222;
+}
+#meta, #partial_meta {
+	display: none;
 }
 #meta_div {
 	height: 106px;
@@ -217,11 +237,12 @@ toolbarseparator {
 #meta_secondary {
 	display: none;
 }
-#meta label {
+#meta label, #partial_meta label, #partial_meta p {
 	color: white;
 }
-#p_content_type label, #p_hidden label, #p_safety_level label,
-#meta_more label, #meta_settings label {
+#p_content_type label, #p_hidden label, #p_safety_level label, #p_resize label,
+#m_content_type label, #m_hidden label, #m_safety_level label, #m_resize label,
+#meta_more label, #meta_save label {
 	color: black;
 }
 

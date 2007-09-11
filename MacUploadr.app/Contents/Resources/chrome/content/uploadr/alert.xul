@@ -6,7 +6,7 @@
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept"
 ondialogaccept="return true;" onload="
-document.getElementById('dialog_alert').title = window.arguments[1];
+document.getElementById('dialog_alert').setAttribute('title', window.arguments[1]);
 document.getElementById('title').firstChild.nodeValue = window.arguments[1];
 document.getElementById('msg').firstChild.nodeValue = window.arguments[0];
 centerWindowOnScreen();

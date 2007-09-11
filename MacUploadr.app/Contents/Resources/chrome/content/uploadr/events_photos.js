@@ -6,6 +6,8 @@ events.photos = {
 		// Save old metadata
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
+		} else if (1 < photos.selected.length) {
+			meta.abandon();
 		}
 	
 		// If we clicked on an image
@@ -60,35 +62,18 @@ events.photos = {
 			// If this was just plain clicked, select it
 			else {
 				img.className = 'selected';
-				photos.selected.push(id);
+				photos.selected = [id];
 			}
 
 			// Save the image last clicked
 			photos.last = id;
 	
 			// Update the metadata pane
-			document.getElementById('meta_primary').style.display = '-moz-box';
-			document.getElementById('meta_secondary').style.display = 'none';
-			var meta_div = document.getElementById('meta_div');
 			if (1 == photos.selected.length) {
-				while (meta_div.hasChildNodes()) {
-					meta_div.removeChild(meta_div.firstChild);
-				}
-				var w = parseInt(img.getAttribute('width'));
-				var h = parseInt(img.getAttribute('height'));
-				meta_div.setAttribute('width', w + 4);
-				meta_div.setAttribute('height', h + 4);
-				var meta_img = document.createElementNS(NS_HTML, 'img');
-				meta_img.setAttribute('width', w);
-				meta_img.setAttribute('height', h);
-				meta_img.src = img.src;
-				meta_div.appendChild(meta_img);
 				meta.load(photos.selected[0]);
-				meta_div.style.visibility = 'visible';
 				meta.enable();
 			} else {
-				meta_div.style.visibility = 'hidden';
-				meta.disable();
+				meta.partial();
 			}
 
 			// Enable toolbar buttons for selected images
@@ -110,13 +95,131 @@ events.photos = {
 			while (meta_div.hasChildNodes()) {
 				meta_div.removeChild(meta_div.firstChild);
 			}
-			meta_div.style.visibility = 'hidden';
 			meta.disable();
 			document.getElementById('t_remove').className = 'disabled';
 			document.getElementById('t_rotate_l').className = 'disabled';
 			document.getElementById('t_rotate_r').className = 'disabled';
 		}
 
+	},
+
+	// Anchor point for drag-select
+	anchor: null,
+
+	// Constants to align box and cursor
+	OFFSET_X: -5,
+	OFFSET_Y: -72,
+
+	// Initiate a drag
+	mousedown: function(e) {
+
+		// Clicking on a single photo will do drag-reordering
+		if (e.target.src) {
+		}
+
+		// Clicking whitespace will start the drag-select
+		else {
+			events.anchor = {
+				x: e.clientX + events.photos.OFFSET_X,
+				y: e.clientY + events.photos.OFFSET_Y
+			};
+			var ds = document.getElementById('drag_select');
+			ds.style.left = events.anchor.x + 'px';
+			ds.style.top = events.anchor.y + 'px';
+			ds.style.width = '1px';
+			ds.style.height = '1px';
+			ds.style.display = 'block';
+		}
+
+	},
+
+	// Keep dragging
+	mousemove: function(e) {
+
+		// If we're reordering
+		if (null == events.anchor) {
+		}
+
+		// If we're selecting
+		else {
+			const OFFSET_X = events.photos.OFFSET_X;
+			const OFFSET_Y = events.photos.OFFSET_Y;
+			var ds = document.getElementById('drag_select');
+
+			// Invert positions if necessary
+			if (events.anchor.x > e.clientX + OFFSET_X) {
+				ds.style.left = (e.clientX + OFFSET_X) + 'px';
+			}
+			if (events.anchor.y > e.clientY + OFFSET_Y) {
+				ds.style.top = (e.clientY + OFFSET_Y) + 'px';
+			}
+
+			// New width and height
+			ds.style.width = Math.abs(e.clientX + OFFSET_X - events.anchor.x) + 'px';
+			ds.style.height = Math.abs(e.clientY + OFFSET_Y - events.anchor.y) + 'px';
+
+			// Actually find photos in the box
+			findr.bounding_box(events.anchor.x, events.anchor.y,
+				e.clientX + OFFSET_X, e.clientY + OFFSET_Y);
+
+		}
+
+	},
+
+	// Finish a drag
+	mouseup: function(e) {
+
+		// If we're reordering
+		if (null == events.anchor) {
+		}
+
+		// If we're selecting, finalize the selection
+		else {
+
+			// Kill the bounding box
+			var ds = document.getElementById('drag_select');
+			ds.style.width = '1px';
+			ds.style.height = '1px';
+			ds.style.display = 'none';
+
+			// Save old metadata
+			if (1 == photos.selected.length) {
+				meta.save(photos.selected[0]);
+			} else if (1 < photos.selected.length) {
+				meta.abandon();
+			}
+
+			// Find new selection
+			var p = photos.list;
+			photos.selected = [];
+			for (var i = p.length; i >= 0; --i) {
+				if (null != p[i]) {
+					var img = document.getElementById('photo' + i).getElementsByTagName('img')[0];
+					if ('selecting' == img.className) {
+						img.className = 'selected';
+						photos.selected.push(i);
+					} else {
+						img.className = '';
+					}
+				}
+			}
+			if (0 == photos.selected.length) {
+				events.photos.click({target: {}});
+			} else {
+				if (1 == photos.selected.length) {
+					meta.load(photos.selected[0]);
+					meta.enable();
+				} else {
+					meta.partial();
+				}
+				document.getElementById('t_remove').className = 'enabled';
+				document.getElementById('t_rotate_l').className = 'enabled';
+				document.getElementById('t_rotate_r').className = 'enabled';
+			}
+
+		}
+
+		events.anchor = null;
 	},
 
 	// Properly enable/disable the checkboxes available for private photos to be shared with
@@ -131,12 +234,6 @@ events.photos = {
 			document.getElementById('p_is_friend').disabled = false;
 			document.getElementById('p_is_family').disabled = false;
 		}
-	},
-
-	// Show the settings page
-	settings: function() {
-		pages.go('settings');
-		buttons.show(['back', 'ok']);
 	},
 
 	// Display the other metadata fields

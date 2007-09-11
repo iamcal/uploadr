@@ -143,11 +143,13 @@ var _upload = function(rsp, id) {
 		if (0 < photos.ok && confirm(locale.getString('uploaded.prompt'),
 			locale.getString('uploaded.prompt.title'))) {
 			var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
-			var uri = io.newURI('http://www.flickr.com/tools/uploader_edit.gne?ids=' +
+			var uri = io.newURI('http://flickr.com/tools/uploader_edit.gne?ids=' +
 				photos.uploaded.join(','), null, null);
 			var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
 				Ci.nsIExternalProtocolService);
-			eps.loadURI(uri, null);
+			var launcher = eps.getProtocolHandlerInfo('http');
+			launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
+			launcher.launchWithURI(uri, null);
 		}
 
 		// Clear out the uploading batch

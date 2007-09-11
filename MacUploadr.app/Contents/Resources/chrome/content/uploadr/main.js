@@ -37,7 +37,7 @@ events.tools = {
 
 		// Clear the selection
 		photos.selected = [];
-		events.photos.click({'target': {}});
+		events.photos.click({target: {}});
 
 		// Allow upload only if there are photos
 		if (photos.count) {
@@ -180,10 +180,10 @@ events.arrows = {
 		}
 		if (null != next) {
 			events.photos.click({
-				'target': document.getElementById('photo' + next.id).getElementsByTagName('img')[0],
-				'shiftKey': e.shiftKey,
-				'ctrlKey': e.ctrlKey,
-				'metaKey': e.metaKey
+				target: document.getElementById('photo' + next.id).getElementsByTagName('img')[0],
+				shiftKey: e.shiftKey,
+				ctrlKey: e.ctrlKey,
+				metaKey: e.metaKey
 			});
 		}
 	}

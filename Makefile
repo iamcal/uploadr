@@ -1,4 +1,4 @@
-SRC := ~/code/flickrUploadr_no_symlink/MacUploadr.app/Contents
+SRC := ~/code/flickrUploadr3/MacUploadr.app/Contents
 BUILD := ~/Desktop/build/Flickr\ Uploadr.app/Contents
 
 all:
