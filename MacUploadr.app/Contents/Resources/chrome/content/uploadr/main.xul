@@ -27,7 +27,6 @@ persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/main.js" />
 	<script src="chrome://uploadr/content/events_bandwidth.js" />
 	<keyset>
-		<key id="key_add" modifiers="accel" key="a" oncommand="photos.add();" />
 		<key id="key_quit" modifiers="accel" key="q" oncommand="exit();" />
 		<key id="key_back" keycode="VK_BACK" oncommand="events.tools.remove();" />
 		<key id="key_delete" keycode="VK_DELETE" oncommand="events.tools.remove();" />
@@ -52,14 +51,12 @@ persist="screenX screenY width height sizemode">
 		oncommand="events.arrows.down(event);" />
 		<key id="key_left" modifiers="accel" keycode="VK_LEFT"
 		oncommand="events.arrows.left(event);" />
-		<!--<key id="key_tab" keycode="VK_TAB" oncommand="events.arrows.right(event);" />-->
 	</keyset>
 	<toolbox id="menu">
 		<menubar>
 			<menu id="menu_file" label="&menu.file;">
 				<menupopup>
-					<menuitem id="menu_add" label="&menu.file.add;"
-					key="key_add" oncommand="photos.add();" />
+					<menuitem id="menu_add" label="&menu.file.add;" oncommand="photos.add();" />
 					<menuitem id="menu_FileQuitItem" label="&menu.file.exit;"
 					key="key_quit" oncommand="exit();" />
 				</menupopup>
