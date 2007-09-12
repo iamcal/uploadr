@@ -131,6 +131,7 @@ var photos = {
 			photos.uploading.push(p);
 		}
 		photos.list = [];
+		photos.count = 0;
 		document.getElementById('button_upload').disabled = true;
 		photos.selected = [];
 		photos.last = null;

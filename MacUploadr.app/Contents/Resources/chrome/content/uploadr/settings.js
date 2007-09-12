@@ -170,13 +170,18 @@ var settings = {
 		settings.resize = u.resize;
 
 		// Fetch anything available by API that wasn't found locally
-		if (null == settings.content_type) {
+		if (isNaN(settings.is_public) || null == settings.is_public ||
+			isNaN(settings.is_friend) || null == settings.is_friend ||
+			isNaN(settings.is_family) || null == settings.is_family) {
+			flickr.prefs.getPrivacy();
+		}
+		if (isNaN(settings.content_type) || null == settings.content_type) {
 			flickr.prefs.getContentType();
 		}
-		if (null == settings.hidden) {
+		if (isNaN(settings.hidden) || null == settings.hidden) {
 			flickr.prefs.getHidden();
 		}
-		if (null == settings.safety_level) {
+		if (isNaN(settings.safety_level) || null == settings.safety_level) {
 			flickr.prefs.getSafetyLevel();
 		}
 

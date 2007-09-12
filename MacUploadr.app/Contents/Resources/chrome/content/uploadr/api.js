@@ -1,6 +1,8 @@
 const api_key = '-----';
 const secret = '-----';
 
+const TIMEOUT = 60000; // Milliseconds
+
 // A note about the authentication API:
 //   Because authentication is rather involved, involving a bunch of API calls in sequence,
 //   authentication should be kicked off using users.login() in users.js.  The login sequence
@@ -40,8 +42,16 @@ var upload = function(id) {
 var upload_cancel = false;
 var _upload = function(rsp, id) {
 
+	// Cancel the timeout
+	window.clearTimeout(upload_timeout_handle);
+
 	// How did the upload go?
-	var stat = rsp.getAttribute('stat');
+	var stat;
+	if ('object' == typeof rsp) {
+		stat = rsp.getAttribute('stat');
+	} else {
+		stat = 'fail';
+	}
 	if ('ok' == stat) {
 		++photos.ok;
 		var photo_id = parseInt(rsp.getElementsByTagName('photoid')[0].firstChild.nodeValue)
@@ -49,20 +59,24 @@ var _upload = function(rsp, id) {
 		photos.add_to_set.push(photo_id);
 	} else if ('fail' == stat) {
 		++photos.fail;
-		photos.failed.push(photos.uploading[id].path);
+		photos.failed.push(photos.uploading[id]);
 
 		// If we're out of bandwidth
-		if (6 == parseInt(rsp.getElementsByTagName('err')[0].getAttribute('code'))) {
+		if ('object' == typeof rsp &&
+			6 == parseInt(rsp.getElementsByTagName('err')[0].getAttribute('code'))) {
 			document.getElementById('progress').style.display = 'none';
 			var f = photos.failed;
+			var f_str = '||' + f.join('||') + '||';
 			for each (var p in photos.uploading) {
-				if (null != p && -1 == f.indexOf(p.path)) {
-					f.push(p.path);
+				if (null != p && -1 == f_str.indexOf(p.path)) {
+					f.push(p);
+					f_str += p.path + '||';
 				}
 			}
 			var ii = f.length;
 			for (var i  = 0; i < ii; ++i) {
-				photos._add(f[i]);
+				photos._add(f[i].path);
+				photos.list[photos.list.length - 1] = f[i];
 			}
 			document.getElementById('button_upload').disabled = true;
 			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
@@ -122,7 +136,8 @@ var _upload = function(rsp, id) {
 			var f = photos.failed;
 			var ii = f.length;
 			for (var i  = 0; i < ii; ++i) {
-				photos._add(f[i]);
+				photos._add(f[i].path);
+				photos.list[photos.list.length - 1] = f[i];
 			}
 			document.getElementById('button_upload').disabled = true;
 			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
@@ -133,6 +148,7 @@ var _upload = function(rsp, id) {
 			for each (var p in photos.uploading) {
 				if (null != p) {
 					photos._add(p.path);
+					photos.list[photos.list.length - 1] = p;
 				}
 			}
 			document.getElementById('button_upload').disabled = true;
@@ -150,6 +166,12 @@ var _upload = function(rsp, id) {
 			var launcher = eps.getProtocolHandlerInfo('http');
 			launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
 			launcher.launchWithURI(uri, null);
+		}
+
+		// Make sure the upload button is enabled if it should be
+		//   The confirm() box above can prevent this from happening after sorting, so force it
+		if (0 < photos.count) {
+			document.getElementById('button_upload').disabled = false;
 		}
 
 		// Clear out the uploading batch
@@ -177,20 +199,45 @@ var _upload = function(rsp, id) {
 	}
 
 };
-var upload_progress_interval = null;
+var upload_progress_handle = null;
+var upload_progress_last = 0;
 var upload_progress_total = -1;
-var upload_progress = function(stream) {
+var upload_progress = function(stream, id) {
+
+	// Get this bit of progress
 	var a = stream.available();
-	var percent = Math.round(100 * (upload_progress_total - a) / upload_progress_total);
+	var bytes = upload_progress_total - a;
+	var percent = Math.round(100 * bytes / upload_progress_total);
 	if (0 > percent) {
 		percent = 0;
 	}
+
+	// Have we made any progress?  If so, push the timeout event further into the future; if
+	// not, call it explicitly now
+	if (bytes > upload_progress_last) {
+		window.clearTimeout(upload_timeout_handle);
+		upload_timeout_handle = window.setTimeout(function() {
+			upload_timeout(id);
+		}, TIMEOUT);
+	}
+	upload_progress_last = bytes;
+
+	// Update the UI
 	var meter = document.getElementById('progress_file');
 	meter.value = percent;
+
+	// This is the end?
 	if (0 == a) {
 		meter.mode = 'undetermined';
-		window.clearInterval(upload_progress_interval);
+		window.clearInterval(upload_progress_handle);
 	}
+
+};
+var upload_timeout_handle = null;
+var upload_timeout = function(id) {
+	window.clearInterval(upload_progress_handle);
+	upload_cancel = true;
+	_upload(false, id);
 };
 
 // The standard API
@@ -206,7 +253,8 @@ var flickr = {
 			});
 		},
 		_checkToken: function(rsp) {
-			if ('ok' != rsp.getAttribute('stat')) {
+			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
+				users.logout();
 				return;
 			}
 			users.token = rsp.getElementsByTagName('token')[0].firstChild.nodeValue;
@@ -225,7 +273,8 @@ var flickr = {
 			});
 		},
 		_getFrob: function(rsp) {
-			if ('ok' != rsp.getAttribute('stat')) {
+			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
+				users.logout();
 				return;
 			}
 			users.frob = rsp.getElementsByTagName('frob')[0].firstChild.nodeValue;
@@ -249,7 +298,8 @@ var flickr = {
 			}
 		},
 		_getToken: function(rsp) {
-			if ('ok' != rsp.getAttribute('stat')) {
+			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
+				users.logout();
 				return;
 			}
 			users.token = rsp.getElementsByTagName('token')[0].firstChild.nodeValue;
@@ -274,7 +324,8 @@ var flickr = {
 			});
 		},
 		_getUploadStatus: function(rsp) {
-			if ('ok' != rsp.getAttribute('stat')) {
+			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
+				flickr.people.getUploadStatus();
 				return;
 			}
 			var user = rsp.getElementsByTagName('user')[0];
@@ -415,6 +466,23 @@ var flickr = {
 			settings.update();
 		},
 
+		getPrivacy: function() {
+			_api({
+				'method': 'flickr.prefs.getPrivacy',
+				'auth_token': users.token
+			});
+		},
+		_getPrivacy: function(rsp) {
+			if ('ok' != rsp.getAttribute('stat')) {
+				return;
+			}
+			var privacy = parseInt(rsp.getElementsByTagName('person')[0].getAttribute('privacy'));
+			settings.is_public = 1 == privacy;
+			settings.is_friend = 2 == privacy || 4 == privacy;
+			settings.is_family = 3 == privacy || 5 == privacy;
+			settings.update();
+		},
+
 		getSafetyLevel: function() {
 			_api({
 				'method': 'flickr.prefs.getSafetyLevel',
@@ -433,6 +501,9 @@ var flickr = {
 	}
 
 };
+
+// Hash of timeouts being used to track running API calls
+var _timeouts = {};
 
 // The guts of the API object - this actually makes the XHR calls and finds the callback
 //   Callbacks are named exactly like the API method but with an _ in front of the last
@@ -540,6 +611,17 @@ Components.utils.reportError('API CALL: ' + params.toSource());
 	// Use XHR
 	//   GET and POST are supported here
 	else {
+
+		// Build up the callback
+		//   For the method foo.bar.baz this will call foo.bar._baz with the response
+		var callback;
+		if (params.method) {
+			var index = 1 + params.method.lastIndexOf('.');
+			callback = params.method.substring(0, index) + '_' +
+				params.method.substring(index, params.method.length) + '(rsp);';
+		}
+
+		// Callback
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (4 == xhr.readyState && 200 == xhr.status && xhr.responseXML) {
@@ -549,9 +631,12 @@ Components.utils.reportError('API RESULT: ' + xhr.responseText);
 
 					// If this is a normal method call
 					if (params.method) {
-						var index = 1 + params.method.lastIndexOf('.');
-						eval(params.method.substring(0, index) + '_' +
-							params.method.substring(index, params.method.length) + '(rsp);');
+
+						// It returned normally, don't timeout
+						window.clearTimeout(_timeouts[esc_params['api_sig']]);
+						delete _timeouts[esc_params['api_sig']];
+
+						eval(callback);
 					}
 
 					// If this is an upload
@@ -564,6 +649,8 @@ Components.utils.reportError('API RESULT: ' + xhr.responseText);
 				}
 			}
 		};
+
+		// Send the request
 		xhr.open(post ? 'POST' : 'GET', url, true);
 		if (post) {
 			xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' +
@@ -572,11 +659,23 @@ Components.utils.reportError('API RESULT: ' + xhr.responseText);
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		}
 		xhr.send(mstream);
+
+		// Setup upload progress indicator
 		if (post && -1 != id) {
-			upload_progress_interval = window.setInterval(function() {
-				upload_progress(mstream);
+			upload_progress_handle = window.setInterval(function() {
+				upload_progress(mstream, id);
 			}, 200);
 		}
+
+		// Setup timeout guard on everything else
+		else if (params.method) {
+			_timeouts[esc_params['api_sig']] = window.setTimeout(function() {
+Components.utils.reportError('API TIMEOUT: ' + callback);
+				var rsp = false;
+				eval(callback);
+			}, TIMEOUT);
+		}
+
 	}
 
 };

@@ -92,7 +92,7 @@ var users = {
 		}
 
 		// Update the UI
-		if ('users' != pages.current()) {
+		if ('photos' == pages.current()) {
 			buttons.show(['upload']);
 		}
 
