@@ -6,6 +6,7 @@ var photos = {
 	selected: [],
 	last: null,
 	unsaved: false,
+	sort: true,
 
 	// Batch size limiting
 	batch_size: 0,
@@ -106,12 +107,12 @@ var photos = {
 		var resizing = false;
 		for each (var p in photos.list) {
 			if (null != p) {
-				if (null != p.resize && -1 != p.resize &&
-					p.square > p.resize) {
+				if (null != settings.resize && -1 != settings.resize &&
+					p.square > settings.resize) {
 					resizing = true;
-					threads.worker.dispatch(new Resize(p.id, p.resize, p.path),
+					threads.worker.dispatch(new Resize(p.id, settings.resize, p.path),
 						threads.worker.DISPATCH_NORMAL);
-				} else if (uploadr.fsize(p.path) > users.filesize && p.square > p.resize) {
+				} else if (uploadr.fsize(p.path) > users.filesize && p.square > settings.resize) {
 					resizing = true;
 					threads.worker.dispatch(new Resize(p.id, -1, p.path),
 						threads.worker.DISPATCH_NORMAL);

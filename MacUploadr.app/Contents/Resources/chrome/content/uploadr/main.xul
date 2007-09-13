@@ -6,11 +6,10 @@
 <?xul-overlay href="chrome://uploadr/content/users.xul"?>
 <?xul-overlay href="chrome://uploadr/content/settings.xul"?>
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
-<window id="main" title="&title;" width="750" height="575"
+<window id="main" title="&title;" width="960" height="700"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml" onload="users.load();" onclose="return exit();"
 persist="screenX screenY width height sizemode">
-	<html:link rel="shortcut icon" href="chrome://uploadr/skin/icon_16.png" />
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
 	</stringbundleset>

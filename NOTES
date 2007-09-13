@@ -39,3 +39,20 @@ Look into embedding Flash into the Uploadr - Picnik
 Drag selecting photos
 	I couldn't figure out any way other than hardcoding the offsets to make the box actually
 	track the cursor.  document.getElementById('photos').offsetTop isn't set?!
+
+
+
+9-12-2007 meeting with Gino & Stewart
+
+Partial batch metadata
+	Overwrite titles always
+	Append to description always (prefix with \n\n)
+		Could have a pref for append/overwrite for description - nah
+	Confirmation on clicking save
+	*** Make blank title or description not overwrite each photo ***
+		Do all partial batches like the changed_* checks in settings.js
+	"Leave unchanged" checkbox for privacy metadata that unchecks if they change something
+Re-adding to a batch after failure
+	Preserve order in the queue, which is the order they wanted
+Add add-to-set option for each photo and for partial batches
+Nix the per-photo resize options

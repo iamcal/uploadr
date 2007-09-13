@@ -78,8 +78,6 @@ var _upload = function(rsp, id) {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
 			}
-			document.getElementById('button_upload').disabled = true;
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
 			photos.uploading = [];
 			photos.uploaded = [];
 			photos.add_to_set = [];
@@ -139,20 +137,16 @@ var _upload = function(rsp, id) {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
 			}
-			document.getElementById('button_upload').disabled = true;
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
 		}
 
 		// If this was a cancellation, add photos we didn't get to back to the batch
 		if (upload_cancel) {
 			for each (var p in photos.uploading) {
 				if (null != p) {
-					photos._add(p.path);
+					photos._add(p.path);;
 					photos.list[photos.list.length - 1] = p;
 				}
 			}
-			document.getElementById('button_upload').disabled = true;
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
 		}
 
 		// Offer to open the uploaded batch on the site

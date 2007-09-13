@@ -20,7 +20,6 @@ var meta = {
 			document.getElementById('m_content_type').selectedIndex = settings.content_type - 1;
 			document.getElementById('m_hidden').selectedIndex = settings.hidden - 1;
 			document.getElementById('m_safety_level').selectedIndex = settings.safety_level - 1;
-			document.getElementById('m_resize').value = settings.resize;
 		}
 
 		// Load the values from a specific photo
@@ -51,7 +50,6 @@ var meta = {
 			document.getElementById('p_content_type').selectedIndex = p.content_type - 1;
 			document.getElementById('p_hidden').selectedIndex = p.hidden - 1;
 			document.getElementById('p_safety_level').selectedIndex = p.safety_level - 1;
-			document.getElementById('p_resize').value = p.resize;
 		}
 
 	},
@@ -69,15 +67,20 @@ var meta = {
 
 				// Overwrite most stuff
 				var p = photos.list[photos.selected[i]];
-				p.title = document.getElementById('m_title').value;
-				p.description = document.getElementById('m_description').value;
+				var title = document.getElementById('m_title').value;
+				if ('' != title) {
+					p.title = title;
+				}
+				var description = document.getElementById('m_description').value;
+				if ('' != description) {
+					p.description += ('' == p.description ? '' : '\n\n') + description;
+				}
 				p.is_public = parseInt(document.getElementById('m_is_public').value);
 				p.is_friend = document.getElementById('m_is_friend').checked ? 1 : 0;
 				p.is_family = document.getElementById('m_is_family').checked ? 1 : 0;
 				p.content_type = document.getElementById('m_content_type').selectedIndex + 1;
 				p.hidden = document.getElementById('m_hidden').selectedIndex + 1;
 				p.safety_level = document.getElementById('m_safety_level').selectedIndex + 1;
-				p.resize = document.getElementById('m_resize').value;
 
 				// But tags are the special case, we append, but smartly to remove duplicates
 				p.tags = meta.tags(p.tags + ' ' + document.getElementById('m_tags').value);
@@ -98,7 +101,6 @@ var meta = {
 			p.content_type = document.getElementById('p_content_type').selectedIndex + 1;
 			p.hidden = document.getElementById('p_hidden').selectedIndex + 1;
 			p.safety_level = document.getElementById('p_safety_level').selectedIndex + 1;
-			p.resize = document.getElementById('p_resize').value;
 		}
 
 	},
@@ -117,6 +119,8 @@ var meta = {
 
 	partial: function() {
 		meta.load();
+		document.getElementById('m_prompt').firstChild.nodeValue =
+			locale.getFormattedString('meta.partial.prompt', [photos.selected.length]);
 		document.getElementById('meta').style.display = 'none';
 		document.getElementById('partial_meta').style.display = '-moz-box';
 		document.getElementById('no_meta').style.display = 'none';
@@ -143,8 +147,7 @@ var meta = {
 					document.getElementById('m_content_type').selectedIndex + 1 ||
 				settings.hidden != document.getElementById('m_hidden').selectedIndex + 1 ||
 				settings.safety_level !=
-					document.getElementById('m_safety_level').selectedIndex + 1 ||
-				settings.resize != document.getElementById('m_resize').value
+					document.getElementById('m_safety_level').selectedIndex + 1
 			)) {
 			if (confirm(locale.getString('meta.abandon'), locale.getString('meta.abandon.title'))) {
 				meta.save();
