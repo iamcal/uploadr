@@ -192,17 +192,21 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 			return NS_ERROR_INVALID_ARG;
 		}
 
+		// Orient the image properly and return the orientation
+		Image img(*path_str);
+		ostringstream out;
+
 		struct timeval first;
 		gettimeofday(&first, 0);
 
-		// Orient the image properly and return the orientation
-		Image img(*path_str);
+		int orient = base_orient(img);
 
 		struct timeval last;
 		gettimeofday(&last, 0);
-		int run_usec = 1000000 * (last.tv_sec - first.tv_sec) + (last.tv_usec - first.tv_usec);
+		double runtime = ((double)last.tv_sec + (double)last.tv_usec / 1000000) -
+			((double)first.tv_sec - (double)first.tv_usec / 1000000);
 		ostringstream run;
-		run << run_usec << "x";
+		run << runtime << "x";
 		string run_str = run.str();
 		char * foo = (char *)run_str.c_str();
 		int i = 0;
@@ -211,8 +215,6 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 			++foo;
 		}
 
-		ostringstream out;
-		int orient = base_orient(img);
 		out << orient << "x";
 
 		// Get the original size
