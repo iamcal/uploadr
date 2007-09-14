@@ -44,8 +44,8 @@ ThumbCallback.prototype = {
 		try {
 
 			// Parse the returned string
-			//   <orientation>x<width>x<height>x<date_taken>x<thumb_width>x<thumb_height><thumb_path>
-			var thumb = this.result.match(/^(.*)x([0-9]+)x([0-9]+)x(.*)x([0-9]+)x([0-9]+)(.+)$/);
+			//   <time>x<orientation>x<width>x<height>x<date_taken>x<thumb_width>x<thumb_height><thumb_path>
+			var thumb = this.result.match(/^(.*)x(.*)x([0-9]+)x([0-9]+)x(.*)x([0-9]+)x([0-9]+)(.+)$/);
 
 			// Get this photo from the DOM and remove its loading class
 			var img = document.getElementById('photo' + this.id).getElementsByTagName('img')[0];
@@ -62,13 +62,14 @@ ThumbCallback.prototype = {
 
 			// If successful, replace with the thumb and update the Photo object
 			else {
-Components.utils.reportError(parseInt(thumb[1]));
-				photos.list[this.id].width = parseInt(thumb[2]);
-				photos.list[this.id].height = parseInt(thumb[3]);
-				photos.list[this.id].date_taken = thumb[4];
-				img.setAttribute('width', thumb[5]);
-				img.setAttribute('height', thumb[6]);
-				img.src = 'file://' + thumb[7];
+Components.utils.reportError('time: ' + thumb[1] + 'us');
+//Components.utils.reportError(parseInt(thumb[2]));
+				photos.list[this.id].width = parseInt(thumb[3]);
+				photos.list[this.id].height = parseInt(thumb[4]);
+				photos.list[this.id].date_taken = thumb[5];
+				img.setAttribute('width', thumb[6]);
+				img.setAttribute('height', thumb[7]);
+				img.src = 'file://' + thumb[8];
 
 				// Check the size of this file if we're logged in
 				if (users.username) {

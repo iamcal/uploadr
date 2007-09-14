@@ -12,11 +12,51 @@
 #include <mach-o/dyld.h>
 #endif
 
+// Fake gettimeofday on Windows
+#ifdef XP_WIN
+#include < time.h >
+
+#if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
+#define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
+#else
+#define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
+#endif
+struct timezone {
+	int  tz_minuteswest;
+	int  tz_dsttime;
+};
+int gettimeofday(struct timeval *tv, struct timezone *tz) {
+	FILETIME ft;
+	unsigned __int64 tmpres = 0;
+	static int tzflag;
+	if (NULL != tv) {
+		GetSystemTimeAsFileTime(&ft);
+		tmpres |= ft.dwHighDateTime;
+		tmpres <<= 32;
+		tmpres |= ft.dwLowDateTime;
+		tmpres -= DELTA_EPOCH_IN_MICROSECS;
+		tmpres /= 10;
+		tv->tv_sec = (long)(tmpres / 1000000UL);
+		tv->tv_usec = (long)(tmpres % 1000000UL);
+	}
+	if (NULL != tz) {
+		if (!tzflag) {
+			_tzset();
+			tzflag++;
+		}
+		tz->tz_minuteswest = _timezone / 60;
+		tz->tz_dsttime = _daylight;
+	}
+	return 0;
+}
+#else
+#include <sys/time.h>
+#endif
+
 #define round(n) (int)(0 <= (n) ? (n) + 0.5 : (n) - 0.5)
 
 using namespace std;
 using namespace Magick;
-
 
 // Get the path as a normal std::string
 //   Gotta find a better way to do this
@@ -147,6 +187,10 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 	string * path_str = 0;
 	string * thumb_str = 0;
 	try {
+
+		struct timeval first;
+		gettimeofday(&first, 0);
+
 		path_str = conv_str(path);
 		if (0 == path_str) {
 			return NS_ERROR_INVALID_ARG;
@@ -225,6 +269,20 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 			_retval.Append(*o);
 			++o;
 		}
+
+		struct timeval last;
+		gettimeofday(&last, 0);
+		int run_usec = 1000000 * (last.tv_sec - first.tv_sec) + (last.tv_usec - first.tv_usec);
+		ostringstream run;
+		run << run_usec << "x";
+		string run_str = run.str();
+		o = (char *)run_str.c_str();
+		int i = 0;
+		while (*o) {
+			_retval.Insert(*o, i++);
+			++o;
+		}
+
 		return NS_OK;
 	}
 
@@ -235,7 +293,7 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		char * o = (char *)e.what();
 		while (*o) {
 			_retval.Append(*o);
-			++o;
+			++o; 
 		}
 	}
 	return NS_OK;
