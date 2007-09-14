@@ -126,7 +126,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;;&quot;..\..\..\..\GraphicsMagick-1.1.8\Magick++\lib&quot;;&quot;..\..\..\..\GraphicsMagick-1.1.8&quot;"
+				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.8\Magick++\lib&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.8&quot;"
 				PreprocessorDefinitions="XP_WIN;XP_WIN32;NDEBUG;WIN32;_CONSOLE;_VISUALC_;NeedFunctionPrototypes;_MAGICKMOD_;_LIB;NEED_SOCKETS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -150,7 +150,7 @@
 				AdditionalDependencies="CORE_RL_Magick++_.lib CORE_RL_bzlib_.lib CORE_RL_coders_.lib CORE_RL_filters_.lib CORE_RL_jbig_.lib CORE_RL_jp2_.lib CORE_RL_jpeg_.lib CORE_RL_lcms_.lib CORE_RL_libxml_.lib CORE_RL_magick_.lib CORE_RL_png_.lib CORE_RL_tiff_.lib CORE_RL_ttf_.lib CORE_RL_wand_.lib CORE_RL_wmf_.lib CORE_RL_xlib_.lib CORE_RL_zlib_.lib X11.lib Xext.lib Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib"
 				OutputFile="$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\GraphicsMagick-1.1.8\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.8\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

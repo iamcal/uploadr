@@ -1,5 +1,5 @@
 #include "gm_impl.h"
-#include <Magick++.h>
+#include "Magick++.h"
 #include <stdlib.h>
 #include <iostream>
 #include <sstream>
@@ -78,7 +78,7 @@ string * find_path(string * path_str, const char * extra) {
 			dir_str->insert(dir_str->rfind('.'), index.str());
 		}
 		return dir_str;
-	} catch (Exception & e) {
+	} catch (Exception &) {
 		delete dir_str;
 		return 0;
 	}
