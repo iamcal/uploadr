@@ -86,6 +86,7 @@ var photos = {
 		}
 
 		// For each selected image, show the loading spinner and dispatch the rotate job
+		document.getElementById('button_upload').disabled = true;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[s[i]];
 			var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
@@ -96,6 +97,7 @@ var photos = {
 			threads.worker.dispatch(new Rotate(p.id, degrees, uploadr.conf.thumbSize,
 				p.path), threads.worker.DISPATCH_NORMAL);
 		}
+		threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
 
 	},
 
@@ -108,11 +110,11 @@ var photos = {
 		for each (var p in photos.list) {
 			if (null != p) {
 				if (null != settings.resize && -1 != settings.resize &&
-					p.square > settings.resize) {
+					(p.width > settings.resize || p.width > settings.resize)) {
 					resizing = true;
 					threads.worker.dispatch(new Resize(p.id, settings.resize, p.path),
 						threads.worker.DISPATCH_NORMAL);
-				} else if (uploadr.fsize(p.path) > users.filesize && p.square > settings.resize) {
+				} else if (uploadr.fsize(p.path) > users.filesize) {
 					resizing = true;
 					threads.worker.dispatch(new Resize(p.id, -1, p.path),
 						threads.worker.DISPATCH_NORMAL);
@@ -179,7 +181,8 @@ var Photo = function(id, path) {
 	} else {
 		this.filename = filename[1];
 	}
-	this.square = 0;
+	this.width = 0;
+	this.height = 0;
 	this.title = '';
 	this.description = '';
 	this.tags = '';

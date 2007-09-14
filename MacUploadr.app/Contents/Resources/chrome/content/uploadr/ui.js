@@ -293,7 +293,7 @@ var exit = function() {
 	try {
 		var profile = Cc['@mozilla.org/file/directory_service;1'].getService(
 			Ci.nsIProperties).get('ProfD', Ci.nsIFile);
-		profile.append('thumbs');
+		profile.append('images');
 		profile.remove(true);
 	} catch (err) {}
 
@@ -301,7 +301,6 @@ var exit = function() {
 	var e = Cc['@mozilla.org/toolkit/app-startup;1'].getService(
 		Components.interfaces.nsIAppStartup);
 	e.quit(Ci.nsIAppStartup.eForceQuit);
-	return true;
 
 };
 

@@ -44,8 +44,8 @@ ThumbCallback.prototype = {
 		try {
 
 			// Parse the returned string
-			//   The format is <square>x<date_taken>x<width>x<height><thumb_path>
-			var thumb = this.result.match(/^([0-9]+)x(.*)x([0-9]+)x([0-9]+)(.+)$/);
+			//   <orientation>x<width>x<height>x<date_taken>x<thumb_width>x<thumb_height><thumb_path>
+			var thumb = this.result.match(/^(.*)x([0-9]+)x([0-9]+)x(.*)x([0-9]+)x([0-9]+)(.+)$/);
 
 			// Get this photo from the DOM and remove its loading class
 			var img = document.getElementById('photo' + this.id).getElementsByTagName('img')[0];
@@ -62,11 +62,13 @@ ThumbCallback.prototype = {
 
 			// If successful, replace with the thumb and update the Photo object
 			else {
-				photos.list[this.id].square = thumb[1];
-				photos.list[this.id].date_taken = thumb[2];
-				img.setAttribute('width', thumb[3]);
-				img.setAttribute('height', thumb[4]);
-				img.src = 'file://' + thumb[5];
+Components.utils.reportError(parseInt(thumb[1]));
+				photos.list[this.id].width = parseInt(thumb[2]);
+				photos.list[this.id].height = parseInt(thumb[3]);
+				photos.list[this.id].date_taken = thumb[4];
+				img.setAttribute('width', thumb[5]);
+				img.setAttribute('height', thumb[6]);
+				img.src = 'file://' + thumb[7];
 
 				// Check the size of this file if we're logged in
 				if (users.username) {
@@ -109,18 +111,40 @@ Rotate.prototype = {
 		try {
 
 			// Rotate and if successful re-thumb the image
-			var rotate = threads.gm.rotate(this.degrees, this.path);
-			if ('ok' == rotate) {
-				var result = threads.gm.thumb(this.thumbSize, this.path);
+			var result = threads.gm.rotate(this.degrees, this.path);
+
+			// Parse the returned string
+			//   ok<path>
+			var rotate = result.match(/^ok(.*)$/);
+
+			if (null == rotate) {
+				Components.utils.reportError(rotate);
+			} else {
+				threads.main.dispatch(new RotateCallback(this.id, rotate[1]),
+					threads.main.DISPATCH_NORMAL);
+				result = threads.gm.thumb(this.thumbSize, rotate[1]);
 				threads.main.dispatch(new ThumbCallback(this.id, result),
 					threads.main.DISPATCH_NORMAL);
-			} else {
-				Components.utils.reportError(rotate);
 			}
 
 		} catch (err) {
 			Components.utils.reportError(err);
 		}
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+var RotateCallback = function(id, path) {
+	this.id = id;
+	this.path = path;
+};
+RotateCallback.prototype = {
+	run: function() {
+		photos.list[this.id].path = this.path;
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
@@ -233,10 +257,9 @@ Resize.prototype = {
 		try {
 
 			// Resize the image and callback to the UI thread
-			if ('ok' == threads.gm.resize(this.square, this.path)) {
-				threads.main.dispatch(new ResizeCallback(this.id, this.square),
-					threads.main.DISPATCH_NORMAL);
-			}
+			var result = threads.gm.resize(this.square, this.path);
+			threads.main.dispatch(new ResizeCallback(this.id, result),
+				threads.main.DISPATCH_NORMAL);
 
 		} catch (err) {
 			Components.utils.reportError(err);
@@ -249,26 +272,39 @@ Resize.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
-var ResizeCallback = function(id, square) {
+var ResizeCallback = function(id, result) {
 	this.id = id;
-	this.square = square;
+	this.result = result;
 };
 ResizeCallback.prototype = {
 	run: function() {
 		try {
 
-			// Mark this photo's new size and adjust bandwidth meter
-			photos.list[this.id].square = this.square;
-			var size = uploadr.fsize(photos.list[this.id].path);
-			photos.batch_size -= photos.list[this.id].filesize;
-			if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
-				status.set(locale.getString('status.limit'));
-			} else {
-				status.clear();
-			}
-			photos.batch_size += size;
-			free.update();
+			// Parse the returned string
+			//   <width>x<height><path>
+			var resize = this.result.match(/^([0-9]+)x([0-9]+)(.+)$/);
 
+			if (null == resize) {
+				Components.utils.reportError(result);
+			} else {
+
+				// Update photo properties
+				photos.list[this.id].width = resize[1];
+				photos.list[this.id].height = resize[2];
+				photos.list[this.id].path = resize[3];
+
+				// Update bandwidth
+				var size = uploadr.fsize(resize[3]);
+				photos.batch_size -= photos.list[this.id].filesize;
+				if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
+					status.set(locale.getString('status.limit'));
+				} else {
+					status.clear();
+				}
+				photos.batch_size += size;
+				free.update();
+
+			}
 		} catch (err) {
 			Components.utils.reportError(err);
 		}
@@ -280,6 +316,35 @@ ResizeCallback.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
+
+// Job to enable uploads that can follow a bunch of jobs in the queue
+var EnableUpload = function() {
+};
+EnableUpload.prototype = {
+	run: function() {
+		threads.main.dispatch(new EnableUploadCallback(), threads.main.DISPATCH_NORMAL);
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+var EnableUploadCallback = function() {
+};
+EnableUploadCallback.prototype = {
+	run: function() {
+		document.getElementById('button_upload').disabled = false;
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+
 
 // We need a job to retry an upload batch after we finish resizing
 var RetryUpload = function() {
