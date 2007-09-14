@@ -12,6 +12,11 @@
 #include <mach-o/dyld.h>
 #endif
 
+#define round(n) (int)(0 <= (n) ? (n) + 0.5 : (n) - 0.5)
+
+using namespace std;
+using namespace Magick;
+
 // Fake gettimeofday on Windows
 #ifdef XP_WIN
 #include <windows.h>
@@ -52,10 +57,26 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
 #include <sys/time.h>
 #endif
 
-#define round(n) (int)(0 <= (n) ? (n) + 0.5 : (n) - 0.5)
-
-using namespace std;
-using namespace Magick;
+// Cheesy code timing
+struct timeval first;
+struct timeval last;
+void start_timer() {
+	gettimeofday(&first, 0);
+}
+void stop_timer(nsAString & _retval) {
+	gettimeofday(&last, 0);
+	double runtime = ((double)last.tv_sec + (double)last.tv_usec / 1000000) -
+		((double)first.tv_sec + (double)first.tv_usec / 1000000);
+	ostringstream run;
+	run << runtime << ";";
+	string run_str = run.str();
+	char * foo = (char *)run_str.c_str();
+	int i = 0;
+	while (*foo) {
+		_retval.Insert(*foo, i++);
+		++foo;
+	}
+}
 
 // Get the path as a normal std::string
 //   Gotta find a better way to do this
@@ -193,31 +214,18 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		}
 
 		// Orient the image properly and return the orientation
+start_timer();
 		Image img(*path_str);
 		ostringstream out;
-
-		struct timeval first;
-		gettimeofday(&first, 0);
-
+		out << "x"; // THIS IS ONLY FOR THE TIMERS
+stop_timer(_retval);
+start_timer();
 		int orient = base_orient(img);
-
-		struct timeval last;
-		gettimeofday(&last, 0);
-		double runtime = ((double)last.tv_sec + (double)last.tv_usec / 1000000) -
-			((double)first.tv_sec - (double)first.tv_usec / 1000000);
-		ostringstream run;
-		run << runtime << "x";
-		string run_str = run.str();
-		char * foo = (char *)run_str.c_str();
-		int i = 0;
-		while (*foo) {
-			_retval.Insert(*foo, i++);
-			++foo;
-		}
-
+stop_timer(_retval);
 		out << orient << "x";
 
 		// Get the original size
+start_timer();
 		int bw, bh;
 		if (0 < orient) {
 			bw = img.baseColumns();
@@ -226,10 +234,12 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 			bw = img.baseRows();
 			bh = img.baseColumns();
 		}
+stop_timer(_retval);
 		int base = bw > bh ? bw : bh;
 		out << bw << "x" << bh << "x";
 
 		// Get EXIF date taken
+start_timer();
 		string date_taken = img.attribute("EXIF:DateTimeOriginal");
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTimeDigitized");
@@ -237,6 +247,7 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTime");
 		}
+stop_timer(_retval);
 		out << date_taken << "x";
 
 		// Find thumbnail width and height
@@ -253,7 +264,9 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		}
 
 		// Create a new path
+start_timer();
 		thumb_str = find_path(path_str, "-thumb");
+stop_timer(_retval);
 		if (0 == thumb_str) {
 			return NS_ERROR_NULL_POINTER;
 		}
@@ -271,12 +284,21 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		}
 
 		// Create the actual thumbnail
+start_timer();
 		img.scale(dim.str());
+stop_timer(_retval);
+start_timer();
 		img.sharpen(1, sigma);
+stop_timer(_retval);
+start_timer();
 		img.compressType(NoCompression);
+stop_timer(_retval);
+start_timer();
 		img.write(*thumb_str);
+stop_timer(_retval);
 
 		// If all went well, return stuff
+start_timer();
 		string o_str = out.str();
 		delete thumb_str; thumb_str = 0;
 		char * o = (char *)o_str.c_str();
@@ -284,6 +306,7 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 			_retval.Append(*o);
 			++o;
 		}
+stop_timer(_retval);
 
 		return NS_OK;
 	}
