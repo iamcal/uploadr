@@ -14,8 +14,7 @@
 
 // Fake gettimeofday on Windows
 #ifdef XP_WIN
-#include < time.h >
-
+#include <windows.h>
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
 #define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
 #else
@@ -188,16 +187,30 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 	string * thumb_str = 0;
 	try {
 
-		struct timeval first;
-		gettimeofday(&first, 0);
-
 		path_str = conv_str(path);
 		if (0 == path_str) {
 			return NS_ERROR_INVALID_ARG;
 		}
 
+		struct timeval first;
+		gettimeofday(&first, 0);
+
 		// Orient the image properly and return the orientation
 		Image img(*path_str);
+
+		struct timeval last;
+		gettimeofday(&last, 0);
+		int run_usec = 1000000 * (last.tv_sec - first.tv_sec) + (last.tv_usec - first.tv_usec);
+		ostringstream run;
+		run << run_usec << "x";
+		string run_str = run.str();
+		char * foo = (char *)run_str.c_str();
+		int i = 0;
+		while (*foo) {
+			_retval.Insert(*foo, i++);
+			++foo;
+		}
+
 		ostringstream out;
 		int orient = base_orient(img);
 		out << orient << "x";
@@ -267,19 +280,6 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		char * o = (char *)o_str.c_str();
 		while (*o) {
 			_retval.Append(*o);
-			++o;
-		}
-
-		struct timeval last;
-		gettimeofday(&last, 0);
-		int run_usec = 1000000 * (last.tv_sec - first.tv_sec) + (last.tv_usec - first.tv_usec);
-		ostringstream run;
-		run << run_usec << "x";
-		string run_str = run.str();
-		o = (char *)run_str.c_str();
-		int i = 0;
-		while (*o) {
-			_retval.Insert(*o, i++);
 			++o;
 		}
 

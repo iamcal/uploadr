@@ -62,7 +62,7 @@ ThumbCallback.prototype = {
 
 			// If successful, replace with the thumb and update the Photo object
 			else {
-Components.utils.reportError('time: ' + thumb[1] + 'us');
+Components.utils.reportError('time: ' + thumb[1] + 'us (' + this.result + ')');
 //Components.utils.reportError(parseInt(thumb[2]));
 				photos.list[this.id].width = parseInt(thumb[3]);
 				photos.list[this.id].height = parseInt(thumb[4]);
