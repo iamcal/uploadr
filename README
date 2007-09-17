@@ -56,6 +56,8 @@ Studio 7 solution file.  Make the following changes:
   o Change the Runtime Library for the CORE_Magick++ project under
     Configuration Properties > C/C++ > Code Generation to
     "Multi-threaded DLL (/MD)"
+  o Tell all of the CORE_* projects to optimize for speed under
+    Configuration Properties > C/C++ > Optimization
 
 Build it to see where the problems are.  As of 1.1.8, 18 out of 20
 projects build properly.  The two that do not are utilities that are

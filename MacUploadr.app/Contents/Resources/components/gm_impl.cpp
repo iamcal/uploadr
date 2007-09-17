@@ -216,16 +216,16 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		// Orient the image properly and return the orientation
 start_timer();
 		Image img(*path_str);
+stop_timer(_retval);
 		ostringstream out;
 		out << "x"; // THIS IS ONLY FOR THE TIMERS
-stop_timer(_retval);
-start_timer();
+//start_timer();
 		int orient = base_orient(img);
-stop_timer(_retval);
+//stop_timer(_retval);
 		out << orient << "x";
 
 		// Get the original size
-start_timer();
+//start_timer();
 		int bw, bh;
 		if (0 < orient) {
 			bw = img.baseColumns();
@@ -234,12 +234,12 @@ start_timer();
 			bw = img.baseRows();
 			bh = img.baseColumns();
 		}
-stop_timer(_retval);
+//stop_timer(_retval);
 		int base = bw > bh ? bw : bh;
 		out << bw << "x" << bh << "x";
 
 		// Get EXIF date taken
-start_timer();
+//start_timer();
 		string date_taken = img.attribute("EXIF:DateTimeOriginal");
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTimeDigitized");
@@ -247,7 +247,7 @@ start_timer();
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTime");
 		}
-stop_timer(_retval);
+//stop_timer(_retval);
 		out << date_taken << "x";
 
 		// Find thumbnail width and height
@@ -264,9 +264,9 @@ stop_timer(_retval);
 		}
 
 		// Create a new path
-start_timer();
+//start_timer();
 		thumb_str = find_path(path_str, "-thumb");
-stop_timer(_retval);
+//stop_timer(_retval);
 		if (0 == thumb_str) {
 			return NS_ERROR_NULL_POINTER;
 		}
@@ -284,21 +284,21 @@ stop_timer(_retval);
 		}
 
 		// Create the actual thumbnail
-start_timer();
+//start_timer();
 		img.scale(dim.str());
-stop_timer(_retval);
-start_timer();
+//stop_timer(_retval);
+//start_timer();
 		img.sharpen(1, sigma);
-stop_timer(_retval);
-start_timer();
+//stop_timer(_retval);
+//start_timer();
 		img.compressType(NoCompression);
-stop_timer(_retval);
-start_timer();
+//stop_timer(_retval);
+//start_timer();
 		img.write(*thumb_str);
-stop_timer(_retval);
+//stop_timer(_retval);
 
 		// If all went well, return stuff
-start_timer();
+//start_timer();
 		string o_str = out.str();
 		delete thumb_str; thumb_str = 0;
 		char * o = (char *)o_str.c_str();
@@ -306,7 +306,7 @@ start_timer();
 			_retval.Append(*o);
 			++o;
 		}
-stop_timer(_retval);
+//stop_timer(_retval);
 
 		return NS_OK;
 	}
