@@ -73,6 +73,11 @@ Mac
 First make sure you install libjpeg et. al. using MacPorts, then run
 these commands.
 
+Because of dynamic/static linker weirdness, to build GraphicsMagick,
+make sure libjpeg.dylib is available in /opt/local/lib.  To build the
+XPCOM component, move this file to /opt/local/lib/libjpeg.dylib.sav
+(or somewhere else, just so it is away from the expected location).
+
 ./configure LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
 CPPFLAGS="-I/opt/local/include -I/usr/local/include" --without-perl \
 --disable-installed
@@ -84,7 +89,8 @@ Linux
 Building on Ubuntu is identical to the Mac but doesn't require the
 inclusion of /opt directories.
 
-./configure --without-perl && make && sudo make install
+./configure --without-perl --disable-installed
+make && sudo make install
 
 Currently this will build in Linux but will not work.
 
