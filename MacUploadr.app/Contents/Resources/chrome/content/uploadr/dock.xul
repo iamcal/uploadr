@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+id="dock" title="" width="0" height="0">
+	<script src="chrome://global/content/nsUserSettings.js" />
+	<script><![CDATA[
+Components.utils.reportError('dock.xul: ' + window.arguments);
+		window.addEventListener('load', function() {
+			if (window.arguments && window.arguments[0]){
+				const Cc = Components.classes;
+				const Ci = Components.interfaces;
+
+				// Get the main window
+				var singleton = nsPreferences.copyUnicharPref('toolkit.singletonWindowType');
+				var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(
+					Ci.nsIWindowMediator);
+				var win = windowMediator.getMostRecentWindow(singleton);
+
+				// Add this photo, converting file:// URL to a native path
+				if (win) {
+					win._photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
+						Ci.nsIFileProtocolHandler).getFileFromURLSpec(window.arguments[0]).path);
+					win._threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+					window.close();
+					win.focus();
+				}
+
+			}
+		}, false);
+	]]></script>
+</window>

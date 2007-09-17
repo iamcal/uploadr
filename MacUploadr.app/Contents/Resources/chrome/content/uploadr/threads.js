@@ -9,6 +9,9 @@ var threads = {
 
 };
 
+// Make this available to child windows like photos
+window._threads = threads;
+
 // Thumbnail thread wrapper
 var Thumb = function(id, thumbSize, path) {
 	this.id = id;

@@ -5,13 +5,33 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>xulrunner</string>
+	<string>foo.sh</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>jpeg</string>
+				<string>jpg</string>
+				<string>png</string>
+				<string>gif</string>
+			</array>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>GIFf</string>
+				<string>JPEG</string>
+				<string>PNGf</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+		</dict>
+	</array>
 	<key>CFBundleGetInfoString</key>
-	<string>3.0</string>
+	<string>Flickr Uploadr 3.0, © Yahoo!, Inc.</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.flickr.uploadr</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>3.0</string>
+	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>Flickr Uploadr</string>
 	<key>CFBundlePackageType</key>
@@ -19,7 +39,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>3.0</string>
 	<key>CFBundleSignature</key>
-	<string>com.flickr.uploadr</string>
+	<string>FLUP</string>
 	<key>CFBundleIconFile</key>
 	<string>icons.icns</string>
 	<key>CFBundleURLTypes</key>

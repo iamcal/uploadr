@@ -6,10 +6,10 @@
 <?xul-overlay href="chrome://uploadr/content/users.xul"?>
 <?xul-overlay href="chrome://uploadr/content/settings.xul"?>
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
-<window id="main" title="&title;" width="960" height="700"
+<window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-xmlns:html="http://www.w3.org/1999/xhtml" onload="users.load();" onclose="return exit();"
-persist="screenX screenY width height sizemode">
+xmlns:html="http://www.w3.org/1999/xhtml" onload="users.load(); uploadr.drag();"
+onclose="return exit();" persist="screenX screenY width height sizemode">
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
 	</stringbundleset>

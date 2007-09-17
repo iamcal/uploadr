@@ -15,6 +15,20 @@ var uploadr = {
 		thumbSize: 100
 	},
 
+	// Handle files dragged on startup
+	drag: function() {
+		Components.utils.reportError('uploadr.drag(): ' + window.arguments[0]);
+		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
+		var ii = cl.length;
+		for (var i = 0; i < ii; ++i) {
+			if ('-url' == cl.getArgument(i)) {
+				photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
+					Ci.nsIFileProtocolHandler).getFileFromURLSpec(cl.getArgument(++i)).path);
+			}
+		}
+		threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+	},
+
 	// Profile file IO
 	fread: function(name) {
 		try {

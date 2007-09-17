@@ -44,6 +44,7 @@ var photos = {
 		}
 	},
 	_add: function(path) {
+Components.utils.reportError(path);
 
 		// Add the original image to the list and set our status
 		var id = photos.list.length;
@@ -169,6 +170,10 @@ var photos = {
 	}
 
 };
+
+// Make the photos object visible to child windows
+//   This makes drag-to-dock possible
+window._photos = photos;
 
 // Photo properties
 var Photo = function(id, path) {
