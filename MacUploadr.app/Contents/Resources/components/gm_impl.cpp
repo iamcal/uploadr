@@ -185,24 +185,7 @@ CGM::CGM() {
 CGM::~CGM() {
 }
 
-// Setting and getting my name
-//   Required?
-/*
-NS_IMETHODIMP CGM::GetName(nsAString & aName) {
-	aName.Assign(mName);
-	return NS_OK;
-}
-NS_IMETHODIMP CGM::SetName(const nsAString & aName) {
-	mName.Assign(aName);
-	return NS_OK;
-}
-*/
-
-//
-// GM interface
-//
-
-// Create a thumbnail of the image, preserving aspect ratio
+// Create a thumbnail of the image, preserving aspect ratio and store it to the profile
 NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _retval) {
 	string * path_str = 0;
 	string * thumb_str = 0;
@@ -298,7 +281,6 @@ stop_timer(_retval);
 //stop_timer(_retval);
 
 		// If all went well, return stuff
-//start_timer();
 		string o_str = out.str();
 		delete thumb_str; thumb_str = 0;
 		char * o = (char *)o_str.c_str();
@@ -306,7 +288,6 @@ stop_timer(_retval);
 			_retval.Append(*o);
 			++o;
 		}
-//stop_timer(_retval);
 
 		return NS_OK;
 	}
@@ -325,7 +306,7 @@ stop_timer(_retval);
 
 }
 
-// Create a thumbnail of the image, preserving aspect ratio
+// Rotate an image, preserving size and store it to the profile
 NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) {
 	string * path_str = 0;
 	string * rotate_str = 0;
@@ -384,6 +365,7 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 
 }
 
+// Resize an image and store it to the profile
 NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _retval) {
 	string * path_str = 0;
 	string * resize_str = 0;
