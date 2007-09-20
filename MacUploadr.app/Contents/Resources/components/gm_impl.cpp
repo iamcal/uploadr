@@ -1,5 +1,13 @@
 #include "gm_impl.h"
+
+// GraphicsMagick
 #include "Magick++.h"
+
+// Exiv2
+#include "image.hpp"
+#include "exif.hpp"
+#include "iptc.hpp"
+
 #include <stdlib.h>
 #include <iostream>
 #include <sstream>
@@ -15,7 +23,6 @@
 #define round(n) (int)(0 <= (n) ? (n) + 0.5 : (n) - 0.5)
 
 using namespace std;
-using namespace Magick;
 
 // Fake gettimeofday on Windows
 #ifdef XP_WIN
@@ -138,37 +145,94 @@ string * find_path(string * path_str, const char * extra) {
 			dir_str->insert(dir_str->rfind('.'), index.str());
 		}
 		return dir_str;
-	} catch (Exception &) {
+	} catch (Magick::Exception &) {
 		delete dir_str;
 		return 0;
 	}
 }
 
 // Orient an image's pixels as EXIF instructs
-int base_orient(Image & img) {
+int base_orient(Magick::Image & img) {
 	string orientation = img.attribute("EXIF:Orientation");
-	int orient = (unsigned int)*orientation.c_str() - 0x30;
+	int orient = (int)*orientation.c_str() - 0x30;
 	if (1 > orient || 8 < orient) {
 		orient = 1;
 	}
 	if (2 == orient) {
 		img.flop();
 	} else if (3 == orient) {
-		img.rotate(180);
+		img.rotate(180.0);
 	} else if (4 == orient) {
 		img.flip();
 	} else if (5 == orient) {
-		img.flop();
-		img.rotate(-90);
-	} else if (6 == orient) {
-		img.rotate(90);
-	} else if (7 == orient) {
+		img.rotate(90.0);
 		img.flip();
-		img.rotate(90);
+	} else if (6 == orient) {
+		img.rotate(90.0);
+	} else if (7 == orient) {
+		img.rotate(270.0);
+		img.flip();
 	} else if (8 == orient) {
-		img.rotate(-90);
+		img.rotate(270.0);
 	}
-	return orient * (orient >= 5 ? -1 : 1);
+	return orient;
+}
+
+// Update the image width and height in EXIF
+void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
+
+	// Keys to search
+	char * keys[2][4] = {
+
+		// Width
+		{
+			"Exif.Photo.PixelXDimension", // Only for compressed images
+			"Exif.Image.ImageWidth", // From TIFF-land
+			"Exif.Iop.RelatedImageWidth",
+			0
+		},
+
+		// Height
+		{
+			"Exif.Photo.PixelYDimension", // Only for compressed images
+			"Exif.Image.ImageLength", // From TIFF-land
+			"Exif.Iop.RelatedImageLength",
+			0
+		}
+
+	};
+
+	// Once for width, once for height
+	int values[2] = { w, h };
+	for (unsigned int i = 0; i < 2; ++i) {
+
+		// For each key we have, if it's set, override it
+		unsigned int j = 0;
+		unsigned int done = 0;
+		while (0 != keys[i][j]) {
+			string str = string(keys[i][j]);
+			Exiv2::ExifKey key = Exiv2::ExifKey(str);
+			Exiv2::ExifData::iterator it = exif.findKey(key);
+			if (exif.end() != it) {
+//				if (done) {
+					exif.erase(it);
+//				} else {
+//					exif[keys[i][j]] = uint16_t(values[i]);
+//					done = 1;
+//				}
+			}
+			++j;
+		}
+
+		// As a last resort, set the first key
+		if (!done) {
+			exif[keys[i][0]] = uint16_t(values[i]);
+		}
+
+	}
+}
+
+void exif_update_orient(Exiv2::ExifData & exif, int orient) {
 }
 
 NS_IMPL_ISUPPORTS1(CGM, IGM)
@@ -178,7 +242,7 @@ CGM::CGM() {
 	char path[1024];
 	unsigned int size = 1024;
 	_NSGetExecutablePath(&path[0], &size);
-	InitializeMagick(&path[0]);
+	Magick::InitializeMagick(&path[0]);
 #endif
 }
 
@@ -198,7 +262,7 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 
 		// Orient the image properly and return the orientation
 start_timer();
-		Image img(*path_str);
+		Magick::Image img(*path_str);
 stop_timer(_retval);
 		ostringstream out;
 		out << "x"; // THIS IS ONLY FOR THE TIMERS
@@ -210,7 +274,7 @@ stop_timer(_retval);
 		// Get the original size
 //start_timer();
 		int bw, bh;
-		if (0 < orient) {
+		if (5 > orient) {
 			bw = img.baseColumns();
 			bh = img.baseRows();
 		} else {
@@ -274,7 +338,7 @@ stop_timer(_retval);
 		img.sharpen(1, sigma);
 //stop_timer(_retval);
 //start_timer();
-		img.compressType(NoCompression);
+		img.compressType(Magick::NoCompression);
 //stop_timer(_retval);
 //start_timer();
 		img.write(*thumb_str);
@@ -293,7 +357,7 @@ stop_timer(_retval);
 	}
 
 	// Otherwise yell about it
-	catch (Exception & e) {
+	catch (Magick::Exception & e) {
 		delete path_str;
 		delete thumb_str;
 		char * o = (char *)e.what();
@@ -332,10 +396,10 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 
 		// Rotate the image
 		//   TODO: Save EXIF and IPTC profiles
-		Image img(*path_str);
+		Magick::Image img(*path_str);
 		base_orient(img);
 		img.rotate(degrees);
-		img.compressType(NoCompression);
+		img.compressType(Magick::NoCompression);
 		img.write(*rotate_str);
 		delete path_str; path_str = 0;
 
@@ -352,7 +416,7 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 	}
 
 	// Otherwise yell about it
-	catch (Exception & e) {
+	catch (Magick::Exception & e) {
 		delete path_str;
 		delete rotate_str;
 		char * o = (char *)e.what();
@@ -375,8 +439,14 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 			return NS_ERROR_INVALID_ARG;
 		}
 
+		// Yank out all the metadata we want to save
+		Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+		meta_r->readMetadata();
+		Exiv2::ExifData &exif = meta_r->exifData();
+		Exiv2::IptcData &iptc = meta_r->iptcData();
+
 		// Open the image
-		Image img(*path_str);
+		Magick::Image img(*path_str);
 		int bw = img.baseColumns(), bh = img.baseRows();
 		int base = bw > bh ? bw : bh;
 
@@ -404,10 +474,14 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 		ostringstream out;
 		if (bw > bh) {
 			r = (float)bh * (float)square / (float)bw;
-			out << square << "x" << round(r);
+			r = round(r);
+			exif_update_dim(exif, square, r);
+			out << square << "x" << r;
 		} else {
 			r = (float)bw * (float)square / (float)bh;
-			out << round(r) << "x" << square;
+			r = round(r);
+			exif_update_dim(exif, r, square);
+			out << r << "x" << square;
 		}
 		string dim(out.str());
 
@@ -427,8 +501,14 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 		//   TODO: Save EXIF and IPTC profiles
 		img.scale(dim);
 		img.sharpen(1, sigma);
-		img.compressType(NoCompression);
+		img.compressType(Magick::NoCompression);
 		img.write(*resize_str);
+
+		// Put saved metadata into the resized image
+		Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*resize_str);
+		meta_w->setExifData(exif);
+		meta_w->setIptcData(iptc);
+		meta_w->writeMetadata();
 
 		// If all went well, return stuff
 		string o_str = out.str();
@@ -442,7 +522,7 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 	}
 
 	// Otherwise yell about it
-	catch (Exception & e) {
+	catch (Magick::Exception & e) {
 		delete path_str;
 		delete resize_str;
 		char * o = (char *)e.what();

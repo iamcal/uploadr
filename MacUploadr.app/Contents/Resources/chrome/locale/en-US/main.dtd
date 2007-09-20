@@ -60,6 +60,9 @@
 <!ENTITY meta.tags "Tags:">
 <!ENTITY meta.more "More">
 <!ENTITY meta.save "Save">
+<!ENTITY meta.leave_unchanged "Leave unchanged">
+<!ENTITY meta.privacy "Privacy">
+<!ENTITY meta.melons "Content type and safety level">
 
 <!ENTITY dialog.bandwidth "Available bandwidth exceeded!">
 <!ENTITY dialog.bandwidth.text "You're out of bandwidth for this month.  You can either switch to a different Flickr account to keep uploading or upgrade to a Pro account to get unlimited uploads.  If you upgrade to a Pro account you'll have to restart Flickr Uploadr.">

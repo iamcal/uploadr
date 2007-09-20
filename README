@@ -98,6 +98,22 @@ Currently this will build in Linux but will not work.
 
 
 
+EXIV2
+------------------------------------------------------------------------
+
+Windows
+-------
+
+xxx
+
+Mac / Linux
+-----------
+
+./configure --enable-commercial --disable-shared
+make && sudo make install
+
+
+
 Packaging for deployment
 ------------------------------------------------------------------------
 

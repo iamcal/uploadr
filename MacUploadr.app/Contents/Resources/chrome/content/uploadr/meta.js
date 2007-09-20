@@ -5,29 +5,31 @@ var meta = {
 
 		// Load the defaults for a partial batch
 		if (null == id) {
-			document.getElementById('m_title').value = '';
-			document.getElementById('m_description').value = '';
-			document.getElementById('m_tags').value = '';
-			var is_public = document.getElementById('m_is_public');
+			document.getElementById('batch_title').value = '';
+			document.getElementById('batch_description').value = '';
+			document.getElementById('batch_tags').value = '';
+			document.getElementById('batch_is_public_unchanged').checked = true;
+			var is_public = document.getElementById('batch_is_public');
 			is_public.value = settings.is_public;
 			var dis = 1 == parseInt(is_public.value);
-			var is_friend = document.getElementById('m_is_friend');
+			var is_friend = document.getElementById('batch_is_friend');
 			is_friend.checked = 1 == settings.is_friend;
-			document.getElementById('m_is_friend').disabled = dis;
-			var is_family = document.getElementById('m_is_family');
+			document.getElementById('batch_is_friend').disabled = dis;
+			var is_family = document.getElementById('batch_is_family');
 			is_family.checked = 1 == settings.is_family;
 			is_family.disabled = dis;
-			document.getElementById('m_content_type').selectedIndex = settings.content_type - 1;
-			document.getElementById('m_hidden').selectedIndex = settings.hidden - 1;
-			document.getElementById('m_safety_level').selectedIndex = settings.safety_level - 1;
+			document.getElementById('batch_content_type_unchanged').checked = true;
+			document.getElementById('batch_content_type').selectedIndex = settings.content_type - 1;
+			document.getElementById('batch_hidden_unchanged').checked = true;
+			document.getElementById('batch_hidden').selectedIndex = settings.hidden - 1;
+			document.getElementById('batch_safety_level_unchanged').checked = true;
+			document.getElementById('batch_safety_level').selectedIndex = settings.safety_level - 1;
 		}
 
 		// Load the values from a specific photo
 		else {
 			var p = photos.list[id];
 			var img = document.getElementById('photo' + id).getElementsByTagName('img')[0];
-			document.getElementById('meta_primary').style.display = '-moz-box';
-			document.getElementById('meta_secondary').style.display = 'none';
 			var meta_div = document.getElementById('meta_div');
 			while (meta_div.hasChildNodes()) {
 				meta_div.removeChild(meta_div.firstChild);
@@ -41,15 +43,15 @@ var meta = {
 			meta_img.setAttribute('height', h);
 			meta_img.src = img.src;
 			meta_div.appendChild(meta_img);
-			document.getElementById('p_title').value = p.title;
-			document.getElementById('p_description').value = p.description;
-			document.getElementById('p_tags').value = p.tags;
-			document.getElementById('p_is_public').value = p.is_public;
-			document.getElementById('p_is_friend').checked = 1 == p.is_friend;
-			document.getElementById('p_is_family').checked = 1 == p.is_family;
-			document.getElementById('p_content_type').selectedIndex = p.content_type - 1;
-			document.getElementById('p_hidden').selectedIndex = p.hidden - 1;
-			document.getElementById('p_safety_level').selectedIndex = p.safety_level - 1;
+			document.getElementById('single_title').value = p.title;
+			document.getElementById('single_description').value = p.description;
+			document.getElementById('single_tags').value = p.tags;
+			document.getElementById('single_is_public').value = p.is_public;
+			document.getElementById('single_is_friend').checked = 1 == p.is_friend;
+			document.getElementById('single_is_family').checked = 1 == p.is_family;
+			document.getElementById('single_content_type').selectedIndex = p.content_type - 1;
+			document.getElementById('single_hidden').selectedIndex = p.hidden - 1;
+			document.getElementById('single_safety_level').selectedIndex = p.safety_level - 1;
 		}
 
 	},
@@ -64,26 +66,38 @@ var meta = {
 
 			var ii = photos.selected.length;
 			for (var i = 0; i < ii; ++i) {
-
-				// Overwrite most stuff
 				var p = photos.list[photos.selected[i]];
-				var title = document.getElementById('m_title').value;
+
+				// Overwrite title if one is given
+				var title = document.getElementById('batch_title').value;
 				if ('' != title) {
 					p.title = title;
 				}
-				var description = document.getElementById('m_description').value;
+
+				// Append description if one is given
+				var description = document.getElementById('batch_description').value;
 				if ('' != description) {
 					p.description += ('' == p.description ? '' : '\n\n') + description;
 				}
-				p.is_public = parseInt(document.getElementById('m_is_public').value);
-				p.is_friend = document.getElementById('m_is_friend').checked ? 1 : 0;
-				p.is_family = document.getElementById('m_is_family').checked ? 1 : 0;
-				p.content_type = document.getElementById('m_content_type').selectedIndex + 1;
-				p.hidden = document.getElementById('m_hidden').selectedIndex + 1;
-				p.safety_level = document.getElementById('m_safety_level').selectedIndex + 1;
 
-				// But tags are the special case, we append, but smartly to remove duplicates
-				p.tags = meta.tags(p.tags + ' ' + document.getElementById('m_tags').value);
+				// Append tags, but then parse and remove duplicates
+				p.tags = meta.tags(p.tags + ' ' + document.getElementById('batch_tags').value);
+
+				// Overwrite privacy, content type, hidden and safety level if they changed
+				if (!document.getElementById('batch_is_public_unchanged').checked) {
+					p.is_public = parseInt(document.getElementById('batch_is_public').value);
+					p.is_friend = document.getElementById('batch_is_friend').checked ? 1 : 0;
+					p.is_family = document.getElementById('batch_is_family').checked ? 1 : 0;
+				}
+				if (!document.getElementById('batch_content_type_unchanged').checked) {
+					p.content_type = document.getElementById('batch_content_type').selectedIndex + 1;
+				}
+				if (!document.getElementById('batch_hidden_unchanged').checked) {
+					p.hidden = document.getElementById('batch_hidden').selectedIndex + 1;
+				}
+				if (!document.getElementById('batch_safety_level_unchanged').checked) {
+					p.safety_level = document.getElementById('batch_safety_level').selectedIndex + 1;
+				}
 
 			}
 			meta.load();
@@ -92,62 +106,62 @@ var meta = {
 		// Save a single photo
 		else {
 			var p = photos.list[id];
-			p.title = document.getElementById('p_title').value;
-			p.description = document.getElementById('p_description').value;
-			p.tags = document.getElementById('p_tags').value;
-			p.is_public = parseInt(document.getElementById('p_is_public').value);
-			p.is_friend = document.getElementById('p_is_friend').checked ? 1 : 0;
-			p.is_family = document.getElementById('p_is_family').checked ? 1 : 0;
-			p.content_type = document.getElementById('p_content_type').selectedIndex + 1;
-			p.hidden = document.getElementById('p_hidden').selectedIndex + 1;
-			p.safety_level = document.getElementById('p_safety_level').selectedIndex + 1;
+			p.title = document.getElementById('single_title').value;
+			p.description = document.getElementById('single_description').value;
+			p.tags = document.getElementById('single_tags').value;
+			p.is_public = parseInt(document.getElementById('single_is_public').value);
+			p.is_friend = document.getElementById('single_is_friend').checked ? 1 : 0;
+			p.is_family = document.getElementById('single_is_family').checked ? 1 : 0;
+			p.content_type = document.getElementById('single_content_type').selectedIndex + 1;
+			p.hidden = document.getElementById('single_hidden').selectedIndex + 1;
+			p.safety_level = document.getElementById('single_safety_level').selectedIndex + 1;
 		}
 
 	},
 
 	// Enable the right-side metadata column on the photos page
 	enable: function() {
-		var is_public = document.getElementById('p_is_public');
+		var is_public = document.getElementById('single_is_public');
 		is_public.disabled = false;
 		var dis = 1 == parseInt(is_public.value);
-		document.getElementById('p_is_friend').disabled = dis;
-		document.getElementById('p_is_family').disabled = dis;
+		document.getElementById('single_is_friend').disabled = dis;
+		document.getElementById('single_is_family').disabled = dis;
 		document.getElementById('meta').style.display = '-moz-box';
-		document.getElementById('partial_meta').style.display = 'none';
+		document.getElementById('meta_privacy').style.display = 'none';
+		document.getElementById('meta_melons').style.display = 'none';
+		document.getElementById('batch_meta').style.display = 'none';
 		document.getElementById('no_meta').style.display = 'none';
 	},
 
-	partial: function() {
+	batch: function() {
 		meta.load();
-		document.getElementById('m_prompt').firstChild.nodeValue =
-			locale.getFormattedString('meta.partial.prompt', [photos.selected.length]);
+		document.getElementById('batch_prompt').firstChild.nodeValue =
+			locale.getFormattedString('meta.batch.prompt', [photos.selected.length]);
 		document.getElementById('meta').style.display = 'none';
-		document.getElementById('partial_meta').style.display = '-moz-box';
+		document.getElementById('batch_meta').style.display = '-moz-box';
+		document.getElementById('batch_meta_privacy').style.display = 'none';
+		document.getElementById('batch_meta_melons').style.display = 'none';
 		document.getElementById('no_meta').style.display = 'none';
 	},
 
 	// Disable the right-side metadata column on the photos page
 	disable: function() {
 		document.getElementById('meta').style.display = 'none';
-		document.getElementById('partial_meta').style.display = 'none';
+		document.getElementById('batch_meta').style.display = 'none';
 		document.getElementById('no_meta').style.display = '-moz-box';
 	},
 
 	// If a user leaves a partial batch before committing, warn them
 	abandon: function() {
-		if ('-moz-box' == document.getElementById('partial_meta').style.display &&
+		if ('-moz-box' == document.getElementById('batch_meta').style.display &&
 			1 < photos.selected.length && (
-				'' != document.getElementById('m_title').value ||
-				'' != document.getElementById('m_description').value ||
-				'' != document.getElementById('m_tags').value ||
-				settings.is_public != parseInt(document.getElementById('m_is_public').value) ||
-				settings.is_friend != document.getElementById('m_is_friend').checked ? 1 : 0 ||
-				settings.is_family != document.getElementById('m_is_family').checked ? 1 : 0 ||
-				settings.content_type !=
-					document.getElementById('m_content_type').selectedIndex + 1 ||
-				settings.hidden != document.getElementById('m_hidden').selectedIndex + 1 ||
-				settings.safety_level !=
-					document.getElementById('m_safety_level').selectedIndex + 1
+				'' != document.getElementById('batch_title').value ||
+				'' != document.getElementById('batch_description').value ||
+				'' != document.getElementById('batch_tags').value ||
+				!document.getElementById('batch_is_public_unchanged').checked ||
+				!document.getElementById('batch_content_type_unchanged').checked ||
+				!document.getElementById('batch_hidden_unchanged').checked ||
+				!document.getElementById('batch_safety_level_unchanged').checked
 			)) {
 			if (confirm(locale.getString('meta.abandon'), locale.getString('meta.abandon.title'))) {
 				meta.save();

@@ -24,27 +24,38 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			</vbox>
 		</vbox>
 		<vbox id="meta">
-			<html:div id="meta_div"></html:div>
-			<vbox id="meta_primary">
-				<label control="p_title" value="&meta.title;" />
-				<textbox id="p_title" />
-				<label control="p_description" value="&meta.description;" />
-				<textbox id="p_description" multiline="true" rows="2" />
-				<label control="p_tags" value="&meta.tags;" />
-				<textbox id="p_tags" />
-				<html:p> </html:p>
-				<label control="p_is_public" value="&settings.privacy.who;" />
-				<radiogroup id="p_is_public" value="1"
+			<hbox>
+				<html:div id="meta_div"></html:div>
+				<vbox>
+					<label id="meta_dim" value="dim" />
+					<label id="meta_size" value="size" />
+				</vbox>
+			</hbox>
+			<label control="single_title" value="&meta.title;" />
+			<textbox id="single_title" />
+			<label control="single_description" value="&meta.description;" />
+			<textbox id="single_description" multiline="true" rows="2" />
+			<label control="single_tags" value="&meta.tags;" />
+			<textbox id="single_tags" />
+			<html:p> </html:p>
+			<label id="batch_meta_privacy_link" value="&meta.privacy;"
+			onclick="events.photos.privacy();" />
+			<vbox id="meta_privacy">
+				<label control="single_is_public" value="&settings.privacy.who;" />
+				<radiogroup id="single_is_public" value="1"
 				oncommand="events.photos.is_public(this.value);">
 					<radio value="0" label="&settings.privacy.private;" />
-						<checkbox id="p_is_friend" label="&settings.privacy.friend;" />
-						<checkbox id="p_is_family" label="&settings.privacy.family;" />
+						<checkbox id="single_is_friend" label="&settings.privacy.friend;" />
+						<checkbox id="single_is_family" label="&settings.privacy.family;" />
 					<radio value="1" label="&settings.privacy.public;" />
 				</radiogroup>
 			</vbox>
-			<vbox id="meta_secondary">
-				<label control="p_content_type" value="&settings.content_type;" />
-				<menulist id="p_content_type">
+			<html:p> </html:p>
+			<label id="batch_meta_melons_link" value="&meta.melons;"
+			onclick="events.photos.melons();" />
+			<vbox id="meta_melons">
+				<label control="single_content_type" value="&settings.content_type;" />
+				<menulist id="single_content_type">
 					<menupopup>
 						<menuitem value="1" label="&settings.content_type.photo;"
 						selected="true" />
@@ -52,16 +63,82 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<menuitem value="3" label="&settings.content_type.other;" />
 					</menupopup>
 				</menulist>
-				<label control="p_hidden" value="&settings.hidden;" />
-				<menulist id="p_hidden">
+				<label control="single_hidden" value="&settings.hidden;" />
+				<menulist id="single_hidden">
 					<menupopup>
 						<menuitem value="1" label="&settings.hidden.no;"
 						selected="true" />
 						<menuitem value="2" label="&settings.hidden.yes;" />
 					</menupopup>
 				</menulist>
-				<label control="p_safety_level" value="&settings.safety_level;" />
-				<menulist id="p_safety_level">
+				<label control="single_safety_level" value="&settings.safety_level;" />
+				<menulist id="single_safety_level">
+					<menupopup>
+						<menuitem value="1" label="&settings.safety_level.safe;"
+						selected="true" />
+						<menuitem value="2" label="&settings.safety_level.moderate;" />
+						<menuitem value="3" label="&settings.safety_level.restricted;" />
+					</menupopup>
+				</menulist>
+			</vbox>
+		</vbox>
+		<vbox id="batch_meta">
+			<html:div class="status"><html:p id="batch_prompt"> </html:p></html:div>
+			<label control="batch_title" value="&meta.title;" />
+			<textbox id="batch_title" />
+			<label control="batch_description" value="&meta.description;" />
+			<textbox id="batch_description" multiline="true" rows="2" />
+			<label control="batch_tags" value="&meta.tags;" />
+			<textbox id="batch_tags" />
+			<html:p> </html:p>
+			<label id="batch_meta_privacy_link" value="&meta.privacy;"
+			onclick="events.photos.privacy();" />
+			<vbox id="batch_meta_privacy">
+				<label control="batch_is_public" value="&settings.privacy.who;" />
+				<checkbox id="batch_is_public_unchanged" label="&meta.leave_unchanged;"
+				checked="true" />
+				<radiogroup id="batch_is_public" value="1"
+				oncommand="events.photos.batch_is_public_change();
+				events.photos.batch_is_public(this.value);">
+					<radio value="0" label="&settings.privacy.private;" />
+						<checkbox id="batch_is_friend" label="&settings.privacy.friend;"
+						oncommand="events.photos.batch_is_public_change();" />
+						<checkbox id="batch_is_family" label="&settings.privacy.family;"
+						oncommand="events.photos.batch_is_public_change();" />
+					<radio value="1" label="&settings.privacy.public;" />
+				</radiogroup>
+			</vbox>
+			<html:p> </html:p>
+			<label id="batch_meta_melons_link" value="&meta.melons;"
+			onclick="events.photos.melons();" />
+			<vbox id="batch_meta_melons">
+				<label control="batch_content_type" value="&settings.content_type;" />
+				<checkbox id="batch_content_type_unchanged" label="&meta.leave_unchanged;"
+				checked="true" />
+				<menulist id="batch_content_type"
+				oncommand="events.photos.batch_content_type_change();">
+					<menupopup>
+						<menuitem value="1" label="&settings.content_type.photo;"
+						selected="true" />
+						<menuitem value="2" label="&settings.content_type.screenshot;" />
+						<menuitem value="3" label="&settings.content_type.other;" />
+					</menupopup>
+				</menulist>
+				<label control="batch_hidden" value="&settings.hidden;" />
+				<checkbox id="batch_hidden_unchanged" label="&meta.leave_unchanged;"
+				checked="true" />
+				<menulist id="batch_hidden" oncommand="events.photos.batch_hidden_change();">
+					<menupopup>
+						<menuitem value="1" label="&settings.hidden.no;"
+						selected="true" />
+						<menuitem value="2" label="&settings.hidden.yes;" />
+					</menupopup>
+				</menulist>
+				<label control="batch_safety_level" value="&settings.safety_level;" />
+				<checkbox id="batch_safety_level_unchanged" label="&meta.leave_unchanged;"
+				checked="true" />
+				<menulist id="batch_safety_level"
+				oncommand="events.photos.batch_safety_level_change();">
 					<menupopup>
 						<menuitem value="1" label="&settings.safety_level.safe;"
 						selected="true" />
@@ -71,53 +148,6 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				</menulist>
 			</vbox>
 			<spacer flex="1" />
-			<button id="meta_more" label="&meta.more;" oncommand="events.photos.toggle();" />
-		</vbox>
-		<vbox id="partial_meta">
-			<html:p id="m_prompt"> </html:p>
-			<label control="m_title" value="&meta.title;" />
-			<textbox id="m_title" />
-			<label control="m_description" value="&meta.description;" />
-			<textbox id="m_description" multiline="true" rows="2" />
-			<label control="m_tags" value="&meta.tags;" />
-			<textbox id="m_tags" />
-			<html:p> </html:p>
-			<label control="m_is_public" value="&settings.privacy.who;" />
-			<radiogroup id="m_is_public" value="1"
-			oncommand="events.photos.partial_is_public(this.value);">
-				<radio value="0" label="&settings.privacy.private;" />
-					<checkbox id="m_is_friend" label="&settings.privacy.friend;" />
-					<checkbox id="m_is_family" label="&settings.privacy.family;" />
-				<radio value="1" label="&settings.privacy.public;" />
-			</radiogroup>
-			<html:p> </html:p>
-			<label control="m_content_type" value="&settings.content_type;" />
-			<menulist id="m_content_type">
-				<menupopup>
-					<menuitem value="1" label="&settings.content_type.photo;"
-					selected="true" />
-					<menuitem value="2" label="&settings.content_type.screenshot;" />
-					<menuitem value="3" label="&settings.content_type.other;" />
-				</menupopup>
-			</menulist>
-			<label control="m_hidden" value="&settings.hidden;" />
-			<menulist id="m_hidden">
-				<menupopup>
-					<menuitem value="1" label="&settings.hidden.no;"
-					selected="true" />
-					<menuitem value="2" label="&settings.hidden.yes;" />
-				</menupopup>
-			</menulist>
-			<label control="m_safety_level" value="&settings.safety_level;" />
-			<menulist id="m_safety_level">
-				<menupopup>
-					<menuitem value="1" label="&settings.safety_level.safe;"
-					selected="true" />
-					<menuitem value="2" label="&settings.safety_level.moderate;" />
-					<menuitem value="3" label="&settings.safety_level.restricted;" />
-				</menupopup>
-			</menulist>
-			<html:p> </html:p>
 			<button id="meta_save" label="&meta.save;" oncommand="meta.save();" />
 		</vbox>
 		<vbox id="no_meta" />

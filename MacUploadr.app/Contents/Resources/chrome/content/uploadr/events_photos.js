@@ -76,7 +76,7 @@ events.photos = {
 				meta.load(photos.selected[0]);
 				meta.enable();
 			} else {
-				meta.partial();
+				meta.batch();
 			}
 
 			// Enable toolbar buttons for selected images
@@ -213,7 +213,7 @@ events.photos = {
 					meta.load(photos.selected[0]);
 					meta.enable();
 				} else {
-					meta.partial();
+					meta.batch();
 				}
 				document.getElementById('t_remove').className = 'enabled';
 				document.getElementById('t_rotate_l').className = 'enabled';
@@ -229,24 +229,24 @@ events.photos = {
 	// friends and/or family
 	is_public: function(value) {
 		if (1 == parseInt(value)) {
-			document.getElementById('p_is_friend').checked = false;
-			document.getElementById('p_is_family').checked = false;
-			document.getElementById('p_is_friend').disabled = true;
-			document.getElementById('p_is_family').disabled = true;
+			document.getElementById('single_is_friend').checked = false;
+			document.getElementById('single_is_family').checked = false;
+			document.getElementById('single_is_friend').disabled = true;
+			document.getElementById('single_is_family').disabled = true;
 		} else {
-			document.getElementById('p_is_friend').disabled = false;
-			document.getElementById('p_is_family').disabled = false;
+			document.getElementById('single_is_friend').disabled = false;
+			document.getElementById('single_is_family').disabled = false;
 		}
 	},
-	partial_is_public: function(value) {
+	batch_is_public: function(value) {
 		if (1 == parseInt(value)) {
-			document.getElementById('m_is_friend').checked = false;
-			document.getElementById('m_is_family').checked = false;
-			document.getElementById('m_is_friend').disabled = true;
-			document.getElementById('m_is_family').disabled = true;
+			document.getElementById('batch_is_friend').checked = false;
+			document.getElementById('batch_is_family').checked = false;
+			document.getElementById('batch_is_friend').disabled = true;
+			document.getElementById('batch_is_family').disabled = true;
 		} else {
-			document.getElementById('m_is_friend').disabled = false;
-			document.getElementById('m_is_family').disabled = false;
+			document.getElementById('batch_is_friend').disabled = false;
+			document.getElementById('batch_is_family').disabled = false;
 		}
 	},
 
@@ -261,6 +261,49 @@ events.photos = {
 			primary.style.display = 'none';
 			secondary.style.display = '-moz-box';
 		}
+	},
+	privacy: function() {
+		var prefix = '';
+		if (1 < photos.selected.length) {
+			prefix = 'batch_'
+		}
+		var privacy = document.getElementById(prefix + 'meta_privacy');
+		var melons = document.getElementById(prefix + 'meta_melons');
+		melons.style.display = 'none';
+Components.utils.reportError(privacy.style.display);
+		if ('none' == privacy.style.display) {
+			privacy.style.display = '-moz-box';
+		} else {
+			privacy.style.display = 'none';
+		}
+	},
+	melons: function() {
+		var prefix = '';
+		if (1 < photos.selected.length) {
+			prefix = 'batch_'
+		}
+		var privacy = document.getElementById(prefix + 'meta_privacy');
+		var melons = document.getElementById(prefix + 'meta_melons');
+		privacy.style.display = 'none';
+		if ('none' == melons.style.display) {
+			melons.style.display = '-moz-box';
+		} else {
+			melons.style.display = 'none';
+		}
+	},
+
+	// Track whether a partial batch was changed
+	batch_is_public_change: function() {
+		document.getElementById('batch_is_public_unchanged').checked = false;
+	},
+	batch_content_type_change: function() {
+		document.getElementById('batch_content_type_unchanged').checked = false;
+	},
+	batch_hidden_change: function() {
+		document.getElementById('batch_hidden_unchanged').checked = false;
+	},
+	batch_safety_level_change: function() {
+		document.getElementById('batch_safety_level_unchanged').checked = false;
 	}
 
 };
