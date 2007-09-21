@@ -228,9 +228,29 @@ toolbarseparator {
 	padding: 1px;
 	border: 2px solid #ff0084;
 	background: white;
+	cursor: move;
 }
 #list li img.dragging {
 	opacity: 0.5;
+}
+
+/* Cursor follower for dragging */
+#drag_follower_0, #drag_follower_1, #drag_follower_2, #drag_follower_3 {
+	display: none;
+	position: absolute;
+/*	opacity: 0.5;*/
+}
+#drag_follower_0 {
+	background: red;
+}
+#drag_follower_1 {
+	background: green;
+}
+#drag_follower_2 {
+	background: blue;
+}
+#drag_follower_3 {
+	background: yellow;
 }
 
 /* A semi-opaque box for selecting multiple images */

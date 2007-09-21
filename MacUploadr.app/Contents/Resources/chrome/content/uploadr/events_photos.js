@@ -111,26 +111,27 @@ events.photos = {
 
 	// Indicator for the state-of-the-drag
 	//   0: Not dragging
-	//   1: Clicking to starting drag
+	//   1: Clicking to starting drag, but maybe just clicking
 	//   2: Actually dragging
 	dragging: 0,
+
+	// References to the 4 drag followers
+	followers: null,
+	follower_img: null,
 
 	// Initiate a drag
 	mousedown: function(e) {
 
 		// Clicking on a single photo will do drag-reordering
 		if (e.target.src) {
-//Components.utils.reportError('drag reordering');
-			/*
 			if ('selected' != e.target.className) {
 				var imgs = document.getElementById('list').getElementsByTagName('img');
 				var ii = imgs.length;
 				for (var i = 0; i < ii; ++i) {
 					imgs[i].className = '';
 				}
-				photos.selected = [parseInt(e.target.id.replace('photo', ''))];
+				photos.selected = [parseInt(e.target.parentNode.id.replace('photo', ''))];
 			}
-			*/
 			events.photos.dragging = 1;
 		}
 
@@ -155,13 +156,98 @@ events.photos = {
 
 		// If we're reordering
 		if (null == events.photos.anchor) {
-//Components.utils.reportError('drag reordering and moving');
+
+			// Once the user starts the drag, give feedback
 			if (1 == events.photos.dragging) {
+
+				// Make the selected photos look like they're being dragged
 				for each (var id in photos.selected) {
-					document.getElementById('photo' + id).className = 'selected dragging';
+					document.getElementById('photo' + id).getElementsByTagName(
+						'img')[0].className = 'selected dragging';
 				}
+
+				events.photos.dragging = 2;
 			}
-			events.photos.dragging = 2;
+
+			// As the user is dragging, update the feedback
+			if (2 == events.photos.dragging) {
+
+				// Get references to the followers
+				if (null == events.photos.followers) {
+Components.utils.reportError('followers');
+					events.photos.followers = [
+						document.getElementById('drag_follower_0'),
+						document.getElementById('drag_follower_1'),
+						document.getElementById('drag_follower_2'),
+						document.getElementById('drag_follower_3')
+					];
+				}
+
+				// Only set background images on the first pass
+				var f = events.photos.followers;
+				var img = events.photos.follower_img;
+				if (null == img) {
+Components.utils.reportError('follower_img');
+					events.photos.follower_img = document.getElementById('photo' +
+						photos.selected[0]).getElementsByTagName('img')[0];
+					img = events.photos.follower_img;
+					for each (var _f in f) {
+//						_f.style.backgroundImage = 'url(' + img.src + ')';
+					}	
+				}
+
+				// Common sizes
+				var left = 	Math.floor(e.clientX + uploadr.conf.OFFSET_X - (img.width / 2));
+				var middle = Math.floor(e.clientY + uploadr.conf.OFFSET_Y);
+				var width = Math.ceil(img.width / 2);
+				var height = Math.ceil(img.height / 2);
+
+				f[0].style.left = left + 'px';
+				f[0].style.top = Math.floor(e.clientY + uploadr.conf.OFFSET_Y -
+					(img.height / 2)) + 'px';
+				f[0].style.width = img.width + 'px';
+				f[0].style.height = height + 'px';
+				f[0].style.display = 'block';
+
+				f[1].style.left = left + 'px';
+				f[1].style.top = middle + 'px';
+				f[1].style.width = (width - 1) + 'px';
+				f[1].style.height = (height + 1) + 'px';
+				f[1].style.display = 'block';
+
+				f[2].style.left = Math.floor(e.clientX + uploadr.conf.OFFSET_X - 1) + 'px';
+				f[2].style.top = (middle + 1) + 'px';
+				f[2].style.width = '1px';
+				f[2].style.height = height + 'px';
+				f[2].style.display = 'block';
+
+				f[3].style.left = Math.floor(e.clientX + uploadr.conf.OFFSET_X) + 'px';
+				f[3].style.top = middle + 'px';
+				f[3].style.width = (width - 1) + 'px';
+				f[3].style.height = (height + 1) + 'px';
+				f[3].style.display = 'block';
+
+				// Get the list item we're hovering over
+				var target;
+				if ('div' == e.target.nodeName) {
+					target = document.getElementById('list').lastChild;
+				} else if ('img' == e.target.nodeName) {
+					target = e.target.parentNode;
+				} else {
+					target = e.target;
+				}
+//Components.utils.reportError(target);
+
+				// Don't place the target in the middle of a bunch of selected elements
+				if (-1 != target.className.indexOf('selected')) {
+					///
+				}
+
+				// Show indicator of drop position
+//				target.style.borderRight = '2px solid black';
+
+			}
+
 		}
 
 		// If we're selecting
@@ -196,9 +282,17 @@ events.photos = {
 		// If we're reordering
 		if (null == events.photos.anchor) {
 			if (2 == events.photos.dragging) {
+
+				// Stop giving drag feedback
 				for each (var id in photos.selected) {
-					document.getElementById('photo' + id).className = 'selected';
+					document.getElementById('photo' + id).getElementsByTagName(
+						'img')[0].className = 'selected';
 				}
+				for each (var f in events.photos.followers) {
+					f.style.display = 'none';
+				}
+				events.photos.follower_img = null;
+
 			}
 			events.photos.dragging = 0;
 		}

@@ -20,6 +20,10 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<html:ul id="list">
 					</html:ul>
 					<html:div id="drag_select" />
+					<html:div id="drag_follower_0" />
+					<html:div id="drag_follower_1" />
+					<html:div id="drag_follower_2" />
+					<html:div id="drag_follower_3" />
 				</stack>
 			</vbox>
 		</vbox>
