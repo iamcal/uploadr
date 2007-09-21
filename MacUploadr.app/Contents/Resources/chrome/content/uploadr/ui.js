@@ -163,8 +163,8 @@ var findr = {
 
 	// Get photos in a bounding box
 	bounding_box: function(x1, y1, x2, y2) {
-		const OFFSET_X = events.photos.OFFSET_X;
-		const OFFSET_Y = events.photos.OFFSET_Y;
+		const OFFSET_X = uploadr.conf.OFFSET_X;
+		const OFFSET_Y = uploadr.conf.OFFSET_Y;
 
 		// Get our points in order
 		if (x2 < x1) {

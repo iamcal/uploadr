@@ -12,7 +12,14 @@ var uploadr = {
 
 	// Configuration
 	conf: {
-		thumbSize: 100
+
+		// Size of thumbnails
+		thumbSize: 100,
+
+		// Constants to align photos box and cursor for dragging
+		OFFSET_X: -5,
+		OFFSET_Y: -72
+
 	},
 
 	// Handle files dragged on startup

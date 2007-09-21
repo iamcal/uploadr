@@ -73,7 +73,8 @@ radiogroup checkbox {
 	margin: 5px;
 }
 
-/* Toolbar
+/*
+ * Toolbar
  */
 #tools toolbox toolbar {
 	width: 217px;
@@ -166,8 +167,13 @@ toolbarseparator {
 	height: 34px;
 }
 
-/* Photos page
+
+
+/*
+ * The photos container
  */
+
+/* The container has multiple nested boxes for multiple backgrounds */
 #photos {
 	margin: 0;
 	overflow: auto;
@@ -178,6 +184,8 @@ toolbarseparator {
 .oldest {
 	background: url(oldest.gif) no-repeat bottom right;
 }
+
+/* Dragging photos into the container */
 .no_drag {
 	padding: 5px;
 }
@@ -185,6 +193,8 @@ toolbarseparator {
 	padding: 0;
 	border: 5px solid #ff0084;
 }
+
+/* The actual list of photos */
 #list {
 	margin: 0;
 	padding: 0;
@@ -205,24 +215,37 @@ toolbarseparator {
 	padding: 3px;
 	background: transparent;
 }
+
+/* Image states */
+#list li img.loading {
+}
 #list li img.selecting {
 	padding: 2px;
 	border: 1px solid #ff0084;
 	background: white;
-}
-#list li img.loading {
 }
 #list li img.selected {
 	padding: 1px;
 	border: 2px solid #ff0084;
 	background: white;
 }
+#list li img.dragging {
+	opacity: 0.5;
+}
+
+/* A semi-opaque box for selecting multiple images */
 #drag_select {
 	display: none;
 	position: absolute;
 	border: 1px solid #0063dc;
 	background: url(drag_select.png);
 }
+
+/*
+ * Photo metadata
+ */
+
+/* Three states, depending on what's selected */
 #meta, #batch_meta, #no_meta {
 	width: 180px;
 	padding: 5px;
@@ -231,6 +254,8 @@ toolbarseparator {
 #meta, #batch_meta {
 	display: none;
 }
+
+/* If one image selected, this shows the thumbnail */
 #meta_div {
 	width: 100px;
 	height: 103px;
@@ -240,6 +265,8 @@ toolbarseparator {
 	padding: 0;
 	border: 0;
 }
+
+/* Selectively show available metadata settings */
 #meta_secondary {
 	display: none;
 }
@@ -251,6 +278,8 @@ toolbarseparator {
 #batch_meta_privacy, #batch_meta_melons {
 	display: none;
 }
+
+
 
 /* User settings page
  */

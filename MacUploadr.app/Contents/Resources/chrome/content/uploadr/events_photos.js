@@ -18,9 +18,9 @@ events.photos = {
 
 			// Without modifier keys, start with nothing selected
 			if (!(e.shiftKey || e.ctrlKey || e.metaKey)) {
-				var imgs = document.getElementsByTagName('img');
-				var u_bound = imgs.length;
-				for (var i = 0; i < u_bound; ++i) {
+				var imgs = document.getElementById('list').getElementsByTagName('img');
+				var ii = imgs.length;
+				for (var i = 0; i < ii; ++i) {
 					imgs[i].className = '';
 				}
 				photos.selected = [];
@@ -109,26 +109,40 @@ events.photos = {
 	// Anchor point for drag-select
 	anchor: null,
 
-	// Constants to align box and cursor
-	OFFSET_X: -5,
-	OFFSET_Y: -72,
+	// Indicator for the state-of-the-drag
+	//   0: Not dragging
+	//   1: Clicking to starting drag
+	//   2: Actually dragging
+	dragging: 0,
 
 	// Initiate a drag
 	mousedown: function(e) {
 
 		// Clicking on a single photo will do drag-reordering
 		if (e.target.src) {
+//Components.utils.reportError('drag reordering');
+			/*
+			if ('selected' != e.target.className) {
+				var imgs = document.getElementById('list').getElementsByTagName('img');
+				var ii = imgs.length;
+				for (var i = 0; i < ii; ++i) {
+					imgs[i].className = '';
+				}
+				photos.selected = [parseInt(e.target.id.replace('photo', ''))];
+			}
+			*/
+			events.photos.dragging = 1;
 		}
 
 		// Clicking whitespace will start the drag-select
 		else {
-			events.anchor = {
-				x: e.clientX + events.photos.OFFSET_X,
-				y: e.clientY + events.photos.OFFSET_Y
+			events.photos.anchor = {
+				x: e.clientX + uploadr.conf.OFFSET_X,
+				y: e.clientY + uploadr.conf.OFFSET_Y
 			};
 			var ds = document.getElementById('drag_select');
-			ds.style.left = events.anchor.x + 'px';
-			ds.style.top = events.anchor.y + 'px';
+			ds.style.left = events.photos.anchor.x + 'px';
+			ds.style.top = events.photos.anchor.y + 'px';
 			ds.style.width = '1px';
 			ds.style.height = '1px';
 			ds.style.display = 'block';
@@ -140,29 +154,36 @@ events.photos = {
 	mousemove: function(e) {
 
 		// If we're reordering
-		if (null == events.anchor) {
+		if (null == events.photos.anchor) {
+//Components.utils.reportError('drag reordering and moving');
+			if (1 == events.photos.dragging) {
+				for each (var id in photos.selected) {
+					document.getElementById('photo' + id).className = 'selected dragging';
+				}
+			}
+			events.photos.dragging = 2;
 		}
 
 		// If we're selecting
 		else {
-			const OFFSET_X = events.photos.OFFSET_X;
-			const OFFSET_Y = events.photos.OFFSET_Y;
+			const OFFSET_X = uploadr.conf.OFFSET_X;
+			const OFFSET_Y = uploadr.conf.OFFSET_Y;
 			var ds = document.getElementById('drag_select');
 
 			// Invert positions if necessary
-			if (events.anchor.x > e.clientX + OFFSET_X) {
+			if (events.photos.anchor.x > e.clientX + OFFSET_X) {
 				ds.style.left = (e.clientX + OFFSET_X) + 'px';
 			}
-			if (events.anchor.y > e.clientY + OFFSET_Y) {
+			if (events.photos.anchor.y > e.clientY + OFFSET_Y) {
 				ds.style.top = (e.clientY + OFFSET_Y) + 'px';
 			}
 
 			// New width and height
-			ds.style.width = Math.abs(e.clientX + OFFSET_X - events.anchor.x) + 'px';
-			ds.style.height = Math.abs(e.clientY + OFFSET_Y - events.anchor.y) + 'px';
+			ds.style.width = Math.abs(e.clientX + OFFSET_X - events.photos.anchor.x) + 'px';
+			ds.style.height = Math.abs(e.clientY + OFFSET_Y - events.photos.anchor.y) + 'px';
 
 			// Actually find photos in the box
-			findr.bounding_box(events.anchor.x, events.anchor.y,
+			findr.bounding_box(events.photos.anchor.x, events.photos.anchor.y,
 				e.clientX + OFFSET_X, e.clientY + OFFSET_Y);
 
 		}
@@ -173,7 +194,13 @@ events.photos = {
 	mouseup: function(e) {
 
 		// If we're reordering
-		if (null == events.anchor) {
+		if (null == events.photos.anchor) {
+			if (2 == events.photos.dragging) {
+				for each (var id in photos.selected) {
+					document.getElementById('photo' + id).className = 'selected';
+				}
+			}
+			events.photos.dragging = 0;
 		}
 
 		// If we're selecting, finalize the selection
@@ -222,7 +249,7 @@ events.photos = {
 
 		}
 
-		events.anchor = null;
+		events.photos.anchor = null;
 	},
 
 	// Properly enable/disable the checkboxes available for private photos to be shared with
@@ -270,7 +297,6 @@ events.photos = {
 		var privacy = document.getElementById(prefix + 'meta_privacy');
 		var melons = document.getElementById(prefix + 'meta_melons');
 		melons.style.display = 'none';
-Components.utils.reportError(privacy.style.display);
 		if ('none' == privacy.style.display) {
 			privacy.style.display = '-moz-box';
 		} else {

@@ -104,7 +104,15 @@ EXIV2
 Windows
 -------
 
-xxx
+Just like GraphicsMagick, let Visual Studio 8 eat the 7.1 project files
+and then make the following changes:
+  o Change the Runtime Library for the exiv2lib project under
+    Configuration Properties > C/C++ > Code Generation to
+    "Multi-threaded DLL (/MD)"
+  o Comment out a few conflicting blocks of code, starting at:
+      o localtime.c:196
+      o localtime.c:965
+      o private.h:136
 
 Mac / Linux
 -----------
