@@ -206,7 +206,9 @@ toolbarseparator {
 	width: 116px;
 	height: 116px;
 	margin: 0;
-	padding: 5px;
+	padding: 5px 1px;
+	border-left: 2px solid transparent;
+	border-right: 2px solid transparent;
 	text-align: center;
 	vertical-align: middle;
 }
@@ -233,24 +235,23 @@ toolbarseparator {
 #list li img.dragging {
 	opacity: 0.5;
 }
+#list li.drop_left {
+	border-left: 2px solid black;
+}
+#list li.drop_right {
+	border-right: 2px solid black;
+}
 
 /* Cursor follower for dragging */
-#drag_follower_0, #drag_follower_1, #drag_follower_2, #drag_follower_3 {
+#drag_follower {
 	display: none;
 	position: absolute;
-/*	opacity: 0.5;*/
-}
-#drag_follower_0 {
-	background: red;
-}
-#drag_follower_1 {
-	background: green;
-}
-#drag_follower_2 {
-	background: blue;
-}
-#drag_follower_3 {
-	background: yellow;
+	height: 14px;
+	padding: 0 3px;
+	text-align: center;
+	font-weight: bold;
+	color: white;
+	background: #ff0084;
 }
 
 /* A semi-opaque box for selecting multiple images */

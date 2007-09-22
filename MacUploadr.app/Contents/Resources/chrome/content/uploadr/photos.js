@@ -166,6 +166,34 @@ var photos = {
 			}
 		}
 
+	},
+
+	// Normalize the photo list and selected list with the DOM
+	update: function() {
+
+		// Transform photo IDs temporarily and note the new IDs of selected photos
+		var old_selected = ',' + photos.selected.toString() + ',';
+		var new_selected = [];
+		var p = photos.list;
+		var ii = p.length;
+		for (var i = 0; i < ii; ++i) {
+			if (null != p[i]) {
+				document.getElementById('photo' + p[i].id).id = '_photo' + i;
+				if (-1 != old_selected.indexOf(',' + p[i].id + ',')) {
+					new_selected.push(i);
+				}
+				p[i].id = i;
+			}
+		}
+
+		// Transform photo IDs back to normal and update the selected list
+		for (var i = 0; i < ii; ++i) {
+			if (null != p[i]) {
+				document.getElementById('_photo' + i).id = 'photo' + i;
+			}
+		}
+		photos.selected = new_selected;
+
 	}
 
 };

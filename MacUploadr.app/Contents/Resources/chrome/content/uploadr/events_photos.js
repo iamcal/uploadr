@@ -115,15 +115,16 @@ events.photos = {
 	//   2: Actually dragging
 	dragging: 0,
 
-	// References to the 4 drag followers
-	followers: null,
-	follower_img: null,
+	// Reference to our current destination
+	target: null,
+	left: false,
 
 	// Initiate a drag
 	mousedown: function(e) {
 
 		// Clicking on a single photo will do drag-reordering
 		if (e.target.src) {
+/*
 			if ('selected' != e.target.className) {
 				var imgs = document.getElementById('list').getElementsByTagName('img');
 				var ii = imgs.length;
@@ -132,6 +133,7 @@ events.photos = {
 				}
 				photos.selected = [parseInt(e.target.parentNode.id.replace('photo', ''))];
 			}
+*/
 			events.photos.dragging = 1;
 		}
 
@@ -153,12 +155,19 @@ events.photos = {
 
 	// Keep dragging
 	mousemove: function(e) {
+		const OFFSET_X = uploadr.conf.OFFSET_X;
+		const OFFSET_Y = uploadr.conf.OFFSET_Y;
 
 		// If we're reordering
 		if (null == events.photos.anchor) {
 
 			// Once the user starts the drag, give feedback
 			if (1 == events.photos.dragging) {
+
+				// Update the selection
+				if ('selected' != e.target.className) {
+					events.photos.click(e);
+				}
 
 				// Make the selected photos look like they're being dragged
 				for each (var id in photos.selected) {
@@ -172,79 +181,50 @@ events.photos = {
 			// As the user is dragging, update the feedback
 			if (2 == events.photos.dragging) {
 
-				// Get references to the followers
-				if (null == events.photos.followers) {
-Components.utils.reportError('followers');
-					events.photos.followers = [
-						document.getElementById('drag_follower_0'),
-						document.getElementById('drag_follower_1'),
-						document.getElementById('drag_follower_2'),
-						document.getElementById('drag_follower_3')
-					];
-				}
-
-				// Only set background images on the first pass
-				var f = events.photos.followers;
-				var img = events.photos.follower_img;
-				if (null == img) {
-Components.utils.reportError('follower_img');
-					events.photos.follower_img = document.getElementById('photo' +
-						photos.selected[0]).getElementsByTagName('img')[0];
-					img = events.photos.follower_img;
-					for each (var _f in f) {
-//						_f.style.backgroundImage = 'url(' + img.src + ')';
-					}	
-				}
-
-				// Common sizes
-				var left = 	Math.floor(e.clientX + uploadr.conf.OFFSET_X - (img.width / 2));
-				var middle = Math.floor(e.clientY + uploadr.conf.OFFSET_Y);
-				var width = Math.ceil(img.width / 2);
-				var height = Math.ceil(img.height / 2);
-
-				f[0].style.left = left + 'px';
-				f[0].style.top = Math.floor(e.clientY + uploadr.conf.OFFSET_Y -
-					(img.height / 2)) + 'px';
-				f[0].style.width = img.width + 'px';
-				f[0].style.height = height + 'px';
-				f[0].style.display = 'block';
-
-				f[1].style.left = left + 'px';
-				f[1].style.top = middle + 'px';
-				f[1].style.width = (width - 1) + 'px';
-				f[1].style.height = (height + 1) + 'px';
-				f[1].style.display = 'block';
-
-				f[2].style.left = Math.floor(e.clientX + uploadr.conf.OFFSET_X - 1) + 'px';
-				f[2].style.top = (middle + 1) + 'px';
-				f[2].style.width = '1px';
-				f[2].style.height = height + 'px';
-				f[2].style.display = 'block';
-
-				f[3].style.left = Math.floor(e.clientX + uploadr.conf.OFFSET_X) + 'px';
-				f[3].style.top = middle + 'px';
-				f[3].style.width = (width - 1) + 'px';
-				f[3].style.height = (height + 1) + 'px';
-				f[3].style.display = 'block';
+				// Show the cursor follower
+				var follower = document.getElementById('drag_follower');
+				follower.firstChild.nodeValue = photos.selected.length;
+				follower.style.left = (e.clientX + OFFSET_X + 10) + 'px';
+				follower.style.top = (e.clientY + OFFSET_Y + 7) + 'px';
+				follower.style.display = 'block';
 
 				// Get the list item we're hovering over
 				var target;
-				if ('div' == e.target.nodeName) {
-					target = document.getElementById('list').lastChild;
+				if ('li' == e.target.nodeName) {
+					target = e.target;
 				} else if ('img' == e.target.nodeName) {
 					target = e.target.parentNode;
 				} else {
-					target = e.target;
+					target = document.getElementById('list').lastChild;
 				}
-//Components.utils.reportError(target);
+
+				// Which side of the list item are we on?
+				var left = e.clientX < (target.offsetLeft +
+					target.getElementsByTagName('img')[0].width / 2);
 
 				// Don't place the target in the middle of a bunch of selected elements
-				if (-1 != target.className.indexOf('selected')) {
-					///
+				var list = document.getElementById('list');
+				while (target != list[left ? 'firstChild' : 'lastChild']) {
+					var tmp = target[left ? 'previousSibling' : 'nextSibling'];
+					if (-1 == target.getElementsByTagName('img')[0].className.indexOf('selected') ||
+						-1 != target.getElementsByTagName('img')[0].className.indexOf('selected') &&
+						-1 == tmp.getElementsByTagName('img')[0].className.indexOf('selected')) {
+						break;
+					}
+					target = tmp;
 				}
 
 				// Show indicator of drop position
-//				target.style.borderRight = '2px solid black';
+				if (left && target != list.getElementsByTagName('li')[0]) {
+					left = false;
+					target = target.previousSibling;
+				}
+				if (null != events.photos.target && target != events.photos.target) {
+					events.photos.target.className = '';
+				}
+				target.className = left ? 'drop_left' : 'drop_right';
+				events.photos.target = target;
+				events.photos.left = left;
 
 			}
 
@@ -252,8 +232,6 @@ Components.utils.reportError('follower_img');
 
 		// If we're selecting
 		else {
-			const OFFSET_X = uploadr.conf.OFFSET_X;
-			const OFFSET_Y = uploadr.conf.OFFSET_Y;
 			var ds = document.getElementById('drag_select');
 
 			// Invert positions if necessary
@@ -283,18 +261,41 @@ Components.utils.reportError('follower_img');
 		if (null == events.photos.anchor) {
 			if (2 == events.photos.dragging) {
 
-				// Stop giving drag feedback
+				// Reorder the photo list
+				photos.selected.sort(function(a, b) {
+					return a < b;
+				});
+				var list = document.getElementById('list');
 				for each (var id in photos.selected) {
-					document.getElementById('photo' + id).getElementsByTagName(
-						'img')[0].className = 'selected';
+					var p = document.getElementById('photo' + id);
+
+					// Stop giving drag feedback
+					p.getElementsByTagName('img')[0].className = 'selected';
+
+					// Move this image to its new home
+					if (events.photos.left) {
+						list.insertBefore(p, events.photos.target);
+					} else {
+						if (events.photos.target == list.lastChild) {
+							list.appendChild(p);
+						} else {
+							list.insertBefore(p, events.photos.target.nextSibling);
+						}
+					}
+
 				}
-				for each (var f in events.photos.followers) {
-					f.style.display = 'none';
+				photos.update();
+
+				// Stop showing feedback on the cursor
+				document.getElementById('drag_follower').style.display = 'none';
+				if (null != events.photos.target) {
+					events.photos.target.className = '';
 				}
-				events.photos.follower_img = null;
 
 			}
 			events.photos.dragging = 0;
+			events.photos.target = null;
+			events.photos.left = false;
 		}
 
 		// If we're selecting, finalize the selection
