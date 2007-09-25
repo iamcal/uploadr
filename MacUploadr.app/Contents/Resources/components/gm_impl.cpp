@@ -158,22 +158,32 @@ int base_orient(Magick::Image & img) {
 	if (1 > orient || 8 < orient) {
 		orient = 1;
 	}
-	if (2 == orient) {
-		img.flop();
-	} else if (3 == orient) {
-		img.rotate(180.0);
-	} else if (4 == orient) {
-		img.flip();
-	} else if (5 == orient) {
-		img.rotate(90.0);
-		img.flip();
-	} else if (6 == orient) {
-		img.rotate(90.0);
-	} else if (7 == orient) {
-		img.rotate(270.0);
-		img.flip();
-	} else if (8 == orient) {
-		img.rotate(270.0);
+	switch (orient) {
+		case 2:
+			img.flop();
+		break;
+		case 3:
+			img.rotate(180.0);
+		break;
+		case 4:
+			img.flip();
+		break;
+		case 5:
+			img.rotate(90.0);
+			img.flip();
+		break;
+		case 6:
+			img.rotate(90.0);
+		break;
+		case 7:
+			img.rotate(270.0);
+			img.flip();
+		break;
+		case 8:
+			img.rotate(270.0);
+		break;
+		default:
+		break;
 	}
 	return orient;
 }
@@ -186,17 +196,17 @@ void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 
 		// Width
 		{
+			"Exif.Iop.RelatedImageWidth",
 			"Exif.Photo.PixelXDimension", // Only for compressed images
 			"Exif.Image.ImageWidth", // From TIFF-land
-			"Exif.Iop.RelatedImageWidth",
 			0
 		},
 
 		// Height
 		{
+			"Exif.Iop.RelatedImageLength",
 			"Exif.Photo.PixelYDimension", // Only for compressed images
 			"Exif.Image.ImageLength", // From TIFF-land
-			"Exif.Iop.RelatedImageLength",
 			0
 		}
 
@@ -214,25 +224,18 @@ void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 			Exiv2::ExifKey key = Exiv2::ExifKey(str);
 			Exiv2::ExifData::iterator it = exif.findKey(key);
 			if (exif.end() != it) {
-//				if (done) {
-					exif.erase(it);
-//				} else {
-//					exif[keys[i][j]] = uint16_t(values[i]);
-//					done = 1;
-//				}
+				exif[keys[i][j]] = uint32_t(values[i]);
+				done = 1;
 			}
 			++j;
 		}
 
-		// As a last resort, set the first key
+		// As a last resort, set the TIFF tags
 		if (!done) {
-			exif[keys[i][0]] = uint16_t(values[i]);
+			exif[keys[i][0]] = uint32_t(values[i]);
 		}
 
 	}
-}
-
-void exif_update_orient(Exiv2::ExifData & exif, int orient) {
 }
 
 NS_IMPL_ISUPPORTS1(CGM, IGM)
@@ -388,6 +391,12 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 			return NS_ERROR_INVALID_ARG;
 		}
 
+		// Yank out all the metadata we want to save
+		Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+		meta_r->readMetadata();
+		Exiv2::ExifData &exif = meta_r->exifData();
+		Exiv2::IptcData &iptc = meta_r->iptcData();
+
 		// Create a new path
 		rotate_str = find_path(path_str, "-rotate");
 		if (0 == rotate_str) {
@@ -395,13 +404,21 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 		}
 
 		// Rotate the image
-		//   TODO: Save EXIF and IPTC profiles
 		Magick::Image img(*path_str);
+		delete path_str; path_str = 0;
 		base_orient(img);
 		img.rotate(degrees);
 		img.compressType(Magick::NoCompression);
 		img.write(*rotate_str);
-		delete path_str; path_str = 0;
+
+		// Set the orientation to 1 because we're orienting the pixels manually
+		exif["Exif.Image.Orientation"] = uint32_t(1);
+
+		// Put saved metadata into the resized image
+		Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*rotate_str);
+		meta_w->setExifData(exif);
+		meta_w->setIptcData(iptc);
+		meta_w->writeMetadata();
 
 		// If all went well, return stuff
 		_retval.Append('o');
@@ -498,7 +515,6 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 		double sigma = 0.95;
 
 		// Resize the image
-		//   TODO: Save EXIF and IPTC profiles
 		img.scale(dim);
 		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);

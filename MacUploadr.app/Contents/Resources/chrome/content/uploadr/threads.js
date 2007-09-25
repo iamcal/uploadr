@@ -122,7 +122,7 @@ Rotate.prototype = {
 			var rotate = result.match(/^ok(.*)$/);
 
 			if (null == rotate) {
-				Components.utils.reportError(rotate);
+				Components.utils.reportError(result);
 			} else {
 				threads.main.dispatch(new RotateCallback(this.id, rotate[1]),
 					threads.main.DISPATCH_NORMAL);
@@ -199,12 +199,18 @@ SortCallback.prototype = {
 	run: function() {
 
 		// Perform the sort
-		var p = photos.list;
-		if (1 >= p.length) {
-			if (1 == p.length) {
+		if (1 >= photos.list.length) {
+			if (1 == photos.list.length) {
 				document.getElementById('button_upload').disabled = false;
 			}
 			return;
+		}
+		var p = [];
+		for each (var photo in photos.list) {
+			p.push({
+				id: photo.id,
+				date_taken: photo.date_taken
+			});
 		}
 		p.sort(_sort);
 
@@ -216,7 +222,7 @@ SortCallback.prototype = {
 				list.appendChild(document.getElementById('photo' + p[i].id));
 			}
 		}
-		photos.update();
+		photos.normalize();
 
 		// And finally allow them to upload
 		document.getElementById('button_upload').disabled = false;

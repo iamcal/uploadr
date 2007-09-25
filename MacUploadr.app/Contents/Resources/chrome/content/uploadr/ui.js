@@ -163,8 +163,10 @@ var findr = {
 
 	// Get photos in a bounding box
 	bounding_box: function(x1, y1, x2, y2) {
-		const OFFSET_X = uploadr.conf.OFFSET_X;
-		const OFFSET_Y = uploadr.conf.OFFSET_Y;
+		const OFFSET_X = -events.photos.box.x - 5;
+		const OFFSET_Y = -events.photos.box.y - 5;
+		var pos = {x: {}, y: {}};
+		events.photos.box.getPosition(pos.x, pos.y);
 
 		// Get our points in order
 		if (x2 < x1) {
@@ -229,7 +231,9 @@ var drag = {
 			});
 
 			// After the last file is added, sort the images by date taken
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+			if (photos.sort) {
+				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+			}
 
 			// Enable the upload button?
 			if (photos.count) {

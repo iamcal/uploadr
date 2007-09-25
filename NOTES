@@ -56,3 +56,74 @@ Re-adding to a batch after failure
 	Preserve order in the queue, which is the order they wanted
 Add add-to-set option for each photo and for partial batches
 Nix the per-photo resize options
+
+
+
+In case we ever want to set PROPER EXIF orientation rather than actually rotating pixels,
+here is the C code:
+
+long orient = exif["Exif.Image.Orientation"].toLong();
+if (1 > orient || 8 < orient) {
+	orient = 1;
+}
+switch (orient) {
+	case 1:
+		if (90 == degrees) {
+			orient = 6;
+		} else if (-90 == degrees || 270 == degrees) {
+			orient = 8;
+		}
+	break;
+	case 2:
+		if (90 == degrees) {
+			orient = 5;
+		} else if (-90 == degrees || 270 == degrees) {
+			orient = 7;
+		}
+	break;
+	case 3:
+		if (90 == degrees) {
+			orient = 8;
+		} else if (-90 == degrees || 270 == degrees) {
+			orient = 6;
+		}
+	break;
+	case 4:
+		if (90 == degrees) {
+			orient = 7;
+		} else if (-90 == degrees || 270 == degrees) {
+			orient = 5;
+		}
+	break;
+	case 5:
+		if (90 == degrees) {
+			orient = 4;
+		} else if (-90 == degrees || 270 == degrees) {
+			orient = 2;
+		}
+	break;
+	case 6:
+		if (90 == degrees) {
+			orient = 3;
+		} else if (-90 == degrees || 270 == degrees) {
+			orient = 1;
+		}
+	break;
+	case 7:
+		if (90 == degrees) {
+			orient = 2;
+		} else if (-90 == degrees || 270 == degrees) {
+			orient = 4;
+		}
+	break;
+	case 8:
+		if (90 == degrees) {
+			orient = 1;
+		} else if (-90 == degrees || 270 == degrees) {
+			orient = 3;
+		}
+	break;
+	default:
+	break;
+}
+exif["Exif.Image.Orientation"] = uint32_t(orient);

@@ -119,8 +119,17 @@ events.photos = {
 	target: null,
 	left: false,
 
+	// Reference to the photos container for scroll info
+	box: null,
+
 	// Initiate a drag
 	mousedown: function(e) {
+		if (null == events.photos.box) {
+			events.photos.box = document.getElementById('photos').boxObject.QueryInterface(
+				Ci.nsIScrollBoxObject);
+		}
+		var pos = {x: {}, y: {}};
+		events.photos.box.getPosition(pos.x, pos.y);
 
 		// Clicking on a single photo will do drag-reordering
 		if (e.target.src) {
@@ -134,14 +143,16 @@ events.photos = {
 				photos.selected = [parseInt(e.target.parentNode.id.replace('photo', ''))];
 			}
 */
-			events.photos.dragging = 1;
+			if (1 < photos.count) {
+				events.photos.dragging = 1;
+			}
 		}
 
 		// Clicking whitespace will start the drag-select
 		else {
 			events.photos.anchor = {
-				x: e.clientX + uploadr.conf.OFFSET_X,
-				y: e.clientY + uploadr.conf.OFFSET_Y
+				x: e.clientX + pos.x.value - events.photos.box.x - 5,
+				y: e.clientY + pos.y.value - events.photos.box.y - 5
 			};
 			var ds = document.getElementById('drag_select');
 			ds.style.left = events.photos.anchor.x + 'px';
@@ -155,8 +166,14 @@ events.photos = {
 
 	// Keep dragging
 	mousemove: function(e) {
-		const OFFSET_X = uploadr.conf.OFFSET_X;
-		const OFFSET_Y = uploadr.conf.OFFSET_Y;
+		if (null == events.photos.box) {
+			events.photos.box = document.getElementById('photos').boxObject.QueryInterface(
+				Ci.nsIScrollBoxObject);
+		}
+		const OFFSET_X = -events.photos.box.x - 5;
+		const OFFSET_Y = -events.photos.box.y - 5;
+		var pos = {x: {}, y: {}};
+		events.photos.box.getPosition(pos.x, pos.y);
 
 		// If we're reordering
 		if (null == events.photos.anchor) {
@@ -184,8 +201,8 @@ events.photos = {
 				// Show the cursor follower
 				var follower = document.getElementById('drag_follower');
 				follower.firstChild.nodeValue = photos.selected.length;
-				follower.style.left = (e.clientX + OFFSET_X + 10) + 'px';
-				follower.style.top = (e.clientY + OFFSET_Y + 7) + 'px';
+				follower.style.left = (e.clientX + pos.x.value + OFFSET_X + 10) + 'px';
+				follower.style.top = (e.clientY + pos.y.value + OFFSET_Y + 7) + 'px';
 				follower.style.display = 'block';
 
 				// Get the list item we're hovering over
@@ -228,6 +245,9 @@ events.photos = {
 
 			}
 
+			// If we're reaching the edge of the box and can scroll, do so
+			
+
 		}
 
 		// If we're selecting
@@ -235,20 +255,22 @@ events.photos = {
 			var ds = document.getElementById('drag_select');
 
 			// Invert positions if necessary
-			if (events.photos.anchor.x > e.clientX + OFFSET_X) {
-				ds.style.left = (e.clientX + OFFSET_X) + 'px';
+			if (events.photos.anchor.x > e.clientX + pos.x.value + OFFSET_X) {
+				ds.style.left = (e.clientX + pos.x.value + OFFSET_X) + 'px';
 			}
-			if (events.photos.anchor.y > e.clientY + OFFSET_Y) {
-				ds.style.top = (e.clientY + OFFSET_Y) + 'px';
+			if (events.photos.anchor.y > e.clientY + pos.y.value + OFFSET_Y) {
+				ds.style.top = (e.clientY + pos.y.value + OFFSET_Y) + 'px';
 			}
 
 			// New width and height
-			ds.style.width = Math.abs(e.clientX + OFFSET_X - events.photos.anchor.x) + 'px';
-			ds.style.height = Math.abs(e.clientY + OFFSET_Y - events.photos.anchor.y) + 'px';
+			ds.style.width = Math.abs(e.clientX + pos.x.value + OFFSET_X -
+				events.photos.anchor.x) + 'px';
+			ds.style.height = Math.abs(e.clientY + pos.y.value + OFFSET_Y -
+				events.photos.anchor.y) + 'px';
 
 			// Actually find photos in the box
 			findr.bounding_box(events.photos.anchor.x, events.photos.anchor.y,
-				e.clientX + OFFSET_X, e.clientY + OFFSET_Y);
+				e.clientX + pos.x.value + OFFSET_X, e.clientY + pos.y.value + OFFSET_Y);
 
 		}
 
@@ -284,7 +306,7 @@ events.photos = {
 					}
 
 				}
-				photos.update();
+				photos.normalize();
 
 				// Stop showing feedback on the cursor
 				document.getElementById('drag_follower').style.display = 'none';

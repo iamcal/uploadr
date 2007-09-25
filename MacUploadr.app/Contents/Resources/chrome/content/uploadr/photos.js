@@ -36,8 +36,10 @@ var photos = {
 				photos._add(files.getNext().QueryInterface(Ci.nsILocalFile).path);
 			}
 
-			// After the last file is added, sort the images by date taken
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+			// After the last file is added, sort the images by date taken if we're sorting
+			if (photos.sort) {
+				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+			}
 
 		} else if (photos.count) {
 			document.getElementById('button_upload').disabled = false;
@@ -104,6 +106,8 @@ var photos = {
 	// Upload photos
 	upload: function() {
 
+Components.utils.reportError(photos.list.toSource());
+
 		// If any photos need resizing to fit in the per-photo size limits, dispatch the
 		// jobs and wait
 		var resizing = false;
@@ -169,30 +173,26 @@ var photos = {
 	},
 
 	// Normalize the photo list and selected list with the DOM
-	update: function() {
+	normalize: function() {
+		var list = document.getElementById('list').getElementsByTagName('li');
+		var old_list = photos.list;
+		photos.list = [];
+		photos.selected = [];
+		for (var i = list.length - 1; i >= 0; --i) {
+			var old_id = parseInt(list[i].id.replace('photo', ''));
+			var new_id = photos.list.length;
 
-		// Transform photo IDs temporarily and note the new IDs of selected photos
-		var old_selected = ',' + photos.selected.toString() + ',';
-		var new_selected = [];
-		var p = photos.list;
-		var ii = p.length;
-		for (var i = 0; i < ii; ++i) {
-			if (null != p[i]) {
-				document.getElementById('photo' + p[i].id).id = '_photo' + i;
-				if (-1 != old_selected.indexOf(',' + p[i].id + ',')) {
-					new_selected.push(i);
-				}
-				p[i].id = i;
-			}
-		}
+			// Move the photo info
+			list[i].id = 'photo' + new_id;
+			photos.list.push(old_list[old_id]);
+			photos.list[new_id].id = new_id;
 
-		// Transform photo IDs back to normal and update the selected list
-		for (var i = 0; i < ii; ++i) {
-			if (null != p[i]) {
-				document.getElementById('_photo' + i).id = 'photo' + i;
+			// Update selection
+			if ('selected' == list[i].getElementsByTagName('img')[0].className) {
+				photos.selected.push(new_id);
 			}
+
 		}
-		photos.selected = new_selected;
 
 	}
 

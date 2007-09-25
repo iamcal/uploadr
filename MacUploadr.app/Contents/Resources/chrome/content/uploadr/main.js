@@ -34,6 +34,7 @@ events.tools = {
 			--photos.count;
 			photos.unsaved = true;
 		}
+		photos.normalize();
 
 		// Clear the selection
 		photos.selected = [];

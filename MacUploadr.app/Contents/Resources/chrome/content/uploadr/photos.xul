@@ -8,7 +8,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 	<script src="chrome://uploadr/content/events_photos.js" />
 	<hbox id="page_photos" flex="1">
 		<vbox class="newest" flex="1">
-			<vbox id="photos" class="no_drag oldest" flex="1" onclick="events.photos.click(event);"
+			<scrollbox id="photos" class="no_drag oldest" flex="1" orient="vertical"
+			onclick="events.photos.click(event);"
 			onmousedown="events.photos.mousedown(event);"
 			onmousemove="events.photos.mousemove(event);"
 			onmouseup="events.photos.mouseup(event);"
@@ -22,7 +23,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<html:div id="drag_select" />
 					<html:p id="drag_follower"> </html:p>
 				</stack>
-			</vbox>
+			</scrollbox>
 		</vbox>
 		<vbox id="meta">
 			<hbox>
