@@ -24,7 +24,7 @@ var photos = {
 
 	// Let the user select some files, thumbnail them and track them
 	add: function() {
-		document.getElementById('button_upload').disabled = true;
+		buttons.disable('upload');
 		var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
@@ -39,10 +39,12 @@ var photos = {
 			// After the last file is added, sort the images by date taken if we're sorting
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+			} else {
+				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
 			}
 
 		} else if (photos.count) {
-			document.getElementById('button_upload').disabled = false;
+			buttons.enable('upload');
 		}
 	},
 	_add: function(path) {
@@ -88,7 +90,7 @@ var photos = {
 		}
 
 		// For each selected image, show the loading spinner and dispatch the rotate job
-		document.getElementById('button_upload').disabled = true;
+		buttons.disable('upload');
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[s[i]];
 			var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
@@ -105,8 +107,11 @@ var photos = {
 
 	// Upload photos
 	upload: function() {
+		block_exit();
 
-Components.utils.reportError(photos.list.toSource());
+		// Update the UI
+		status.set(locale.getString('status.uploading'));
+		buttons.disable('upload');
 
 		// If any photos need resizing to fit in the per-photo size limits, dispatch the
 		// jobs and wait
@@ -139,7 +144,6 @@ Components.utils.reportError(photos.list.toSource());
 		}
 		photos.list = [];
 		photos.count = 0;
-		document.getElementById('button_upload').disabled = true;
 		photos.selected = [];
 		photos.last = null;
 		photos.unsaved = false;
@@ -157,14 +161,11 @@ Components.utils.reportError(photos.list.toSource());
 			}
 		}
 
-		// Update the UI
-		status.set(locale.getString('status.uploading'));
-
 		// Kick off the first batch job if we haven't started
 		if (not_started) {
 			for (var i = 0; i < ii; ++i) {
 				if (null != photos.uploading[i]) {
-					upload(i);
+					upload.start(i);
 					break;
 				}
 			}
@@ -194,9 +195,59 @@ Components.utils.reportError(photos.list.toSource());
 
 		}
 
+	},
+
+	// Load saved metadata
+	load: function() {
+		var obj = uploadr.fread('photos.json');
+
+		// Add the previous batch of photos
+		var list = obj.list;
+		var ii = list.length;
+		for (var i  = 0; i < ii; ++i) {
+			photos._add(list[i].path);
+			photos.list[photos.list.length - 1] = list[i];
+		}
+
+		// Sort photos based on previous sort setting
+		photos.sort = obj.sort;
+		if (photos.sort) {
+			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+		} else {
+			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+			document.getElementById('photos_sort_default').style.display = 'none';
+			document.getElementById('photos_sort_revert').style.display = 'block';
+		}
+
+		// Bring in old sets that were created locally but not on the site
+		for each (var name in obj.sets) {
+			meta.created_sets.push(name);
+			meta.sets[name] = name;
+		}
+
+	},
+
+	// Save all metadata to disk
+	save: function() {
+		if (0 != _block_exit) {
+			return;
+		}
+		if (0 == photos.count) {
+			meta.created_sets = [];
+		}
+		uploadr.fwrite('photos.json', {
+			sort: photos.sort,
+			sets: meta.created_sets,
+			list: photos.list
+		});
 	}
 
 };
+
+// Setup auto-saving of metadata in case of crashes
+window.setInterval(function() {
+	photos.save();
+}, 1000 * uploadr.conf.auto_save);
 
 // Make the photos object visible to child windows
 //   This makes drag-to-dock possible
@@ -224,5 +275,5 @@ var Photo = function(id, path) {
 	this.content_type = settings.content_type;
 	this.safety_level = settings.safety_level;
 	this.hidden = settings.hidden;
-	this.resize = settings.resize;
+	this.sets = [];
 };

@@ -1,21 +1,28 @@
-/* Common things
- */
+/* Baseline style, not sure how necessary it is */
 box, toolbox, hbox, vbox {
 	margin: 0;
 	padding: 0;
 	border: 0;
 }
-#menu {
-	display: none;
-}
+
+
+
+/*
+ * Header
+ */
+
 h1, h2 {
 	margin-top: 0;
 }
+
+/* The user indicator */
 #switch {
 	color: #0063dc;
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+/* Logo and top styles */
 .fill {
 	border-bottom: 1px solid #999;
 }
@@ -25,6 +32,8 @@ h1, h2 {
 	background: url(logo.png) no-repeat scroll 0 10px;
 	border-bottom: 1px solid #999;
 }
+
+/* Pages */
 .page {
 	padding: 16px 0 16px 16px;
 	background: white;
@@ -32,13 +41,23 @@ h1, h2 {
 .page hbox vbox {
 	padding: 0 16px 0 0;
 }
+
+
+
+/*
+ * Footer
+ */
+
 #footer {
 	height: 40px;
 	padding: 5px;
-	border-top: 1px solid #999;
+	border-top: 1px dotted #bbb;
+	background: white;
 }
+
+/* Free user bandwidth counter */
 #free {
-	display: none;
+	visibility: hidden;
 }
 #bw_used, #bw_batch, #bw_remaining {
 	height: 17px;
@@ -57,20 +76,58 @@ h1, h2 {
 	width: 94px;
 	background-position: 0 -17px;
 }
+
+/* Upload progress meter */
 #progress {
-	display: none;
+	visibility: hidden;
 }
+
+/* Buttons */
 #button_back, #button_ok, #button_upload {
 	display: none;
 }
+input.button {
+	margin: 0 0 5px 5px;
+	background: #0063dc;
+	color: white;
+	font-size: 12px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+input.disabled_button {
+	margin: 0 0 5px 5px;
+	background: #eee;
+	color: #888;
+	font-size: 12px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+/* Nested form indentation, used all over */
 radiogroup checkbox {
 	margin-left: 16px;
 }
+
+/* Special messages */
 .status {
-	background: #ffb;
-}
-.status p {
 	margin: 5px;
+	padding: 5px;
+	background: #ffc;
+}
+.status h3, .status p {
+	margin: 0;
+}
+
+/* Make anything look like a link */
+.link {
+	color: #0063dc;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/* Make the upload button gaudy */
+#button_upload {
+	font-size: 16px;
 }
 
 /*
@@ -194,6 +251,14 @@ toolbarseparator {
 	border: 5px solid #ff0084;
 }
 
+/* Sort indicators */
+#photos_sort_default {
+	color: #bbb;
+}
+#photos_sort_revert {
+	display: none;
+}
+
 /* The actual list of photos */
 #list {
 	margin: 0;
@@ -262,15 +327,17 @@ toolbarseparator {
 	background: url(drag_select.png);
 }
 
+
+
 /*
  * Photo metadata
  */
 
 /* Three states, depending on what's selected */
 #meta, #batch_meta, #no_meta {
-	width: 180px;
+	width: 200px;
 	padding: 5px;
-	background: #f4f4f4;
+	background: #f8f8f8;
 }
 #meta, #batch_meta {
 	display: none;
@@ -287,41 +354,50 @@ toolbarseparator {
 	border: 0;
 }
 
-/* Selectively show available metadata settings */
-#meta_secondary {
+/* Initially hide extra metadata settings */
+#single_privacy, #single_melons, #single_sets, #batch_privacy, #batch_melons, #batch_sets {
 	display: none;
 }
-#batch_meta_privacy_link, #batch_meta_melons_link {
-	color: #0063dc;
-	text-decoration: underline;
+
+/* Space for the sets section */
+#single_sets table, #batch_sets table {
+	margin: 5px 0 0 0;
+}
+
+/* Sets lists */
+#single_sets ul, #batch_sets ul {
+	margin: 5px 5px 0 5px;
+	padding: 0;
+	list-style-type: none;
+}
+#single_sets ul li, #batch_sets ul li {
+	margin: 0;
+	padding: 0 0 5px 5px;
+}
+#single_sets ul li a, #batch_sets ul li a {
+	color: #aaa;
+	text-decoration: none;
 	cursor: pointer;
 }
-#batch_meta_privacy, #batch_meta_melons {
-	display: none;
-}
 
 
 
-/* User settings page
- */
+/* User settings page */
 #page_users {
 	display: none;
 }
 
-/* Settings page
- */
+/* Settings page */
 #page_settings {
 	display: none;
 }
 
-/* Upload progress page
- */
+/* Upload progress page */
 #page_progress {
 	display: none;
 }
 
-/* Upload complete page
- */
+/* Upload complete page */
 #page_complete {
 	display: none;
 }

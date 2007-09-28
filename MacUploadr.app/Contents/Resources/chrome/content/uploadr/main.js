@@ -42,10 +42,10 @@ events.tools = {
 
 		// Allow upload only if there are photos
 		if (photos.count) {
-			document.getElementById('button_upload').disabled = false;
+			buttons.enable('upload');
 		} else {
 			photos.unsaved = false;
-			document.getElementById('button_upload').disabled = true;
+			buttons.disable('upload');
 		}
 
 	},
@@ -132,7 +132,7 @@ events.buttons = {
 	cancel: function() {
 		if (confirm(locale.getString('progress.cancel'),
 			locale.getString('progress.cancel.title'))) {
-			upload_cancel = true;
+			upload.cancel = true;
 		}
 	},
 
@@ -142,7 +142,9 @@ events.buttons = {
 		var uri = io.newURI('http://flickr.com/upgrade/', null, null);
 		var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
 			Ci.nsIExternalProtocolService);
-		eps.loadURI(uri, null);
+		var launcher = eps.getProtocolHandlerInfo('http');
+		launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
+		launcher.launchWithURI(uri, null);
 		alert(locale.getString('go_pro'), locale.getString('go_pro.title'));
 	}
 

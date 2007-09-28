@@ -9,7 +9,9 @@ events.bandwidth = {
 		var uri = io.newURI('http://flickr.com/upgrade/', null, null);
 		var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
 			Ci.nsIExternalProtocolService);
-		eps.loadURI(uri, null);
+		var launcher = eps.getProtocolHandlerInfo('http');
+		launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
+		launcher.launchWithURI(uri, null);
 	}
 
 };

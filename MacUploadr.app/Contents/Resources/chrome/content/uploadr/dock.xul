@@ -19,7 +19,13 @@ Components.utils.reportError('dock.xul: ' + window.arguments);
 				if (win) {
 					win._photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
 						Ci.nsIFileProtocolHandler).getFileFromURLSpec(window.arguments[0]).path);
-					win._threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+					if (win._photos.sort) {
+						win._threads.worker.dispatch(new Sort(),
+							win._threads.worker.DISPATCH_NORMAL);
+					} else {
+						win._threads.worker.dispatch(new EnableUpload(),
+							win._threads.worker.DISPATCH_NORMAL);
+					}
 					window.close();
 					win.focus();
 				}

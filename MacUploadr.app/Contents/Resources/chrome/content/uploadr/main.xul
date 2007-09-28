@@ -8,7 +8,7 @@
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-xmlns:html="http://www.w3.org/1999/xhtml" onload="users.load(); uploadr.drag();"
+xmlns:html="http://www.w3.org/1999/xhtml" onload="users.load(); photos.load(); uploadr.drag();"
 onclose="return exit();" persist="screenX screenY width height sizemode">
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
@@ -27,6 +27,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/events_bandwidth.js" />
 	<keyset>
 		<key id="key_quit" modifiers="accel" key="q" oncommand="exit();" />
+		<key id="key_prefs" modifiers="accel" key="," oncommand="events.tools.settings();" />
 		<key id="key_back" keycode="VK_BACK" oncommand="events.tools.remove();" />
 		<key id="key_delete" keycode="VK_DELETE" oncommand="events.tools.remove();" />
 
@@ -56,6 +57,8 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			<menu id="menu_file" label="&menu.file;">
 				<menupopup>
 					<menuitem id="menu_add" label="&menu.file.add;" oncommand="photos.add();" />
+					<menuitem id="menu_preferences" label="&menu.file.preferences;"
+					key="key_prefs" oncommand="events.tools.settings();" />
 					<menuitem id="menu_FileQuitItem" label="&menu.file.exit;"
 					key="key_quit" oncommand="exit();" />
 				</menupopup>
@@ -113,8 +116,8 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 						<box id="bw_remaining" />
 					</hbox>
 				</vbox>
-				<button id="go_pro" label="&bandwidth.go_pro;"
-				oncommand="events.buttons.go_pro();" />
+				<html:input type="button" id="go_pro" value="&bandwidth.go_pro;"
+				class="link" onclick="events.buttons.go_pro();" />
 			</hbox>
 			<hbox id="progress">
 				<vbox>
@@ -126,19 +129,19 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					<progressmeter id="progress_file" value="0" />
 				</vbox>
 				<vbox>
-					<button id="button_cancel" label="&buttons.cancel;"
-					oncommand="events.buttons.cancel();" />
+					<html:input type="button" id="button_cancel" value="&buttons.cancel;"
+					class="button" onclick="events.buttons.cancel();" />
 				</vbox>
 			</hbox>
 			<spacer flex="1" />
-			<button id="button_login" label="&buttons.login;"
-			oncommand="events.buttons.login();" />
-			<button id="button_back" label="&buttons.back;"
-			oncommand="events.buttons.back();" />
-			<button id="button_ok" label="&buttons.ok;"
-			oncommand="events.buttons.ok();" />
-			<button id="button_upload" label="&buttons.upload;" disabled="true"
-			oncommand="events.buttons.upload();" />
+			<html:input type="button" id="button_login" value="&buttons.login;" class="button"
+			onclick="events.buttons.login();" />
+			<html:input type="button" id="button_back" value="&buttons.back;" class="button"
+			onclick="events.buttons.back();" />
+			<html:input type="button" id="button_ok" value="&buttons.ok;" class="button"
+			onclick="events.buttons.ok();" />
+			<html:input type="button" id="button_upload" value="&buttons.upload;"
+			class="disabled_button" disabled="true" onclick="events.buttons.upload();" />
 		</hbox>
 		<statusbar>
 			<statusbarpanel id="status" label="" flex="1" />

@@ -18,8 +18,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			ondragexit="nsDragAndDrop.dragExit(event, drag.observer); event.stopPropagation();"
 			ondragdrop="nsDragAndDrop.drop(event, drag.observer); event.stopPropagation();">
 				<stack>
-					<html:ul id="list">
-					</html:ul>
+					<html:div>
+						<label id="photos_sort_default" value="&photos.sort.default;" />
+						<label id="photos_sort_revert" class="link" value="&photos.sort.revert;" />
+						<html:ul id="list"></html:ul>
+					</html:div>
 					<html:div id="drag_select" />
 					<html:p id="drag_follower"> </html:p>
 				</stack>
@@ -29,8 +32,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			<hbox>
 				<html:div id="meta_div"></html:div>
 				<vbox>
-					<label id="meta_dim" value="dim" />
-					<label id="meta_size" value="size" />
+					<label id="meta_dim" value="" />
+					<label id="meta_size" value="" />
 				</vbox>
 			</hbox>
 			<label control="single_title" value="&meta.title;" />
@@ -40,9 +43,9 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			<label control="single_tags" value="&meta.tags;" />
 			<textbox id="single_tags" />
 			<html:p> </html:p>
-			<label id="batch_meta_privacy_link" value="&meta.privacy;"
+			<label id="single_privacy_link" class="link" value="&meta.privacy;"
 			onclick="events.photos.privacy();" />
-			<vbox id="meta_privacy">
+			<vbox id="single_privacy">
 				<label control="single_is_public" value="&settings.privacy.who;" />
 				<radiogroup id="single_is_public" value="1"
 				oncommand="events.photos.is_public(this.value);">
@@ -51,11 +54,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<checkbox id="single_is_family" label="&settings.privacy.family;" />
 					<radio value="1" label="&settings.privacy.public;" />
 				</radiogroup>
+				<html:p> </html:p>
 			</vbox>
-			<html:p> </html:p>
-			<label id="batch_meta_melons_link" value="&meta.melons;"
+			<label id="single_melons_link" class="link" value="&meta.melons;"
 			onclick="events.photos.melons();" />
-			<vbox id="meta_melons">
+			<vbox id="single_melons">
 				<label control="single_content_type" value="&settings.content_type;" />
 				<menulist id="single_content_type">
 					<menupopup>
@@ -82,10 +85,30 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<menuitem value="3" label="&settings.safety_level.restricted;" />
 					</menupopup>
 				</menulist>
+				<html:p> </html:p>
+			</vbox>
+			<label control="single_sets_link" class="link" value="&meta.single.sets;"
+			onclick="events.photos.sets();" />
+			<vbox id="single_sets">
+				<html:ul id="single_sets_list"></html:ul>
+				<menulist id="single_set">
+					<menupopup>
+						<menuitem value="0" label="&settings.sets.none;" />
+					</menupopup>
+				</menulist>
+				<html:table border="0" cellpadding="0" cellspacing="0">
+				<html:tr>
+					<html:td><label id="single_sets_create" class="link"
+					value="&settings.sets.create;" onclick="events.photos.create_set();" /></html:td>
+					<html:td><html:input type="button" id="single_sets_add" class="button"
+					value="&settings.sets.add;" onclick="events.photos.add_to_set();" /></html:td>
+				</html:tr>
+				</html:table>
 			</vbox>
 		</vbox>
 		<vbox id="batch_meta">
-			<html:div class="status"><html:p id="batch_prompt"> </html:p></html:div>
+			<vbox class="status"><html:h3
+			id="batch_prompt"> </html:h3><html:p>&meta.batch.prompt;</html:p></vbox>
 			<label control="batch_title" value="&meta.title;" />
 			<textbox id="batch_title" />
 			<label control="batch_description" value="&meta.description;" />
@@ -93,9 +116,9 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			<label control="batch_tags" value="&meta.tags;" />
 			<textbox id="batch_tags" />
 			<html:p> </html:p>
-			<label id="batch_meta_privacy_link" value="&meta.privacy;"
+			<label id="batch_privacy_link" class="link" value="&meta.privacy;"
 			onclick="events.photos.privacy();" />
-			<vbox id="batch_meta_privacy">
+			<vbox id="batch_privacy">
 				<label control="batch_is_public" value="&settings.privacy.who;" />
 				<checkbox id="batch_is_public_unchanged" label="&meta.leave_unchanged;"
 				checked="true" />
@@ -109,11 +132,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						oncommand="events.photos.batch_is_public_change();" />
 					<radio value="1" label="&settings.privacy.public;" />
 				</radiogroup>
+				<html:p> </html:p>
 			</vbox>
-			<html:p> </html:p>
-			<label id="batch_meta_melons_link" value="&meta.melons;"
+			<label id="batch_melons_link" class="link" value="&meta.melons;"
 			onclick="events.photos.melons();" />
-			<vbox id="batch_meta_melons">
+			<vbox id="batch_melons">
 				<label control="batch_content_type" value="&settings.content_type;" />
 				<checkbox id="batch_content_type_unchanged" label="&meta.leave_unchanged;"
 				checked="true" />
@@ -148,9 +171,29 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<menuitem value="3" label="&settings.safety_level.restricted;" />
 					</menupopup>
 				</menulist>
+				<html:p> </html:p>
+			</vbox>
+			<label control="batch_sets_link" class="link" value="&meta.batch.sets;"
+			onclick="events.photos.sets();" />
+			<vbox id="batch_sets">
+				<html:ul id="batch_sets_list"></html:ul>
+				<menulist id="batch_set">
+					<menupopup>
+						<menuitem value="0" label="&settings.sets.none;" />
+					</menupopup>
+				</menulist>
+				<html:table border="0" cellpadding="0" cellspacing="0">
+				<html:tr>
+					<html:td><label id="batch_sets_create" class="link"
+					value="&settings.sets.create;" onclick="events.photos.create_set();" /></html:td>
+					<html:td><html:input type="button" id="batch_sets_add" class="button"
+					value="&settings.sets.add;" onclick="events.photos.add_to_set();" /></html:td>
+				</html:tr>
+				</html:table>
 			</vbox>
 			<spacer flex="1" />
-			<button id="meta_save" label="&meta.save;" oncommand="meta.save();" />
+			<html:input type="button" id="meta_save" value="&meta.save;" class="button"
+			onclick="meta.save();" />
 		</vbox>
 		<vbox id="no_meta" />
 	</hbox>

@@ -201,7 +201,7 @@ SortCallback.prototype = {
 		// Perform the sort
 		if (1 >= photos.list.length) {
 			if (1 == photos.list.length) {
-				document.getElementById('button_upload').disabled = false;
+				buttons.enable('upload');
 			}
 			return;
 		}
@@ -225,7 +225,7 @@ SortCallback.prototype = {
 		photos.normalize();
 
 		// And finally allow them to upload
-		document.getElementById('button_upload').disabled = false;
+		buttons.enable('upload');
 
 	},
 	QueryInterface: function(iid) {
@@ -324,7 +324,7 @@ var EnableUploadCallback = function() {
 };
 EnableUploadCallback.prototype = {
 	run: function() {
-		document.getElementById('button_upload').disabled = false;
+		buttons.enable('upload');
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

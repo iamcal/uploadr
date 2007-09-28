@@ -17,10 +17,10 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				<html:h2>&settings.set;</html:h2>
 				<menulist id="s_set" disabled="true">
 					<menupopup>
-						<menuitem value="0" label="&settings.set.none;" />
+						<menuitem value="0" label="&settings.sets.none;" />
 					</menupopup>
 				</menulist>
-				<hbox><button id="s_set_add" label="&settings.set.add;"
+				<hbox><button id="s_set_add" label="&settings.sets.add;"
 				oncommand="events.settings.add_set();" /></hbox>
 			</vbox>
 		</hbox>

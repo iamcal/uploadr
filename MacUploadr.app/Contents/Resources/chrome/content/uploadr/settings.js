@@ -9,8 +9,6 @@
 var settings = {
 
 	// The settings themselves
-	tags: '',
-	set: null,
 	is_public: null,
 	is_friend: null,
 	is_family: null,
@@ -24,32 +22,6 @@ var settings = {
 	//   to overwrite data, and updates all photos
 	update: function() {
 		var page = pages.current();
-
-		// Kills nulls and NaNs before they kill us
-		//   This is basically crash-recovery code, and might not be necessary anymore
-		/*
-		if (isNaN(settings.is_public) || null == settings.is_public) {
-			settings.is_public = 1;
-		}
-		if (isNaN(settings.is_friend) || null == settings.is_friend) {
-			settings.is_friend = 1;
-		}
-		if (isNaN(settings.is_family) || null == settings.is_family) {
-			settings.is_family = 1;
-		}
-		if (isNaN(settings.content_type) || null == settings.content_type) {
-			settings.content_type = 1;
-		}
-		if (isNaN(settings.hidden) || null == settings.hidden) {
-			settings.hidden = 1;
-		}
-		if (isNaN(settings.safety_level) || null == settings.safety_level) {
-			settings.safety_level = 1;
-		}
-		if ('' == settings.resize || null == settings.resize) {
-			settings.resize = -1;
-		}
-		*/
 
 		// On the settings page, update settings object and photos
 		if ('settings' == page) {
@@ -67,12 +39,9 @@ var settings = {
 				settings.safety_level !=
 					document.getElementById('s_safety_level').selectedIndex + 1
 			);
-			var changed_resize = 'settings' == page &&
-				settings.resize != document.getElementById('s_resize').value;
 	
 			// Get permission to overwrite any changes that were made
-			if (0 < photos.count &&
-				(changed_privacy || changed_melons || changed_resize) &&
+			if (0 < photos.count && (changed_privacy || changed_melons) &&
 				!confirm(locale.getString('settings.overwrite'),
 					locale.getString('settings.overwrite.title'))) {
 				return;
@@ -91,9 +60,7 @@ var settings = {
 				settings.hidden = document.getElementById('s_hidden').selectedIndex + 1;
 				settings.safety_level = document.getElementById('s_safety_level').selectedIndex + 1;
 			}
-			if (changed_resize) {
-				settings.resize = parseInt(document.getElementById('s_resize').value);
-			}
+			settings.resize = parseInt(document.getElementById('s_resize').value);
 
 		}
 
@@ -118,9 +85,6 @@ var settings = {
 					if (changed_melons || null == photo[k]) {
 						photo[k] = settings[k];
 					}
-				}
-				if (changed_resize || null == photo.resize) {
-					photo.resize = settings.resize;
 				}
 			}
 		}

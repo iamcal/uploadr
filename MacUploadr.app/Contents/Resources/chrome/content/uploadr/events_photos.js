@@ -85,7 +85,11 @@ events.photos = {
 			document.getElementById('t_rotate_r').className = 'enabled';
 	
 		}
-	
+		// If we clicked the revert to sorted button
+		else if (e.target.id && 'photos_sort_revert' == e.target.id) {
+			events.photos.sort();
+		}
+
 		// If we clicked on whitespace, hide the thumbnail and metadata, and disable buttons
 		else {
 			photos.selected = [];
@@ -122,6 +126,35 @@ events.photos = {
 	// Reference to the photos container for scroll info
 	box: null,
 
+	// Auto-scroll interval while dragging
+	auto_scroll: null,
+
+	// Update the bounding box used during drag-selection
+	drag_select: function(e, pos) {
+		const OFFSET_X = -events.photos.box.x - 5;
+		const OFFSET_Y = -events.photos.box.y - 5;
+		var ds = document.getElementById('drag_select');
+
+		// Invert positions if necessary
+		if (events.photos.anchor.x > e.clientX + pos.x.value + OFFSET_X) {
+			ds.style.left = (e.clientX + pos.x.value + OFFSET_X) + 'px';
+		}
+		if (events.photos.anchor.y > e.clientY + pos.y.value + OFFSET_Y) {
+			ds.style.top = (e.clientY + pos.y.value + OFFSET_Y) + 'px';
+		}
+
+		// New width and height
+		ds.style.width = Math.abs(e.clientX + pos.x.value + OFFSET_X -
+			events.photos.anchor.x) + 'px';
+		ds.style.height = Math.abs(e.clientY + pos.y.value + OFFSET_Y -
+			events.photos.anchor.y) + 'px';
+
+		// Actually find photos in the box
+		findr.bounding_box(events.photos.anchor.x, events.photos.anchor.y,
+			e.clientX + pos.x.value + OFFSET_X, e.clientY + pos.y.value + OFFSET_Y);
+
+	},
+
 	// Initiate a drag
 	mousedown: function(e) {
 		if (null == events.photos.box) {
@@ -133,23 +166,13 @@ events.photos = {
 
 		// Clicking on a single photo will do drag-reordering
 		if (e.target.src) {
-/*
-			if ('selected' != e.target.className) {
-				var imgs = document.getElementById('list').getElementsByTagName('img');
-				var ii = imgs.length;
-				for (var i = 0; i < ii; ++i) {
-					imgs[i].className = '';
-				}
-				photos.selected = [parseInt(e.target.parentNode.id.replace('photo', ''))];
-			}
-*/
 			if (1 < photos.count) {
 				events.photos.dragging = 1;
 			}
 		}
 
 		// Clicking whitespace will start the drag-select
-		else {
+		else if (e.target.id && 'photos_sort_revert' != e.target.id) {
 			events.photos.anchor = {
 				x: e.clientX + pos.x.value - events.photos.box.x - 5,
 				y: e.clientY + pos.y.value - events.photos.box.y - 5
@@ -245,39 +268,56 @@ events.photos = {
 
 			}
 
-			// If we're reaching the edge of the box and can scroll, do so
-			
-
 		}
 
 		// If we're selecting
 		else {
-			var ds = document.getElementById('drag_select');
+			events.photos.drag_select(e, pos);
+		}
 
-			// Invert positions if necessary
-			if (events.photos.anchor.x > e.clientX + pos.x.value + OFFSET_X) {
-				ds.style.left = (e.clientX + pos.x.value + OFFSET_X) + 'px';
+		// If we're reaching the edge of the box and can scroll, do so
+		if ((0 != events.photos.dragging || null != events.photos.anchor) &&
+			(uploadr.conf.scroll > e.clientY + OFFSET_Y ||
+			 uploadr.conf.scroll > events.photos.box.height - e.clientY - OFFSET_Y)) {
+			if (null == events.photos.auto_scroll) {
+				var clientX = e.clientX;
+				var clientY = e.clientY;
+				events.photos.auto_scroll = window.setInterval(function() {
+					var delta = 0;
+					if (uploadr.conf.scroll > clientY + OFFSET_Y) {
+						delta = -uploadr.conf.scroll;
+					}
+					if (uploadr.conf.scroll > events.photos.box.height - clientY - OFFSET_Y) {
+						delta = uploadr.conf.scroll;
+					}
+					var pos = {x: {}, y: {}};
+					events.photos.box.getPosition(pos.x, pos.y);
+					if (delta) {
+						events.photos.box.scrollTo(pos.x.value, pos.y.value + delta);
+					}
+					events.photos.drag_select({clientX: clientX, clientY: clientY}, pos);
+				}, 10);
 			}
-			if (events.photos.anchor.y > e.clientY + pos.y.value + OFFSET_Y) {
-				ds.style.top = (e.clientY + pos.y.value + OFFSET_Y) + 'px';
+		}
+
+		// If we've left the auto-scroll area, stop
+		else {
+			if (null != events.photos.auto_scroll) {
+				window.clearInterval(events.photos.auto_scroll);
+				events.photos.auto_scroll = null;
 			}
-
-			// New width and height
-			ds.style.width = Math.abs(e.clientX + pos.x.value + OFFSET_X -
-				events.photos.anchor.x) + 'px';
-			ds.style.height = Math.abs(e.clientY + pos.y.value + OFFSET_Y -
-				events.photos.anchor.y) + 'px';
-
-			// Actually find photos in the box
-			findr.bounding_box(events.photos.anchor.x, events.photos.anchor.y,
-				e.clientX + pos.x.value + OFFSET_X, e.clientY + pos.y.value + OFFSET_Y);
-
 		}
 
 	},
 
 	// Finish a drag
 	mouseup: function(e) {
+
+		// Stop auto-scrolling when we stop dragging, too
+		if (null != events.photos.auto_scroll) {
+			window.clearInterval(events.photos.auto_scroll);
+			events.photos.auto_scroll = null;
+		}
 
 		// If we're reordering
 		if (null == events.photos.anchor) {
@@ -313,6 +353,11 @@ events.photos = {
 				if (null != events.photos.target) {
 					events.photos.target.className = '';
 				}
+
+				// Show the link to revert to default order
+				document.getElementById('photos_sort_default').style.display = 'none';
+				document.getElementById('photos_sort_revert').style.display = 'block';
+				photos.sort = false;
 
 			}
 			events.photos.dragging = 0;
@@ -351,7 +396,7 @@ events.photos = {
 				}
 			}
 			if (0 == photos.selected.length) {
-				events.photos.click({target: {}});
+				events.photos.click(e);
 			} else {
 				if (1 == photos.selected.length) {
 					meta.load(photos.selected[0]);
@@ -367,6 +412,15 @@ events.photos = {
 		}
 
 		events.photos.anchor = null;
+	},
+
+	// Sort the photos when asked
+	sort: function() {
+		buttons.disable('upload');
+		threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+		document.getElementById('photos_sort_default').style.display = 'block';
+		document.getElementById('photos_sort_revert').style.display = 'none';
+		photos.sort = true;
 	},
 
 	// Properly enable/disable the checkboxes available for private photos to be shared with
@@ -395,43 +449,58 @@ events.photos = {
 	},
 
 	// Display the other metadata fields
-	toggle: function() {
-		var primary = document.getElementById('meta_primary');
-		var secondary = document.getElementById('meta_secondary');
-		if ('none' == primary.style.display) {
-			primary.style.display = '-moz-box';
-			secondary.style.display = 'none';
-		} else {
-			primary.style.display = 'none';
-			secondary.style.display = '-moz-box';
-		}
-	},
 	privacy: function() {
-		var prefix = '';
+		var prefix;
 		if (1 < photos.selected.length) {
-			prefix = 'batch_'
+			prefix = 'batch'
+		} else {
+			prefix = 'single';
 		}
-		var privacy = document.getElementById(prefix + 'meta_privacy');
-		var melons = document.getElementById(prefix + 'meta_melons');
-		melons.style.display = 'none';
+		var privacy = document.getElementById(prefix + '_privacy');
+		var melons = document.getElementById(prefix + '_melons');
+		var sets = document.getElementById(prefix + '_sets');
 		if ('none' == privacy.style.display) {
 			privacy.style.display = '-moz-box';
 		} else {
 			privacy.style.display = 'none';
 		}
+		melons.style.display = 'none';
+		sets.style.display = 'none';
 	},
 	melons: function() {
-		var prefix = '';
+		var prefix;
 		if (1 < photos.selected.length) {
-			prefix = 'batch_'
+			prefix = 'batch'
+		} else {
+			prefix = 'single';
 		}
-		var privacy = document.getElementById(prefix + 'meta_privacy');
-		var melons = document.getElementById(prefix + 'meta_melons');
+		var privacy = document.getElementById(prefix + '_privacy');
+		var melons = document.getElementById(prefix + '_melons');
+		var sets = document.getElementById(prefix + '_sets');
 		privacy.style.display = 'none';
 		if ('none' == melons.style.display) {
 			melons.style.display = '-moz-box';
 		} else {
 			melons.style.display = 'none';
+		}
+		sets.style.display = 'none';
+	},
+	sets: function() {
+		var prefix;
+		if (1 < photos.selected.length) {
+			prefix = 'batch'
+		} else {
+			prefix = 'single';
+		}
+		var privacy = document.getElementById(prefix + '_privacy');
+		var melons = document.getElementById(prefix + '_melons');
+		var sets = document.getElementById(prefix + '_sets');
+		privacy.style.display = 'none';
+		melons.style.display = 'none';
+		if ('none' == sets.style.display) {
+			sets.style.display = '-moz-box';
+		} else {
+			sets.style.display = 'none';
 		}
 	},
 
@@ -447,6 +516,72 @@ events.photos = {
 	},
 	batch_safety_level_change: function() {
 		document.getElementById('batch_safety_level_unchanged').checked = false;
+	},
+
+	// Create a new set
+	create_set: function() {
+
+		// Do we have any sets to give?
+		if (-1 == users.sets || 0 < users.sets) {
+			var name = prompt(locale.getString('settings.set.add'),
+				locale.getString('settings.set.add.title'));
+			if (!name) {
+				return;
+			}
+			meta.created_sets.push(name);
+			meta.sets[name] = name;
+			var dropdowns = ['single_set', 'batch_set'];
+			for each (var dropdown in dropdowns) {
+				var d = document.getElementById(dropdown);
+				d.removeItemAt(0);
+				d.insertItemAt(0, locale.getString('settings.set.dont'), '', '');
+				d.insertItemAt(1, name, name, '');
+				d.selectedIndex = 1;
+				d.disabled = false;
+			}
+		}
+
+		// No sets remaining
+		else {
+			alert(locale.getString('settings.set.exhausted'),
+				locale.getString('settings.set.exhausted,title'));
+		}
+
+	},
+
+	// Add selected photos to the selected set
+	add_to_set: function() {
+
+		// Single photo or group of photos?
+		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+
+		// Get the set we're adding to
+		var set = document.getElementById(prefix + '_set');
+		var set_id = set.value;
+		var name = set.selectedItem.label;
+		if ('' == set_id) {
+			return;
+		}
+
+		// Add each selected photo to this set
+		var ul = document.getElementById(prefix + '_sets_list');
+		var ii = photos.selected.length;
+		for (var i = 0; i < ii; ++i) {
+			var p = photos.list[photos.selected[i]];
+			if (-1 == p.sets.indexOf(set_id)) {
+				p.sets.push(set_id);
+			}
+Components.utils.reportError(p.sets);
+		}
+		set.selectedIndex = 0;
+
+		// Add it to the list
+		meta.select_set(ul, set_id, name);
+
+	},
+
+	// Remove selected photos from a set
+	remove_from_set: function(set) {
 	}
 
 };

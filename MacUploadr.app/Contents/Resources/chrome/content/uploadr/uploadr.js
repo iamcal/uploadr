@@ -16,11 +16,21 @@ var uploadr = {
 		// Size of thumbnails
 		thumbSize: 100,
 
+		// Scrolling threshold for dragging (pixels);
+		scroll: 20,
+
+		// Upload mode
+		//   Must be 'sync' or 'async'
+		mode: 'async',
+
+		// How often should the app auto-save metadata? (seconds)
+		auto_save: 60
+
 	},
 
 	// Handle files dragged on startup
 	drag: function() {
-		Components.utils.reportError('uploadr.drag(): ' + window.arguments[0]);
+		buttons.disable('upload');
 		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
 		var ii = cl.length;
 		for (var i = 0; i < ii; ++i) {
@@ -29,7 +39,11 @@ var uploadr = {
 					Ci.nsIFileProtocolHandler).getFileFromURLSpec(cl.getArgument(++i)).path);
 			}
 		}
-		threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+		if (photos.sort) {
+			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+		} else {
+			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+		}
 	},
 
 	// Profile file IO

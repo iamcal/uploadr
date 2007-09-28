@@ -1,5 +1,10 @@
 var meta = {
 
+	// Map of set IDs to names
+	sets: {},
+	created_sets: [],
+	sets_map: {},
+
 	// Load a photo's metadata from JS into the DOM
 	load: function(id) {
 
@@ -24,6 +29,7 @@ var meta = {
 			document.getElementById('batch_hidden').selectedIndex = settings.hidden - 1;
 			document.getElementById('batch_safety_level_unchanged').checked = true;
 			document.getElementById('batch_safety_level').selectedIndex = settings.safety_level - 1;
+			document.getElementById('batch_set').selectedIndex = 0;
 		}
 
 		// Load the values from a specific photo
@@ -43,6 +49,10 @@ var meta = {
 			meta_img.setAttribute('height', h);
 			meta_img.src = img.src;
 			meta_div.appendChild(meta_img);
+			document.getElementById('meta_dim').value = locale.getFormattedString('meta.dim',
+				[p.width, p.height]);
+			document.getElementById('meta_size').value = locale.getFormattedString('meta.size',
+				[(Math.round(uploadr.fsize(p.path) / 102.4) / 10) + ' MB']);
 			document.getElementById('single_title').value = p.title;
 			document.getElementById('single_description').value = p.description;
 			document.getElementById('single_tags').value = p.tags;
@@ -52,6 +62,20 @@ var meta = {
 			document.getElementById('single_content_type').selectedIndex = p.content_type - 1;
 			document.getElementById('single_hidden').selectedIndex = p.hidden - 1;
 			document.getElementById('single_safety_level').selectedIndex = p.safety_level - 1;
+
+			// Sets list
+			var ul = document.getElementById('single_sets_list');
+			while (ul.hasChildNodes()) {
+				ul.removeChild(ul.firstChild);
+			}
+			if (null != meta.sets) {
+				var ii = p.sets.length;
+				for (var i = 0; i < ii; ++i) {
+					meta.select_set(ul, p.sets[i], meta.sets[p.sets[i]]);
+				}
+			}
+			document.getElementById('single_set').selectedIndex = 0;
+
 		}
 
 	},
@@ -127,8 +151,9 @@ var meta = {
 		document.getElementById('single_is_friend').disabled = dis;
 		document.getElementById('single_is_family').disabled = dis;
 		document.getElementById('meta').style.display = '-moz-box';
-		document.getElementById('meta_privacy').style.display = 'none';
-		document.getElementById('meta_melons').style.display = 'none';
+		document.getElementById('single_privacy').style.display = 'none';
+		document.getElementById('single_melons').style.display = 'none';
+		document.getElementById('single_sets').style.display = 'none';
 		document.getElementById('batch_meta').style.display = 'none';
 		document.getElementById('no_meta').style.display = 'none';
 	},
@@ -139,8 +164,9 @@ var meta = {
 			locale.getFormattedString('meta.batch.prompt', [photos.selected.length]);
 		document.getElementById('meta').style.display = 'none';
 		document.getElementById('batch_meta').style.display = '-moz-box';
-		document.getElementById('batch_meta_privacy').style.display = 'none';
-		document.getElementById('batch_meta_melons').style.display = 'none';
+		document.getElementById('batch_privacy').style.display = 'none';
+		document.getElementById('batch_melons').style.display = 'none';
+		document.getElementById('batch_sets').style.display = 'none';
 		document.getElementById('no_meta').style.display = 'none';
 	},
 
@@ -223,6 +249,27 @@ var meta = {
 		}
 		return (quotes ? '"' : '') + tag.replace(/^\s+/, '').replace(/\s+$/, '') +
 			(quotes ? '"' : '');
+	},
+
+	// Show a set in the list of selected sets
+	select_set: function(ul, set_id, name) {
+		var li = document.createElementNS(NS_HTML, 'li');
+		li.appendChild(document.createTextNode(name + ' '));
+		var a = document.createElementNS(NS_HTML, 'a');
+		a.appendChild(document.createTextNode(String.fromCharCode(215)));
+		a.onclick = function(e) {
+			var ii = photos.selected.length;
+			for (var i = 0; i < ii; ++i) {
+				var p = photos.list[photos.selected[i]];
+				var j = p.sets.indexOf(set_id);
+				if (-1 != j) {
+					delete p.sets[j];
+				}
+			}
+			e.target.parentNode.parentNode.removeChild(e.target.parentNode);
+		};
+		li.appendChild(a);
+		ul.appendChild(li);
 	}
 
 };

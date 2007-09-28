@@ -93,7 +93,7 @@ var users = {
 
 		// Update the UI
 		if ('photos' == pages.current()) {
-			buttons.show(['upload']);
+			buttons.show('upload');
 		}
 
 		// Update the list on the users page

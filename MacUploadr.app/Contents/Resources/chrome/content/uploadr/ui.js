@@ -84,7 +84,7 @@ var free = {
 			var bw_remaining = document.getElementById('bw_remaining');
 			bw_remaining.style.width = remaining + 'px';
 			bw_remaining.style.backgroundPosition = '-' + (used + batch) + 'px -17px';
-			document.getElementById('free').style.display = '-moz-box';
+			document.getElementById('free').style.visibility = 'visible';
 		}
 
 		// And show the proper maximum size in the settings window
@@ -94,7 +94,7 @@ var free = {
 	},
 
 	hide: function() {
-		document.getElementById('free').style.display = 'none';
+		document.getElementById('free').style.visibility = 'hidden';
 	}
 
 };
@@ -108,16 +108,40 @@ var buttons = {
 		if ('string' == typeof list) {
 			list = [list];
 		}
-		buttons.hideAll();
+		buttons.hide_all();
 		for each (l in list) {
 			document.getElementById('button_' + l).style.display = '-moz-box';
 		}
 	},
 
 	// Hide all buttons
-	hideAll: function() {
+	hide_all: function() {
 		for each (l in buttons._list) {
 			document.getElementById('button_' + l).style.display = 'none';
+		}
+	},
+
+	// Enable specified buttons
+	enable: function(list) {
+		if ('string' == typeof list) {
+			list = [list];
+		}
+		for each (l in list) {
+			var b = document.getElementById('button_' + l);
+			b.disabled = false;
+			b.className = 'button';
+		}
+	},
+
+	// Disable specified buttons
+	disable: function(list) {
+		if ('string' == typeof list) {
+			list = [list];
+		}
+		for each (l in list) {
+			var b = document.getElementById('button_' + l);
+			b.disabled = true;
+			b.className = 'disabled_button';
 		}
 	}
 
@@ -133,9 +157,7 @@ var status = {
 	// Clear the status bar
 	clear: function() {
 		var status = document.getElementById('status');
-		//var r = status.label;
 		status.label = '';
-		//return r;
 	}
 
 };
@@ -218,6 +240,7 @@ var drag = {
 		onDrop: function(e, data) {
 
 			// Add the files
+			buttons.disable('upload');
 			data.dataList.forEach(function(d) {
 				if (d.first.data.isDirectory()) {
 					var files = d.first.data.directoryEntries;
@@ -233,13 +256,13 @@ var drag = {
 			// After the last file is added, sort the images by date taken
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+			} else {
+				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
 			}
 
 			// Enable the upload button?
-			if (photos.count) {
-				document.getElementById('button_upload').disabled = false;
-			} else {
-				document.getElementById('button_upload').disabled = true;
+			if (0 == photos.count) {
+				buttons.disable('upload');
 			}
 
 		},
@@ -273,27 +296,34 @@ locale.getFormattedString = function(id, args) {
 };
 
 // Allow functions to block exiting
-var block_exit = false;
+var _block_exit = 0;
+var _block_exit_stack = [];
+var block_exit = function() {
+	++_block_exit;
+	Components.utils.reportError('push: ' + _block_exit);
+	_block_exit_stack.push(_block_exit);
+}
+var unblock_exit = function() {
+	--_block_exit;
+	Components.utils.reportError('pop: ' + _block_exit_stack.pop());
+}
 
 // Why is exiting such a pain?
 var exit = function() {
 
 	// Don't exit if exit is blocked
-	if (block_exit) {
+Components.utils.reportError('_block_exit: ' + _block_exit);
+	if (0 < _block_exit) {
 		return;
 	}
 
-	// If there are unsaved photos, don't exit without confirmation
-	if (photos.unsaved && !confirm(locale.getString('unsaved'),
-		locale.getString('unsaved.title'))) {
-		return false;
-	}
 
-	// Save user info
+	// Save state
+	photos.save();
 	settings.save();
 	users.save();
 
-	// Remove the thumbs directory
+	// Remove the images directory
 	try {
 		var profile = Cc['@mozilla.org/file/directory_service;1'].getService(
 			Ci.nsIProperties).get('ProfD', Ci.nsIFile);
