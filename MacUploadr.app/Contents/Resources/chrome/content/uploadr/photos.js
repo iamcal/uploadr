@@ -73,6 +73,36 @@ var photos = {
 		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, path),
 			threads.worker.DISPATCH_NORMAL);
 
+		// Check the size of this file if we're logged in
+		if (users.username) {
+			var size = file.size(photos.list[id].path);
+			if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
+				status.set(locale.getString('status.limit'));
+			} else {
+				status.clear();
+			}
+			photos.batch_size += size;
+			free.update();
+		}
+
+	},
+
+	// Handle files dragged on startup
+	drag: function() {
+		buttons.disable('upload');
+		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
+		var ii = cl.length;
+		for (var i = 0; i < ii; ++i) {
+			if ('-url' == cl.getArgument(i)) {
+				photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
+					Ci.nsIFileProtocolHandler).getFileFromURLSpec(cl.getArgument(++i)).path);
+			}
+		}
+		if (photos.sort) {
+			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+		} else {
+			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+		}
 	},
 
 	// Rotate selected files
@@ -123,7 +153,7 @@ var photos = {
 					resizing = true;
 					threads.worker.dispatch(new Resize(p.id, settings.resize, p.path),
 						threads.worker.DISPATCH_NORMAL);
-				} else if (uploadr.fsize(p.path) > users.filesize) {
+				} else if (file.size(p.path) > users.filesize) {
 					resizing = true;
 					threads.worker.dispatch(new Resize(p.id, -1, p.path),
 						threads.worker.DISPATCH_NORMAL);
@@ -199,7 +229,7 @@ var photos = {
 
 	// Load saved metadata
 	load: function() {
-		var obj = uploadr.fread('photos.json');
+		var obj = file.read('photos.json');
 
 		// Add the previous batch of photos
 		var list = obj.list;
@@ -235,7 +265,7 @@ var photos = {
 		if (0 == photos.count) {
 			meta.created_sets = [];
 		}
-		uploadr.fwrite('photos.json', {
+		file.write('photos.json', {
 			sort: photos.sort,
 			sets: meta.created_sets,
 			list: photos.list

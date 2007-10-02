@@ -127,3 +127,32 @@ switch (orient) {
 	break;
 }
 exif["Exif.Image.Orientation"] = uint32_t(orient);
+
+
+
+filename		ticket_id					photo_id		site order		proper order
+
+IMG_1722.JPG	3609264-72157602195393043	1453335763		2				1
+api.jpg			3609264-72157602195394259	1453336053		1				2
+beck.jpg		3609264-72157602195394999	1453336425		3				3
+
+
+
+API CALL: ({async:1, auth_token:"72157601434015522-c1b9da7a8b48ebe2", title:"", description:"", tags:"", is_public:0, is_friend:0, is_family:0, content_type:1, hidden:1, safety_level:1, photo:{filename:"IMG_1722.JPG", path:"/Users/rcrowley/Desktop/pictures/IMG_1722.JPG"}})
+
+API RESULT: <?xml version="1.0" encoding="utf-8" ?>
+<rsp stat="fail">
+	<err code="98" msg="Invalid auth token" />
+</rsp>
+
+
+
+API CALL: ({async:1, auth_token:"72157601434015522-c1b9da7a8b48ebe2", title:"", description:"", tags:"", is_public:0, is_friend:0, is_family:0, content_type:1, hidden:1, safety_level:1, photo:{filename:"api.jpg", path:"/Users/rcrowley/Desktop/pictures/api.jpg"}})
+
+API RESULT: <?xml version="1.0" encoding="utf-8" ?>
+<rsp stat="ok">
+<ticketid>3609264-72157602187992740</ticketid>
+</rsp>
+
+
+

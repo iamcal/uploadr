@@ -52,7 +52,7 @@ var meta = {
 			document.getElementById('meta_dim').value = locale.getFormattedString('meta.dim',
 				[p.width, p.height]);
 			document.getElementById('meta_size').value = locale.getFormattedString('meta.size',
-				[(Math.round(uploadr.fsize(p.path) / 102.4) / 10) + ' MB']);
+				[(Math.round(file.size(p.path) / 102.4) / 10)]);
 			document.getElementById('single_title').value = p.title;
 			document.getElementById('single_description').value = p.description;
 			document.getElementById('single_tags').value = p.tags;
@@ -155,7 +155,7 @@ var meta = {
 		document.getElementById('single_melons').style.display = 'none';
 		document.getElementById('single_sets').style.display = 'none';
 		document.getElementById('batch_meta').style.display = 'none';
-		document.getElementById('no_meta').style.display = 'none';
+		meta._enable();
 	},
 
 	batch: function() {
@@ -167,7 +167,17 @@ var meta = {
 		document.getElementById('batch_privacy').style.display = 'none';
 		document.getElementById('batch_melons').style.display = 'none';
 		document.getElementById('batch_sets').style.display = 'none';
+		meta._enable();
+	},
+
+	// Common to batch and single enabling
+	_enable: function() {
 		document.getElementById('no_meta').style.display = 'none';
+		var remove = document.getElementById('t_remove');
+		remove.className = 'button';
+		remove.disabled = false;
+		document.getElementById('t_rotate_l').className = 'enabled';
+		document.getElementById('t_rotate_r').className = 'enabled';
 	},
 
 	// Disable the right-side metadata column on the photos page
@@ -175,6 +185,11 @@ var meta = {
 		document.getElementById('meta').style.display = 'none';
 		document.getElementById('batch_meta').style.display = 'none';
 		document.getElementById('no_meta').style.display = '-moz-box';
+		var remove = document.getElementById('t_remove');
+		remove.className = 'disabled_button';
+		remove.disabled = true;
+		document.getElementById('t_rotate_l').className = 'disabled';
+		document.getElementById('t_rotate_r').className = 'disabled';
 	},
 
 	// If a user leaves a partial batch before committing, warn them

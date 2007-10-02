@@ -1,6 +1,6 @@
 var pages = {
 
-	_list: ['photos', 'users', 'settings', 'progress', 'complete'],
+	_list: ['photos', 'queue'],
 	_current: 0,
 
 	// Go to a specified page
@@ -20,15 +20,6 @@ var pages = {
 			document.getElementById('page_' + pages._list[i]).style.display = display;
 		}
 
-		// Only show the toolbar on the photos page
-		if ('photos' == id) {
-			document.getElementById('tools').style.display = '-moz-box';
-			document.getElementById('no_tools').style.display = 'none';
-		} else {
-			document.getElementById('tools').style.display = 'none';
-			document.getElementById('no_tools').style.display = '-moz-box';
-		}
-
 	},
 
 	// Return the current page name
@@ -38,6 +29,7 @@ var pages = {
 
 };
 
+// Free account capacity indicators
 var free = {
 
 	update: function() {
@@ -59,7 +51,7 @@ var free = {
 			if (0 == photos.batch_size && 0 != photos.count) {
 				for each (var p in photos.list) {
 					if (null != p) {
-						var size = uploadr.fsize(p.path);
+						var size = file.size(p.path);
 						if (!users.is_pro &&
 							users.bandwidth.remaining - photos.batch_size < size) {
 							status.set(locale.getString('status.limit'));
@@ -71,25 +63,16 @@ var free = {
 				}
 			}
 
-			var used = Math.min(94, Math.round(94 * users.bandwidth.used / users.bandwidth.total));
-			var batch = Math.max(0, Math.round(94 * photos.batch_size / users.bandwidth.total));
-			var remaining = Math.max(0,
-				Math.round(94 * users.bandwidth.remaining / users.bandwidth.total));
-			batch = Math.min(batch, remaining);
-			remaining += 94 - (used + batch + remaining);
-			document.getElementById('bw_used').style.width = used + 'px';
-			var bw_batch = document.getElementById('bw_batch');
-			bw_batch.style.width = batch + 'px';
-			bw_batch.style.backgroundPosition = '-' + used + 'px -34px';
-			var bw_remaining = document.getElementById('bw_remaining');
-			bw_remaining.style.width = remaining + 'px';
-			bw_remaining.style.backgroundPosition = '-' + (used + batch) + 'px -17px';
-			document.getElementById('free').style.visibility = 'visible';
+			var f = document.getElementById('free');
+			f.value = locale.getFormattedString('free.status', [
+				Math.round(100 * users.bandwidth.used / users.bandwidth.total),
+				Math.round(users.bandwidth.total / 102.4) / 10,
+				Math.round(users.bandwidth.remaining / 102.4) / 10,
+				photos.count,
+				Math.round(photos.batch_size / 102.4) / 10
+			]);
+			f.style.visibility = 'visible';
 		}
-
-		// And show the proper maximum size in the settings window
-		document.getElementById('s_resize_note').firstChild.nodeValue =
-			locale.getFormattedString('settings.resize.note', [users.filesize >> 10]);
 
 	},
 
@@ -101,7 +84,7 @@ var free = {
 
 var buttons = {
 
-	_list: ['login', 'back', 'ok', 'upload'],
+	_list: ['login', 'upload'],
 
 	// Show specified buttons
 	show: function(list) {
@@ -130,6 +113,9 @@ var buttons = {
 			var b = document.getElementById('button_' + l);
 			b.disabled = false;
 			b.className = 'button';
+			if ('upload' == l) {
+				document.getElementById('menu_upload_upload').disabled = false;
+			}
 		}
 	},
 
@@ -142,6 +128,9 @@ var buttons = {
 			var b = document.getElementById('button_' + l);
 			b.disabled = true;
 			b.className = 'disabled_button';
+			if ('upload' == l) {
+				document.getElementById('menu_upload_upload').disabled = true;
+			}
 		}
 	}
 
@@ -162,7 +151,7 @@ var status = {
 
 };
 
-// Functions to find photos above and below a given photo
+// Functions to find photos in the grid
 var findr = {
 
 	// How many photos are in each full row?
@@ -232,10 +221,10 @@ var drag = {
 		onDragEnter: function(e, flavor, session) {
 		},
 		onDragOver: function(e, data) {
-			document.getElementById('photos').className = 'drag oldest';
+			document.getElementById('photos').className = 'drag';
 		},
 		onDragExit: function(e, flavor, session) {
-			document.getElementById('photos').className = 'no_drag oldest';
+			document.getElementById('photos').className = 'no_drag';
 		},
 		onDrop: function(e, data) {
 
@@ -297,26 +286,21 @@ locale.getFormattedString = function(id, args) {
 
 // Allow functions to block exiting
 var _block_exit = 0;
-var _block_exit_stack = [];
 var block_exit = function() {
 	++_block_exit;
-	Components.utils.reportError('push: ' + _block_exit);
-	_block_exit_stack.push(_block_exit);
 }
 var unblock_exit = function() {
 	--_block_exit;
-	Components.utils.reportError('pop: ' + _block_exit_stack.pop());
 }
 
 // Why is exiting such a pain?
 var exit = function() {
 
 	// Don't exit if exit is blocked
-Components.utils.reportError('_block_exit: ' + _block_exit);
 	if (0 < _block_exit) {
+Components.utils.reportError(_block_exit);
 		return;
 	}
-
 
 	// Save state
 	photos.save();
@@ -354,4 +338,15 @@ var prompt = function(msg, title) {
 	window.openDialog('chrome://uploadr/content/prompt.xul', 'dialog_prompt',
 		'chrome,modal', msg, title, result);
 	return result.result;
+};
+
+// Open a browser window to the given URL
+var launch_browser = function(url) {
+	var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+	var uri = io.newURI(url, null, null);
+	var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
+		Ci.nsIExternalProtocolService);
+	var launcher = eps.getProtocolHandlerInfo('http');
+	launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
+	launcher.launchWithURI(uri, null);
 };

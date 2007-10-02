@@ -1,47 +1,48 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
-<!DOCTYPE overlay SYSTEM "chrome://uploadr/locale/main.dtd">
-<overlay id="overlay_settings"
+<!DOCTYPE dialog SYSTEM "chrome://uploadr/locale/main.dtd">
+<dialog id="dialog_settings" title="&settings;" buttons="accept,cancel"
+ondialogaccept="events.settings.ok(); return true;"
+ondialogcancel="events.settings.cancel(); return true;" onload="events.settings.load();"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml">
+	<stringbundleset>
+		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
+	</stringbundleset>
+	<script src="chrome://uploadr/content/uploadr.js" />
 	<script src="chrome://uploadr/content/events_settings.js" />
-	<vbox id="page_settings" class="page" flex="1">
-		<html:h1>&settings;</html:h1>
+	<vbox flex="1">
+		<groupbox flex="1">
+			<caption label="&settings.users;" />
+			<menulist id="user">
+				<menupopup />
+			</menulist>
+			<hbox>
+				<button id="remove" label="&settings.users.remove;"
+				oncommand="events.settings.remove_user();" />
+				<button id="add" label="&settings.users.add;"
+				oncommand="events.settings.add_user();" />
+			</hbox>
+		</groupbox>
 		<hbox flex="1">
-			<vbox flex="1">
-				<html:h2>&settings.tags;</html:h2>
-				<textbox id="s_tags" multiline="true" rows="2" />
-			</vbox>
-			<vbox flex="1">
-				<html:h2>&settings.set;</html:h2>
-				<menulist id="s_set" disabled="true">
-					<menupopup>
-						<menuitem value="0" label="&settings.sets.none;" />
-					</menupopup>
-				</menulist>
-				<hbox><button id="s_set_add" label="&settings.sets.add;"
-				oncommand="events.settings.add_set();" /></hbox>
-			</vbox>
-		</hbox>
-		<hbox flex="1">
-			<vbox flex="1">
-				<html:h2>&settings.privacy;</html:h2>
-				<label control="s_is_public" value="&settings.privacy.who;" />
-				<radiogroup id="s_is_public" value="1"
+			<groupbox flex="1">
+				<caption label="&settings.privacy;" />
+				<label control="is_public" value="&settings.privacy.who;" />
+				<radiogroup id="is_public" value="1"
 				oncommand="events.settings.is_public(this.value);">
 					<radio value="0" label="&settings.privacy.private;" />
-						<checkbox id="s_is_friend" label="&settings.privacy.friend;"
+						<checkbox id="is_friend" label="&settings.privacy.friend;"
 						disabled="true" />
-						<checkbox id="s_is_family" label="&settings.privacy.family;"
+						<checkbox id="is_family" label="&settings.privacy.family;"
 						disabled="true" />
 					<radio value="1" label="&settings.privacy.public;" />
 				</radiogroup>
-			</vbox>
-			<vbox flex="1">
-				<html:h2>&settings.melons;</html:h2>
-				<label control="s_content_type" value="&settings.content_type;" />
-				<menulist id="s_content_type">
+			</groupbox>
+			<groupbox flex="1">
+				<caption label="&settings.melons;" />
+				<label control="content_type" value="&settings.content_type;" />
+				<menulist id="content_type">
 					<menupopup>
 						<menuitem value="1" label="&settings.content_type.photo;"
 						selected="true" />
@@ -49,16 +50,16 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<menuitem value="3" label="&settings.content_type.other;" />
 					</menupopup>
 				</menulist>
-				<label control="s_hidden" value="&settings.hidden;" />
-				<menulist id="s_hidden">
+				<label control="hidden" value="&settings.hidden;" />
+				<menulist id="hidden">
 					<menupopup>
 						<menuitem value="1" label="&settings.hidden.no;"
 						selected="true" />
 						<menuitem value="2" label="&settings.hidden.yes;" />
 					</menupopup>
 				</menulist>
-				<label control="s_safety_level" value="&settings.safety_level;" />
-				<menulist id="s_safety_level">
+				<label control="safety_level" value="&settings.safety_level;" />
+				<menulist id="safety_level">
 					<menupopup>
 						<menuitem value="1" label="&settings.safety_level.safe;"
 						selected="true" />
@@ -66,11 +67,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<menuitem value="3" label="&settings.safety_level.restricted;" />
 					</menupopup>
 				</menulist>
-			</vbox>
-			<vbox flex="1">
-				<html:h2>&settings.resize;</html:h2>
+			</groupbox>
+			<groupbox flex="1">
+				<caption label="&settings.resize;" />
 				<html:p>&settings.resize.prompt;</html:p>
-				<menulist id="s_resize">
+				<menulist id="resize">
 					<menupopup>
 						<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
 						<menuitem value="800" label="&settings.resize.800;" />
@@ -79,8 +80,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<menuitem value="2048" label="&settings.resize.2048;" />
 					</menupopup>
 				</menulist>
-				<html:p id="s_resize_note"> </html:p>
-			</vbox>
+				<html:p id="resize_note"> </html:p>
+			</groupbox>
 		</hbox>
 	</vbox>
-</overlay>
+</dialog>

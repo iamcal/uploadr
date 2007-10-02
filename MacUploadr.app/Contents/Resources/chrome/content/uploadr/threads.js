@@ -74,16 +74,10 @@ ThumbCallback.prototype = {
 				img.setAttribute('height', thumb[7]);
 				img.src = 'file://' + thumb[8];
 
-				// Check the size of this file if we're logged in
-				if (users.username) {
-					var size = uploadr.fsize(photos.list[this.id].path);
-					if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
-						status.set(locale.getString('status.limit'));
-					} else {
-						status.clear();
-					}
-					photos.batch_size += size;
-					free.update();
+				// If only one photo is selected, refresh the other thumbnail, too
+				if (1 == photos.selected.length) {
+					document.getElementById('meta_div').getElementsByTagName('img')[0].src =
+						img.src;
 				}
 
 			}
@@ -283,7 +277,7 @@ ResizeCallback.prototype = {
 				photos.list[this.id].path = resize[3];
 
 				// Update bandwidth
-				var size = uploadr.fsize(resize[3]);
+				var size = file.size(resize[3]);
 				photos.batch_size -= photos.list[this.id].filesize;
 				if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
 					status.set(locale.getString('status.limit'));

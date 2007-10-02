@@ -15,6 +15,9 @@ var users = {
 	// List of authorized users
 	list: {},
 
+	// A one-time custom callback after login
+	after_login: null,
+
 	// Shortcut for the auth sequence
 	login: function() {
 		free.hide();
@@ -38,11 +41,14 @@ var users = {
 			var username = locale.getFormattedString('username', [users.username]);
 			document.getElementById('username').value = username;
 			document.getElementById('switch').value = locale.getString('switch');
-			document.getElementById('u_current').firstChild.nodeValue = username;
 			status.set(locale.getString('status.ready'));
 
 		} else {
 			users.logout();
+		}
+		if ('function' == typeof users.after_login) {
+			users.after_login();
+			users.after_login = null;
 		}
 	},
 
@@ -59,10 +65,8 @@ var users = {
 		users.sets = null;
 
 		// Update the UI
-		var notloggedin = locale.getString('notloggedin');
-		document.getElementById('username').value = notloggedin;
+		document.getElementById('username').value = locale.getString('notloggedin');
 		document.getElementById('switch').value = locale.getString('login');
-		document.getElementById('u_current').firstChild.nodeValue = notloggedin;
 		document.getElementById('free').style.display = 'none';
 		status.set(locale.getString('status.disconnected'));
 
@@ -96,28 +100,11 @@ var users = {
 			buttons.show('upload');
 		}
 
-		// Update the list on the users page
-		var dropdown = document.getElementById('u_user');
-		dropdown.removeAllItems();
-		var sorted = [];
-		for (var u in users.list) {
-			if (users.username != u) {
-				sorted.push(u);
-			}
-		}
-		sorted.sort();
-		var ii = sorted.length;
-		dropdown.appendItem(locale.getString('users.prompt'), '');
-		dropdown.selectedIndex = 0;
-		for (var i = 0; i < ii; ++i) {
-			dropdown.appendItem(sorted[i], sorted[i]);
-		}
-
 	},
 
 	// Load users from a file
 	load: function() {
-		users.list = uploadr.fread('users.json');
+		users.list = file.read('users.json');
 
 		// Login as the current user
 		for each (var u in users.list) {
@@ -138,7 +125,7 @@ var users = {
 
 	// Save users to a file
 	save: function() {
-		uploadr.fwrite('users.json', users.list);
+		file.write('users.json', users.list);
 	}
 
 };

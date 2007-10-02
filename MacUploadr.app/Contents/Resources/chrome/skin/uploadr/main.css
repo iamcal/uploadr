@@ -11,26 +11,21 @@ box, toolbox, hbox, vbox {
  * Header
  */
 
-h1, h2 {
-	margin-top: 0;
+#head {
+	background: #f8f8f8;
+	border-bottom: 1px solid #ddd;
 }
 
-/* The user indicator */
-#switch {
-	color: #0063dc;
-	text-decoration: underline;
-	cursor: pointer;
-}
-
-/* Logo and top styles */
-.fill {
-	border-bottom: 1px solid #999;
-}
+/* Logo */
 #logo {
 	width: 120px;
 	height: 67px;
 	background: url(logo.png) no-repeat scroll 0 10px;
-	border-bottom: 1px solid #999;
+}
+
+/* User indicator */
+#head hbox {
+	margin: 10px;
 }
 
 /* Pages */
@@ -51,7 +46,7 @@ h1, h2 {
 #footer {
 	height: 40px;
 	padding: 5px;
-	border-top: 1px dotted #bbb;
+	border-top: 1px dotted #ddd;
 	background: white;
 }
 
@@ -86,22 +81,32 @@ h1, h2 {
 #button_back, #button_ok, #button_upload {
 	display: none;
 }
-input.button {
+input.button, input.disabled_button {
 	margin: 0 0 5px 5px;
+	font-size: 12px;
+	font-weight: bold;
+	text-transform: uppercase;
+	vertical-align: middle;
+}	
+input.button {
 	background: #0063dc;
 	color: white;
-	font-size: 12px;
-	font-weight: bold;
-	text-transform: uppercase;
 }
 input.disabled_button {
-	margin: 0 0 5px 5px;
 	background: #eee;
 	color: #888;
-	font-size: 12px;
-	font-weight: bold;
-	text-transform: uppercase;
 }
+
+/* Make the upload button gaudy */
+#button_upload {
+	font-size: 16px;
+}
+
+
+
+/*
+ * Utilities
+ */
 
 /* Nested form indentation, used all over */
 radiogroup checkbox {
@@ -125,20 +130,19 @@ radiogroup checkbox {
 	cursor: pointer;
 }
 
-/* Make the upload button gaudy */
-#button_upload {
-	font-size: 16px;
-}
+
 
 /*
  * Toolbar
  */
+#tools {
+	background: white;
+	border-bottom: 1px dotted #ddd;
+}
 #tools toolbox toolbar {
-	width: 217px;
 	height: 34px;
 	padding: 5px 0 0 10px;
 	background: white;
-	border-top: 1px solid #999;
 	border-bottom: 0;
 }
 #tools toolbox toolbar toolbarbutton {
@@ -152,32 +156,8 @@ radiogroup checkbox {
 }
 toolbarseparator {
 	width: 1px;
-	margin: 0 15px 0 10px;
+	margin: 0 15px 5px 10px;
 	background: #eee;
-}
-#t_add {
-	width: 21px;
-}
-#t_add.disabled {
-	background-position: 0px -3px;
-}
-#t_add.enabled {
-	background-position: 0px -35px;
-}
-#t_add.enabled:active {
-	background-position: 0px -67px;
-}
-#t_remove {
-	width: 20px;
-}
-#t_remove.disabled {
-	background-position: -21px -3px;
-}
-#t_remove.enabled {
-	background-position: -21px -35px;
-}
-#t_remove.enabled:active {
-	background-position: -21px -67px;
 }
 #t_rotate_l {
 	width: 30px;
@@ -203,26 +183,6 @@ toolbarseparator {
 #t_rotate_r.enabled:active {
 	background-position: -72px -67px;
 }
-#t_settings {
-	width: 19px;
-}
-#t_settings.disabled {
-	background-position: -103px -3px;
-}
-#t_settings.enabled {
-	background-position: -103px -35px;
-}
-#t_settings.enabled:active {
-	background-position: -103px -67px;
-}
-#diag {
-	background: url(diag.gif) no-repeat;
-}
-#no_tools {
-	display: none;
-	width: 217px;
-	height: 34px;
-}
 
 
 
@@ -230,16 +190,11 @@ toolbarseparator {
  * The photos container
  */
 
-/* The container has multiple nested boxes for multiple backgrounds */
 #photos {
 	margin: 0;
+	background: white;
+	border-right: 1px solid #ddd;
 	overflow: auto;
-}
-.newest {
-	background: white url(newest.gif) no-repeat;
-}
-.oldest {
-	background: url(oldest.gif) no-repeat bottom right;
 }
 
 /* Dragging photos into the container */
@@ -378,26 +333,4 @@ toolbarseparator {
 	color: #aaa;
 	text-decoration: none;
 	cursor: pointer;
-}
-
-
-
-/* User settings page */
-#page_users {
-	display: none;
-}
-
-/* Settings page */
-#page_settings {
-	display: none;
-}
-
-/* Upload progress page */
-#page_progress {
-	display: none;
-}
-
-/* Upload complete page */
-#page_complete {
-	display: none;
 }

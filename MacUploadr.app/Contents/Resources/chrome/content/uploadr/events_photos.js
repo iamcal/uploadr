@@ -79,11 +79,6 @@ events.photos = {
 				meta.batch();
 			}
 
-			// Enable toolbar buttons for selected images
-			document.getElementById('t_remove').className = 'enabled';
-			document.getElementById('t_rotate_l').className = 'enabled';
-			document.getElementById('t_rotate_r').className = 'enabled';
-	
 		}
 		// If we clicked the revert to sorted button
 		else if (e.target.id && 'photos_sort_revert' == e.target.id) {
@@ -103,9 +98,6 @@ events.photos = {
 				meta_div.removeChild(meta_div.firstChild);
 			}
 			meta.disable();
-			document.getElementById('t_remove').className = 'disabled';
-			document.getElementById('t_rotate_l').className = 'disabled';
-			document.getElementById('t_rotate_r').className = 'disabled';
 		}
 
 	},
@@ -404,14 +396,56 @@ events.photos = {
 				} else {
 					meta.batch();
 				}
-				document.getElementById('t_remove').className = 'enabled';
-				document.getElementById('t_rotate_l').className = 'enabled';
-				document.getElementById('t_rotate_r').className = 'enabled';
 			}
 
 		}
 
 		events.photos.anchor = null;
+	},
+
+	// Remove selected photos
+	remove: function() {
+
+		// Nothing to do if somehow there are no selected photos
+		var ii = photos.selected.length;
+		if (0 == ii) {
+			return;
+		}
+
+		// Remove selected photos
+		for (var i = 0; i < ii; ++i) {
+			var id = photos.selected[i];
+			var li = document.getElementById('photo' + id);
+			li.parentNode.removeChild(li);
+
+			// Free the size of this file
+			if (users.username && !users.is_pro) {
+				var size = file.size(photos.list[id].path);
+				photos.batch_size -= size;
+				if (users.bandwidth.remaining - photos.batch_size) {
+					status.clear();
+				}
+			}
+
+			photos.list[id] = null;
+			--photos.count;
+			photos.unsaved = true;
+		}
+		free.update();
+		photos.normalize();
+
+		// Clear the selection
+		photos.selected = [];
+		events.photos.click({target: {}});
+
+		// Allow upload only if there are photos
+		if (photos.count) {
+			buttons.enable('upload');
+		} else {
+			photos.unsaved = false;
+			buttons.disable('upload');
+		}
+
 	},
 
 	// Sort the photos when asked
@@ -571,7 +605,6 @@ events.photos = {
 			if (-1 == p.sets.indexOf(set_id)) {
 				p.sets.push(set_id);
 			}
-Components.utils.reportError(p.sets);
 		}
 		set.selectedIndex = 0;
 

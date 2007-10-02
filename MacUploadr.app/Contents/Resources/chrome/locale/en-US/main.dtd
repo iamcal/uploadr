@@ -1,12 +1,22 @@
 <!ENTITY title "Flickr Uploadr">
 
-<!ENTITY menu.file "File">
-<!ENTITY menu.file.add "Add">
-<!ENTITY menu.file.preferences "Preferences">
-<!ENTITY menu.file.exit "Quit">
+<!ENTITY menu.upload "Upload">
+<!ENTITY menu.upload.add "Add">
+<!ENTITY menu.upload.preferences "Preferences">
+<!ENTITY menu.upload.exit "Quit">
+<!ENTITY menu.edit "Edit">
+<!ENTITY menu.edit.cut "Cut">
+<!ENTITY menu.edit.copy "Copy">
+<!ENTITY menu.edit.paste "Paste">
+<!ENTITY menu.help "Help">
+<!ENTITY menu.help.about "About">
+<!ENTITY menu.help.faq "FAQ">
 
 <!ENTITY notloggedin "Not logged in">
 <!ENTITY login "Login">
+
+<!ENTITY tools.add "+ Add">
+<!ENTITY tools.remove "− Remove">
 
 <!ENTITY buttons.login "Login">
 <!ENTITY buttons.back "Back">
@@ -20,20 +30,14 @@
 <!ENTITY progress.overall "Overall:">
 <!ENTITY progress.this_file "This file:">
 
-<!ENTITY users "Users">
-<!ENTITY users.user "Select a user to change to:">
-<!ENTITY users.remove "Remove selected user">
-<!ENTITY users.add "Add new user">
-
 <!ENTITY photos.sort.default "Photos are sorted by date taken.  Drag to reorder.">
 <!ENTITY photos.sort.revert "Re-sort by date taken">
 
 <!ENTITY settings "Settings">
-<!ENTITY settings.tags "Batch tags">
-<!ENTITY settings.set "Add these photos to a set">
-<!ENTITY settings.sets.none "No sets">
-<!ENTITY settings.sets.add "Add">
-<!ENTITY settings.sets.create "Create a set...">
+<!ENTITY settings.users "Users">
+<!ENTITY settings.users.user "Select a user to change to:">
+<!ENTITY settings.users.remove "Remove selected user">
+<!ENTITY settings.users.add "Add new user">
 <!ENTITY settings.privacy "Privacy">
 <!ENTITY settings.privacy.who "Who can see this photo?">
 <!ENTITY settings.privacy.private "Only you">
@@ -71,6 +75,9 @@
 <!ENTITY meta.batch.prompt "Changing settings here will affect the selected images.">
 <!ENTITY meta.single.sets "Add this photo to sets">
 <!ENTITY meta.batch.sets "Add these photos to sets">
+<!ENTITY settings.sets.none "No sets">
+<!ENTITY settings.sets.add "Add">
+<!ENTITY settings.sets.create "Create a set...">
 
 <!ENTITY dialog.bandwidth "Available bandwidth exceeded!">
 <!ENTITY dialog.bandwidth.text "You're out of bandwidth for this month.  You can either switch to a different Flickr account to keep uploading or upgrade to a Pro account to get unlimited uploads.  If you upgrade to a Pro account you'll have to restart Flickr Uploadr.">

@@ -133,7 +133,6 @@ var upload = {
 					meta.sets_map[set_id].push(photo_id);
 				}
 			}
-//			photos.add_to_set.push(photo_id);
 
 		} else if ('fail' == stat) {
 			++photos.fail;
@@ -142,9 +141,6 @@ var upload = {
 				return;
 			}
 		}
-
-		// Add this photo to sets
-		///
 		photos.uploading[id] = null;
 
 		// Update the UI
@@ -272,7 +268,6 @@ var upload = {
 	done: function() {
 
 		// Kick off the chain of adding photos to a set
-Components.utils.reportError(meta.sets_map.toSource());
 		var not_adding_to_sets = true;
 		for (var set_id in meta.sets_map) {
 			status.set(locale.getString('status.sets'));
@@ -322,14 +317,8 @@ Components.utils.reportError(meta.sets_map.toSource());
 		// Offer to open the uploaded batch on the site
 		if (0 < photos.ok && confirm(locale.getString('uploaded.prompt'),
 			locale.getString('uploaded.prompt.title'))) {
-			var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
-			var uri = io.newURI('http://flickr.com/tools/uploader_edit.gne?ids=' +
-				photos.uploaded.join(','), null, null);
-			var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
-				Ci.nsIExternalProtocolService);
-			var launcher = eps.getProtocolHandlerInfo('http');
-			launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
-			launcher.launchWithURI(uri, null);
+			launch_browser('http://flickr.com/tools/uploader_edit.gne?ids=' +
+				photos.uploaded.join(','));
 		}
 
 		// Make sure the upload button is enabled if it should be
@@ -640,7 +629,7 @@ var flickr = {
 			if ('ok' == rsp.getAttribute('stat')) {
 				settings.content_type =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('content_type'));
-				settings.update();
+//				settings.update();
 			}
 			unblock_exit();
 		},
@@ -656,7 +645,7 @@ var flickr = {
 			if ('ok' == rsp.getAttribute('stat')) {
 				settings.hidden =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('hidden'));
-				settings.update();
+//				settings.update();
 			}
 			unblock_exit();
 		},
@@ -674,7 +663,7 @@ var flickr = {
 				settings.is_public = 1 == privacy;
 				settings.is_friend = 2 == privacy || 4 == privacy;
 				settings.is_family = 3 == privacy || 5 == privacy;
-				settings.update();
+//				settings.update();
 			}
 			unblock_exit();
 		},
@@ -691,7 +680,7 @@ var flickr = {
 			if ('ok' == rsp.getAttribute('stat')) {
 				settings.safety_level =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('safety_level'));
-				settings.update();
+//				settings.update();
 			}
 			unblock_exit();
 		}
@@ -797,13 +786,7 @@ Components.utils.reportError('API CALL: ' + params.toSource());
 	// Open a browser
 	//   Only GET requests are supported here
 	if (browser) {
-		var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
-		var uri = io.newURI(url, null, null);
-		var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
-			Ci.nsIExternalProtocolService);
-		var launcher = eps.getProtocolHandlerInfo('http');
-		launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
-		launcher.launchWithURI(uri, null);
+		launch_browser(url);
 	}
 
 	// Use XHR
