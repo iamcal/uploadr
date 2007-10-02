@@ -108,12 +108,16 @@ events.photos = {
 	// Indicator for the state-of-the-drag
 	//   0: Not dragging
 	//   1: Clicking to starting drag, but maybe just clicking
-	//   2: Actually dragging
+	//   2: Waiting for dragging far enough
+	//   3: Actually dragging
 	dragging: 0,
 
 	// Reference to our current destination
 	target: null,
 	left: false,
+
+	// Make sure they mean to reorder
+	far_enough: false,
 
 	// Reference to the photos container for scroll info
 	box: null,
@@ -164,7 +168,7 @@ events.photos = {
 		}
 
 		// Clicking whitespace will start the drag-select
-		else if (e.target.id && 'photos_sort_revert' != e.target.id) {
+		else if ('photos_sort_revert' != e.target.id) {
 			events.photos.anchor = {
 				x: e.clientX + pos.x.value - events.photos.box.x - 5,
 				y: e.clientY + pos.y.value - events.photos.box.y - 5
@@ -210,8 +214,14 @@ events.photos = {
 				events.photos.dragging = 2;
 			}
 
+			// Once they drag off of an image, they've dragged far enough for this to
+			// be on purpose
+			if (2 == events.photos.dragging && 'img' != e.target.nodeName) {
+				events.photos.dragging = 3;
+			}
+
 			// As the user is dragging, update the feedback
-			if (2 == events.photos.dragging) {
+			if (3 == events.photos.dragging) {
 
 				// Show the cursor follower
 				var follower = document.getElementById('drag_follower');
@@ -313,7 +323,7 @@ events.photos = {
 
 		// If we're reordering
 		if (null == events.photos.anchor) {
-			if (2 == events.photos.dragging) {
+			if (3 == events.photos.dragging) {
 
 				// Reorder the photo list
 				photos.selected.sort(function(a, b) {
@@ -401,51 +411,6 @@ events.photos = {
 		}
 
 		events.photos.anchor = null;
-	},
-
-	// Remove selected photos
-	remove: function() {
-
-		// Nothing to do if somehow there are no selected photos
-		var ii = photos.selected.length;
-		if (0 == ii) {
-			return;
-		}
-
-		// Remove selected photos
-		for (var i = 0; i < ii; ++i) {
-			var id = photos.selected[i];
-			var li = document.getElementById('photo' + id);
-			li.parentNode.removeChild(li);
-
-			// Free the size of this file
-			if (users.username && !users.is_pro) {
-				var size = file.size(photos.list[id].path);
-				photos.batch_size -= size;
-				if (users.bandwidth.remaining - photos.batch_size) {
-					status.clear();
-				}
-			}
-
-			photos.list[id] = null;
-			--photos.count;
-			photos.unsaved = true;
-		}
-		free.update();
-		photos.normalize();
-
-		// Clear the selection
-		photos.selected = [];
-		events.photos.click({target: {}});
-
-		// Allow upload only if there are photos
-		if (photos.count) {
-			buttons.enable('upload');
-		} else {
-			photos.unsaved = false;
-			buttons.disable('upload');
-		}
-
 	},
 
 	// Sort the photos when asked

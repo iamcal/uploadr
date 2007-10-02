@@ -76,18 +76,3 @@ events.arrows = {
 	}
 
 };
-
-events.menus = {
-
-	help: {
-
-		about: function() {
-		},
-
-		faq: function() {
-			launch_browser('http://flickr.com/help/faq/');
-		}
-
-	}
-
-};

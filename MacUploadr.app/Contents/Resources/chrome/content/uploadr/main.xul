@@ -6,7 +6,8 @@
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-xmlns:html="http://www.w3.org/1999/xhtml" onload="users.load(); photos.load(); photos.drag();"
+xmlns:html="http://www.w3.org/1999/xhtml"
+onload="upgrade.check(); users.load(); photos.load(); photos.drag();"
 onclose="return exit();" persist="screenX screenY width height sizemode">
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
@@ -15,8 +16,10 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://global/content/nsDragAndDrop.js" />
 	<script src="chrome://uploadr/content/md5.js" />
 	<script src="chrome://uploadr/content/uploadr.js" />
+	<script src="chrome://uploadr/content/upgrade.js" />
 	<script src="chrome://uploadr/content/file.js" />
 	<script src="chrome://uploadr/content/threads.js" />
+	<script src="chrome://uploadr/content/keys.js" />
 	<script src="chrome://uploadr/content/api.js" />
 	<script src="chrome://uploadr/content/photos.js" />
 	<script src="chrome://uploadr/content/meta.js" />
@@ -25,23 +28,13 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/ui.js" />
 	<script src="chrome://uploadr/content/main.js" />
 	<script src="chrome://uploadr/content/events_bandwidth.js" />
-
-	<!-- Commands appearing more than one place -->
-	<commandset>
-		<command id="cmd_add" oncommand="photos.add();" />
-		<command id="cmd_upload" oncommand="photos.upload();" />
-		<command id="cmd_prefs" oncommand="settings.show();" />
-		<command id="cmd_quit" oncommand="exit();" />
-		<command id="cmd_remove" oncommand="events.photos.remove();" />
-	</commandset>
-
 	<keyset>
-		<key id="key_add" modifiers="accel" key="o" command="cmd_add" />
-		<key id="key_upload" modifiers="shift accel" key="u" command="cmd_upload" />
-		<key id="key_prefs" modifiers="accel" key="," command="cmd_prefs" />
-		<key id="key_quit" modifiers="accel" key="q" command="cmd_quit" />
-		<key id="key_back" keycode="VK_BACK" command="cmd_remove" />
-		<key id="key_delete" keycode="VK_DELETE" command="cmd_remove" />
+		<key id="key_add" modifiers="accel" key="o" oncommand="photos.add();" />
+		<key id="key_upload" modifiers="shift accel" key="u" oncommand="photos.upload();" />
+		<key id="key_prefs" modifiers="accel" key="," oncommand="settings.show();" />
+		<key id="key_quit" modifiers="accel" key="q" oncommand="exit();" />
+		<key id="key_back" keycode="VK_BACK" oncommand="photos.remove();" />
+		<key id="key_delete" keycode="VK_DELETE" oncommand="photos.remove();" />
 		<key id="key_up" keycode="VK_UP" oncommand="events.arrows.up(event);" />
 		<key id="key_right" keycode="VK_RIGHT" oncommand="events.arrows.right(event);" />
 		<key id="key_down" keycode="VK_DOWN" oncommand="events.arrows.down(event);" />
@@ -68,13 +61,13 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			<menu id="menu_upload" label="&menu.upload;">
 				<menupopup>
 					<menuitem id="menu_add" label="&menu.upload.add;" key="key_add"
-					command="cmd_add" />
+					oncommand="photos.add();" />
 					<menuitem id="menu_upload_upload" label="&menu.upload;" key="key_upload"
-					command="cmd_upload" />
+					oncommand="photos.upload();" />
 					<menuitem id="menu_preferences" label="&menu.upload.preferences;"
-					key="key_prefs" command="cmd_prefs" />
+					key="key_prefs" oncommand="settings.show();" />
 					<menuitem id="menu_FileQuitItem" label="&menu.upload.exit;"
-					key="key_quit" command="cmd_quit" />
+					key="key_quit" oncommand="exit();" />
 				</menupopup>
 			</menu>
 			<menu id="menu_edit" label="&menu.edit;">
@@ -89,10 +82,10 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			</menu>
 			<menu id="menu_help" label="&menu.help;">
 				<menupopup>
-					<menuitem id="menu_about" label="&menu.help.about;"
-					oncommand="events.menus.help.about();" />
+					<menuitem id="aboutName" label="&menu.help.about;"
+					oncommand="help.about();" />
 					<menuitem id="menu_faq" label="&menu.help.faq;"
-					oncommand="events.menus.help.faq();" />
+					oncommand="help.faq();" />
 				</menupopup>
 			</menu>
 		</menubar>
@@ -114,20 +107,6 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 
 		<!-- Footer and status bar -->
 		<hbox id="footer">
-<!--
-			<hbox id="free">
-				<vbox>
-					<label value="&bandwidth;" />
-					<hbox>
-						<box id="bw_used" />
-						<box id="bw_batch" />
-						<box id="bw_remaining" />
-					</hbox>
-				</vbox>
-				<html:input type="button" id="go_pro" value="&bandwidth.go_pro;"
-				class="button" onclick="events.buttons.go_pro();" />
-			</hbox>
--->
 			<hbox id="progress">
 				<vbox>
 					<label value="&progress.overall;" />

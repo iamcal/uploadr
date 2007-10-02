@@ -30,6 +30,13 @@ var meta = {
 			document.getElementById('batch_safety_level_unchanged').checked = true;
 			document.getElementById('batch_safety_level').selectedIndex = settings.safety_level - 1;
 			document.getElementById('batch_set').selectedIndex = 0;
+
+			// Clear the old sets list
+			var ul = document.getElementById('batch_sets_list');
+			while (ul.hasChildNodes()) {
+				ul.removeChild(ul.firstChild);
+			}
+
 		}
 
 		// Load the values from a specific photo
@@ -276,10 +283,14 @@ var meta = {
 			var ii = photos.selected.length;
 			for (var i = 0; i < ii; ++i) {
 				var p = photos.list[photos.selected[i]];
-				var j = p.sets.indexOf(set_id);
-				if (-1 != j) {
-					delete p.sets[j];
+				var new_sets = [];
+				var jj = p.sets.length;
+				for (var j = 0; j < jj; ++j) {
+					if (set_id != p.sets[j]) {
+						new_sets.push(p.sets[j]);
+					}
 				}
+				p.sets = new_sets;
 			}
 			e.target.parentNode.parentNode.removeChild(e.target.parentNode);
 		};

@@ -9,7 +9,7 @@
 <!ENTITY menu.edit.copy "Copy">
 <!ENTITY menu.edit.paste "Paste">
 <!ENTITY menu.help "Help">
-<!ENTITY menu.help.about "About">
+<!ENTITY menu.help.about "About Flickr Uploadr">
 <!ENTITY menu.help.faq "FAQ">
 
 <!ENTITY notloggedin "Not logged in">
@@ -30,12 +30,12 @@
 <!ENTITY progress.overall "Overall:">
 <!ENTITY progress.this_file "This file:">
 
-<!ENTITY photos.sort.default "Photos are sorted by date taken.  Drag to reorder.">
-<!ENTITY photos.sort.revert "Re-sort by date taken">
+<!ENTITY photos.sort.default "Photos are sorted by date taken.  You can click-and-drag to reorder.">
+<!ENTITY photos.sort.revert "Re-sort photos by date taken">
 
 <!ENTITY settings "Settings">
 <!ENTITY settings.users "Users">
-<!ENTITY settings.users.user "Select a user to change to:">
+<!ENTITY settings.users.user "Login as:">
 <!ENTITY settings.users.remove "Remove selected user">
 <!ENTITY settings.users.add "Add new user">
 <!ENTITY settings.privacy "Privacy">
@@ -83,3 +83,7 @@
 <!ENTITY dialog.bandwidth.text "You're out of bandwidth for this month.  You can either switch to a different Flickr account to keep uploading or upgrade to a Pro account to get unlimited uploads.  If you upgrade to a Pro account you'll have to restart Flickr Uploadr.">
 <!ENTITY dialog.bandwidth.switch "Switch users">
 <!ENTITY dialog.bandwidth.go_pro "Go Pro!">
+
+<!ENTITY dialog.about "About Flickr Uploadr">
+<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Yahoo!, Inc.">
+<!ENTITY dialog.about.copyright.open_source "XULRunner MPL, GraphicsMagick GPL, Exiv2 copyright © Andreas Huggel">

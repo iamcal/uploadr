@@ -13,7 +13,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<html:input type="button" id="t_add" class="button"
 					value="&tools.add;" onclick="photos.add();" />
 					<html:input type="button" id="t_remove" class="disabled_button"
-					value="&tools.remove;" onclick="events.photos.remove();" />
+					value="&tools.remove;" onclick="photos.remove();" />
 					<toolbarseparator />
 					<toolbarbutton id="t_rotate_l" class="disabled"
 					oncommand="photos.rotate(-90);" />
@@ -210,9 +210,9 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					</html:tr>
 					</html:table>
 				</vbox>
-				<spacer flex="1" />
+				<!--<spacer flex="1" />
 				<html:input type="button" id="meta_save" value="&meta.save;" class="button"
-				onclick="meta.save();" />
+				onclick="meta.save();" />-->
 			</vbox>
 			<vbox id="no_meta" />
 		</hbox>

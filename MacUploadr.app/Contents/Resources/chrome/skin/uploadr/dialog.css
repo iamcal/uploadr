@@ -3,10 +3,29 @@ dialog {
 	width: 300px;
 }
 
+
+
 /*
  * The special settings dialog
  */
 
 #dialog_settings {
 	width: 600px;
+}
+
+
+
+/*
+ * The special about dialog
+ */
+
+#dialog_about {
+	width: 400px;
+	background: #f8f8f8;
+}
+
+#logo {
+	width: 120px;
+	height: 67px;
+	background: url(logo.png) no-repeat;
 }

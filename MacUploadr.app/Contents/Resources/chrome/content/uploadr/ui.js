@@ -29,6 +29,19 @@ var pages = {
 
 };
 
+var help = {
+
+	about: function() {
+		window.openDialog('chrome://uploadr/content/about.xul', 'dialog_about',
+			'chrome,modal', uploadr.conf.version);
+	},
+
+	faq: function() {
+		launch_browser('http://flickr.com/help/faq/');
+	}
+
+};
+
 // Free account capacity indicators
 var free = {
 
@@ -294,10 +307,13 @@ var unblock_exit = function() {
 }
 
 // Why is exiting such a pain?
-var exit = function() {
+var exit = function(force) {
+	if (null == force) {
+		force = false;
+	}
 
 	// Don't exit if exit is blocked
-	if (0 < _block_exit) {
+	if (!force && 0 < _block_exit) {
 Components.utils.reportError(_block_exit);
 		return;
 	}

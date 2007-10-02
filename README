@@ -33,6 +33,21 @@ increment the BuildID defined in flickrUploadr/uploadr/application.ini.
 
 
 
+API Keys
+------------------------------------------------------------------------
+
+The CVS tree no longer contains API keys and secrets.  Get them from
+the site and put them in:
+
+MacUploadr.app/Contents/Resources/chrome/content/uploadr/keys.js
+
+The file should look like this:
+
+const api_key = 'xxxxxxxxxx';
+const secret = 'xxxxx';
+
+
+
 GraphicsMagick
 ------------------------------------------------------------------------
 

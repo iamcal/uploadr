@@ -1,6 +1,3 @@
-const api_key = '-----';
-const secret = '-----';
-
 const TIMEOUT = 60000; // Milliseconds
 
 // A note about the authentication API:

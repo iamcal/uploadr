@@ -105,6 +105,51 @@ var photos = {
 		}
 	},
 
+	// Remove selected photos
+	remove: function() {
+
+		// Nothing to do if somehow there are no selected photos
+		var ii = photos.selected.length;
+		if (0 == ii) {
+			return;
+		}
+
+		// Remove selected photos
+		for (var i = 0; i < ii; ++i) {
+			var id = photos.selected[i];
+			var li = document.getElementById('photo' + id);
+			li.parentNode.removeChild(li);
+
+			// Free the size of this file
+			if (users.username && !users.is_pro) {
+				var size = file.size(photos.list[id].path);
+				photos.batch_size -= size;
+				if (users.bandwidth.remaining - photos.batch_size) {
+					status.clear();
+				}
+			}
+
+			photos.list[id] = null;
+			--photos.count;
+			photos.unsaved = true;
+		}
+		free.update();
+		photos.normalize();
+
+		// Clear the selection
+		photos.selected = [];
+		events.photos.click({target: {}});
+
+		// Allow upload only if there are photos
+		if (photos.count) {
+			buttons.enable('upload');
+		} else {
+			photos.unsaved = false;
+			buttons.disable('upload');
+		}
+
+	},
+
 	// Rotate selected files
 	rotate: function(degrees) {
 

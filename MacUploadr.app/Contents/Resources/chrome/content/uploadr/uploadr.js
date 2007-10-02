@@ -21,7 +21,10 @@ var uploadr = {
 		mode: 'async',
 
 		// How often should the app auto-save metadata? (seconds)
-		auto_save: 60
+		auto_save: 60,
+
+		// What version am I?
+		version: '3.0.1'
 
 	}
 
