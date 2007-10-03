@@ -35,6 +35,10 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<key id="key_quit" modifiers="accel" key="q" oncommand="exit();" />
 		<key id="key_back" keycode="VK_BACK" oncommand="photos.remove();" />
 		<key id="key_delete" keycode="VK_DELETE" oncommand="photos.remove();" />
+		<key id="key_cut" modifiers="accel" oncommand="goDoCommand('cmd_cut');" />
+		<key id="key_copy" modifiers="accel" oncommand="goDoCommand('cmd_copy');" />
+		<key id="key_paste" modifiers="accel" oncommand="goDoCommand('cmd_paste');" />
+		<key id="key_all" modifiers="accel" oncommand="events.photos.select_all();" />
 		<key id="key_up" keycode="VK_UP" oncommand="events.arrows.up(event);" />
 		<key id="key_right" keycode="VK_RIGHT" oncommand="events.arrows.right(event);" />
 		<key id="key_down" keycode="VK_DOWN" oncommand="events.arrows.down(event);" />
@@ -72,12 +76,14 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			</menu>
 			<menu id="menu_edit" label="&menu.edit;">
 				<menupopup>
-					<menuitem id="menu_cut" label="&menu.edit.cut;"
+					<menuitem id="menu_cut" label="&menu.edit.cut;" key="key_cut"
 					oncommand="goDoCommand('cmd_cut');" />
-					<menuitem id="menu_copy" label="&menu.edit.copy;"
+					<menuitem id="menu_copy" label="&menu.edit.copy;" key="key_copy"
 					oncommand="goDoCommand('cmd_copy');" />
-					<menuitem id="menu_paste" label="&menu.edit.paste;"
+					<menuitem id="menu_paste" label="&menu.edit.paste;" key="key_paste"
 					oncommand="goDoCommand('cmd_paste');" />
+					<menuitem id="menu_all" label="&menu.edit.select_all;" key="key_all"
+					oncommand="events.photos.select_all();" />
 				</menupopup>
 			</menu>
 			<menu id="menu_help" label="&menu.help;">

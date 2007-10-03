@@ -3,12 +3,19 @@ all:
 	@echo "  mac"
 	@echo "  ppc"
 	@echo "  linux"
+	@echo "  universal - combines mac and ppc targets using lipo"
 
 mac:
 	make -f mac.mk
 
+ppc:
+	make -f ppc.mk
+
 linux:
 	make -f linux.mk
+
+universal:
+	lipo
 
 test:
 	g++ -w -c -o gm_test.o -I/usr/local/include/GraphicsMagick gm_test.cpp

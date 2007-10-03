@@ -413,6 +413,11 @@ events.photos = {
 		events.photos.anchor = null;
 	},
 
+	// Select all photos
+	select_all: function() {
+		
+	},
+
 	// Sort the photos when asked
 	sort: function() {
 		buttons.disable('upload');
@@ -576,10 +581,6 @@ events.photos = {
 		// Add it to the list
 		meta.select_set(ul, set_id, name);
 
-	},
-
-	// Remove selected photos from a set
-	remove_from_set: function(set) {
 	}
 
 };
