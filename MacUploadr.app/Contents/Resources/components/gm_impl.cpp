@@ -74,19 +74,18 @@ void stop_timer(nsAString & _retval) {
 	gettimeofday(&last, 0);
 	double runtime = ((double)last.tv_sec + (double)last.tv_usec / 1000000) -
 		((double)first.tv_sec + (double)first.tv_usec / 1000000);
-	ostringstream run;
-	run << runtime << ";";
-	string run_str = run.str();
-	char * foo = (char *)run_str.c_str();
+	ostringstream oss;
+	oss << runtime << ";";
+	string s = oss.str();
+	char * c = (char *)s.c_str();
 	int i = 0;
-	while (*foo) {
-		_retval.Insert(*foo, i++);
-		++foo;
+	while (*c) {
+		_retval.Insert(*c, i++);
+		++c;
 	}
 }
 
-// Get the path as a normal std::string
-//   Gotta find a better way to do this
+// Convert an nsAString to a std::string
 string * conv_str(const nsAString & nsa) {
 	char * s = 0;
 	s = new char[nsa.Length() + 1];
@@ -264,18 +263,15 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		}
 
 		// Orient the image properly and return the orientation
-start_timer();
-		Magick::Image img(*path_str);
-stop_timer(_retval);
-		ostringstream out;
-		out << "x"; // THIS IS ONLY FOR THE TIMERS
 //start_timer();
-		int orient = base_orient(img);
+		Magick::Image img(*path_str);
 //stop_timer(_retval);
-		out << orient << "x";
+		ostringstream out;
+// out << "###"; // FOR TIMERS ONLY
+		int orient = base_orient(img);
+		out << orient << "###";
 
 		// Get the original size
-//start_timer();
 		int bw, bh;
 		if (5 > orient) {
 			bw = img.baseColumns();
@@ -284,12 +280,10 @@ stop_timer(_retval);
 			bw = img.baseRows();
 			bh = img.baseColumns();
 		}
-//stop_timer(_retval);
 		int base = bw > bh ? bw : bh;
-		out << bw << "x" << bh << "x";
+		out << bw << "###" << bh << "###";
 
 		// Get EXIF date taken
-//start_timer();
 		string date_taken = img.attribute("EXIF:DateTimeOriginal");
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTimeDigitized");
@@ -297,26 +291,60 @@ stop_timer(_retval);
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTime");
 		}
-//stop_timer(_retval);
-		out << date_taken << "x";
+		out << date_taken << "###";
 
 		// Find thumbnail width and height
 		float r;
 		ostringstream dim;
 		if (bw > bh) {
 			r = (float)bh * (float)square / (float)bw;
-			out << square << "x" << round(r);
+			out << square << "###" << round(r);
 			dim << square << "x" << round(r);
 		} else {
 			r = (float)bw * (float)square / (float)bh;
-			out << round(r) << "x" << square;
+			out << round(r) << "###" << square;
 			dim << round(r) << "x" << square;
 		}
+		out << "###";
+
+		// Extract IPTC data that we care about
+		Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+		meta_r->readMetadata();
+		Exiv2::IptcData & iptc = meta_r->iptcData();
+		string title = iptc["Iptc.Application2.ObjectName"].toString();
+		if (0 == title.size()) {
+			title = iptc["Iptc.Application2.Headline"].toString();
+		}
+		string description = iptc["Iptc.Application2.Caption"].toString();
+		if (0 == description.size()) {
+			Exiv2::ExifData & exif = meta_r->exifData();
+			description = exif["Exif.Image.ImageDescription"].toString();
+		}
+		string tags = iptc["Iptc.Application2.Keywords"].toString() + " " +
+			iptc["Iptc.Application2.City"].toString() + " " +
+			iptc["Iptc.Application2.ProvinceState"].toString() + " " +
+			iptc["Iptc.Application2.CountryName"].toString();
+
+		// Hide ### strings within the IPTC data
+		size_t pos = title.find("###", pos);
+		while (string::npos != pos) {
+			title.replace(pos, 3, "{---THREE---POUND---DELIM---}");
+			pos = title.find("###", pos);
+		}
+		pos = description.find("###", pos);
+		while (string::npos != pos) {
+			description.replace(pos, 3, "{---THREE---POUND---DELIM---}");
+			pos = description.find("###", pos);
+		}
+		pos = tags.find("###", pos);
+		while (string::npos != pos) {
+			tags.replace(pos, 3, "{---THREE---POUND---DELIM---}");
+			pos = tags.find("###", pos);
+		}
+		out << title << "###" << description << "###" << tags << "###";
 
 		// Create a new path
-//start_timer();
 		thumb_str = find_path(path_str, "-thumb");
-//stop_timer(_retval);
 		if (0 == thumb_str) {
 			return NS_ERROR_NULL_POINTER;
 		}
@@ -334,18 +362,10 @@ stop_timer(_retval);
 		}
 
 		// Create the actual thumbnail
-//start_timer();
 		img.scale(dim.str());
-//stop_timer(_retval);
-//start_timer();
 		img.sharpen(1, sigma);
-//stop_timer(_retval);
-//start_timer();
 		img.compressType(Magick::NoCompression);
-//stop_timer(_retval);
-//start_timer();
 		img.write(*thumb_str);
-//stop_timer(_retval);
 
 		// If all went well, return stuff
 		string o_str = out.str();
@@ -394,8 +414,8 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 		// Yank out all the metadata we want to save
 		Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
 		meta_r->readMetadata();
-		Exiv2::ExifData &exif = meta_r->exifData();
-		Exiv2::IptcData &iptc = meta_r->iptcData();
+		Exiv2::ExifData & exif = meta_r->exifData();
+		Exiv2::IptcData & iptc = meta_r->iptcData();
 
 		// Create a new path
 		rotate_str = find_path(path_str, "-rotate");
@@ -459,8 +479,8 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 		// Yank out all the metadata we want to save
 		Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
 		meta_r->readMetadata();
-		Exiv2::ExifData &exif = meta_r->exifData();
-		Exiv2::IptcData &iptc = meta_r->iptcData();
+		Exiv2::ExifData & exif = meta_r->exifData();
+		Exiv2::IptcData & iptc = meta_r->iptcData();
 
 		// Open the image
 		Magick::Image img(*path_str);

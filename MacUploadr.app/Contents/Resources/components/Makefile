@@ -7,9 +7,6 @@ all:
 mac:
 	make -f mac.mk
 
-ppc:
-	make -f ppc.mk
-
 linux:
 	make -f linux.mk
 

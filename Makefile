@@ -1,6 +1,6 @@
 SRC := ~/code/flickrUploadr3/MacUploadr.app/Contents
 BUILD := ~/Desktop/build/Flickr\ Uploadr.app/Contents
-GM_VER := 1.1.9
+GM_VER := 1.1.10
 
 all:
 	@echo "This target doesn't do anything!  Specify one of these:"

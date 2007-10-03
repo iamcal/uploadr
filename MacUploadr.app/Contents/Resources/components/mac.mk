@@ -24,7 +24,7 @@ module:
 	-I$(EXIV_INCLUDE) $(DEFINE) gm_module.cpp
 
 dylib: impl module
-	g++ -v -dynamiclib -o gm.dylib gm_impl.o gm_module.o \
+	g++ -arch i386 -arch ppc -v -dynamiclib -o gm.dylib gm_impl.o gm_module.o \
 	-L$(GECKO_SDK)/lib -L$(GM_LIB) -L$(X11_LIB) -L$(PORTS_LIB) -L$(XULRUNNER) \
 	-Wl,-executable_path,$(XULRUNNER) -lxpcomglue_s -lxpcom -lnspr4 \
 	-lGraphicsMagick -lGraphicsMagick++ -lexiv2 -lX11 -lz -lbz2 -lxml2 -lXext \

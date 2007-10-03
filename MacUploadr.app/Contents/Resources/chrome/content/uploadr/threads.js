@@ -47,32 +47,25 @@ ThumbCallback.prototype = {
 		try {
 
 			// Parse the returned string
-			//   <time>x<orientation>x<width>x<height>x<date_taken>x<thumb_width>x<thumb_height><thumb_path>
-			var thumb = this.result.match(/^(.*)x(.*)x([0-9]+)x([0-9]+)x(.*)x([0-9]+)x([0-9]+)(.+)$/);
+			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<title>###<description>###<tags>###<thumb_path>
+			var thumb = this.result.split('###');
 
 			// Get this photo from the DOM and remove its loading class
 			var img = document.getElementById('photo' + this.id).getElementsByTagName('img')[0];
 			img.style.visibility = 'hidden';
 			img.className = img.className.replace('loading', '');
 
-			// If unsuccessful, replace with the error image
-			if (null == thumb) {
-				img.setAttribute('src', 'chrome://uploadr/skin/error.gif');
-				img.setAttribute('width', 100);
-				img.setAttribute('height', 100);
-				Components.utils.reportError(this.result);
-			}
-
 			// If successful, replace with the thumb and update the Photo object
-			else {
-//Components.utils.reportError('time: ' + thumb[1] + ' (' + this.result + ')');
-//Components.utils.reportError('orient: ' + parseInt(thumb[2]) + ' (' + this.result + ')');
-				photos.list[this.id].width = parseInt(thumb[3]);
-				photos.list[this.id].height = parseInt(thumb[4]);
-				photos.list[this.id].date_taken = thumb[5];
-				img.setAttribute('width', thumb[6]);
-				img.setAttribute('height', thumb[7]);
-				img.src = 'file://' + thumb[8];
+			if (10 == thumb.length) {
+				photos.list[this.id].width = parseInt(thumb[1]);
+				photos.list[this.id].height = parseInt(thumb[2]);
+				photos.list[this.id].date_taken = thumb[3];
+				img.setAttribute('width', thumb[4]);
+				img.setAttribute('height', thumb[5]);
+				photos.list[this.id].title = thumb[6].replace(/^\s+|\s+$/, '');
+				photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/, '');
+				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
+				img.src = 'file://' + thumb[9];
 
 				// If only one photo is selected, refresh the other thumbnail, too
 				if (1 == photos.selected.length) {
@@ -80,6 +73,14 @@ ThumbCallback.prototype = {
 						img.src;
 				}
 
+			}
+
+			// If unsuccessful, replace with the error image
+			else {
+				img.setAttribute('src', 'chrome://uploadr/skin/error.gif');
+				img.setAttribute('width', 100);
+				img.setAttribute('height', 100);
+				Components.utils.reportError(this.result);
 			}
 
 			// After updating, make it visible again
