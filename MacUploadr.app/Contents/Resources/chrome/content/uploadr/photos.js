@@ -276,7 +276,10 @@ var photos = {
 	load: function() {
 		var obj = file.read('photos.json');
 
-// Return if there are no photos
+		// Don't bother if there are no photos
+		if ('undefined' == typeof obj.list) {
+			return;
+		}
 
 		// Add the previous batch of photos
 		var list = obj.list;

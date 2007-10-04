@@ -323,13 +323,15 @@ Components.utils.reportError(_block_exit);
 	settings.save();
 	users.save();
 
-	// Remove the images directory
-	try {
-		var profile = Cc['@mozilla.org/file/directory_service;1'].getService(
-			Ci.nsIProperties).get('ProfD', Ci.nsIFile);
-		profile.append('images');
-		profile.remove(true);
-	} catch (err) {}
+	// Remove the images directory if there are no photos left
+	if (0 == photos.count) {
+		try {
+			var profile = Cc['@mozilla.org/file/directory_service;1'].getService(
+				Ci.nsIProperties).get('ProfD', Ci.nsIFile);
+			profile.append('images');
+			profile.remove(true);
+		} catch (err) {}
+	}
 
 	// Finally exit
 	var e = Cc['@mozilla.org/toolkit/app-startup;1'].getService(
