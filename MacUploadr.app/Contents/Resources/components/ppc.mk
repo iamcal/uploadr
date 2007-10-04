@@ -24,6 +24,7 @@ module:
 	-I$(EXIV_INCLUDE) $(DEFINE) gm_module.cpp
 
 dylib: impl module
+	ranlib $(GECKO_SDK)/lib/libxpcomglue_s.a
 	g++ -v -dynamiclib -o gm.dylib.ppc gm_impl.o gm_module.o \
 	-L$(GECKO_SDK)/lib -L$(GM_LIB) -L$(X11_LIB) -L$(PORTS_LIB) -L$(XULRUNNER) \
 	-Wl,-executable_path,$(XULRUNNER) -lxpcomglue_s -lxpcom -lnspr4 \
