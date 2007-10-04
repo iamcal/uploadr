@@ -14,8 +14,8 @@
 #include <string>
 #include <sys/stat.h>
 #include "nsCOMPtr.h"
-#include "nsIFile.h"
 #include "nsDirectoryServiceUtils.h"
+#include "nsIFile.h"
 #ifdef XP_MACOSX
 #include <mach-o/dyld.h>
 #endif
@@ -320,10 +320,13 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 			Exiv2::ExifData & exif = meta_r->exifData();
 			description = exif["Exif.Image.ImageDescription"].toString();
 		}
-		string tags = iptc["Iptc.Application2.Keywords"].toString() + " " +
-			iptc["Iptc.Application2.City"].toString() + " " +
-			iptc["Iptc.Application2.ProvinceState"].toString() + " " +
-			iptc["Iptc.Application2.CountryName"].toString();
+		string tags = iptc["Iptc.Application2.Keywords"].toString();
+		tags.append(" ");
+		tags.append(iptc["Iptc.Application2.City"].toString());
+		tags.append(" ");
+		tags.append(iptc["Iptc.Application2.ProvinceState"].toString());
+		tags.append(" ");
+		tags.append(iptc["Iptc.Application2.CountryName"].toString());
 
 		// Hide ### strings within the IPTC data
 		size_t pos = title.find("###", pos);
