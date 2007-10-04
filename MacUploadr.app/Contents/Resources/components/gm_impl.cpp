@@ -14,8 +14,8 @@
 #include <string>
 #include <sys/stat.h>
 #include "nsCOMPtr.h"
-#include "nsDirectoryServiceUtils.h"
 #include "nsIFile.h"
+#include "nsDirectoryServiceUtils.h"
 #ifdef XP_MACOSX
 #include <mach-o/dyld.h>
 #endif

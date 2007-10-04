@@ -90,6 +90,9 @@ Mac
 First make sure you install libjpeg et. al. using MacPorts, then run
 these commands.
 
+sudo port install jpeg
+sudo port install libpng
+
 Because of dynamic/static linker weirdness, to build GraphicsMagick,
 make sure libjpeg.dylib is available in /opt/local/lib.  To build the
 XPCOM component, move this file to /opt/local/lib/libjpeg.dylib.sav
@@ -134,6 +137,21 @@ Mac / Linux
 
 ./configure --enable-commercial --disable-shared
 make && sudo make install
+
+
+
+Building
+------------------------------------------------------------------------
+
+Windows
+-------
+
+Use the Visual Studio project in components/.
+
+Mac
+---
+
+Use the Makefile in components/ with targets for Intel and PPC.
 
 
 

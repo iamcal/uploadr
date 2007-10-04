@@ -8,6 +8,7 @@
 <!ENTITY menu.edit.cut "Cut">
 <!ENTITY menu.edit.copy "Copy">
 <!ENTITY menu.edit.paste "Paste">
+<!ENTITY menu.edit.select_all "Select all">
 <!ENTITY menu.help "Help">
 <!ENTITY menu.help.about "About Flickr Uploadr">
 <!ENTITY menu.help.faq "FAQ">
