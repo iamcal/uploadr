@@ -62,7 +62,10 @@ ThumbCallback.prototype = {
 				photos.list[this.id].date_taken = thumb[3];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
-				photos.list[this.id].title = thumb[6].replace(/^\s+|\s+$/, '');
+				var title = thumb[6].replace(/^\s+|\s+$/, '');
+				if ('' != title) {
+					photos.list[this.id].title = title;
+				}
 				photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/, '');
 				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
 				img.src = 'file://' + thumb[9];

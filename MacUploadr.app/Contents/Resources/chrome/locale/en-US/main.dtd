@@ -68,11 +68,7 @@
 <!ENTITY meta.title "Title:">
 <!ENTITY meta.description "Description:">
 <!ENTITY meta.tags "Tags:">
-<!ENTITY meta.more "More">
-<!ENTITY meta.save "Save">
 <!ENTITY meta.leave_unchanged "Leave unchanged">
-<!ENTITY meta.privacy "Privacy">
-<!ENTITY meta.melons "Content type and safety level">
 <!ENTITY meta.batch.prompt "Changing settings here will affect the selected images.">
 <!ENTITY meta.single.sets "Add this photo to sets">
 <!ENTITY meta.batch.sets "Add these photos to sets">

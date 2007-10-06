@@ -102,9 +102,11 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<hbox id="head">
 			<box id="logo" />
 			<box flex="1" />
-			<hbox><label id="username" value="&notloggedin;" /><html:input
-			type="button" id="switch" class="button" value="&login;"
-			onclick="events.buttons.login();" /></hbox>
+			<hbox>
+				<vbox><label id="username" value="&notloggedin;" /></vbox>
+				<vbox><html:div id="switch" class="button" onclick="events.buttons.login();"
+				><html:div>&login;</html:div></html:div></vbox>
+			</hbox>
 		</hbox>
 
 		<!-- Placeholder for overlays -->
@@ -122,16 +124,14 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					<progressmeter id="progress_overall" value="0" />
 					<progressmeter id="progress_file" value="0" />
 				</vbox>
-				<vbox>
-					<html:input type="button" id="button_cancel" value="&buttons.cancel;"
-					class="button" onclick="events.buttons.cancel();" />
-				</vbox>
+				<vbox><html:div id="button_cancel" class="button" onclick="events.buttons.cancel();"
+				><html:div>&buttons.cancel;</html:div></html:div></vbox>
 			</hbox>
 			<spacer flex="1" />
-			<html:input type="button" id="button_login" value="&buttons.login;" class="button"
-			onclick="events.buttons.login();" />
-			<html:input type="button" id="button_upload" value="&buttons.upload;"
-			class="disabled_button" disabled="true" onclick="events.buttons.upload();" />
+			<html:div id="button_login" class="button" onclick="events.buttons.login();"
+			><html:div>&buttons.login;</html:div></html:div>
+			<html:div id="button_upload" class="button" onclick="events.buttons.upload();"
+			><html:div>&buttons.upload;</html:div></html:div>
 		</hbox>
 
 	</vbox>

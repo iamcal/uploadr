@@ -15,15 +15,15 @@ xpt:
 	$(GECKO_SDK)/bin/xpidl -m typelib -I$(GECKO_SDK)/idl gm.idl
 
 impl:
-	g++ -arch i386 -w -c -o gm_impl.o -I$(GECKO_SDK)/include -I$(GM_INCLUDE) \
+	g++ -w -c -o gm_impl.o -I$(GECKO_SDK)/include -I$(GM_INCLUDE) \
 	-I$(EXIV_INCLUDE) $(DEFINE) gm_impl.cpp
 
 module:
-	g++ -arch i386 -w -c -o gm_module.o -I$(GECKO_SDK)/include -I$(GM_INCLUDE) \
+	g++ -w -c -o gm_module.o -I$(GECKO_SDK)/include -I$(GM_INCLUDE) \
 	-I$(EXIV_INCLUDE) $(DEFINE) gm_module.cpp
 
 dylib: impl module
-	g++ -arch i386 -v -dynamiclib -o gm.dylib.mac gm_impl.o gm_module.o \
+	g++ -v -dynamiclib -o gm.dylib.mac gm_impl.o gm_module.o \
 	-L$(GECKO_SDK)/lib -L$(GM_LIB) -L$(X11_LIB) -L$(PORTS_LIB) -L$(XULRUNNER) \
 	-Wl,-executable_path,$(XULRUNNER) -lxpcomglue_s -lxpcom -lnspr4 \
 	-lGraphicsMagick -lGraphicsMagick++ -lexiv2 -lX11 -lz -lbz2 -lxml2 -lXext \

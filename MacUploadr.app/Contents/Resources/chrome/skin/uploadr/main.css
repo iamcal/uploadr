@@ -27,14 +27,8 @@ box, toolbox, hbox, vbox {
 #head hbox {
 	margin: 10px;
 }
-
-/* Pages */
-.page {
-	padding: 16px 0 16px 16px;
-	background: white;
-}
-.page hbox vbox {
-	padding: 0 16px 0 0;
+#username {
+	margin-top: 5px;
 }
 
 
@@ -81,23 +75,31 @@ box, toolbox, hbox, vbox {
 #button_back, #button_ok, #button_upload {
 	display: none;
 }
-input.button, input.disabled_button {
+div.button, div.disabled_button {
+	height: 22px;
 	margin: 0 0 5px 5px;
+	cursor: default;
+}
+div.button div, div.disabled_button div {
+	padding: 5px;
 	font-size: 12px;
+	line-height: 12px;
 	font-weight: bold;
 	text-transform: uppercase;
-	vertical-align: middle;
-}	
-input.button {
+}
+div.button {
 	background: #0063dc;
 	color: white;
 }
-input.disabled_button {
+div.disabled_button {
 	background: #eee;
 	color: #888;
 }
+div.button :active {
+	background: #0053cc;
+}
 
-/* Make the upload button gaudy */
+/* Make the upload button extra gaudy */
 #button_upload {
 	font-size: 16px;
 }
@@ -144,6 +146,9 @@ radiogroup checkbox {
 	padding: 5px 0 0 10px;
 	background: white;
 	border-bottom: 0;
+}
+#tools toolbox toolbar div {
+	margin: 0 0 5px 5px;
 }
 #tools toolbox toolbar toolbarbutton {
 	height: 20px;
@@ -290,28 +295,28 @@ toolbarseparator {
 
 /* Three states, depending on what's selected */
 #meta, #batch_meta, #no_meta {
-	width: 200px;
+	width: 420px;
 	padding: 5px;
 	background: #f8f8f8;
 }
 #meta, #batch_meta {
 	display: none;
 }
+#meta vbox.column, #batch_meta vbox.column {
+	width: 200px;
+	padding: 5px;
+}
 
 /* If one image selected, this shows the thumbnail */
 #meta_div {
 	width: 100px;
 	height: 103px;
+	margin: 5px;
 }
 #meta_div img {
 	margin: 0 auto;
 	padding: 0;
 	border: 0;
-}
-
-/* Initially hide extra metadata settings */
-#single_privacy, #single_melons, #single_sets, #batch_privacy, #batch_melons, #batch_sets {
-	display: none;
 }
 
 /* Space for the sets section */

@@ -158,9 +158,6 @@ var meta = {
 		document.getElementById('single_is_friend').disabled = dis;
 		document.getElementById('single_is_family').disabled = dis;
 		document.getElementById('meta').style.display = '-moz-box';
-		document.getElementById('single_privacy').style.display = 'none';
-		document.getElementById('single_melons').style.display = 'none';
-		document.getElementById('single_sets').style.display = 'none';
 		document.getElementById('batch_meta').style.display = 'none';
 		meta._enable();
 	},
@@ -171,9 +168,6 @@ var meta = {
 			locale.getFormattedString('meta.batch.prompt', [photos.selected.length]);
 		document.getElementById('meta').style.display = 'none';
 		document.getElementById('batch_meta').style.display = '-moz-box';
-		document.getElementById('batch_privacy').style.display = 'none';
-		document.getElementById('batch_melons').style.display = 'none';
-		document.getElementById('batch_sets').style.display = 'none';
 		meta._enable();
 	},
 

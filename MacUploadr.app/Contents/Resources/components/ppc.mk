@@ -8,7 +8,6 @@ PORTS_LIB := /opt/local/lib
 XULRUNNER := ../../Frameworks/XUL.framework/Versions/Current
 DEFINE := -DXP_UNIX -DXP_MACOSX
 
-#all: xpt dylib
 all: dylib
 
 xpt:

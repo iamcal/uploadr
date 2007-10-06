@@ -415,7 +415,7 @@ events.photos = {
 
 	// Select all photos
 	select_all: function() {
-		
+		alert('implement me!');
 	},
 
 	// Sort the photos when asked
@@ -449,62 +449,6 @@ events.photos = {
 		} else {
 			document.getElementById('batch_is_friend').disabled = false;
 			document.getElementById('batch_is_family').disabled = false;
-		}
-	},
-
-	// Display the other metadata fields
-	privacy: function() {
-		var prefix;
-		if (1 < photos.selected.length) {
-			prefix = 'batch'
-		} else {
-			prefix = 'single';
-		}
-		var privacy = document.getElementById(prefix + '_privacy');
-		var melons = document.getElementById(prefix + '_melons');
-		var sets = document.getElementById(prefix + '_sets');
-		if ('none' == privacy.style.display) {
-			privacy.style.display = '-moz-box';
-		} else {
-			privacy.style.display = 'none';
-		}
-		melons.style.display = 'none';
-		sets.style.display = 'none';
-	},
-	melons: function() {
-		var prefix;
-		if (1 < photos.selected.length) {
-			prefix = 'batch'
-		} else {
-			prefix = 'single';
-		}
-		var privacy = document.getElementById(prefix + '_privacy');
-		var melons = document.getElementById(prefix + '_melons');
-		var sets = document.getElementById(prefix + '_sets');
-		privacy.style.display = 'none';
-		if ('none' == melons.style.display) {
-			melons.style.display = '-moz-box';
-		} else {
-			melons.style.display = 'none';
-		}
-		sets.style.display = 'none';
-	},
-	sets: function() {
-		var prefix;
-		if (1 < photos.selected.length) {
-			prefix = 'batch'
-		} else {
-			prefix = 'single';
-		}
-		var privacy = document.getElementById(prefix + '_privacy');
-		var melons = document.getElementById(prefix + '_melons');
-		var sets = document.getElementById(prefix + '_sets');
-		privacy.style.display = 'none';
-		melons.style.display = 'none';
-		if ('none' == sets.style.display) {
-			sets.style.display = '-moz-box';
-		} else {
-			sets.style.display = 'none';
 		}
 	},
 

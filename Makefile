@@ -1,4 +1,4 @@
-SRC := ~/code/flickrUploadr3/MacUploadr.app/Contents
+SRC := MacUploadr.app/Contents
 BUILD := ~/Desktop/build/Flickr\ Uploadr.app/Contents
 GM_VER := 1.1.10
 
@@ -31,7 +31,7 @@ build:
 	mkdir $(BUILD)/lib/GraphicsMagick-$(GM_VER)
 	mkdir $(BUILD)/lib/GraphicsMagick-$(GM_VER)/config
 	cp $(SRC)/lib/GraphicsMagick-$(GM_VER)/config/*.mgk \
-		$(BUILD)/lib/GraphicsMagick-$(GM_VER)/
+		$(BUILD)/lib/GraphicsMagick-$(GM_VER)/config/
 	cp -R $(SRC)/Frameworks/XUL.framework $(BUILD)/Frameworks/
 	ln -s ../Frameworks/XUL.framework/Versions/Current/xulrunner \
 		$(BUILD)/MacOS/xulrunner

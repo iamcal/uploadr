@@ -346,7 +346,7 @@ var Photo = function(id, path) {
 	}
 	this.width = 0;
 	this.height = 0;
-	this.title = '';
+	this.title = this.filename;
 	this.description = '';
 	this.tags = '';
 	this.is_public = settings.is_public;
