@@ -6,8 +6,6 @@ const NS_HTML = 'http://www.w3.org/1999/xhtml';
 var events = {};
 
 var uploadr = {
-
-	// Configuration
 	conf: {
 
 		// Size of thumbnails
@@ -20,12 +18,32 @@ var uploadr = {
 		//   Must be 'sync' or 'async'
 		mode: 'async',
 
+		// Upload timeout (milliseconds);
+		timeout: 60000,
+
+		// Upload progress-checking interval (milliseconds)
+		check: 400,
+
 		// How often should the app auto-save metadata? (seconds)
 		auto_save: 60,
 
 		// What version am I?
-		version: '3.0.1'
+		version: '3.0.1',
+
+		// Configure what types of API events should be written to the console
+		console: {
+			request: false,
+			response: true,
+			timeout: true
+		}
 
 	}
-
 };
+
+// Make the $ plain old getElementById and jQuery not conflict
+/*
+jQuery.noConflict();
+var $ = function(id) {
+	return document.getElementById(id);
+};
+*/

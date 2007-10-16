@@ -152,6 +152,7 @@ var meta = {
 
 	// Enable the right-side metadata column on the photos page
 	enable: function() {
+		document.getElementById('single_title').select();
 		var is_public = document.getElementById('single_is_public');
 		is_public.disabled = false;
 		var dis = 1 == parseInt(is_public.value);
@@ -161,7 +162,6 @@ var meta = {
 		document.getElementById('batch_meta').style.display = 'none';
 		meta._enable();
 	},
-
 	batch: function() {
 		meta.load();
 		document.getElementById('batch_prompt').firstChild.nodeValue =
@@ -169,14 +169,13 @@ var meta = {
 		document.getElementById('meta').style.display = 'none';
 		document.getElementById('batch_meta').style.display = '-moz-box';
 		meta._enable();
+		document.getElementById('batch_title').select();
 	},
 
 	// Common to batch and single enabling
 	_enable: function() {
 		document.getElementById('no_meta').style.display = 'none';
-		var remove = document.getElementById('t_remove');
-		remove.className = 'button';
-		remove.disabled = false;
+		buttons.remove.enable();
 		document.getElementById('t_rotate_l').className = 'enabled';
 		document.getElementById('t_rotate_r').className = 'enabled';
 	},
@@ -186,9 +185,7 @@ var meta = {
 		document.getElementById('meta').style.display = 'none';
 		document.getElementById('batch_meta').style.display = 'none';
 		document.getElementById('no_meta').style.display = '-moz-box';
-		var remove = document.getElementById('t_remove');
-		remove.className = 'disabled_button';
-		remove.disabled = true;
+		buttons.remove.disable();
 		document.getElementById('t_rotate_l').className = 'disabled';
 		document.getElementById('t_rotate_r').className = 'disabled';
 	},
@@ -290,6 +287,68 @@ var meta = {
 		};
 		li.appendChild(a);
 		ul.appendChild(li);
+	},
+
+	// Create a new set
+	create_set: function() {
+
+		// Do we have any sets to give?
+		if (-1 == users.sets || 0 < users.sets) {
+			var name = prompt(locale.getString('settings.set.add'),
+				locale.getString('settings.set.add.title'));
+			if (!name) {
+				return;
+			}
+			meta.created_sets.push(name);
+			meta.sets[name] = name;
+			var dropdowns = ['single_set', 'batch_set'];
+			for each (var dropdown in dropdowns) {
+				var d = document.getElementById(dropdown);
+				d.removeItemAt(0);
+				d.insertItemAt(0, locale.getString('settings.set.dont'), '', '');
+				d.insertItemAt(1, name, name, '');
+				d.selectedIndex = 1;
+				d.disabled = false;
+			}
+			meta.add_to_set();
+		}
+
+		// No sets remaining
+		else {
+			alert(locale.getString('settings.set.exhausted'),
+				locale.getString('settings.set.exhausted,title'));
+		}
+
+	},
+
+	// Add selected photos to the selected set
+	add_to_set: function() {
+
+		// Single photo or group of photos?
+		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+
+		// Get the set we're adding to
+		var set = document.getElementById(prefix + '_set');
+		var set_id = set.value;
+		var name = set.selectedItem.label;
+		if ('' == set_id) {
+			return;
+		}
+
+		// Add each selected photo to this set
+		var ul = document.getElementById(prefix + '_sets_list');
+		var ii = photos.selected.length;
+		for (var i = 0; i < ii; ++i) {
+			var p = photos.list[photos.selected[i]];
+			if (-1 == p.sets.indexOf(set_id)) {
+				p.sets.push(set_id);
+			}
+		}
+		set.selectedIndex = 0;
+
+		// Add it to the list
+		meta.select_set(ul, set_id, name);
+
 	}
 
 };

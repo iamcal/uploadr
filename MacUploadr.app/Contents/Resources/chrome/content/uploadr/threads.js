@@ -53,6 +53,7 @@ ThumbCallback.prototype = {
 			// Get this photo from the DOM and remove its loading class
 			var img = document.getElementById('photo' + this.id).getElementsByTagName('img')[0];
 			img.style.visibility = 'hidden';
+			var need_click = -1 == img.className.indexOf('selected');
 			img.className = img.className.replace('loading', '');
 
 			// If successful, replace with the thumb and update the Photo object
@@ -69,6 +70,16 @@ ThumbCallback.prototype = {
 				photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/, '');
 				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
 				img.src = 'file://' + thumb[9];
+
+				// Select newly added images
+				if (need_click) {
+					events.photos.click({
+						target: img,
+						ctrlKey: true,
+						metaKey: true,
+						shiftKey: false
+					});
+				}
 
 				// If only one photo is selected, refresh the other thumbnail, too
 				if (1 == photos.selected.length) {
@@ -92,6 +103,7 @@ ThumbCallback.prototype = {
 		} catch (err) {
 			Components.utils.reportError(err);
 		}
+		unblock_remove();
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
@@ -147,6 +159,7 @@ var RotateCallback = function(id, path) {
 RotateCallback.prototype = {
 	run: function() {
 		photos.list[this.id].path = this.path;
+Components.utils.reportError(photos.selected.toSource());
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
@@ -199,7 +212,7 @@ SortCallback.prototype = {
 		// Perform the sort
 		if (1 >= photos.list.length) {
 			if (1 == photos.list.length) {
-				buttons.enable('upload');
+				buttons.upload.enable();
 			}
 			return;
 		}
@@ -214,7 +227,7 @@ SortCallback.prototype = {
 
 		// Lazily do the UI refresh by appendChild'ing everything in the right order
 		//   This is far from being a bottleneck, so leave it alone until it is
-		var list = document.getElementById('list');
+		var list = document.getElementById('photos_list');
 		for (var i = p.length - 1; i >= 0; --i) {
 			if (null != p[i]) {
 				list.appendChild(document.getElementById('photo' + p[i].id));
@@ -223,7 +236,7 @@ SortCallback.prototype = {
 		photos.normalize();
 
 		// And finally allow them to upload
-		buttons.enable('upload');
+		buttons.upload.enable();
 
 	},
 	QueryInterface: function(iid) {
@@ -322,7 +335,8 @@ var EnableUploadCallback = function() {
 };
 EnableUploadCallback.prototype = {
 	run: function() {
-		buttons.enable('upload');
+		buttons.upload.enable();
+Components.utils.reportError(photos.selected.toSource());
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

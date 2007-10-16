@@ -1,5 +1,3 @@
-const TIMEOUT = 60000; // Milliseconds
-
 // A note about the authentication API:
 //   Because authentication is rather involved, involving a bunch of API calls in sequence,
 //   authentication should be kicked off using users.login() in users.js.  The login sequence
@@ -17,7 +15,9 @@ var upload = {
 	cancel: false,
 
 	// Progress metering
+	progress_bar: null,
 	progress_handle: null,
+	progress_id: -1,
 	progress_last: 0,
 	progress_total: -1,
 
@@ -34,10 +34,10 @@ var upload = {
 	start: function(id) {
 
 		// Update the UI
-		var meter = document.getElementById('progress_file');
-		meter.value = 0;
-		meter.mode = 'determined';
-		document.getElementById('progress').style.visibility = 'visible';
+		if (null == upload.progress_bar) {
+			upload.progress_bar = new ProgressBar('progress_bar');
+			document.getElementById('progress').style.visibility = 'visible';
+		}
 
 		// Pass the photo to the API
 		var photo = photos.uploading[id];
@@ -67,12 +67,21 @@ var upload = {
 	// Finish an asynchronous upload
 	_async: function(rsp, id) {
 
+		// Stop checking progress
+		if (null != upload.progress_handle) {
+			window.clearInterval(upload.progress_handle);
+			upload.progress_handle = null;
+		}
+
 		// If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 			++photos.fail;
 			photos.failed.push(photos.uploading[id]);
 			if (upload.bandwidth(rsp)) {
 				return;
+			}
+			if (upload.cancel) {
+				upload.done();
 			}
 		}
 
@@ -100,6 +109,13 @@ var upload = {
 
 	// Finish a synchronous upload
 	_sync: function(rsp, id) {
+Components.utils.reportError('_sync ' + id);
+
+		// Stop checking progress if we're in synchronous mode
+		if ('sync' == uploadr.conf.mode && null != upload.progress_handle) {
+			window.clearInterval(upload.progress_handle);
+			upload.progress_handle = null;
+		}
 
 		// Cancel the timeout
 		window.clearTimeout(upload.timeout_handle);
@@ -140,16 +156,9 @@ var upload = {
 		}
 		photos.uploading[id] = null;
 
-		// Update the UI
-		document.getElementById('progress_overall').value =
-			100 * (photos.ok + photos.fail) / photos.total;
-
 		// For the last upload, we have some cleanup to do
-		var done = true;
-		for each (var p in photos.uploading) {
-			done = done && null == p;
-		}
-		if (done || upload.cancel) {
+		if ((upload.cancel || photos.ok + photos.fail == photos.total) &&
+			0 == upload.tickets_count) {
 			upload.done();
 		}
 
@@ -170,37 +179,54 @@ var upload = {
 	progress: function(stream, id) {
 
 		// Get this bit of progress
-		var a = stream.available();
-		var bytes = upload.progress_total - a;
-		var percent = Math.round(100 * bytes / upload.progress_total);
-		if (0 > percent) {
-			percent = 0;
+		if (id != upload.progress_id) {
+			upload.progress_id = id;
+			upload.progress_last = upload.progress_total;
 		}
+		var a = stream.available() >> 10;
+		var kb = upload.progress_last - a;
 
-		// Have we made any progress?  If so, push the timeout event further into the future; if
-		// not, call it explicitly now
-		if (bytes > upload.progress_last) {
+		// Have we made any progress?  If so, push the timeout event further into the future
+		//   This is set to 1 kilobyte instead of 0 because some essentially dead connections will
+		//   send off a few bytes every now and then
+		if (1 < kb) {
 			window.clearTimeout(upload.timeout_handle);
 			upload.timeout_handle = window.setTimeout(function() {
 				upload.timeout(id);
-			}, TIMEOUT);
+			}, uploadr.conf.timeout);
 		}
-		upload.progress_last = bytes;
+		if (0 != upload.progress_last) {
+			photos.kb.sent += kb;
+		}
+		upload.progress_last = a;
 
 		// Update the UI
-		var meter = document.getElementById('progress_file');
-		meter.value = percent;
-
-		// This is the end?
-		if (0 == a) {
-			meter.mode = 'undetermined';
-			window.clearInterval(upload.progress_handle);
-		}
+/*
+var keys = [];
+for (var k in photos.uploading) keys.push(k + (null == photos.uploading[k] ? 'null' : ''));
+Components.utils.reportError('id: ' + id + ', photos.uploading: [' + keys + '], this_percent: ' +
+(1 - a / upload.progress_total) + ', overall_percent: ' + (photos.kb.sent / photos.kb.total) +
+', sent: ' + photos.kb.sent + ', total: ' + photos.kb.total);
+*/
+//		if (null != photos.uploading[id]) {
+//			photos.uploading[id].progress_bar.update(1 - a / upload.progress_total);
+//		}
+		var percent = photos.kb.sent / photos.kb.total;
+		upload.progress_bar.update(percent);
+		document.getElementById('progress_text').value = locale.getFormattedString(
+			'progress.status', [
+				id + 1, // Since starting to use photos.normalize, this should be correct
+				photos.total,
+				Math.round(100 * percent)
+			]);
 
 	},
 
 	// Timeout an upload after too much inactivity
 	timeout: function(id) {
+		if (uploadr.conf.console.timeout) {
+			Components.utils.reportError('UPLOAD TIMEOUT: ' + id);
+		}
 		window.clearInterval(upload.progress_handle);
 		upload.cancel = true;
 		upload._start(false, id);
@@ -263,6 +289,8 @@ var upload = {
 
 	// Clean up after an upload finishes
 	done: function() {
+		window.clearTimeout(upload.timeout_handle);
+		window.clearInterval(upload.progress_handle);
 
 		// Kick off the chain of adding photos to a set
 		var not_adding_to_sets = true;
@@ -287,7 +315,12 @@ var upload = {
 		photos.batch_size = 0;
 		free.update();
 		document.getElementById('progress').style.visibility = 'hidden';
-		document.getElementById('progress_overall').value = 0;
+		document.getElementById('progress_bar').style.width = '0';
+		events.photos.show_photos();
+		var queue = document.getElementById('queue_list');
+		while (queue.hasChildNodes()) {
+			queue.removeChild(queue.firstChild);
+		}
 		status.clear();
 
 		// Alert the user of any failures and possibly re-add them to the batch
@@ -299,16 +332,18 @@ var upload = {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
 			}
+			photos.normalize();
 		}
 
 		// If this was a cancellation, add photos we didn't get to back to the batch
 		if (upload.cancel) {
 			for each (var p in photos.uploading) {
 				if (null != p) {
-					photos._add(p.path);;
+					photos._add(p.path);
 					photos.list[photos.list.length - 1] = p;
 				}
 			}
+			photos.normalize();
 		}
 
 		// Offer to open the uploaded batch on the site
@@ -320,9 +355,7 @@ var upload = {
 
 		// Make sure the upload button is enabled if it should be
 		//   The confirm() box above can prevent this from happening after sorting, so force it
-		if (0 < photos.count) {
-			buttons.enable('upload');
-		}
+		buttons.upload.enable();
 
 		// Clear out the uploading batch
 		photos.uploading = [];
@@ -332,7 +365,10 @@ var upload = {
 		photos.total = 0;
 		photos.ok = 0;
 		photos.fail = 0;
+		photos.kb.sent = 0;
+		photos.kb.total = 0;
 
+		upload.progress_bar = null;
 		upload.cancel = false;
 		unblock_exit();
 	}
@@ -472,7 +508,8 @@ var flickr = {
 				});
 			},
 			_checkTickets: function(rsp) {
-				if ('ok' == rsp.getAttribute('stat')) {
+				if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
+					var again = false;
 					var tickets = rsp.getElementsByTagName('uploader')[0].getElementsByTagName(
 						'ticket');
 					var ii = tickets.length;
@@ -481,18 +518,22 @@ var flickr = {
 						var complete = parseInt(tickets[i].getAttribute('complete'));
 						if ('undefined' != typeof upload.tickets[ticket_id]) {
 							if (2 == complete) {
+								--upload.tickets_count;
 								upload._sync(false, upload.tickets[ticket_id]);
 								delete upload.tickets[ticket_id];
-								--upload.tickets_count;
 							} else if (1 == complete) {
+								--upload.tickets_count;
 								upload._sync(parseInt(tickets[i].getAttribute('photoid')),
 									upload.tickets[ticket_id]);
 								delete upload.tickets[ticket_id];
-								--upload.tickets_count;
+							} else {
+								again = true;
 							}
 						}
 					}
-					upload._check_tickets();
+					if (again) {
+						upload._check_tickets();
+					}
 				}
 				unblock_exit();
 			}
@@ -612,7 +653,6 @@ var flickr = {
 	},
 
 	// Preferences are fetched from the site when no stored version can be found
-	//   It would be nice if these expanded to include default privacy settings
 	prefs: {
 
 		getContentType: function() {
@@ -626,7 +666,6 @@ var flickr = {
 			if ('ok' == rsp.getAttribute('stat')) {
 				settings.content_type =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('content_type'));
-//				settings.update();
 			}
 			unblock_exit();
 		},
@@ -642,7 +681,6 @@ var flickr = {
 			if ('ok' == rsp.getAttribute('stat')) {
 				settings.hidden =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('hidden'));
-//				settings.update();
 			}
 			unblock_exit();
 		},
@@ -660,7 +698,6 @@ var flickr = {
 				settings.is_public = 1 == privacy;
 				settings.is_friend = 2 == privacy || 4 == privacy;
 				settings.is_family = 3 == privacy || 5 == privacy;
-//				settings.update();
 			}
 			unblock_exit();
 		},
@@ -677,7 +714,6 @@ var flickr = {
 			if ('ok' == rsp.getAttribute('stat')) {
 				settings.safety_level =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('safety_level'));
-//				settings.update();
 			}
 			unblock_exit();
 		}
@@ -693,7 +729,9 @@ var _timeouts = {};
 //   Callbacks are named exactly like the API method but with an _ in front of the last
 //   part of the method name (for example flickr.foo.bar calls back to flickr.foo._bar)
 var _api = function(params, url, browser, post, id) {
-Components.utils.reportError('API CALL: ' + params.toSource());
+	if (uploadr.conf.console.request) {
+		Components.utils.reportError('API REQUEST: ' + params.toSource());
+	}
 	if (null == url) {
 		url = 'http://api.flickr.com/services/rest/';
 	}
@@ -771,7 +809,7 @@ Components.utils.reportError('API CALL: ' + params.toSource());
 			Ci.nsIStringInputStream);
 		sstream.setData('--' + boundary + '--', -1);
 		mstream.appendStream(sstream);
-		upload.progress_total = mstream.available();
+		upload.progress_total = mstream.available() >> 10;
 	} else {
 		var args = [];
 		for (var p in esc_params) {
@@ -808,7 +846,9 @@ Components.utils.reportError('API CALL: ' + params.toSource());
 		xhr.onreadystatechange = function() {
 			if (4 == xhr.readyState && 200 == xhr.status && xhr.responseXML) {
 				try {
-Components.utils.reportError('API RESULT: ' + xhr.responseText);
+					if (uploadr.conf.console.response) {
+						Components.utils.reportError('API RESPONSE: ' + xhr.responseText);
+					}
 					var rsp = xhr.responseXML.documentElement;
 
 					// If this is a normal method call
@@ -846,16 +886,18 @@ Components.utils.reportError('API RESULT: ' + xhr.responseText);
 		if (post && -1 != id) {
 			upload.progress_handle = window.setInterval(function() {
 				upload.progress(mstream, id);
-			}, 200);
+			}, uploadr.conf.check);
 		}
 
 		// Setup timeout guard on everything else
 		else if (params.method) {
 			_timeouts[esc_params['api_sig']] = window.setTimeout(function() {
-Components.utils.reportError('API TIMEOUT: ' + callback);
+				if (uploadr.conf.console.timeout) {
+					Components.utils.reportError('API TIMEOUT: ' + callback);
+				}
 				var rsp = false;
 				eval(callback);
-			}, TIMEOUT);
+			}, uploadr.conf.timeout);
 		}
 
 	}

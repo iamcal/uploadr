@@ -20,9 +20,7 @@
 <!ENTITY tools.remove "− Remove">
 
 <!ENTITY buttons.login "Login">
-<!ENTITY buttons.back "Back">
-<!ENTITY buttons.ok "OK">
-<!ENTITY buttons.upload "Upload this batch">
+<!ENTITY buttons.upload "Upload photos">
 <!ENTITY buttons.cancel "Cancel">
 
 <!ENTITY bandwidth "Bandwidth:">

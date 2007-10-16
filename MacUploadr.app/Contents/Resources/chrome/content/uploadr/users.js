@@ -40,8 +40,10 @@ var users = {
 			// Update the UI
 			var username = locale.getFormattedString('username', [users.username]);
 			document.getElementById('username').value = username;
-			document.getElementById('switch').value = locale.getString('switch');
+			document.getElementById('switch').firstChild.firstChild.nodeValue =
+				locale.getString('switch');
 			status.set(locale.getString('status.ready'));
+			buttons.upload.enable();
 
 		} else {
 			users.logout();
@@ -93,11 +95,6 @@ var users = {
 		} else {
 			users.list[users.username] = new User(users.username, users.nsid, users.token,
 				users.is_pro, users.bandwidth, users.filesize, users.sets);
-		}
-
-		// Update the UI
-		if ('photos' == pages.current()) {
-			buttons.show('upload');
 		}
 
 	},

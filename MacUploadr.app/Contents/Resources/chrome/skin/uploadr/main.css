@@ -12,23 +12,23 @@ box, toolbox, hbox, vbox {
  */
 
 #head {
-	background: #f8f8f8;
+	background: url(header_bg.png);
 	border-bottom: 1px solid #ddd;
 }
 
 /* Logo */
 #logo {
-	width: 120px;
-	height: 67px;
-	background: url(logo.png) no-repeat scroll 0 10px;
+	width: 100px;
+	height: 37px;
+	background: url(logo_flickr.png) no-repeat 5px 5px;
 }
 
 /* User indicator */
 #head hbox {
-	margin: 10px;
+	margin: 8px 5px 0 5px;
 }
 #username {
-	margin-top: 5px;
+	margin: 5px 5px 0 0;
 }
 
 
@@ -38,70 +38,137 @@ box, toolbox, hbox, vbox {
  */
 
 #footer {
-	height: 40px;
-	padding: 5px;
-	border-top: 1px dotted #ddd;
+	height: 28px;
 	background: white;
+}
+
+/* Borders */
+#footer.photos {
+	border-top: 1px dotted #ddd;
+}
+#footer.queue {
+	border-bottom: 1px dotted #ddd;
 }
 
 /* Free user bandwidth counter */
 #free {
 	visibility: hidden;
 }
-#bw_used, #bw_batch, #bw_remaining {
-	height: 17px;
-	background: url(guages.png);
-}
-#bw_used, #bw_batch {
-	width: 0;
-}
-#bw_used {
-	background-position: 0 -51px;
-}
-#bw_batch {
-	background-position: 0 -34px;
-}
-#bw_remaining {
-	width: 94px;
-	background-position: 0 -17px;
-}
 
 /* Upload progress meter */
 #progress {
 	visibility: hidden;
 }
+#progress_queue {
+	height: 28px;
+	width: 21px;
+	margin: 0;
+	padding: 0;
+}
+#footer.photos #progress_queue {
+	background: url(button_slider_closed.png);
+}
+#footer.photos #progress_queue:active {
+	background: url(button_slider_closed_click.png);
+}
+#footer.queue #progress_queue {
+	background: url(button_slider_open.png);
+}
+#footer.queue #progress_queue:active {
+	background: url(button_slider_open_click.png);
+}
+#progress_bar, .progress_bar box {
+	width: 0;
+	border-right: 2px solid #ff0084;
+	background: #f8f8f8;
+}
+#progress_text {
+	margin: 4px 0 0 0;
+	padding-left: 32px;
+	background: url(balls-16x8-trans.gif) no-repeat 8px 6px;
+	font-size: 16px;
+	font-weight: bold;
+}
+.progress_bar {
+	height: 12px;
+	margin: 3px;
+	background: white;
+	text-align: left;
+}
+.progress_bar box {
+	height: 12px;
+	margin: 0;
+}
 
 /* Buttons */
-#button_back, #button_ok, #button_upload {
-	display: none;
-}
 div.button, div.disabled_button {
 	height: 22px;
-	margin: 0 0 5px 5px;
+	margin: 0 5px 5px 0;
 	cursor: default;
+}
+div.button {
+	background: url(buttons_blue.png) no-repeat;
+	color: white;
+}
+div.disabled_button {
+	background: url(buttons_grey.png) no-repeat;
+	color: #888;
 }
 div.button div, div.disabled_button div {
 	padding: 5px;
-	font-size: 12px;
+	font-size: 11px;
 	line-height: 12px;
 	font-weight: bold;
 	text-transform: uppercase;
 }
-div.button {
-	background: #0063dc;
+div.button div {
+	background: url(buttons_blue_slide.png) no-repeat top right;
 	color: white;
 }
-div.disabled_button {
-	background: #eee;
+div.disabled_button div {
+	background: url(buttons_grey_slide.png) no-repeat top right;
 	color: #888;
 }
-div.button :active {
-	background: #0053cc;
+div.button:active {
+	background-position: 0 -22px;
+}
+div.button div:active {
+	background-position: bottom right;
+}
+
+/* Make the switch users button a bit less guady */
+#switch div {
+	font-size: 9px;
+	font-weight: normal;
 }
 
 /* Make the upload button extra gaudy */
 #button_upload {
-	font-size: 16px;
+	width: 193px;
+	height: 37px;
+	background: url(upload_off.png) no-repeat;
+}
+#button_upload.button:active {
+	background: url(upload_click.png) no-repeat;
+}
+#button_upload div {
+	padding: 5px 0 11px 0;
+	background: transparent;
+	font-size: 21px;
+	line-height: 21px;
+	text-transform: none;
+	text-align: center;
+}
+#button_upload.button div {
+	color: #ff0084;
+}
+#button_upload.disabled_button div {
+	color: #888;
+}
+
+/* Vertically center the cancel button */
+#button_cancel {
+	margin: 3px;
 }
 
 
@@ -137,19 +204,22 @@ radiogroup checkbox {
 /*
  * Toolbar
  */
+
 #tools {
 	background: white;
 	border-bottom: 1px dotted #ddd;
 }
 #tools toolbox toolbar {
 	height: 34px;
-	padding: 5px 0 0 10px;
+	padding: 6px 0 1px 5px;
 	background: white;
 	border-bottom: 0;
 }
+/*
 #tools toolbox toolbar div {
 	margin: 0 0 5px 5px;
 }
+*/
 #tools toolbox toolbar toolbarbutton {
 	height: 20px;
 	margin: 0 5px 0 0;
@@ -197,18 +267,16 @@ toolbarseparator {
 
 #photos {
 	margin: 0;
-	background: white;
-	border-right: 1px solid #ddd;
+	padding: 5px;
 	overflow: auto;
 }
 
 /* Dragging photos into the container */
 .no_drag {
-	padding: 5px;
+	background: white;
 }
 .drag {
-	padding: 0;
-	border: 5px solid #ff0084;
+	background: #fff0f8;
 }
 
 /* Sort indicators */
@@ -219,13 +287,13 @@ toolbarseparator {
 	display: none;
 }
 
-/* The actual list of photos */
-#list {
+/* The actual list of photos and similar properties of the queue */
+#photos_list, #queue_list {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
 }
-#list li {
+#photos_list li, #queue_list li {
 	float: left;
 	clear: none;
 	width: 116px;
@@ -237,33 +305,33 @@ toolbarseparator {
 	text-align: center;
 	vertical-align: middle;
 }
-#list li img {
+#photos_list li img, #queue_list li img {
 	margin: auto;
 	padding: 3px;
 	background: transparent;
 }
 
 /* Image states */
-#list li img.loading {
+#photos_list li img.loading {
 }
-#list li img.selecting {
+#photos_list li img.selecting {
 	padding: 2px;
 	border: 1px solid #ff0084;
 	background: white;
 }
-#list li img.selected {
+#photos_list li img.selected {
 	padding: 1px;
 	border: 2px solid #ff0084;
 	background: white;
 	cursor: move;
 }
-#list li img.dragging {
+#photos_list li img.dragging {
 	opacity: 0.5;
 }
-#list li.drop_left {
+#photos_list li.drop_left {
 	border-left: 2px solid black;
 }
-#list li.drop_right {
+#photos_list li.drop_right {
 	border-right: 2px solid black;
 }
 
@@ -294,16 +362,23 @@ toolbarseparator {
  */
 
 /* Three states, depending on what's selected */
-#meta, #batch_meta, #no_meta {
+#meta, #batch_meta, #no_meta, #meta_button {
 	width: 420px;
 	padding: 5px;
 	background: #f8f8f8;
+	border-left: 1px solid #ddd;
 }
 #meta, #batch_meta {
 	display: none;
 }
 #meta vbox.column, #batch_meta vbox.column {
 	width: 200px;
+	padding: 5px;
+}
+
+/* The upload button, which is always visible */
+#meta_button {
+	height: 38px;
 	padding: 5px;
 }
 
@@ -319,23 +394,35 @@ toolbarseparator {
 	border: 0;
 }
 
-/* Space for the sets section */
-#single_sets table, #batch_sets table {
-	margin: 5px 0 0 0;
-}
-
 /* Sets lists */
-#single_sets ul, #batch_sets ul {
+#single_sets_list, #batch_sets_list {
 	margin: 5px 5px 0 5px;
 	padding: 0;
 	list-style-type: none;
 }
-#single_sets ul li, #batch_sets ul li {
+#single_sets_list li, #batch_sets_list li {
 	margin: 0;
 	padding: 0 0 5px 5px;
 }
-#single_sets ul li a, #batch_sets ul li a {
+#single_sets_list li a, #batch_sets_list li a {
 	color: #aaa;
 	text-decoration: none;
 	cursor: pointer;
+}
+
+/* Nicer layout for sets controls */
+#single_sets table, #batch_sets table {
+	margin: 5px 0 0 0;
+}
+
+
+
+/*
+ * The upload queue
+ */
+
+#page_queue {
+	display: none;
+	overflow: auto;
+	background: white;
 }

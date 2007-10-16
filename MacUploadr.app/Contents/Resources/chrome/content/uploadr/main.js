@@ -1,3 +1,4 @@
+// Events for pressed buttons
 events.buttons = {
 
 	// Login button, shown on the photos page until logged in
@@ -34,6 +35,7 @@ events.buttons = {
 
 };
 
+// Events for pressed arrow keys
 events.arrows = {
 
 	up: function(e) {

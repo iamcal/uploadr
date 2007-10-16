@@ -18,7 +18,7 @@ events.photos = {
 
 			// Without modifier keys, start with nothing selected
 			if (!(e.shiftKey || e.ctrlKey || e.metaKey)) {
-				var imgs = document.getElementById('list').getElementsByTagName('img');
+				var imgs = document.getElementById('photos_list').getElementsByTagName('img');
 				var ii = imgs.length;
 				for (var i = 0; i < ii; ++i) {
 					imgs[i].className = '';
@@ -237,7 +237,7 @@ events.photos = {
 				} else if ('img' == e.target.nodeName) {
 					target = e.target.parentNode;
 				} else {
-					target = document.getElementById('list').lastChild;
+					target = document.getElementById('photos_list').lastChild;
 				}
 
 				// Which side of the list item are we on?
@@ -245,7 +245,7 @@ events.photos = {
 					target.getElementsByTagName('img')[0].width / 2);
 
 				// Don't place the target in the middle of a bunch of selected elements
-				var list = document.getElementById('list');
+				var list = document.getElementById('photos_list');
 				while (target != list[left ? 'firstChild' : 'lastChild']) {
 					var tmp = target[left ? 'previousSibling' : 'nextSibling'];
 					if (-1 == target.getElementsByTagName('img')[0].className.indexOf('selected') ||
@@ -329,7 +329,7 @@ events.photos = {
 				photos.selected.sort(function(a, b) {
 					return a < b;
 				});
-				var list = document.getElementById('list');
+				var list = document.getElementById('photos_list');
 				for each (var id in photos.selected) {
 					var p = document.getElementById('photo' + id);
 
@@ -415,12 +415,26 @@ events.photos = {
 
 	// Select all photos
 	select_all: function() {
-		alert('implement me!');
+		if (0 == photos.count) {
+			return;
+		}
+		photos.selected = [];
+		var p = photos.list;
+		var ii = p.length;
+		for (var i = 0; i < ii; ++i) {
+			photos.selected.push(p[i].id);
+		}
+		var list = document.getElementById('photos_list').getElementsByTagName('li');
+		ii = list.length;
+		for (var i = 0; i < ii; ++i) {
+			list[i].getElementsByTagName('img')[0].className = 'selected';
+		}
+		meta.batch();
 	},
 
 	// Sort the photos when asked
 	sort: function() {
-		buttons.disable('upload');
+		buttons.upload.disable();
 		threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
 		document.getElementById('photos_sort_default').style.display = 'block';
 		document.getElementById('photos_sort_revert').style.display = 'none';
@@ -430,25 +444,18 @@ events.photos = {
 	// Properly enable/disable the checkboxes available for private photos to be shared with
 	// friends and/or family
 	is_public: function(value) {
+
+		// Single photo or group of photos?
+		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+
 		if (1 == parseInt(value)) {
-			document.getElementById('single_is_friend').checked = false;
-			document.getElementById('single_is_family').checked = false;
-			document.getElementById('single_is_friend').disabled = true;
-			document.getElementById('single_is_family').disabled = true;
+			document.getElementById(prefix + '_is_friend').checked = false;
+			document.getElementById(prefix + '_is_family').checked = false;
+			document.getElementById(prefix + '_is_friend').disabled = true;
+			document.getElementById(prefix + '_is_family').disabled = true;
 		} else {
-			document.getElementById('single_is_friend').disabled = false;
-			document.getElementById('single_is_family').disabled = false;
-		}
-	},
-	batch_is_public: function(value) {
-		if (1 == parseInt(value)) {
-			document.getElementById('batch_is_friend').checked = false;
-			document.getElementById('batch_is_family').checked = false;
-			document.getElementById('batch_is_friend').disabled = true;
-			document.getElementById('batch_is_family').disabled = true;
-		} else {
-			document.getElementById('batch_is_friend').disabled = false;
-			document.getElementById('batch_is_family').disabled = false;
+			document.getElementById(prefix + '_is_friend').disabled = false;
+			document.getElementById(prefix + '_is_family').disabled = false;
 		}
 	},
 
@@ -466,65 +473,28 @@ events.photos = {
 		document.getElementById('batch_safety_level_unchanged').checked = false;
 	},
 
-	// Create a new set
-	create_set: function() {
-
-		// Do we have any sets to give?
-		if (-1 == users.sets || 0 < users.sets) {
-			var name = prompt(locale.getString('settings.set.add'),
-				locale.getString('settings.set.add.title'));
-			if (!name) {
-				return;
-			}
-			meta.created_sets.push(name);
-			meta.sets[name] = name;
-			var dropdowns = ['single_set', 'batch_set'];
-			for each (var dropdown in dropdowns) {
-				var d = document.getElementById(dropdown);
-				d.removeItemAt(0);
-				d.insertItemAt(0, locale.getString('settings.set.dont'), '', '');
-				d.insertItemAt(1, name, name, '');
-				d.selectedIndex = 1;
-				d.disabled = false;
-			}
-		}
-
-		// No sets remaining
-		else {
-			alert(locale.getString('settings.set.exhausted'),
-				locale.getString('settings.set.exhausted,title'));
-		}
-
+	// Show and hide the photos list and queue list
+	_photos_visible: true,
+	show_photos: function() {
+		events.photos._photos_visible = true;
+//		document.getElementById('progress_queue').className = 'progress_queue_photos';
+		document.getElementById('page_photos').style.display = '-moz-box';
+		document.getElementById('page_queue').style.display = 'none';
+		document.getElementById('footer').className = 'photos';
 	},
-
-	// Add selected photos to the selected set
-	add_to_set: function() {
-
-		// Single photo or group of photos?
-		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
-
-		// Get the set we're adding to
-		var set = document.getElementById(prefix + '_set');
-		var set_id = set.value;
-		var name = set.selectedItem.label;
-		if ('' == set_id) {
-			return;
+	show_queue: function() {
+		events.photos._photos_visible = false;
+//		document.getElementById('progress_queue').className = 'progress_queue_queue';
+		document.getElementById('page_photos').style.display = 'none';
+		document.getElementById('page_queue').style.display = '-moz-box';
+		document.getElementById('footer').className = 'queue';
+	},
+	toggle: function() {
+		if (events.photos._photos_visible) {
+			events.photos.show_queue();
+		} else {
+			events.photos.show_photos();
 		}
-
-		// Add each selected photo to this set
-		var ul = document.getElementById(prefix + '_sets_list');
-		var ii = photos.selected.length;
-		for (var i = 0; i < ii; ++i) {
-			var p = photos.list[photos.selected[i]];
-			if (-1 == p.sets.indexOf(set_id)) {
-				p.sets.push(set_id);
-			}
-		}
-		set.selectedIndex = 0;
-
-		// Add it to the list
-		meta.select_set(ul, set_id, name);
-
 	}
 
 };

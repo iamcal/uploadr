@@ -1,3 +1,5 @@
+// Full-screen pages in the UI
+//   LEGACY: Going away before launch
 var pages = {
 
 	_list: ['photos', 'queue'],
@@ -29,6 +31,7 @@ var pages = {
 
 };
 
+// The help menu
 var help = {
 
 	about: function() {
@@ -38,6 +41,33 @@ var help = {
 
 	faq: function() {
 		launch_browser('http://flickr.com/help/faq/');
+	}
+
+};
+
+// Progress bars
+var ProgressBar = function(id) {
+	this.id = id;
+};
+ProgressBar.prototype = {
+	update: function(percent) {
+		var bar = document.getElementById(this.id);
+		bar.width = Math.round(bar.parentNode.boxObject.width * percent);
+	},
+	clear: function() {
+		this.update(0);
+	},
+
+	// Generate DOM nodes for this progress bar
+	create: function(width) {
+		var inner = document.createElement('box');
+		inner.id = this.id;
+		var outer = document.createElement('box');
+		outer.className = 'progress_bar';
+		outer.style.width = width + 'px';
+		outer.setAttribute('flex', 1);
+		outer.appendChild(inner);
+		return outer;
 	}
 
 };
@@ -95,60 +125,34 @@ var free = {
 
 };
 
+// Enable and disable buttons
 var buttons = {
 
-	_list: ['login', 'upload'],
-
-	// Show specified buttons
-	show: function(list) {
-		if ('string' == typeof list) {
-			list = [list];
-		}
-		buttons.hide_all();
-		for each (l in list) {
-			document.getElementById('button_' + l).style.display = '-moz-box';
-		}
-	},
-
-	// Hide all buttons
-	hide_all: function() {
-		for each (l in buttons._list) {
-			document.getElementById('button_' + l).style.display = 'none';
-		}
-	},
-
-	// Enable specified buttons
-	enable: function(list) {
-		if ('string' == typeof list) {
-			list = [list];
-		}
-		for each (l in list) {
-			var b = document.getElementById('button_' + l);
-			b.disabled = false;
-			b.className = 'button';
-			if ('upload' == l) {
+	upload: {
+		enable: function() {
+			if (users.username && 0 < photos.count) {
+				document.getElementById('button_upload').className = 'button';
 				document.getElementById('menu_upload_upload').disabled = false;
 			}
+		},
+		disable: function() {
+			document.getElementById('button_upload').className = 'disabled_button';
+			document.getElementById('menu_upload_upload').disabled = true;
 		}
 	},
 
-	// Disable specified buttons
-	disable: function(list) {
-		if ('string' == typeof list) {
-			list = [list];
-		}
-		for each (l in list) {
-			var b = document.getElementById('button_' + l);
-			b.disabled = true;
-			b.className = 'disabled_button';
-			if ('upload' == l) {
-				document.getElementById('menu_upload_upload').disabled = true;
-			}
+	remove: {
+		enable: function() {
+			document.getElementById('t_remove').className = 'button';
+		},
+		disable: function() {
+			document.getElementById('t_remove').className = 'disabled_button';
 		}
 	}
 
 };
 
+// Change the status bar text
 var status = {
 
 	// Set a message in the status bar
@@ -224,7 +228,7 @@ var findr = {
 
 };
 
-// Drag and drop handler
+// File drag and drop handler
 var drag = {
 
 	flavors: null,
@@ -232,9 +236,9 @@ var drag = {
 	observer: {
 		canHandleMultipleItems: true,
 		onDragEnter: function(e, flavor, session) {
+			document.getElementById('photos').className = 'drag';
 		},
 		onDragOver: function(e, data) {
-			document.getElementById('photos').className = 'drag';
 		},
 		onDragExit: function(e, flavor, session) {
 			document.getElementById('photos').className = 'no_drag';
@@ -242,7 +246,7 @@ var drag = {
 		onDrop: function(e, data) {
 
 			// Add the files
-			buttons.disable('upload');
+			buttons.upload.disable();
 			data.dataList.forEach(function(d) {
 				if (d.first.data.isDirectory()) {
 					var files = d.first.data.directoryEntries;
@@ -264,7 +268,7 @@ var drag = {
 
 			// Enable the upload button?
 			if (0 == photos.count) {
-				buttons.disable('upload');
+				buttons.upload.disable();
 			}
 
 		},
@@ -297,14 +301,33 @@ locale.getFormattedString = function(id, args) {
 	return str;
 };
 
+// Allow functions to block removing photos
+var _block_remove = 0;
+var block_remove = function() {
+	if (0 == _block_remove) {
+		var b = document.getElementById('t_remove');
+		b.disabled = true;
+		b.className = 'disabled_button';
+	}
+	++_block_remove;
+};
+var unblock_remove = function() {
+	--_block_remove;
+	if (0 == _block_remove) {
+		var b = document.getElementById('t_remove');
+		b.disabled = false;
+		b.className = 'button';
+	}
+};
+
 // Allow functions to block exiting
 var _block_exit = 0;
 var block_exit = function() {
 	++_block_exit;
-}
+};
 var unblock_exit = function() {
 	--_block_exit;
-}
+};
 
 // Why is exiting such a pain?
 var exit = function(force) {
