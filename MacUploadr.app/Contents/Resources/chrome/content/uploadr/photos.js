@@ -199,6 +199,11 @@ Components.utils.reportError(photos.selected.toSource());
 
 	// Upload photos
 	upload: function() {
+		
+		// Don't upload if the button is disabled
+		if ('disabled_button' == document.getElementById('button_upload').className) {
+			return;
+		}
 		block_exit();
 
 		// Update the UI
@@ -244,8 +249,8 @@ Components.utils.reportError(photos.selected.toSource());
 			img.height = old.height;
 			var stack = document.createElement('stack');
 			stack.appendChild(img);
-			p.progress_bar = new ProgressBar('queue' + (photos.uploading.length - 1));
-			var bar = p.progress_bar.create(img.width);
+			p.progress_bar = new ProgressBar('queue' + (photos.uploading.length - 1), img.width);
+			var bar = p.progress_bar.create();
 			bar.style.top = (img.height - 20) + 'px';
 			stack.appendChild(bar);
 			var li = document.createElementNS(NS_HTML, 'li');

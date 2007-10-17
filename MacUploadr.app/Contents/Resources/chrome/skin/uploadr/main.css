@@ -108,16 +108,14 @@ div.button, div.disabled_button {
 }
 div.button {
 	background: url(buttons_blue.png) no-repeat;
-	color: white;
 }
 div.disabled_button {
 	background: url(buttons_grey.png) no-repeat;
-	color: #888;
 }
 div.button div, div.disabled_button div {
-	padding: 5px;
+	padding: 5px 5px 6px 5px;
 	font-size: 11px;
-	line-height: 12px;
+	line-height: 11px;
 	font-weight: bold;
 	text-transform: uppercase;
 }
@@ -132,14 +130,34 @@ div.disabled_button div {
 div.button:active {
 	background-position: 0 -22px;
 }
-div.button div:active {
+div.button div:active, div.small.button div:active {
 	background-position: bottom right;
 }
 
-/* Make the switch users button a bit less guady */
-#switch div {
+/* Smaller buttons */
+div.small.button, div.small.disabled_button {
+	height: 20px;
+}
+div.small.button {
+	background: url(buttons_9px_blue.png) no-repeat;
+}
+div.small.disabled_button {
+	background: url(buttons_9px_grey.png) no-repeat;
+}
+div.small.button div, div.small.disabled_button div {
+	padding: 6px 5px 5px 5px;
 	font-size: 9px;
+	line-height: 9px;
 	font-weight: normal;
+}
+div.small.button div {
+	background: url(buttons_9px_blue_slide.png) no-repeat top right;
+}
+div.small.disabled_button div {
+	background: url(buttons_9px_grey_slide.png) no-repeat top right;
+}
+div.small.button:active {
+	background-position: 0 -20px;
 }
 
 /* Make the upload button extra gaudy */

@@ -46,25 +46,31 @@ var help = {
 };
 
 // Progress bars
-var ProgressBar = function(id) {
+var ProgressBar = function(id, width) {
 	this.id = id;
+	this.width = null == width ? document.getElementById(id).parentNode.boxObject.width : width;
 };
 ProgressBar.prototype = {
 	update: function(percent) {
 		var bar = document.getElementById(this.id);
-		bar.width = Math.round(bar.parentNode.boxObject.width * percent);
+		bar.width = Math.round(this.width * percent);
 	},
 	clear: function() {
 		this.update(0);
 	},
 
+	// Do something special when the bar is finished
+	done: function(success) {
+		this.update(1);
+	},
+
 	// Generate DOM nodes for this progress bar
-	create: function(width) {
+	create: function() {
 		var inner = document.createElement('box');
 		inner.id = this.id;
 		var outer = document.createElement('box');
 		outer.className = 'progress_bar';
-		outer.style.width = width + 'px';
+		outer.style.width = this.width + 'px';
 		outer.setAttribute('flex', 1);
 		outer.appendChild(inner);
 		return outer;

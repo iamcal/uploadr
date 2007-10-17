@@ -477,14 +477,12 @@ events.photos = {
 	_photos_visible: true,
 	show_photos: function() {
 		events.photos._photos_visible = true;
-//		document.getElementById('progress_queue').className = 'progress_queue_photos';
 		document.getElementById('page_photos').style.display = '-moz-box';
 		document.getElementById('page_queue').style.display = 'none';
 		document.getElementById('footer').className = 'photos';
 	},
 	show_queue: function() {
 		events.photos._photos_visible = false;
-//		document.getElementById('progress_queue').className = 'progress_queue_queue';
 		document.getElementById('page_photos').style.display = 'none';
 		document.getElementById('page_queue').style.display = '-moz-box';
 		document.getElementById('footer').className = 'queue';

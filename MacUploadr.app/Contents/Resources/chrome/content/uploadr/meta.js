@@ -152,7 +152,6 @@ var meta = {
 
 	// Enable the right-side metadata column on the photos page
 	enable: function() {
-		document.getElementById('single_title').select();
 		var is_public = document.getElementById('single_is_public');
 		is_public.disabled = false;
 		var dis = 1 == parseInt(is_public.value);
@@ -169,7 +168,6 @@ var meta = {
 		document.getElementById('meta').style.display = 'none';
 		document.getElementById('batch_meta').style.display = '-moz-box';
 		meta._enable();
-		document.getElementById('batch_title').select();
 	},
 
 	// Common to batch and single enabling

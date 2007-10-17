@@ -75,6 +75,7 @@ var upload = {
 
 		// If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
+			photos.uploading[id].progress_bar.done(false);
 			++photos.fail;
 			photos.failed.push(photos.uploading[id]);
 			if (upload.bandwidth(rsp)) {
@@ -87,6 +88,7 @@ var upload = {
 
 		// Otherwise, spin for a ticket
 		else {
+			photos.uploading[id].progress_bar.done(true);
 			upload.tickets[rsp.getElementsByTagName('ticketid')[0].firstChild.nodeValue] = id;
 			++upload.tickets_count;
 			if (null != upload.tickets_handle) {
@@ -109,7 +111,6 @@ var upload = {
 
 	// Finish a synchronous upload
 	_sync: function(rsp, id) {
-Components.utils.reportError('_sync ' + id);
 
 		// Stop checking progress if we're in synchronous mode
 		if ('sync' == uploadr.conf.mode && null != upload.progress_handle) {
@@ -132,6 +133,7 @@ Components.utils.reportError('_sync ' + id);
 			stat = 'fail';
 		}
 		if ('ok' == stat) {
+			photos.uploading[id].progress_bar.done(true);
 			++photos.ok;
 			if ('object' == typeof rsp) {
 				photo_id = parseInt(rsp.getElementsByTagName('photoid')[0].firstChild.nodeValue);
@@ -148,6 +150,7 @@ Components.utils.reportError('_sync ' + id);
 			}
 
 		} else if ('fail' == stat) {
+			photos.uploading[id].progress_bar.done(false);
 			++photos.fail;
 			photos.failed.push(photos.uploading[id]);
 			if (upload.bandwidth(rsp)) {
@@ -201,16 +204,9 @@ Components.utils.reportError('_sync ' + id);
 		upload.progress_last = a;
 
 		// Update the UI
-/*
-var keys = [];
-for (var k in photos.uploading) keys.push(k + (null == photos.uploading[k] ? 'null' : ''));
-Components.utils.reportError('id: ' + id + ', photos.uploading: [' + keys + '], this_percent: ' +
-(1 - a / upload.progress_total) + ', overall_percent: ' + (photos.kb.sent / photos.kb.total) +
-', sent: ' + photos.kb.sent + ', total: ' + photos.kb.total);
-*/
-//		if (null != photos.uploading[id]) {
-//			photos.uploading[id].progress_bar.update(1 - a / upload.progress_total);
-//		}
+		if (null != photos.uploading[id]) {
+			photos.uploading[id].progress_bar.update(1 - a / upload.progress_total);
+		}
 		var percent = photos.kb.sent / photos.kb.total;
 		upload.progress_bar.update(percent);
 		document.getElementById('progress_text').value = locale.getFormattedString(

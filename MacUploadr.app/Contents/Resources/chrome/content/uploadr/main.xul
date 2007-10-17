@@ -105,7 +105,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			<box flex="1" />
 			<hbox>
 				<vbox><label id="username" value="&notloggedin;" /></vbox>
-				<vbox><html:div id="switch" class="button" onclick="events.buttons.login();"
+				<vbox><html:div id="switch" class="small button" onclick="events.buttons.login();"
 				><html:div>&login;</html:div></html:div></vbox>
 			</hbox>
 		</hbox>
@@ -121,7 +121,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					<box flex="1"><box id="progress_bar" /></box>
 					<label id="progress_text" />
 				</stack>
-				<vbox><html:div id="button_cancel" class="button"
+				<vbox><html:div id="button_cancel" class="small button"
 				onclick="events.buttons.cancel();"
 				><html:div>&buttons.cancel;</html:div></html:div></vbox>
 			</hbox>

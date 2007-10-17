@@ -33,8 +33,8 @@ var uploadr = {
 		// Configure what types of API events should be written to the console
 		console: {
 			request: false,
-			response: true,
-			timeout: true
+			response: false,
+			timeout: false
 		}
 
 	}
