@@ -53,14 +53,14 @@ ThumbCallback.prototype = {
 			// Get this photo from the DOM and remove its loading class
 			var img = document.getElementById('photo' + this.id).getElementsByTagName('img')[0];
 			img.style.visibility = 'hidden';
-			var need_click = -1 == img.className.indexOf('selected');
-			img.className = img.className.replace('loading', '');
+			img.className = '';
 
 			// If successful, replace with the thumb and update the Photo object
 			if (10 == thumb.length) {
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
 				photos.list[this.id].date_taken = thumb[3];
+				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
 				var title = thumb[6].replace(/^\s+|\s+$/, '');
@@ -69,17 +69,14 @@ ThumbCallback.prototype = {
 				}
 				photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/, '');
 				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
-				img.src = 'file://' + thumb[9];
 
 				// Select newly added images
-				if (need_click) {
-					events.photos.click({
-						target: img,
-						ctrlKey: true,
-						metaKey: true,
-						shiftKey: false
-					});
-				}
+				events.photos.click({
+					target: img,
+					ctrlKey: true,
+					metaKey: true,
+					shiftKey: false
+				});
 
 				// If only one photo is selected, refresh the other thumbnail, too
 				if (1 == photos.selected.length) {

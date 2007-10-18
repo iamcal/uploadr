@@ -2,7 +2,7 @@
 //   LEGACY: Going away before launch
 var pages = {
 
-	_list: ['photos', 'queue'],
+	_list: ['photos', 'auth', 'help'],
 	_current: 0,
 
 	// Go to a specified page
@@ -37,6 +37,10 @@ var help = {
 	about: function() {
 		window.openDialog('chrome://uploadr/content/about.xul', 'dialog_about',
 			'chrome,modal', uploadr.conf.version);
+	},
+
+	tips: function() {
+		pages.go('help');
 	},
 
 	faq: function() {
@@ -342,10 +346,12 @@ var exit = function(force) {
 	}
 
 	// Don't exit if exit is blocked
+/*
 	if (!force && 0 < _block_exit) {
 Components.utils.reportError(_block_exit);
 		return;
 	}
+*/
 
 	// Save state
 	photos.save();

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
+<?xml-stylesheet href="chrome://uploadr/skin/settings.css" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://uploadr/locale/main.dtd">
 <dialog id="dialog_settings" title="&settings;" buttons="accept,cancel"
 ondialogaccept="events.settings.ok(); return true;"
@@ -12,16 +12,21 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 	</stringbundleset>
 	<script src="chrome://uploadr/content/uploadr.js" />
 	<script src="chrome://uploadr/content/events_settings.js" />
-	<vbox flex="1">
+	<vbox flex="1" id="notloggedin">
+		<html:h3>&settings.notloggedin;</html:h3>
+		<button label="&login;"
+		oncommand="events.settings.add_user();" />
+	</vbox>
+	<vbox flex="1" id="loggedin">
 		<groupbox flex="1">
 			<caption label="&settings.users;" />
 			<menulist id="user">
 				<menupopup />
 			</menulist>
 			<hbox>
-				<button id="remove" label="&settings.users.remove;"
+				<button label="&settings.users.remove;"
 				oncommand="events.settings.remove_user();" />
-				<button id="add" label="&settings.users.add;"
+				<button label="&settings.users.add;"
 				oncommand="events.settings.add_user();" />
 			</hbox>
 		</groupbox>
@@ -50,14 +55,6 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<menuitem value="3" label="&settings.content_type.other;" />
 					</menupopup>
 				</menulist>
-				<label control="hidden" value="&settings.hidden;" />
-				<menulist id="hidden">
-					<menupopup>
-						<menuitem value="1" label="&settings.hidden.no;"
-						selected="true" />
-						<menuitem value="2" label="&settings.hidden.yes;" />
-					</menupopup>
-				</menulist>
 				<label control="safety_level" value="&settings.safety_level;" />
 				<menulist id="safety_level">
 					<menupopup>
@@ -65,6 +62,14 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						selected="true" />
 						<menuitem value="2" label="&settings.safety_level.moderate;" />
 						<menuitem value="3" label="&settings.safety_level.restricted;" />
+					</menupopup>
+				</menulist>
+				<label control="hidden" value="&settings.hidden;" />
+				<menulist id="hidden">
+					<menupopup>
+						<menuitem value="1" label="&settings.hidden.no;"
+						selected="true" />
+						<menuitem value="2" label="&settings.hidden.yes;" />
 					</menupopup>
 				</menulist>
 			</groupbox>

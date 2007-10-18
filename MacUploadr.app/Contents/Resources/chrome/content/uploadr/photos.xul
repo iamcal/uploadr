@@ -57,11 +57,17 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<hbox>
 						<vbox class="column">
 							<label control="single_title" value="&meta.title;" />
-							<textbox id="single_title" tabindex="1" />
+							<textbox id="single_title" tabindex="1"
+							onfocus="events.photos._select_all = this;"
+							onblur="events.photos._select_all = null;" />
 							<label control="single_description" value="&meta.description;" />
-							<textbox id="single_description" multiline="true" rows="2" tabindex="2" />
+							<textbox id="single_description" multiline="true" rows="2" tabindex="2"
+							onfocus="events.photos._select_all = this;"
+							onblur="events.photos._select_all = null;" />
 							<label control="single_tags" value="&meta.tags;" />
-							<textbox id="single_tags" tabindex="3" />
+							<textbox id="single_tags" tabindex="3"
+							onfocus="events.photos._select_all = this;"
+							onblur="events.photos._select_all = null;" />
 							<html:p> </html:p>
 							<label value="&meta.single.sets;" />
 							<html:ul id="single_sets_list"></html:ul>
@@ -102,14 +108,6 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									<menuitem value="3" label="&settings.content_type.other;" />
 								</menupopup>
 							</menulist>
-							<label control="single_hidden" value="&settings.hidden;" />
-							<menulist id="single_hidden" tabindex="10">
-								<menupopup>
-									<menuitem value="1" label="&settings.hidden.no;"
-									selected="true" />
-									<menuitem value="2" label="&settings.hidden.yes;" />
-								</menupopup>
-							</menulist>
 							<label control="single_safety_level" value="&settings.safety_level;" />
 							<menulist id="single_safety_level" tabindex="11">
 								<menupopup>
@@ -117,6 +115,14 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									selected="true" />
 									<menuitem value="2" label="&settings.safety_level.moderate;" />
 									<menuitem value="3" label="&settings.safety_level.restricted;" />
+								</menupopup>
+							</menulist>
+							<label control="single_hidden" value="&settings.hidden;" />
+							<menulist id="single_hidden" tabindex="10">
+								<menupopup>
+									<menuitem value="1" label="&settings.hidden.no;"
+									selected="true" />
+									<menuitem value="2" label="&settings.hidden.yes;" />
 								</menupopup>
 							</menulist>
 						</vbox>
@@ -128,11 +134,17 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<hbox>
 						<vbox class="column">
 							<label control="batch_title" value="&meta.title;" />
-							<textbox id="batch_title" tabindex="1" />
+							<textbox id="batch_title" tabindex="1"
+							onfocus="events.photos._select_all = this;"
+							onblur="events.photos._select_all = null;" />
 							<label control="batch_description" value="&meta.description;" />
-							<textbox id="batch_description" multiline="true" rows="2" tabindex="2" />
+							<textbox id="batch_description" multiline="true" rows="2" tabindex="2"
+							onfocus="events.photos._select_all = this;"
+							onblur="events.photos._select_all = null;" />
 							<label control="batch_tags" value="&meta.tags;" />
-							<textbox id="batch_tags" tabindex="3" />
+							<textbox id="batch_tags" tabindex="3"
+							onfocus="events.photos._select_all = this;"
+							onblur="events.photos._select_all = null;" />
 							<html:p> </html:p>
 							<label value="&meta.batch.sets;" />
 							<html:ul id="batch_sets_list"></html:ul>
@@ -154,26 +166,18 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						</vbox>
 						<vbox class="column">
 							<label control="batch_is_public" value="&settings.privacy.who;" />
-							<checkbox id="batch_is_public_unchanged" label="&meta.leave_unchanged;"
-							checked="true" />
 							<radiogroup id="batch_is_public" value="1" tabindex="6"
-							oncommand="events.photos.is_public_change();
-							events.photos.batch_is_public(this.value);">
+							oncommand="events.photos.is_public(this.value);">
 								<radio value="0" label="&settings.privacy.private;" />
 									<checkbox id="batch_is_friend" label="&settings.privacy.friend;"
-									oncommand="events.photos.batch_is_public_change();"
 									tabindex="7" />
 									<checkbox id="batch_is_family" label="&settings.privacy.family;"
-									oncommand="events.photos.batch_is_public_change();"
 									tabindex="8" />
 								<radio value="1" label="&settings.privacy.public;" />
 							</radiogroup>
 							<html:p> </html:p>
 							<label control="batch_content_type" value="&settings.content_type;" />
-							<checkbox id="batch_content_type_unchanged" label="&meta.leave_unchanged;"
-							checked="true" />
-							<menulist id="batch_content_type" tabindex="9"
-							oncommand="events.photos.batch_content_type_change();">
+							<menulist id="batch_content_type" tabindex="9">
 								<menupopup>
 									<menuitem value="1" label="&settings.content_type.photo;"
 									selected="true" />
@@ -181,27 +185,21 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									<menuitem value="3" label="&settings.content_type.other;" />
 								</menupopup>
 							</menulist>
-							<label control="batch_hidden" value="&settings.hidden;" />
-							<checkbox id="batch_hidden_unchanged" label="&meta.leave_unchanged;"
-							checked="true" />
-							<menulist id="batch_hidden" tabindex="10"
-							oncommand="events.photos.batch_hidden_change();">
-								<menupopup>
-									<menuitem value="1" label="&settings.hidden.no;"
-									selected="true" />
-									<menuitem value="2" label="&settings.hidden.yes;" />
-								</menupopup>
-							</menulist>
 							<label control="batch_safety_level" value="&settings.safety_level;" />
-							<checkbox id="batch_safety_level_unchanged" label="&meta.leave_unchanged;"
-							checked="true" />
-							<menulist id="batch_safety_level" tabindex="11"
-							oncommand="events.photos.batch_safety_level_change();">
+							<menulist id="batch_safety_level" tabindex="11">
 								<menupopup>
 									<menuitem value="1" label="&settings.safety_level.safe;"
 									selected="true" />
 									<menuitem value="2" label="&settings.safety_level.moderate;" />
 									<menuitem value="3" label="&settings.safety_level.restricted;" />
+								</menupopup>
+							</menulist>
+							<label control="batch_hidden" value="&settings.hidden;" />
+							<menulist id="batch_hidden" tabindex="10">
+								<menupopup>
+									<menuitem value="1" label="&settings.hidden.no;"
+									selected="true" />
+									<menuitem value="2" label="&settings.hidden.yes;" />
 								</menupopup>
 							</menulist>
 						</vbox>

@@ -3,6 +3,7 @@
 <?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
 <?xml-stylesheet href="chrome://hacks/skin/hacks.css" type="text/css"?>
 <?xul-overlay href="chrome://uploadr/content/photos.xul"?>
+<?xul-overlay href="chrome://uploadr/content/help.xul"?>
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -83,6 +84,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					oncommand="goDoCommand('cmd_copy');" />
 					<menuitem id="menu_paste" label="&menu.edit.paste;" key="key_paste"
 					oncommand="goDoCommand('cmd_paste');" />
+					<menuseparator />
 					<menuitem id="menu_all" label="&menu.edit.select_all;" key="key_all"
 					oncommand="events.photos.select_all();" />
 				</menupopup>
@@ -91,6 +93,8 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 				<menupopup>
 					<menuitem id="aboutName" label="&menu.help.about;"
 					oncommand="help.about();" />
+					<menuitem id="menu_help_tips" label="&menu.help.tips;"
+					oncommand="help.tips();" />
 					<menuitem id="menu_faq" label="&menu.help.faq;"
 					oncommand="help.faq();" />
 				</menupopup>
@@ -112,6 +116,17 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 
 		<!-- Placeholder for photos and metadata overlay -->
 		<vbox id="page_photos" flex="1" />
+
+		<!-- Page to show during authorization -->
+		<vbox id="page_auth" flex="1">
+			<html:h1>&auth.confirm;</html:h1>
+			<hbox><spacer flex="1" /><html:div id="button_auth" class="button"
+			onclick="events.buttons.auth();"
+			><html:div>&buttons.auth;</html:div></html:div><spacer flex="1" /></hbox>
+		</vbox>
+		
+		<!-- Placeholder for help page -->
+		<vbox id="page_help" flex="1" />
 
 		<!-- Upload progress bar and (hidden) upload queue -->
 		<hbox id="footer" class="photos">

@@ -86,7 +86,7 @@ box, toolbox, hbox, vbox {
 	margin: 4px 0 0 0;
 	padding-left: 32px;
 	background: url(balls-16x8-trans.gif) no-repeat 8px 6px;
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: bold;
 }
 .progress_bar {
@@ -180,8 +180,8 @@ div.small.button:active {
 #button_upload.button div {
 	color: #ff0084;
 }
-#button_upload.disabled_button div {
-	color: #888;
+#button_upload.disabled_button {
+	visibility: hidden;
 }
 
 /* Vertically center the cancel button */
@@ -331,6 +331,7 @@ toolbarseparator {
 
 /* Image states */
 #photos_list li img.loading {
+	margin: 20px 0 0 0;
 }
 #photos_list li img.selecting {
 	padding: 2px;
@@ -442,5 +443,30 @@ toolbarseparator {
 #page_queue {
 	display: none;
 	overflow: auto;
+	background: white;
+}
+
+
+
+/*
+ * Authorization cleanup
+ */
+
+#page_auth {
+	display: none;
+	padding: 40px 24px 24px 24px;
+	background: white;
+	text-align: center;
+}
+
+
+
+/*
+ * Tips and tricks page
+ */
+
+#page_help {
+	display: none;
+	padding: 24px;
 	background: white;
 }

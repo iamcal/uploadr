@@ -13,21 +13,17 @@ var meta = {
 			document.getElementById('batch_title').value = '';
 			document.getElementById('batch_description').value = '';
 			document.getElementById('batch_tags').value = '';
-			document.getElementById('batch_is_public_unchanged').checked = true;
 			var is_public = document.getElementById('batch_is_public');
 			is_public.value = settings.is_public;
-			var dis = 1 == parseInt(is_public.value);
+			var dis = 1 == settings.is_public;
 			var is_friend = document.getElementById('batch_is_friend');
 			is_friend.checked = 1 == settings.is_friend;
-			document.getElementById('batch_is_friend').disabled = dis;
+			is_friend.disabled = dis;
 			var is_family = document.getElementById('batch_is_family');
 			is_family.checked = 1 == settings.is_family;
 			is_family.disabled = dis;
-			document.getElementById('batch_content_type_unchanged').checked = true;
 			document.getElementById('batch_content_type').selectedIndex = settings.content_type - 1;
-			document.getElementById('batch_hidden_unchanged').checked = true;
 			document.getElementById('batch_hidden').selectedIndex = settings.hidden - 1;
-			document.getElementById('batch_safety_level_unchanged').checked = true;
 			document.getElementById('batch_safety_level').selectedIndex = settings.safety_level - 1;
 			document.getElementById('batch_set').selectedIndex = 0;
 
@@ -114,21 +110,13 @@ var meta = {
 				// Append tags, but then parse and remove duplicates
 				p.tags = meta.tags(p.tags + ' ' + document.getElementById('batch_tags').value);
 
-				// Overwrite privacy, content type, hidden and safety level if they changed
-				if (!document.getElementById('batch_is_public_unchanged').checked) {
-					p.is_public = parseInt(document.getElementById('batch_is_public').value);
-					p.is_friend = document.getElementById('batch_is_friend').checked ? 1 : 0;
-					p.is_family = document.getElementById('batch_is_family').checked ? 1 : 0;
-				}
-				if (!document.getElementById('batch_content_type_unchanged').checked) {
-					p.content_type = document.getElementById('batch_content_type').selectedIndex + 1;
-				}
-				if (!document.getElementById('batch_hidden_unchanged').checked) {
-					p.hidden = document.getElementById('batch_hidden').selectedIndex + 1;
-				}
-				if (!document.getElementById('batch_safety_level_unchanged').checked) {
-					p.safety_level = document.getElementById('batch_safety_level').selectedIndex + 1;
-				}
+				// Overwrite privacy, content type, hidden and safety level
+				p.is_public = parseInt(document.getElementById('batch_is_public').value);
+				p.is_friend = document.getElementById('batch_is_friend').checked ? 1 : 0;
+				p.is_family = document.getElementById('batch_is_family').checked ? 1 : 0;
+				p.content_type = document.getElementById('batch_content_type').selectedIndex + 1;
+				p.hidden = document.getElementById('batch_hidden').selectedIndex + 1;
+				p.safety_level = document.getElementById('batch_safety_level').selectedIndex + 1;
 
 			}
 			meta.load();
@@ -191,16 +179,13 @@ var meta = {
 	// If a user leaves a partial batch before committing, warn them
 	abandon: function() {
 		if ('-moz-box' == document.getElementById('batch_meta').style.display &&
-			1 < photos.selected.length && (
-				'' != document.getElementById('batch_title').value ||
-				'' != document.getElementById('batch_description').value ||
-				'' != document.getElementById('batch_tags').value ||
-				!document.getElementById('batch_is_public_unchanged').checked ||
-				!document.getElementById('batch_content_type_unchanged').checked ||
-				!document.getElementById('batch_hidden_unchanged').checked ||
-				!document.getElementById('batch_safety_level_unchanged').checked
-			)) {
-			if (confirm(locale.getString('meta.abandon'), locale.getString('meta.abandon.title'))) {
+			1 < photos.selected.length) {
+			if (uploadr.conf.confirm_save_batch) {
+				if (confirm(locale.getString('meta.abandon'),
+					locale.getString('meta.abandon.title'))) {
+					meta.save();
+				}
+			} else {
 				meta.save();
 			}
 		}

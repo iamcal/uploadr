@@ -11,17 +11,21 @@
 <!ENTITY menu.edit.select_all "Select all">
 <!ENTITY menu.help "Help">
 <!ENTITY menu.help.about "About Flickr Uploadr">
+<!ENTITY menu.help.tips "Tips and Tricks">
 <!ENTITY menu.help.faq "FAQ">
 
-<!ENTITY notloggedin "Not logged in">
-<!ENTITY login "Login">
+<!ENTITY notloggedin "Not signed in">
+<!ENTITY login "Sign in">
+
+<!ENTITY auth.confirm "Ready?">
 
 <!ENTITY tools.add "+ Add">
 <!ENTITY tools.remove "− Remove">
 
-<!ENTITY buttons.login "Login">
 <!ENTITY buttons.upload "Upload photos">
 <!ENTITY buttons.cancel "Cancel">
+<!ENTITY buttons.auth "Go!">
+<!ENTITY buttons.ok "OK">
 
 <!ENTITY bandwidth "Bandwidth:">
 <!ENTITY bandwidth.go_pro "Go Pro!">
@@ -33,6 +37,7 @@
 <!ENTITY photos.sort.revert "Re-sort photos by date taken">
 
 <!ENTITY settings "Settings">
+<!ENTITY settings.notloggedin "You need to sign in to adjust your preferences">
 <!ENTITY settings.users "Users">
 <!ENTITY settings.users.user "Login as:">
 <!ENTITY settings.users.remove "Remove selected user">
@@ -66,7 +71,6 @@
 <!ENTITY meta.title "Title:">
 <!ENTITY meta.description "Description:">
 <!ENTITY meta.tags "Tags:">
-<!ENTITY meta.leave_unchanged "Leave unchanged">
 <!ENTITY meta.batch.prompt "Changing settings here will affect the selected images.">
 <!ENTITY meta.single.sets "Add this photo to sets">
 <!ENTITY meta.batch.sets "Add these photos to sets">

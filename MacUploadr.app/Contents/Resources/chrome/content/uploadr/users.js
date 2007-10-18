@@ -68,7 +68,8 @@ var users = {
 
 		// Update the UI
 		document.getElementById('username').value = locale.getString('notloggedin');
-		document.getElementById('switch').value = locale.getString('login');
+		document.getElementById('switch').firstChild.firstChild.nodeValue =
+			locale.getString('login');
 		document.getElementById('free').style.display = 'none';
 		status.set(locale.getString('status.disconnected'));
 

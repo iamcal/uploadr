@@ -65,9 +65,9 @@ var photos = {
 		block_remove();
 		var img = document.createElementNS(NS_HTML, 'img');
 		img.className = 'loading';
-		img.setAttribute('width', 32);
-		img.setAttribute('height', 32);
-		img.src = 'chrome://uploadr/skin/loading.gif';
+		img.setAttribute('width', 16);
+		img.setAttribute('height', 8);
+		img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
 		var li = document.createElementNS(NS_HTML, 'li');
 		li.id = 'photo' + id;
 		li.appendChild(img);
@@ -173,27 +173,21 @@ var photos = {
 		if (0 == ii) {
 			return;
 		}
-		if (1 < ii && !confirm(locale.getString('rotate.confirm'),
-			locale.getString('rotate.confirm.title'))) {
-			return;
-		}
+		photos.selected = [];
 
 		// For each selected image, show the loading spinner and dispatch the rotate job
 		buttons.upload.disable();
-Components.utils.reportError(photos.selected.toSource());
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[s[i]];
 			var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
-			img.className += ' loading';
-			img.setAttribute('width', 32);
-			img.setAttribute('height', 32);
-			img.src = 'chrome://uploadr/skin/loading.gif';
+			img.className = 'loading';
+			img.setAttribute('width', 16);
+			img.setAttribute('height', 8);
+			img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
 			threads.worker.dispatch(new Rotate(p.id, degrees, uploadr.conf.thumbSize,
 				p.path), threads.worker.DISPATCH_NORMAL);
 		}
-Components.utils.reportError(photos.selected.toSource());
 		threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-Components.utils.reportError(photos.selected.toSource());
 
 	},
 
@@ -204,7 +198,6 @@ Components.utils.reportError(photos.selected.toSource());
 		if ('disabled_button' == document.getElementById('button_upload').className) {
 			return;
 		}
-		block_exit();
 
 		// Update the UI
 		status.set(locale.getString('status.uploading'));
@@ -283,6 +276,7 @@ Components.utils.reportError(photos.selected.toSource());
 		if (not_started) {
 			for (var i = 0; i < ii; ++i) {
 				if (null != photos.uploading[i]) {
+					block_exit();
 					upload.start(i);
 					break;
 				}

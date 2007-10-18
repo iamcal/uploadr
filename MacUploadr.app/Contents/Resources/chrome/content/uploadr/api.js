@@ -419,8 +419,7 @@ var flickr = {
 					'perms': 'write',
 					'frob': users.frob,
 				}, 'http://api.flickr.com/services/auth/', true);
-				alert(locale.getString('auth.confirm'), locale.getString('auth.confirm.title'));
-				flickr.auth.getToken(users.frob);
+				pages.go('auth');
 			}
 		},
 
@@ -550,7 +549,7 @@ var flickr = {
 			}, null, null, true, photoset_id);
 		},
 		_addPhoto: function(rsp, id) {
-			if ('ok' != rsp.getAttribute('stat')) {
+			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 				alert(locale.getString('errors.add_to_set'),
 					locale.getString('errors.add_to_set.title'));
 			} else {
@@ -575,7 +574,7 @@ var flickr = {
 			}, null, null, true, title);
 		},
 		_create: function(rsp, id) {
-			if ('ok' != rsp.getAttribute('stat')) {
+			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 				alert(locale.getString('errors.create_set'),
 					locale.getString('errors.create_set.title'));
 			} else {
@@ -604,7 +603,7 @@ var flickr = {
 			});
 		},
 		_getList: function(rsp) {
-			if ('ok' == rsp.getAttribute('stat')) {
+			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				var sets = rsp.getElementsByTagName('photosets')[0].getElementsByTagName('photoset');
 				var ii = sets.length;
 				for (var i = 0; i < ii; ++i) {
@@ -659,7 +658,7 @@ var flickr = {
 			});
 		},
 		_getContentType: function(rsp) {
-			if ('ok' == rsp.getAttribute('stat')) {
+			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.content_type =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('content_type'));
 			}
@@ -674,7 +673,7 @@ var flickr = {
 			});
 		},
 		_getHidden: function(rsp) {
-			if ('ok' == rsp.getAttribute('stat')) {
+			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.hidden =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('hidden'));
 			}
@@ -689,7 +688,7 @@ var flickr = {
 			});
 		},
 		_getPrivacy: function(rsp) {
-			if ('ok' == rsp.getAttribute('stat')) {
+			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				var privacy = parseInt(rsp.getElementsByTagName('person')[0].getAttribute('privacy'));
 				settings.is_public = 1 == privacy;
 				settings.is_friend = 2 == privacy || 4 == privacy;
@@ -707,7 +706,7 @@ var flickr = {
 			unblock_exit();
 		},
 		_getSafetyLevel: function(rsp) {
-			if ('ok' == rsp.getAttribute('stat')) {
+			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.safety_level =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('safety_level'));
 			}

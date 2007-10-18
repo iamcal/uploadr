@@ -35,7 +35,10 @@ var uploadr = {
 			request: false,
 			response: false,
 			timeout: false
-		}
+		},
+
+		// Should we warn users when they're about to clobber data when leaving a batch?
+		confirm_batch_save: false
 
 	}
 };

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://uploadr/locale/main.dtd">
+<overlay id="overlay_help"
+xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+xmlns:html="http://www.w3.org/1999/xhtml">
+	<vbox id="page_help" flex="1">
+		<html:h1>help</html:h1>
+		<hbox><spacer flex="1" /><html:div id="button_ok" class="button"
+		onclick="pages.go('photos');"
+		><html:div>&buttons.ok;</html:div></html:div></hbox>
+	</vbox>
+</overlay>

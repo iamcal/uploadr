@@ -315,6 +315,9 @@ events.photos = {
 	// Finish a drag
 	mouseup: function(e) {
 
+		// Prevent conflicts with select-all behavior
+		document.getElementById('photos').focus();
+
 		// Stop auto-scrolling when we stop dragging, too
 		if (null != events.photos.auto_scroll) {
 			window.clearInterval(events.photos.auto_scroll);
@@ -413,23 +416,30 @@ events.photos = {
 		events.photos.anchor = null;
 	},
 
-	// Select all photos
+	// True if we're in a text field
+	_select_all: null,
+
+	// Select all photos or all text
 	select_all: function() {
-		if (0 == photos.count) {
-			return;
+		if (null == events.photos._select_all) {
+			if (0 == photos.count) {
+				return;
+			}
+			photos.selected = [];
+			var p = photos.list;
+			var ii = p.length;
+			for (var i = 0; i < ii; ++i) {
+				photos.selected.push(p[i].id);
+			}
+			var list = document.getElementById('photos_list').getElementsByTagName('li');
+			ii = list.length;
+			for (var i = 0; i < ii; ++i) {
+				list[i].getElementsByTagName('img')[0].className = 'selected';
+			}
+			meta.batch();
+		} else {
+			events.photos._select_all.select();
 		}
-		photos.selected = [];
-		var p = photos.list;
-		var ii = p.length;
-		for (var i = 0; i < ii; ++i) {
-			photos.selected.push(p[i].id);
-		}
-		var list = document.getElementById('photos_list').getElementsByTagName('li');
-		ii = list.length;
-		for (var i = 0; i < ii; ++i) {
-			list[i].getElementsByTagName('img')[0].className = 'selected';
-		}
-		meta.batch();
 	},
 
 	// Sort the photos when asked
@@ -457,20 +467,6 @@ events.photos = {
 			document.getElementById(prefix + '_is_friend').disabled = false;
 			document.getElementById(prefix + '_is_family').disabled = false;
 		}
-	},
-
-	// Track whether a partial batch was changed
-	batch_is_public_change: function() {
-		document.getElementById('batch_is_public_unchanged').checked = false;
-	},
-	batch_content_type_change: function() {
-		document.getElementById('batch_content_type_unchanged').checked = false;
-	},
-	batch_hidden_change: function() {
-		document.getElementById('batch_hidden_unchanged').checked = false;
-	},
-	batch_safety_level_change: function() {
-		document.getElementById('batch_safety_level_unchanged').checked = false;
 	},
 
 	// Show and hide the photos list and queue list

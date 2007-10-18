@@ -31,6 +31,12 @@ events.buttons = {
 	go_pro: function() {
 		launch_browser('http://flickr.com/upgrade/');
 		alert(locale.getString('go_pro'), locale.getString('go_pro.title'));
+	},
+
+	// Finish the auth process
+	auth: function() {
+		flickr.auth.getToken(users.frob);
+		pages.go('photos');
 	}
 
 };

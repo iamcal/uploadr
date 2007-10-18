@@ -85,7 +85,6 @@ var settings = {
 				safety_level: settings.safety_level,
 				resize: settings.resize
 			};
-			u = [];
 			for (var uname in users.list) {
 				u.push({
 					username: uname,
@@ -97,7 +96,8 @@ var settings = {
 		// Open the dialog
 		var result = {};
 		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
-			'chrome,modal', s, u, locale.getFormattedString('settings.resize.note',
+			'chrome,modal', null != users.username, s, u,
+			locale.getFormattedString('settings.resize.note',
 			[users.filesize >> 10]), result);
 
 		// If we're adding a new user, auth and re-open the dialog
@@ -122,7 +122,7 @@ var settings = {
 					delete users.list[username];
 				}
 			}
-			if (0 == list.length) {
+			if (deleted_current) {
 				users.username = null;
 				users.logout();
 			}
