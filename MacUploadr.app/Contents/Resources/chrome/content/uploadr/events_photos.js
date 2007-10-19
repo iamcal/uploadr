@@ -10,8 +10,8 @@ events.photos = {
 			meta.abandon();
 		}
 	
-		// If we clicked on an image
-		if (e.target.src) {
+		// If we clicked on an image that isn't an error
+		if (e.target.src && 'error' != e.target.className) {
 			var img = e.target;
 	
 			// Figure out what photos should be in photos.selected
@@ -21,7 +21,9 @@ events.photos = {
 				var imgs = document.getElementById('photos_list').getElementsByTagName('img');
 				var ii = imgs.length;
 				for (var i = 0; i < ii; ++i) {
-					imgs[i].className = '';
+					if ('error' != imgs[i].className) {
+						imgs[i].className = '';
+					}
 				}
 				photos.selected = [];
 			}
@@ -84,6 +86,10 @@ events.photos = {
 		else if (e.target.id && 'photos_sort_revert' == e.target.id) {
 			events.photos.sort();
 		}
+		
+		// If we clicked on an error, do nothing
+		else if ('error' == e.target.className) {
+		}
 
 		// If we clicked on whitespace, hide the thumbnail and metadata, and disable buttons
 		else {
@@ -91,7 +97,9 @@ events.photos = {
 			var imgs = document.getElementsByTagName('img');
 			var ii = imgs.length;
 			for (var i = 0; i < ii; ++i) {
-				imgs[i].className = '';
+				if ('error' != imgs[i].className) {
+					imgs[i].className = '';
+				}
 			}
 			var meta_div = document.getElementById('meta_div');
 			while (meta_div.hasChildNodes()) {
@@ -392,11 +400,13 @@ events.photos = {
 			for (var i = p.length; i >= 0; --i) {
 				if (null != p[i]) {
 					var img = document.getElementById('photo' + i).getElementsByTagName('img')[0];
-					if ('selecting' == img.className) {
-						img.className = 'selected';
-						photos.selected.push(i);
-					} else {
-						img.className = '';
+					if (-1 == img.className.indexOf('error')) {
+						if ('selecting' == img.className) {
+							img.className = 'selected';
+							photos.selected.push(i);
+						} else {
+							img.className = '';
+						}
 					}
 				}
 			}
@@ -434,7 +444,10 @@ events.photos = {
 			var list = document.getElementById('photos_list').getElementsByTagName('li');
 			ii = list.length;
 			for (var i = 0; i < ii; ++i) {
-				list[i].getElementsByTagName('img')[0].className = 'selected';
+				var img = list[i].getElementsByTagName('img')[0];
+				if ('error' != img.className) {
+					img.className = 'selected';
+				}
 			}
 			meta.batch();
 		} else {

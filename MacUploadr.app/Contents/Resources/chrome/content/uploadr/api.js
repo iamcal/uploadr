@@ -378,7 +378,6 @@ var flickr = {
 	auth: {
 
 		checkToken: function(token) {
-			block_exit();
 			_api({
 				'method': 'flickr.auth.checkToken',
 				'auth_token': token
@@ -397,11 +396,9 @@ var flickr = {
 				users._login();
 
 			}
-			unblock_exit();
 		},
 
 		getFrob: function() {
-			block_exit();
 			_api({
 				'method': 'flickr.auth.getFrob'
 			});
@@ -444,7 +441,6 @@ var flickr = {
 				users._login();
 
 			}
-			unblock_exit();
 		}
 
 	},
@@ -453,7 +449,6 @@ var flickr = {
 	people: {
 
 		getUploadStatus: function() {
-			block_exit();
 			_api({
 				'method': 'flickr.people.getUploadStatus',
 				'auth_token': users.token
@@ -486,7 +481,6 @@ var flickr = {
 				free.update();
 				users.update();
 			}
-			unblock_exit();
 		}
 
 	},
@@ -596,7 +590,6 @@ var flickr = {
 		},
 
 		getList: function(user_id) {
-			block_exit();
 			_api({
 				'method': 'flickr.photosets.getList',
 				'user_id': user_id,
@@ -642,7 +635,6 @@ var flickr = {
 
 			}
 			status.clear();
-			unblock_exit();
 		}
 
 	},
@@ -651,7 +643,6 @@ var flickr = {
 	prefs: {
 
 		getContentType: function() {
-			block_exit();
 			_api({
 				'method': 'flickr.prefs.getContentType',
 				'auth_token': users.token
@@ -661,12 +652,12 @@ var flickr = {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.content_type =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('content_type'));
+				settings.save();
+				meta.defaults({content_type: settings.content_type});
 			}
-			unblock_exit();
 		},
 
 		getHidden: function() {
-			block_exit();
 			_api({
 				'method': 'flickr.prefs.getHidden',
 				'auth_token': users.token
@@ -676,12 +667,12 @@ var flickr = {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.hidden =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('hidden'));
+				settings.save();
+				meta.defaults({hidden: settings.hidden});
 			}
-			unblock_exit();
 		},
 
 		getPrivacy: function() {
-			block_exit();
 			_api({
 				'method': 'flickr.prefs.getPrivacy',
 				'auth_token': users.token
@@ -689,28 +680,32 @@ var flickr = {
 		},
 		_getPrivacy: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
-				var privacy = parseInt(rsp.getElementsByTagName('person')[0].getAttribute('privacy'));
+				var privacy =
+					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('privacy'));
 				settings.is_public = 1 == privacy;
 				settings.is_friend = 2 == privacy || 4 == privacy;
-				settings.is_family = 3 == privacy || 5 == privacy;
+				settings.is_family = 3 == privacy || 4 == privacy;
+				settings.save();
+				meta.defaults({
+					is_public: settings.is_public,
+					is_friend: settings.is_friend,
+					is_family: settings.is_family
+				});
 			}
-			unblock_exit();
 		},
 
 		getSafetyLevel: function() {
-			block_exit();
 			_api({
 				'method': 'flickr.prefs.getSafetyLevel',
 				'auth_token': users.token
 			});
-			unblock_exit();
 		},
 		_getSafetyLevel: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.safety_level =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('safety_level'));
+				meta.defaults({safety_level: settings.safety_level});
 			}
-			unblock_exit();
 		}
 
 	}

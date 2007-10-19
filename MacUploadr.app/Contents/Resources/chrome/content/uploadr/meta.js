@@ -5,6 +5,9 @@ var meta = {
 	created_sets: [],
 	sets_map: {},
 
+	// Show a special status message for their first batch
+	first: true,
+
 	// Load a photo's metadata from JS into the DOM
 	load: function(id) {
 
@@ -332,6 +335,55 @@ var meta = {
 		// Add it to the list
 		meta.select_set(ul, set_id, name);
 
+	},
+
+	// Note default values in the meta panes
+	defaults: function(map) {
+		var def = ' ' + locale.getString('meta.default');
+		for (var m in map) {
+			for each (var prefix in ['single_', 'batch_']) {
+				var node = document.getElementById(prefix + m);
+				var loop = true;
+				if ('menulist' == node.nodeName) {
+					node = node.getElementsByTagName('menupopup')[0].getElementsByTagName(
+						'menuitem');
+				} else if ('radiogroup' == node.nodeName) {
+					node = node.getElementsByTagName('radio');
+				} else if ('checkbox' == node.nodeName) {
+					if (1 == map[m]) {
+						node.label += def;
+						loop = false;
+					}
+				}
+				if (loop) {
+					var ii = node.length;
+					for (var i = 0; i < ii; ++i) {
+						node[i].label = node[i].label.replace(def, '');
+						if (parseInt(node[i].value) == map[m]) {
+							node[i].label += def;
+						}
+					}
+				}
+			}
+		}
+	},
+
+	// Only show detailed metadata to logged-in users
+	login: function() {
+		document.getElementById('hide_single_sets').style.visibility = 'visible';
+		document.getElementById('hide_single_privacy').style.visibility = 'visible';
+		document.getElementById('hide_batch_sets').style.visibility = 'visible';
+		document.getElementById('hide_batch_privacy').style.visibility = 'visible';
+		document.getElementById('hide_single_explain').style.display = 'none';
+		document.getElementById('hide_batch_explain').style.display = 'none';
+	},
+	logout: function() {
+		document.getElementById('hide_single_sets').style.visibility = 'hidden';
+		document.getElementById('hide_single_privacy').style.visibility = 'hidden';
+		document.getElementById('hide_batch_sets').style.visibility = 'hidden';
+		document.getElementById('hide_batch_privacy').style.visibility = 'hidden';
+		document.getElementById('hide_single_explain').style.display = '-moz-box';
+		document.getElementById('hide_batch_explain').style.display = '-moz-box';
 	}
 
 };

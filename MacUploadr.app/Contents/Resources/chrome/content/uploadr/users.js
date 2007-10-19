@@ -44,6 +44,7 @@ var users = {
 				locale.getString('switch');
 			status.set(locale.getString('status.ready'));
 			buttons.upload.enable();
+			meta.login();
 
 		} else {
 			users.logout();
@@ -72,6 +73,7 @@ var users = {
 			locale.getString('login');
 		document.getElementById('free').style.display = 'none';
 		status.set(locale.getString('status.disconnected'));
+		meta.logout();
 
 	},
 

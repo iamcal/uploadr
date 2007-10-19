@@ -117,20 +117,20 @@ var free = {
 			}
 
 			var f = document.getElementById('free');
-			f.value = locale.getFormattedString('free.status', [
+			f.firstChild.nodeValue = locale.getFormattedString('free.status', [
 				Math.round(100 * users.bandwidth.used / users.bandwidth.total),
 				Math.round(users.bandwidth.total / 102.4) / 10,
 				Math.round(users.bandwidth.remaining / 102.4) / 10,
 				photos.count,
 				Math.round(photos.batch_size / 102.4) / 10
 			]);
-			f.style.visibility = 'visible';
+			f.style.display = 'block';
 		}
 
 	},
 
 	hide: function() {
-		document.getElementById('free').style.visibility = 'hidden';
+		document.getElementById('free').style.display = 'none';
 	}
 
 };
@@ -223,13 +223,15 @@ var findr = {
 		for (var i = p.length; i >= 0; --i) {
 			if (null != p[i]) {
 				var img = document.getElementById('photo' + i).getElementsByTagName('img')[0];
-				if (img.offsetLeft + OFFSET_X + img.width >= x1 &&
-					img.offsetLeft + OFFSET_X <= x2 &&
-					img.offsetTop + OFFSET_Y + img.height >= y1 &&
-					img.offsetTop + OFFSET_Y <= y2) {
-					img.className = 'selecting';
-				} else {
-					img.className = '';
+				if (-1 == img.className.indexOf('error')) {
+					if (img.offsetLeft + OFFSET_X + img.width >= x1 &&
+						img.offsetLeft + OFFSET_X <= x2 &&
+						img.offsetTop + OFFSET_Y + img.height >= y1 &&
+						img.offsetTop + OFFSET_Y <= y2) {
+						img.className = 'selecting';
+					} else {
+						img.className = '';
+					}
 				}
 			}
 		}
@@ -238,11 +240,9 @@ var findr = {
 
 };
 
-// File drag and drop handler
+// Allow drag and drop into the window
 var drag = {
-
 	flavors: null,
-
 	observer: {
 		canHandleMultipleItems: true,
 		onDragEnter: function(e, flavor, session) {
@@ -286,16 +286,47 @@ var drag = {
 			return drag.flavors;
 		}
 	}
-
 };
-
-// Setup the drag and drop handler
 try {
 	drag.flavors = new FlavourSet();
 	drag.flavors.appendFlavour('application/x-moz-file', 'nsIFile');
 } catch (err) {
 	Components.utils.reportError(err);
 }
+
+// Allow drag and drop to the dock/icon
+//   http://developer.mozilla.org/en/docs/XULRunner:CommandLine
+// This is commented and the supporting components/clh.js is not committed because this likely
+// won't help me do what I actually want to do
+/*
+function CommandLineObserver() {
+	this.register();
+}
+CommandLineObserver.prototype = {
+	observe: function(aSubject, aTopic, aData) {
+		var cl = aSubject.QueryInterface(Components.interfaces.nsICommandLine);
+Components.utils.reportError(cl.length);
+		var ii = cl.length - 1;
+		for (var i = 0; i <= ii; ++i) {
+			if ('-url' == cl.getArgument(i) && i < ii) {
+Components.utils.reportError(cl.getArgument(++i));
+			}
+		}
+	},
+	register: function() {
+		var ob = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+		ob.addObserver(this, 'commandline-args-changed', false);
+	},
+	unregister: function() {
+		var ob = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+		ob.removeObserver(this, 'commandline-args-changed');
+	}
+};
+var observer = new CommandLineObserver();
+var observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+observerService.notifyObservers(window.arguments[0], 'commandline-args-changed', null);
+addEventListener('unload', observer.unregister, false);
+*/
 
 // Get the locale object (a StringBundle) from the DOM
 var locale = document.getElementById('locale');
@@ -346,12 +377,10 @@ var exit = function(force) {
 	}
 
 	// Don't exit if exit is blocked
-/*
-	if (!force && 0 < _block_exit) {
-Components.utils.reportError(_block_exit);
+	if (!force && 0 < _block_exit && !confirm(locale.getString('dialog.exit.text'),
+		locale.getString('dialog.exit'))) {
 		return;
 	}
-*/
 
 	// Save state
 	photos.save();

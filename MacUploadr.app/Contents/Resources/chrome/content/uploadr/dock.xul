@@ -3,8 +3,13 @@
 id="dock" title="" width="0" height="0">
 	<script src="chrome://global/content/nsUserSettings.js" />
 	<script><![CDATA[
-Components.utils.reportError('dock.xul: ' + window.arguments);
 		window.addEventListener('load', function() {
+
+			// This would be a good handler for drags that happen after the app has been
+			// opened, but there is no way to do the Sort job after all the photos have
+			// been loaded, which introduces a bug
+			return;
+
 			if (window.arguments && window.arguments[0]){
 				const Cc = Components.classes;
 				const Ci = Components.interfaces;

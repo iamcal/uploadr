@@ -31,6 +31,16 @@ var settings = {
 		settings.safety_level = u.safety_level;
 		settings.resize = u.resize;
 
+		// Show the default settings in the metadata fields
+		meta.defaults({
+			is_public: settings.is_public,
+			is_friend: settings.is_friend,
+			is_family: settings.is_family,
+			content_type: settings.content_type,
+			hidden: settings.hidden,
+			safety_level: settings.safety_level
+		});
+
 		// Fetch anything available by API that wasn't found locally
 		if (isNaN(settings.is_public) || null == settings.is_public ||
 			isNaN(settings.is_friend) || null == settings.is_friend ||
@@ -162,11 +172,21 @@ var settings = {
 				settings.is_public = s.is_public;
 				settings.is_friend = s.is_friend;
 				settings.is_family = s.is_family;
+				meta.defaults({
+					is_public: settings.is_public,
+					is_friend: settings.is_friend,
+					is_family: settings.is_family
+				});
 			}
 			if (changed_melons) {
 				settings.content_type = s.content_type;
 				settings.hidden = s.hidden;
 				settings.safety_level = s.safety_level;
+				meta.defaults({
+					content_type: settings.content_type,
+					hidden: settings.hidden,
+					safety_level: settings.safety_level
+				});
 			}
 			settings.resize = s.resize;
 

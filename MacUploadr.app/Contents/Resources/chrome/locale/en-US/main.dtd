@@ -13,11 +13,12 @@
 <!ENTITY menu.help.about "About Flickr Uploadr">
 <!ENTITY menu.help.tips "Tips and Tricks">
 <!ENTITY menu.help.faq "FAQ">
+<!ENTITY menu.help.console "Console">
 
 <!ENTITY notloggedin "Not signed in">
 <!ENTITY login "Sign in">
 
-<!ENTITY auth.confirm "Ready?">
+<!ENTITY auth.confirm "Come back here after authorizing Flickr Uploadr on the website.  Ready?">
 
 <!ENTITY tools.add "+ Add">
 <!ENTITY tools.remove "− Remove">
@@ -77,6 +78,7 @@
 <!ENTITY settings.sets.none "No sets">
 <!ENTITY settings.sets.add "Add">
 <!ENTITY settings.sets.create "Create a set...">
+<!ENTITY meta.hidden "Sign in to edit privacy metadata">
 
 <!ENTITY dialog.bandwidth "Available bandwidth exceeded!">
 <!ENTITY dialog.bandwidth.text "You're out of bandwidth for this month.  You can either switch to a different Flickr account to keep uploading or upgrade to a Pro account to get unlimited uploads.  If you upgrade to a Pro account you'll have to restart Flickr Uploadr.">

@@ -97,6 +97,9 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					oncommand="help.tips();" />
 					<menuitem id="menu_faq" label="&menu.help.faq;"
 					oncommand="help.faq();" />
+					<menuseparator />
+					<menuitem id="menu_console" label="&menu.help.console;"
+					oncommand="window.open('chrome://global/content/console.xul');" />
 				</menupopup>
 			</menu>
 		</menubar>

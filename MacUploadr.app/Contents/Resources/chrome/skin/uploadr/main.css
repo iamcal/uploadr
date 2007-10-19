@@ -52,7 +52,9 @@ box, toolbox, hbox, vbox {
 
 /* Free user bandwidth counter */
 #free {
-	visibility: hidden;
+	display: none;
+	margin: 0;
+	padding: 0;
 }
 
 /* Upload progress meter */
@@ -298,6 +300,10 @@ toolbarseparator {
 }
 
 /* Sort indicators */
+#photos_sort_default, #photos_sort_revert {
+	margin: 0;
+	padding: 0;
+}
 #photos_sort_default {
 	color: #bbb;
 }
@@ -393,6 +399,11 @@ toolbarseparator {
 #meta vbox.column, #batch_meta vbox.column {
 	width: 200px;
 	padding: 5px;
+}
+
+/* Initially, and while logged-out, don't show detailed metadata */
+#hide_single_sets, #hide_single_privacy, #hide_batch_sets, #hide_batch_privacy {
+	visibility: hidden;
 }
 
 /* The upload button, which is always visible */

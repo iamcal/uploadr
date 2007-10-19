@@ -88,9 +88,15 @@ ThumbCallback.prototype = {
 
 			// If unsuccessful, replace with the error image
 			else {
-				img.setAttribute('src', 'chrome://uploadr/skin/error.gif');
+				img.setAttribute('src', 'chrome://uploadr/skin/logo_flickr.png');
 				img.setAttribute('width', 100);
-				img.setAttribute('height', 100);
+				img.setAttribute('height', 20);
+				img.className = 'error';
+				img.parentNode.appendChild(document.createTextNode(photos.list[this.id].filename));
+				img.onclick = function() {
+					this.parentNode.parentNode.removeChild(this.parentNode);
+					photos.normalize();
+				};
 				Components.utils.reportError(this.result);
 			}
 
@@ -234,6 +240,7 @@ SortCallback.prototype = {
 
 		// And finally allow them to upload
 		buttons.upload.enable();
+		meta.first = false;
 
 	},
 	QueryInterface: function(iid) {
@@ -333,7 +340,7 @@ var EnableUploadCallback = function() {
 EnableUploadCallback.prototype = {
 	run: function() {
 		buttons.upload.enable();
-Components.utils.reportError(photos.selected.toSource());
+		meta.first = false;
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

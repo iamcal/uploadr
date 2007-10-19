@@ -93,6 +93,8 @@ var photos = {
 	},
 
 	// Handle files dragged on startup
+	//   This will hopefully be replaced by an XPCOM command line handler, but until then this
+	//   is still here to handle drags on startup
 	drag: function() {
 		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
 		var ii = cl.length;
