@@ -322,6 +322,7 @@ events.photos = {
 
 	// Finish a drag
 	mouseup: function(e) {
+		meta.first = false;
 
 		// Prevent conflicts with select-all behavior
 		document.getElementById('photos').focus();

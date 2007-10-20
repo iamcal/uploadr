@@ -5,10 +5,9 @@ id="dock" title="" width="0" height="0">
 	<script><![CDATA[
 		window.addEventListener('load', function() {
 
-			// This would be a good handler for drags that happen after the app has been
-			// opened, but there is no way to do the Sort job after all the photos have
-			// been loaded, which introduces a bug
-			return;
+			// This is a hacked handler for drags that happen after the app was opened
+			//   It prevents clobbering photos by strict ordering in the event queue, but
+			//   it enables upload too early and therefore can cause problems
 
 			if (window.arguments && window.arguments[0]){
 				const Cc = Components.classes;
@@ -22,8 +21,10 @@ id="dock" title="" width="0" height="0">
 
 				// Add this photo, converting file:// URL to a native path
 				if (win) {
-					win._photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-						Ci.nsIFileProtocolHandler).getFileFromURLSpec(window.arguments[0]).path);
+					win._threads.worker.dispatch(new win.PhotoAdd(
+						Cc['@mozilla.org/network/protocol;1?name=file'].getService(
+							Ci.nsIFileProtocolHandler).getFileFromURLSpec(window.arguments[0]).path),
+						win._threads.worker.DISPATCH_NORMAL);
 					if (win._photos.sort) {
 						win._threads.worker.dispatch(new win.Sort(),
 							win._threads.worker.DISPATCH_NORMAL);

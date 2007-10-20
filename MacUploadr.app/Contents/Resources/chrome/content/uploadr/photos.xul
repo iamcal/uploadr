@@ -45,7 +45,9 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			</scrollbox>
 			<vbox>
 				<vbox id="meta" flex="1">
-					<hbox>
+					<vbox id="single_prompt" class="status"
+					><html:h3>&meta.first;</html:h3><html:p>&meta.batch.prompt;</html:p></vbox>
+					<hbox id="single_preview">
 						<html:div id="meta_div"></html:div>
 						<vbox>
 							<spacer flex="1" />

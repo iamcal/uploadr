@@ -79,7 +79,7 @@ ThumbCallback.prototype = {
 				});
 
 				// If only one photo is selected, refresh the other thumbnail, too
-				if (1 == photos.selected.length) {
+				if (1 == photos.selected.length && !meta.first) {
 					document.getElementById('meta_div').getElementsByTagName('img')[0].src =
 						img.src;
 				}
@@ -376,6 +376,37 @@ RetryUploadCallback.prototype = {
 		// Now that we've done the resizing and the background job has called back, upload
 		photos.upload();
 
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+
+// Job to force ordering of photo._add calls
+//   This is a hack for dock.xul and will be replaced with AppleEvents code
+var PhotoAdd = function(path) {
+	this.path = path;
+};
+PhotoAdd.prototype = {
+	run: function() {
+		threads.main.dispatch(new PhotoAddCallback(this.path), threads.main.DISPATCH_NORMAL);
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+var PhotoAddCallback = function(path) {
+	this.path = path;
+};
+PhotoAddCallback.prototype = {
+	run: function() {
+		photos._add(this.path);
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

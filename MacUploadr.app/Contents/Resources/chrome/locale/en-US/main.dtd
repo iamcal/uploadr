@@ -72,7 +72,8 @@
 <!ENTITY meta.title "Title:">
 <!ENTITY meta.description "Description:">
 <!ENTITY meta.tags "Tags:">
-<!ENTITY meta.batch.prompt "Changing settings here will affect the selected images.">
+<!ENTITY meta.first "All photos are selected">
+<!ENTITY meta.batch.prompt "Any changes you make here will affect all selected photos.">
 <!ENTITY meta.single.sets "Add this photo to sets">
 <!ENTITY meta.batch.sets "Add these photos to sets">
 <!ENTITY settings.sets.none "No sets">

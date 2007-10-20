@@ -13,6 +13,13 @@ var meta = {
 
 		// Load the defaults for a partial batch
 		if (null == id) {
+			if (meta.first) {
+				document.getElementById('batch_prompt').firstChild.nodeValue =
+					locale.getString('meta.first');
+			} else {
+				document.getElementById('batch_prompt').firstChild.nodeValue =
+					locale.getFormattedString('meta.batch.prompt', [photos.selected.length]);
+			}
 			document.getElementById('batch_title').value = '';
 			document.getElementById('batch_description').value = '';
 			document.getElementById('batch_tags').value = '';
@@ -41,20 +48,24 @@ var meta = {
 		// Load the values from a specific photo
 		else {
 			var p = photos.list[id];
-			var img = document.getElementById('photo' + id).getElementsByTagName('img')[0];
-			var meta_div = document.getElementById('meta_div');
-			while (meta_div.hasChildNodes()) {
-				meta_div.removeChild(meta_div.firstChild);
+			if (!meta.first) {
+				document.getElementById('single_prompt').style.display = 'none';
+				document.getElementById('single_preview').style.display = '-moz-box';
+				var img = document.getElementById('photo' + id).getElementsByTagName('img')[0];
+				var meta_div = document.getElementById('meta_div');
+				while (meta_div.hasChildNodes()) {
+					meta_div.removeChild(meta_div.firstChild);
+				}
+				var w = parseInt(img.getAttribute('width'));
+				var h = parseInt(img.getAttribute('height'));
+				meta_div.setAttribute('width', w + 4);
+				meta_div.setAttribute('height', h + 4);
+				var meta_img = document.createElementNS(NS_HTML, 'img');
+				meta_img.setAttribute('width', w);
+				meta_img.setAttribute('height', h);
+				meta_img.src = img.src;
+				meta_div.appendChild(meta_img);
 			}
-			var w = parseInt(img.getAttribute('width'));
-			var h = parseInt(img.getAttribute('height'));
-			meta_div.setAttribute('width', w + 4);
-			meta_div.setAttribute('height', h + 4);
-			var meta_img = document.createElementNS(NS_HTML, 'img');
-			meta_img.setAttribute('width', w);
-			meta_img.setAttribute('height', h);
-			meta_img.src = img.src;
-			meta_div.appendChild(meta_img);
 			document.getElementById('meta_dim').value = locale.getFormattedString('meta.dim',
 				[p.width, p.height]);
 			document.getElementById('meta_size').value = locale.getFormattedString('meta.size',
@@ -154,8 +165,6 @@ var meta = {
 	},
 	batch: function() {
 		meta.load();
-		document.getElementById('batch_prompt').firstChild.nodeValue =
-			locale.getFormattedString('meta.batch.prompt', [photos.selected.length]);
 		document.getElementById('meta').style.display = 'none';
 		document.getElementById('batch_meta').style.display = '-moz-box';
 		meta._enable();

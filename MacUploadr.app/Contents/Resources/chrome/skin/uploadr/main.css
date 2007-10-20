@@ -413,6 +413,9 @@ toolbarseparator {
 }
 
 /* If one image selected, this shows the thumbnail */
+#single_preview {
+	display: none;
+}
 #meta_div {
 	width: 100px;
 	height: 103px;
