@@ -71,7 +71,7 @@ ThumbCallback.prototype = {
 				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
 
 				// Select newly added images
-				events.photos.click({
+				mouse.click({
 					target: img,
 					ctrlKey: true,
 					metaKey: true,

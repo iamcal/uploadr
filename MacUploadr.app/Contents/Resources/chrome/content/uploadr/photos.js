@@ -92,29 +92,6 @@ var photos = {
 
 	},
 
-	// Handle files dragged on startup
-	//   This will hopefully be replaced by an XPCOM command line handler, but until then this
-	//   is still here to handle drags on startup
-	drag: function() {
-		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
-		var ii = cl.length;
-		if (0 == ii) {
-			return;
-		}
-		buttons.upload.disable();
-		for (var i = 0; i < ii; ++i) {
-			if ('-url' == cl.getArgument(i)) {
-				photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-					Ci.nsIFileProtocolHandler).getFileFromURLSpec(cl.getArgument(++i)).path);
-			}
-		}
-		if (photos.sort) {
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-		} else {
-			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-		}
-	},
-
 	// Remove selected photos
 	remove: function() {
 
@@ -153,7 +130,7 @@ var photos = {
 
 		// Clear the selection
 		photos.selected = [];
-		events.photos.click({target: {}});
+		mouse.click({target: {}});
 
 		// Allow upload only if there are photos
 		if (photos.count) {
@@ -162,6 +139,8 @@ var photos = {
 			photos.unsaved = false;
 			photos.sort = true;
 			buttons.upload.disable();
+			document.getElementById('photos_sort_default').style.display = 'block';
+			document.getElementById('photos_sort_revert').style.display = 'none';
 		}
 
 	},

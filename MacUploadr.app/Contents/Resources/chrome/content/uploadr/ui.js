@@ -1,5 +1,4 @@
 // Full-screen pages in the UI
-//   LEGACY: Going away before launch
 var pages = {
 
 	_list: ['photos', 'auth', 'help'],
@@ -82,7 +81,7 @@ ProgressBar.prototype = {
 
 };
 
-// Free account capacity indicators
+// Free account capacity indicator
 var free = {
 
 	update: function() {
@@ -135,33 +134,6 @@ var free = {
 
 };
 
-// Enable and disable buttons
-var buttons = {
-
-	upload: {
-		enable: function() {
-			if (users.username && 0 < photos.count) {
-				document.getElementById('button_upload').className = 'button';
-				document.getElementById('menu_upload_upload').disabled = false;
-			}
-		},
-		disable: function() {
-			document.getElementById('button_upload').className = 'disabled_button';
-			document.getElementById('menu_upload_upload').disabled = true;
-		}
-	},
-
-	remove: {
-		enable: function() {
-			document.getElementById('t_remove').className = 'button';
-		},
-		disable: function() {
-			document.getElementById('t_remove').className = 'disabled_button';
-		}
-	}
-
-};
-
 // Change the status bar text
 var status = {
 
@@ -177,156 +149,6 @@ var status = {
 	}
 
 };
-
-// Functions to find photos in the grid
-var findr = {
-
-	// How many photos are in each full row?
-	width: function() {
-		var p = photos.list;
-		var top = -1;
-		var width = 0;
-		for (var i = p.length; i >= 0; --i) {
-			if (null != p[i]) {
-				var test = document.getElementById('photo' + i).offsetTop;
-				if (-1 != top && test > top) {
-					return width;
-				}
-				top = test;
-				++width;
-			}
-		}
-		return 0;
-	},
-
-	// Get photos in a bounding box
-	bounding_box: function(x1, y1, x2, y2) {
-		const OFFSET_X = -events.photos.box.x - 5;
-		const OFFSET_Y = -events.photos.box.y - 5;
-		var pos = {x: {}, y: {}};
-		events.photos.box.getPosition(pos.x, pos.y);
-
-		// Get our points in order
-		if (x2 < x1) {
-			var tmp = x2;
-			x2 = x1;
-			x1 = tmp;
-		}
-		if (y2 < y1) {
-			var tmp = y2;
-			y2 = y1;
-			y1 = tmp;
-		}
-
-		// Walk the photos and see which are in the box
-		var p = photos.list;
-		for (var i = p.length; i >= 0; --i) {
-			if (null != p[i]) {
-				var img = document.getElementById('photo' + i).getElementsByTagName('img')[0];
-				if (-1 == img.className.indexOf('error')) {
-					if (img.offsetLeft + OFFSET_X + img.width >= x1 &&
-						img.offsetLeft + OFFSET_X <= x2 &&
-						img.offsetTop + OFFSET_Y + img.height >= y1 &&
-						img.offsetTop + OFFSET_Y <= y2) {
-						img.className = 'selecting';
-					} else {
-						img.className = '';
-					}
-				}
-			}
-		}
-
-	}
-
-};
-
-// Allow drag and drop into the window
-var drag = {
-	flavors: null,
-	observer: {
-		canHandleMultipleItems: true,
-		onDragEnter: function(e, flavor, session) {
-			document.getElementById('photos').className = 'drag';
-		},
-		onDragOver: function(e, data) {
-		},
-		onDragExit: function(e, flavor, session) {
-			document.getElementById('photos').className = 'no_drag';
-		},
-		onDrop: function(e, data) {
-
-			// Add the files
-			buttons.upload.disable();
-			data.dataList.forEach(function(d) {
-				if (d.first.data.isDirectory()) {
-					var files = d.first.data.directoryEntries;
-					
-					while (files.hasMoreElements()) {
-						photos._add(files.getNext().QueryInterface(Ci.nsILocalFile).path);
-					}
-				} else {
-					photos._add(d.first.data.QueryInterface(Ci.nsILocalFile).path);
-				}
-			});
-
-			// After the last file is added, sort the images by date taken
-			if (photos.sort) {
-				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-			} else {
-				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-			}
-
-			// Enable the upload button?
-			if (0 == photos.count) {
-				buttons.upload.disable();
-			}
-
-		},
-		getSupportedFlavours: function() {
-			return drag.flavors;
-		}
-	}
-};
-try {
-	drag.flavors = new FlavourSet();
-	drag.flavors.appendFlavour('application/x-moz-file', 'nsIFile');
-} catch (err) {
-	Components.utils.reportError(err);
-}
-
-// Allow drag and drop to the dock/icon
-//   http://developer.mozilla.org/en/docs/XULRunner:CommandLine
-// This is commented and the supporting components/clh.js is not committed because this likely
-// won't help me do what I actually want to do
-/*
-function CommandLineObserver() {
-	this.register();
-}
-CommandLineObserver.prototype = {
-	observe: function(aSubject, aTopic, aData) {
-		var cl = aSubject.QueryInterface(Components.interfaces.nsICommandLine);
-Components.utils.reportError(cl.length);
-		var ii = cl.length - 1;
-		for (var i = 0; i <= ii; ++i) {
-			if ('-url' == cl.getArgument(i) && i < ii) {
-Components.utils.reportError(cl.getArgument(++i));
-			}
-		}
-	},
-	register: function() {
-		var ob = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
-		ob.addObserver(this, 'commandline-args-changed', false);
-	},
-	unregister: function() {
-		var ob = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
-		ob.removeObserver(this, 'commandline-args-changed');
-	}
-};
-var observer = new CommandLineObserver();
-var observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
-observerService.notifyObservers(window.arguments[0], 'commandline-args-changed', null);
-addEventListener('unload', observer.unregister, false);
-*/
 
 // Get the locale object (a StringBundle) from the DOM
 var locale = document.getElementById('locale');

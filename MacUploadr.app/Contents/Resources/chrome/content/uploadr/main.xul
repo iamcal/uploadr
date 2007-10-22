@@ -8,28 +8,31 @@
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml"
-onload="upgrade.check(); users.load(); photos.load(); photos.drag();"
+onload="upgrade.check(); users.load(); photos.load(); drag.on_startup();"
 onclose="return exit();" persist="screenX screenY width height sizemode">
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
 	</stringbundleset>
 	<script src="chrome://global/content/globalOverlay.js" />
 	<script src="chrome://global/content/nsDragAndDrop.js" />
-	<script src="chrome://global/content/jquery-1.2.1.pack.js" />
+	<!--<script src="chrome://global/content/jquery-1.2.1.pack.js" />-->
 	<script src="chrome://uploadr/content/md5.js" />
+	<script src="chrome://uploadr/content/keys.js" />
 	<script src="chrome://uploadr/content/uploadr.js" />
 	<script src="chrome://uploadr/content/upgrade.js" />
 	<script src="chrome://uploadr/content/file.js" />
 	<script src="chrome://uploadr/content/threads.js" />
-	<script src="chrome://uploadr/content/keys.js" />
 	<script src="chrome://uploadr/content/api.js" />
 	<script src="chrome://uploadr/content/photos.js" />
 	<script src="chrome://uploadr/content/meta.js" />
 	<script src="chrome://uploadr/content/settings.js" />
 	<script src="chrome://uploadr/content/users.js" />
 	<script src="chrome://uploadr/content/ui.js" />
-	<script src="chrome://uploadr/content/main.js" />
-	<script src="chrome://uploadr/content/events_bandwidth.js" />
+	<script src="chrome://uploadr/content/drag.js" />
+	<script src="chrome://uploadr/content/grid.js" />
+	<script src="chrome://uploadr/content/mouse.js" />
+	<script src="chrome://uploadr/content/keyboard.js" />
+	<script src="chrome://uploadr/content/buttons.js" />
 	<keyset>
 		<key id="key_add" modifiers="accel" key="o" oncommand="photos.add();" />
 		<key id="key_upload" modifiers="shift accel" key="u" oncommand="photos.upload();" />
@@ -40,27 +43,27 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<key id="key_cut" modifiers="accel" key="x" oncommand="goDoCommand('cmd_cut');" />
 		<key id="key_copy" modifiers="accel" key="c" oncommand="goDoCommand('cmd_copy');" />
 		<key id="key_paste" modifiers="accel" key="v" oncommand="goDoCommand('cmd_paste');" />
-		<key id="key_all" modifiers="accel" key="a" oncommand="events.photos.select_all();" />
-		<key id="key_up" keycode="VK_UP" oncommand="events.arrows.up(event);" />
-		<key id="key_right" keycode="VK_RIGHT" oncommand="events.arrows.right(event);" />
-		<key id="key_down" keycode="VK_DOWN" oncommand="events.arrows.down(event);" />
-		<key id="key_left" keycode="VK_LEFT" oncommand="events.arrows.left(event);" />
+		<key id="key_all" modifiers="accel" key="a" oncommand="keyboard.select_all();" />
+		<key id="key_up" keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
 		<key id="key_up" modifiers="shift" keycode="VK_UP"
-		oncommand="events.arrows.up(event);" />
+		oncommand="keyboard.arrows.up(event);" />
 		<key id="key_right" modifiers="shift" keycode="VK_RIGHT"
-		oncommand="events.arrows.right(event);" />
+		oncommand="keyboard.arrows.right(event);" />
 		<key id="key_down" modifiers="shift" keycode="VK_DOWN"
-		oncommand="events.arrows.down(event);" />
+		oncommand="keyboard.arrows.down(event);" />
 		<key id="key_left" modifiers="shift" keycode="VK_LEFT"
-		oncommand="events.arrows.left(event);" />
+		oncommand="keyboard.arrows.left(event);" />
 		<key id="key_up" modifiers="accel" keycode="VK_UP"
-		oncommand="events.arrows.up(event);" />
+		oncommand="keyboard.arrows.up(event);" />
 		<key id="key_right" modifiers="accel" keycode="VK_RIGHT"
-		oncommand="events.arrows.right(event);" />
+		oncommand="keyboard.arrows.right(event);" />
 		<key id="key_down" modifiers="accel" keycode="VK_DOWN"
-		oncommand="events.arrows.down(event);" />
+		oncommand="keyboard.arrows.down(event);" />
 		<key id="key_left" modifiers="accel" keycode="VK_LEFT"
-		oncommand="events.arrows.left(event);" />
+		oncommand="keyboard.arrows.left(event);" />
 	</keyset>
 	<toolbox id="menu">
 		<menubar>
@@ -86,7 +89,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					oncommand="goDoCommand('cmd_paste');" />
 					<menuseparator />
 					<menuitem id="menu_all" label="&menu.edit.select_all;" key="key_all"
-					oncommand="events.photos.select_all();" />
+					oncommand="keyboard.select_all();" />
 				</menupopup>
 			</menu>
 			<menu id="menu_help" label="&menu.help;">
@@ -112,7 +115,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			<box flex="1" />
 			<hbox>
 				<vbox><label id="username" value="&notloggedin;" /></vbox>
-				<vbox><html:div id="switch" class="small button" onclick="events.buttons.login();"
+				<vbox><html:div id="switch" class="small button" onclick="buttons.login.click();"
 				><html:div>&login;</html:div></html:div></vbox>
 			</hbox>
 		</hbox>
@@ -124,7 +127,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<vbox id="page_auth" flex="1">
 			<html:h1>&auth.confirm;</html:h1>
 			<hbox><spacer flex="1" /><html:div id="button_auth" class="button"
-			onclick="events.buttons.auth();"
+			onclick="buttons.auth.click();"
 			><html:div>&buttons.auth;</html:div></html:div><spacer flex="1" /></hbox>
 		</vbox>
 		
@@ -134,13 +137,13 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<!-- Upload progress bar and (hidden) upload queue -->
 		<hbox id="footer" class="photos">
 			<hbox id="progress" flex="1">
-				<box id="progress_queue" onclick="events.photos.toggle();" />
+				<box id="progress_queue" onclick="mouse.toggle();" />
 				<stack flex="1">
 					<box flex="1"><box id="progress_bar" /></box>
 					<label id="progress_text" />
 				</stack>
 				<vbox><html:div id="button_cancel" class="small button"
-				onclick="events.buttons.cancel();"
+				onclick="buttons.cancel.click();"
 				><html:div>&buttons.cancel;</html:div></html:div></vbox>
 			</hbox>
 		</hbox>

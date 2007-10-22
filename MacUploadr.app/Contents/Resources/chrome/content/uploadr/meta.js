@@ -188,7 +188,26 @@ var meta = {
 		document.getElementById('t_rotate_r').className = 'disabled';
 	},
 
+	// Properly enable/disable the checkboxes available for private photos to be shared with
+	// friends and/or family
+	is_public: function(value) {
+
+		// Single photo or group of photos?
+		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+
+		if (1 == parseInt(value)) {
+			document.getElementById(prefix + '_is_friend').checked = false;
+			document.getElementById(prefix + '_is_family').checked = false;
+			document.getElementById(prefix + '_is_friend').disabled = true;
+			document.getElementById(prefix + '_is_family').disabled = true;
+		} else {
+			document.getElementById(prefix + '_is_friend').disabled = false;
+			document.getElementById(prefix + '_is_family').disabled = false;
+		}
+	},
+
 	// If a user leaves a partial batch before committing, warn them
+	//   If uploadr.conf.confirm_save_batch is off, this will always save rather than abandon
 	abandon: function() {
 		if ('-moz-box' == document.getElementById('batch_meta').style.display &&
 			1 < photos.selected.length) {

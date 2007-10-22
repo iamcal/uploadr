@@ -215,10 +215,13 @@ var settings = {
 				}
 			}
 
-			// Refresh the single-photo metadata if necessary
+			// Refresh visible photo metadata if necessary
 			if (1 == photos.selected.length) {
 				meta.load(photos.selected[0]);
 				meta.enable();
+			} else if (1 < photos.selected.length) {
+				meta.load();
+				meta.batch();
 			}
 
 		}

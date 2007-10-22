@@ -3,19 +3,18 @@
 <?xml-stylesheet href="chrome://uploadr/skin/settings.css" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://uploadr/locale/main.dtd">
 <dialog id="dialog_settings" title="&settings;" buttons="accept,cancel"
-ondialogaccept="events.settings.ok(); return true;"
-ondialogcancel="events.settings.cancel(); return true;" onload="events.settings.load();"
+ondialogaccept="settings.ok(); return true;"
+ondialogcancel="settings.cancel(); return true;" onload="settings.load();"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml">
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
 	</stringbundleset>
-	<script src="chrome://uploadr/content/uploadr.js" />
-	<script src="chrome://uploadr/content/events_settings.js" />
+	<script src="chrome://uploadr/content/settings_dialog.js" />
 	<vbox flex="1" id="notloggedin">
 		<html:h3>&settings.notloggedin;</html:h3>
 		<button label="&login;"
-		oncommand="events.settings.add_user();" />
+		oncommand="settings.add_user();" />
 	</vbox>
 	<vbox flex="1" id="loggedin">
 		<groupbox flex="1">
@@ -25,9 +24,9 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			</menulist>
 			<hbox>
 				<button label="&settings.users.remove;"
-				oncommand="events.settings.remove_user();" />
+				oncommand="settings.remove_user();" />
 				<button label="&settings.users.add;"
-				oncommand="events.settings.add_user();" />
+				oncommand="settings.add_user();" />
 			</hbox>
 		</groupbox>
 		<hbox flex="1">
@@ -35,7 +34,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				<caption label="&settings.privacy;" />
 				<label control="is_public" value="&settings.privacy.who;" />
 				<radiogroup id="is_public" value="1"
-				oncommand="events.settings.is_public(this.value);">
+				oncommand="settings.is_public(this.value);">
 					<radio value="0" label="&settings.privacy.private;" />
 						<checkbox id="is_friend" label="&settings.privacy.friend;"
 						disabled="true" />

@@ -276,7 +276,11 @@ var upload = {
 			photos.fail = 0;
 			unblock_exit();
 			window.openDialog('chrome://uploadr/content/bandwidth.xul', 'dialog_bandwidth',
-				'chrome,modal', events.bandwidth.switch_users, events.bandwidth.go_pro);
+				'chrome,modal', function() {
+					buttons.login.click();
+				}, function() {
+					launch_browser('http://flickr.com/upgrade/');
+				});
 			return true;
 		} else {
 			return false;
@@ -312,7 +316,7 @@ var upload = {
 		free.update();
 		document.getElementById('progress').style.visibility = 'hidden';
 		document.getElementById('progress_bar').style.width = '0';
-		events.photos.show_photos();
+		mouse.show_photos();
 		var queue = document.getElementById('queue_list');
 		while (queue.hasChildNodes()) {
 			queue.removeChild(queue.firstChild);

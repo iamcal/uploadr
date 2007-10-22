@@ -1,4 +1,4 @@
-events.photos = {
+var mouse = {
 
 	// Event handler for clicking anywhere in the photos pane
 	click: function(e) {
@@ -84,7 +84,11 @@ events.photos = {
 		}
 		// If we clicked the revert to sorted button
 		else if (e.target.id && 'photos_sort_revert' == e.target.id) {
-			events.photos.sort();
+			buttons.upload.disable();
+			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+			document.getElementById('photos_sort_default').style.display = 'block';
+			document.getElementById('photos_sort_revert').style.display = 'none';
+			photos.sort = true;
 		}
 		
 		// If we clicked on an error, do nothing
@@ -135,55 +139,55 @@ events.photos = {
 
 	// Update the bounding box used during drag-selection
 	drag_select: function(e, pos) {
-		const OFFSET_X = -events.photos.box.x - 5;
-		const OFFSET_Y = -events.photos.box.y - 5;
+		const OFFSET_X = -mouse.box.x - 5;
+		const OFFSET_Y = -mouse.box.y - 5;
 		var ds = document.getElementById('drag_select');
 
 		// Invert positions if necessary
-		if (events.photos.anchor.x > e.clientX + pos.x.value + OFFSET_X) {
+		if (mouse.anchor.x > e.clientX + pos.x.value + OFFSET_X) {
 			ds.style.left = (e.clientX + pos.x.value + OFFSET_X) + 'px';
 		}
-		if (events.photos.anchor.y > e.clientY + pos.y.value + OFFSET_Y) {
+		if (mouse.anchor.y > e.clientY + pos.y.value + OFFSET_Y) {
 			ds.style.top = (e.clientY + pos.y.value + OFFSET_Y) + 'px';
 		}
 
 		// New width and height
 		ds.style.width = Math.abs(e.clientX + pos.x.value + OFFSET_X -
-			events.photos.anchor.x) + 'px';
+			mouse.anchor.x) + 'px';
 		ds.style.height = Math.abs(e.clientY + pos.y.value + OFFSET_Y -
-			events.photos.anchor.y) + 'px';
+			mouse.anchor.y) + 'px';
 
 		// Actually find photos in the box
-		findr.bounding_box(events.photos.anchor.x, events.photos.anchor.y,
+		grid.bounding_box(mouse.anchor.x, mouse.anchor.y,
 			e.clientX + pos.x.value + OFFSET_X, e.clientY + pos.y.value + OFFSET_Y);
 
 	},
 
 	// Initiate a drag
 	mousedown: function(e) {
-		if (null == events.photos.box) {
-			events.photos.box = document.getElementById('photos').boxObject.QueryInterface(
+		if (null == mouse.box) {
+			mouse.box = document.getElementById('photos').boxObject.QueryInterface(
 				Ci.nsIScrollBoxObject);
 		}
 		var pos = {x: {}, y: {}};
-		events.photos.box.getPosition(pos.x, pos.y);
+		mouse.box.getPosition(pos.x, pos.y);
 
 		// Clicking on a single photo will do drag-reordering
 		if (e.target.src) {
 			if (1 < photos.count) {
-				events.photos.dragging = 1;
+				mouse.dragging = 1;
 			}
 		}
 
 		// Clicking whitespace will start the drag-select
 		else if ('photos_sort_revert' != e.target.id) {
-			events.photos.anchor = {
-				x: e.clientX + pos.x.value - events.photos.box.x - 5,
-				y: e.clientY + pos.y.value - events.photos.box.y - 5
+			mouse.anchor = {
+				x: e.clientX + pos.x.value - mouse.box.x - 5,
+				y: e.clientY + pos.y.value - mouse.box.y - 5
 			};
 			var ds = document.getElementById('drag_select');
-			ds.style.left = events.photos.anchor.x + 'px';
-			ds.style.top = events.photos.anchor.y + 'px';
+			ds.style.left = mouse.anchor.x + 'px';
+			ds.style.top = mouse.anchor.y + 'px';
 			ds.style.width = '1px';
 			ds.style.height = '1px';
 			ds.style.display = 'block';
@@ -193,24 +197,24 @@ events.photos = {
 
 	// Keep dragging
 	mousemove: function(e) {
-		if (null == events.photos.box) {
-			events.photos.box = document.getElementById('photos').boxObject.QueryInterface(
+		if (null == mouse.box) {
+			mouse.box = document.getElementById('photos').boxObject.QueryInterface(
 				Ci.nsIScrollBoxObject);
 		}
-		const OFFSET_X = -events.photos.box.x - 5;
-		const OFFSET_Y = -events.photos.box.y - 5;
+		const OFFSET_X = -mouse.box.x - 5;
+		const OFFSET_Y = -mouse.box.y - 5;
 		var pos = {x: {}, y: {}};
-		events.photos.box.getPosition(pos.x, pos.y);
+		mouse.box.getPosition(pos.x, pos.y);
 
 		// If we're reordering
-		if (null == events.photos.anchor) {
+		if (null == mouse.anchor) {
 
 			// Once the user starts the drag, give feedback
-			if (1 == events.photos.dragging) {
+			if (1 == mouse.dragging) {
 
 				// Update the selection
 				if ('selected' != e.target.className) {
-					events.photos.click(e);
+					mouse.click(e);
 				}
 
 				// Make the selected photos look like they're being dragged
@@ -219,17 +223,17 @@ events.photos = {
 						'img')[0].className = 'selected dragging';
 				}
 
-				events.photos.dragging = 2;
+				mouse.dragging = 2;
 			}
 
 			// Once they drag off of an image, they've dragged far enough for this to
 			// be on purpose
-			if (2 == events.photos.dragging && 'img' != e.target.nodeName) {
-				events.photos.dragging = 3;
+			if (2 == mouse.dragging && 'img' != e.target.nodeName) {
+				mouse.dragging = 3;
 			}
 
 			// As the user is dragging, update the feedback
-			if (3 == events.photos.dragging) {
+			if (3 == mouse.dragging) {
 
 				// Show the cursor follower
 				var follower = document.getElementById('drag_follower');
@@ -269,12 +273,12 @@ events.photos = {
 					left = false;
 					target = target.previousSibling;
 				}
-				if (null != events.photos.target && target != events.photos.target) {
-					events.photos.target.className = '';
+				if (null != mouse.target && target != mouse.target) {
+					mouse.target.className = '';
 				}
 				target.className = left ? 'drop_left' : 'drop_right';
-				events.photos.target = target;
-				events.photos.left = left;
+				mouse.target = target;
+				mouse.left = left;
 
 			}
 
@@ -282,39 +286,39 @@ events.photos = {
 
 		// If we're selecting
 		else {
-			events.photos.drag_select(e, pos);
+			mouse.drag_select(e, pos);
 		}
 
 		// If we're reaching the edge of the box and can scroll, do so
-		if ((0 != events.photos.dragging || null != events.photos.anchor) &&
+		if ((0 != mouse.dragging || null != mouse.anchor) &&
 			(uploadr.conf.scroll > e.clientY + OFFSET_Y ||
-			 uploadr.conf.scroll > events.photos.box.height - e.clientY - OFFSET_Y)) {
-			if (null == events.photos.auto_scroll) {
+			 uploadr.conf.scroll > mouse.box.height - e.clientY - OFFSET_Y)) {
+			if (null == mouse.auto_scroll) {
 				var clientX = e.clientX;
 				var clientY = e.clientY;
-				events.photos.auto_scroll = window.setInterval(function() {
+				mouse.auto_scroll = window.setInterval(function() {
 					var delta = 0;
 					if (uploadr.conf.scroll > clientY + OFFSET_Y) {
 						delta = -uploadr.conf.scroll;
 					}
-					if (uploadr.conf.scroll > events.photos.box.height - clientY - OFFSET_Y) {
+					if (uploadr.conf.scroll > mouse.box.height - clientY - OFFSET_Y) {
 						delta = uploadr.conf.scroll;
 					}
 					var pos = {x: {}, y: {}};
-					events.photos.box.getPosition(pos.x, pos.y);
+					mouse.box.getPosition(pos.x, pos.y);
 					if (delta) {
-						events.photos.box.scrollTo(pos.x.value, pos.y.value + delta);
+						mouse.box.scrollTo(pos.x.value, pos.y.value + delta);
 					}
-					events.photos.drag_select({clientX: clientX, clientY: clientY}, pos);
+					mouse.drag_select({clientX: clientX, clientY: clientY}, pos);
 				}, 10);
 			}
 		}
 
 		// If we've left the auto-scroll area, stop
 		else {
-			if (null != events.photos.auto_scroll) {
-				window.clearInterval(events.photos.auto_scroll);
-				events.photos.auto_scroll = null;
+			if (null != mouse.auto_scroll) {
+				window.clearInterval(mouse.auto_scroll);
+				mouse.auto_scroll = null;
 			}
 		}
 
@@ -328,14 +332,14 @@ events.photos = {
 		document.getElementById('photos').focus();
 
 		// Stop auto-scrolling when we stop dragging, too
-		if (null != events.photos.auto_scroll) {
-			window.clearInterval(events.photos.auto_scroll);
-			events.photos.auto_scroll = null;
+		if (null != mouse.auto_scroll) {
+			window.clearInterval(mouse.auto_scroll);
+			mouse.auto_scroll = null;
 		}
 
 		// If we're reordering
-		if (null == events.photos.anchor) {
-			if (3 == events.photos.dragging) {
+		if (null == mouse.anchor) {
+			if (3 == mouse.dragging) {
 
 				// Reorder the photo list
 				photos.selected.sort(function(a, b) {
@@ -349,13 +353,13 @@ events.photos = {
 					p.getElementsByTagName('img')[0].className = 'selected';
 
 					// Move this image to its new home
-					if (events.photos.left) {
-						list.insertBefore(p, events.photos.target);
+					if (mouse.left) {
+						list.insertBefore(p, mouse.target);
 					} else {
-						if (events.photos.target == list.lastChild) {
+						if (mouse.target == list.lastChild) {
 							list.appendChild(p);
 						} else {
-							list.insertBefore(p, events.photos.target.nextSibling);
+							list.insertBefore(p, mouse.target.nextSibling);
 						}
 					}
 
@@ -364,8 +368,8 @@ events.photos = {
 
 				// Stop showing feedback on the cursor
 				document.getElementById('drag_follower').style.display = 'none';
-				if (null != events.photos.target) {
-					events.photos.target.className = '';
+				if (null != mouse.target) {
+					mouse.target.className = '';
 				}
 
 				// Show the link to revert to default order
@@ -374,9 +378,9 @@ events.photos = {
 				photos.sort = false;
 
 			}
-			events.photos.dragging = 0;
-			events.photos.target = null;
-			events.photos.left = false;
+			mouse.dragging = 0;
+			mouse.target = null;
+			mouse.left = false;
 		}
 
 		// If we're selecting, finalize the selection
@@ -412,7 +416,7 @@ events.photos = {
 				}
 			}
 			if (0 == photos.selected.length) {
-				events.photos.click(e);
+				mouse.click(e);
 			} else {
 				if (1 == photos.selected.length) {
 					meta.load(photos.selected[0]);
@@ -424,84 +428,29 @@ events.photos = {
 
 		}
 
-		events.photos.anchor = null;
-	},
-
-	// True if we're in a text field
-	_select_all: null,
-
-	// Select all photos or all text
-	select_all: function() {
-		if (null == events.photos._select_all) {
-			if (0 == photos.count) {
-				return;
-			}
-			photos.selected = [];
-			var p = photos.list;
-			var ii = p.length;
-			for (var i = 0; i < ii; ++i) {
-				photos.selected.push(p[i].id);
-			}
-			var list = document.getElementById('photos_list').getElementsByTagName('li');
-			ii = list.length;
-			for (var i = 0; i < ii; ++i) {
-				var img = list[i].getElementsByTagName('img')[0];
-				if ('error' != img.className) {
-					img.className = 'selected';
-				}
-			}
-			meta.batch();
-		} else {
-			events.photos._select_all.select();
-		}
-	},
-
-	// Sort the photos when asked
-	sort: function() {
-		buttons.upload.disable();
-		threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-		document.getElementById('photos_sort_default').style.display = 'block';
-		document.getElementById('photos_sort_revert').style.display = 'none';
-		photos.sort = true;
-	},
-
-	// Properly enable/disable the checkboxes available for private photos to be shared with
-	// friends and/or family
-	is_public: function(value) {
-
-		// Single photo or group of photos?
-		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
-
-		if (1 == parseInt(value)) {
-			document.getElementById(prefix + '_is_friend').checked = false;
-			document.getElementById(prefix + '_is_family').checked = false;
-			document.getElementById(prefix + '_is_friend').disabled = true;
-			document.getElementById(prefix + '_is_family').disabled = true;
-		} else {
-			document.getElementById(prefix + '_is_friend').disabled = false;
-			document.getElementById(prefix + '_is_family').disabled = false;
-		}
+		mouse.anchor = null;
 	},
 
 	// Show and hide the photos list and queue list
+	//   Usually fired by clicking the toggle button, but is forced when upload finishes
 	_photos_visible: true,
 	show_photos: function() {
-		events.photos._photos_visible = true;
+		mouse._photos_visible = true;
 		document.getElementById('page_photos').style.display = '-moz-box';
 		document.getElementById('page_queue').style.display = 'none';
 		document.getElementById('footer').className = 'photos';
 	},
 	show_queue: function() {
-		events.photos._photos_visible = false;
+		mouse._photos_visible = false;
 		document.getElementById('page_photos').style.display = 'none';
 		document.getElementById('page_queue').style.display = '-moz-box';
 		document.getElementById('footer').className = 'queue';
 	},
 	toggle: function() {
-		if (events.photos._photos_visible) {
-			events.photos.show_queue();
+		if (mouse._photos_visible) {
+			mouse.show_queue();
 		} else {
-			events.photos.show_photos();
+			mouse.show_photos();
 		}
 	}
 

@@ -2,9 +2,6 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 const NS_HTML = 'http://www.w3.org/1999/xhtml';
 
-// A placeholder, because the events_*.js files all create objects within events
-var events = {};
-
 var uploadr = {
 	conf: {
 

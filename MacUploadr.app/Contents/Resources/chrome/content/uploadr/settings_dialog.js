@@ -1,4 +1,4 @@
-events.settings = {
+var settings = {
 
 	load: function() {
 
@@ -13,7 +13,7 @@ events.settings = {
 				document.getElementById('is_public').value = s.is_public;
 				document.getElementById('is_friend').checked = 1 == s.is_friend;
 				document.getElementById('is_family').checked = 1 == s.is_family;
-				events.settings.is_public();
+				settings.is_public();
 				document.getElementById('content_type').selectedIndex = s.content_type - 1;
 				document.getElementById('hidden').selectedIndex = s.hidden - 1;
 				document.getElementById('safety_level').selectedIndex = s.safety_level - 1;
