@@ -295,6 +295,8 @@ var upload = {
 	done: function() {
 		window.clearTimeout(upload.timeout_handle);
 		window.clearInterval(upload.progress_handle);
+		document.getElementById('photos_init').style.display = 'none';
+		document.getElementById('photos_new').style.display = 'none';
 
 		// Kick off the chain of adding photos to a set
 		var not_adding_to_sets = true;
@@ -332,10 +334,6 @@ var upload = {
 			locale.getString('progress.failed.title'))) {
 			var f = photos.failed;
 			var ii = f.length;
-			if (0 != ii) {
-				document.getElementById('photos_init').style.display = 'none';
-				document.getElementById('photos_new').style.display = 'none';
-			}
 			for (var i  = 0; i < ii; ++i) {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
@@ -345,14 +343,8 @@ var upload = {
 
 		// If this was a cancellation, add photos we didn't get to back to the batch
 		if (upload.cancel) {
-			var need_to_hide = true;
 			for each (var p in photos.uploading) {
 				if (null != p) {
-					if (need_to_hide) {
-						document.getElementById('photos_init').style.display = 'none';
-						document.getElementById('photos_new').style.display = 'none';
-						need_to_hide = false;
-					}
 					photos._add(p.path);
 					photos.list[photos.list.length - 1] = p;
 				}
@@ -361,8 +353,8 @@ var upload = {
 		}
 
 		// Offer to open the uploaded batch on the site
-		if (0 < photos.ok && confirm(locale.getString('uploaded.prompt'),
-			locale.getString('uploaded.prompt.title'))) {
+		if (0 < photos.ok && confirm(locale.getString('upload.success.text'),
+			locale.getString('upload.success.title'))) {
 			launch_browser('http://flickr.com/tools/uploader_edit.gne?ids=' +
 				photos.uploaded.join(','));
 		}
@@ -385,6 +377,16 @@ var upload = {
 		upload.progress_bar = null;
 		upload.cancel = false;
 		unblock_exit();
+	},
+
+	// Finally give the user feedback on their upload
+	finalize: function() {
+
+		// Make sure the sets map is actually empty
+		///
+
+		// Decide
+
 	}
 
 };
@@ -621,33 +623,38 @@ var flickr = {
 					meta.sets[sets[i].getAttribute('id')] =
 						sets[i].getElementsByTagName('title')[0].firstChild.nodeValue;
 				}
-				var dropdowns = ['single_set', 'batch_set'];
-				for each (var dropdown in dropdowns) {
-					var d = document.getElementById(dropdown);
-					d.removeAllItems();
-					if (0 == ii) {
-						d.appendItem(locale.getString('settings.set.none'), '', '');
-						d.disabled = true;
-					} else {
-						d.appendItem(locale.getString('settings.set.dont'), '', '');
-						for (var set_id in meta.sets) {
-							d.appendItem(meta.sets[set_id], set_id, '');
-						}
-						d.disabled = false;
+				var lists = ['single_sets_add', 'batch_sets_add'];
+				for each (var list in lists) {
+					var ul = document.getElementById(list);
+					while (ul.hasChildNodes()) {
+						ul.removeChild(ul.firstChild);
 					}
-					d.selectedIndex = 0;
+					if (0 == ii) {
+						var li = document.createElementNS(NS_HTML, 'li');
+						li.appendChild(document.createTextNode(
+							locale.getString('meta.sets.add.none')));
+						ul.appendChild(li);
+					} else {
+						for (var set_id in meta.sets) {
+							var li = document.createElementNS(NS_HTML, 'li');
+							li.appendChild(document.createTextNode(meta.sets[set_id]));
+							ul.appendChild(li);
+						}
+					}
 				}
 
 				// Update a single selected photo
 				if (1 == photos.selected.length) {
-					var ul = document.getElementById('single_set');
-					while (ul.hasChildNodes()) {
-						ul.removeChild(ul.firstChild);
-					}
+					var ul = document.getElementById('single_sets_added');
 					var p = photos.list[photos.selected[0]];
 					var ii = p.sets.length;
-					for (var i = 0; i < ii; ++i) {
-						meta.select_set(ul, meta.sets[p.sets[i]]);
+					if (0 != ii) {
+						while (ul.hasChildNodes()) {
+							ul.removeChild(ul.firstChild);
+						}
+						for (var i = 0; i < ii; ++i) {
+							meta.select_set(ul, meta.sets[p.sets[i]]);
+						}
 					}
 				}
 

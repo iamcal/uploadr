@@ -304,10 +304,10 @@ toolbarseparator {
 	font-weight: normal;
 }
 #photos_init h1, #photos_new h1 {
-	margin: 150px 10px 0 10px;
+	margin: 150px 50px 0 50px;
 }
 #photos_init h2, #photos_new h2 {
-	margin: 10px;
+	margin: 10px 50px;
 }
 
 /* Dragging photos into the container */
@@ -415,6 +415,13 @@ toolbarseparator {
 #meta, #batch_meta {
 	display: none;
 }
+
+/* Minimize jumping around with a min-height on the status messages */
+.thumb_height {
+	min-height: 103px;
+}
+
+/* Two columns */
 #meta vbox.column, #batch_meta vbox.column {
 	width: 200px;
 	padding: 5px;
@@ -447,26 +454,43 @@ toolbarseparator {
 }
 
 /* Sets lists */
-#single_sets_list, #batch_sets_list {
-	margin: 5px 5px 0 5px;
+#hide_single_sets, #hide_batch_sets {
+	margin: 5px;
+}
+#single_sets_add, #batch_sets_add, #single_sets_added, #batch_sets_added {
+	width: 199px;
+	height: 90px;
+	overflow: auto;
+	margin: 0;
 	padding: 0;
+	background: white;
 	list-style-type: none;
 }
-#single_sets_list li, #batch_sets_list li {
+/*
+#single_sets_add, #batch_sets_add {
+	margin: 0 0 0 5px;
+}
+#single_sets_added, #batch_sets_added {
+	margin: 0 5px 0 0;
+}
+*/
+#single_sets_added_none, #batch_sets_added_none {
+	padding: 2px;
+	color: #bbb;
+	font-style: italic;
+	text-align: center;
+	background: transparent;
+}
+#single_sets_add li, #batch_sets_add li, #single_sets_added li, #batch_sets_added li {
 	margin: 0;
-	padding: 0 0 5px 5px;
+	padding: 2px 2px 2px 16px;
 }
-#single_sets_list li a, #batch_sets_list li a {
-	color: #aaa;
-	text-decoration: none;
-	cursor: pointer;
+#single_sets_add li, #batch_sets_add li {
+	background: url(icon_add.png) no-repeat center left;
 }
-
-/* Nicer layout for sets controls */
-#single_sets table, #batch_sets table {
-	margin: 5px 0 0 0;
+#single_sets_added li, #batch_sets_added li {
+	background: url(icon_trash.png) no-repeat center left;
 }
-
 
 
 /*

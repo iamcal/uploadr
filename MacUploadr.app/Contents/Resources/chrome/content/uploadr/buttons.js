@@ -20,7 +20,7 @@ var buttons = {
 	go_pro: {
 		click: function() {
 			launch_browser('http://flickr.com/upgrade/');
-			alert(locale.getString('go_pro'), locale.getString('go_pro.title'));
+			alert(locale.getString('dialog.go_pro.text'), locale.getString('dialog.go_pro.title'));
 		}
 	},
 

@@ -47,12 +47,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				</vbox>
 				<vbox id="photos_new">
 					<html:h1>&photos.new;</html:h1>
-					<html:h2>&photos.new.text;</html:h2>
 				</vbox>
 			</scrollbox>
 			<vbox>
 				<vbox id="meta" flex="1">
-					<vbox id="single_prompt" class="status"
+					<vbox id="single_prompt" class="status thumb_height"
 					><html:h3>&meta.first;</html:h3><html:p>&meta.batch.prompt;</html:p></vbox>
 					<hbox id="single_preview">
 						<html:div id="meta_div"></html:div>
@@ -77,26 +76,6 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<textbox id="single_tags" tabindex="3"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
-							<html:p> </html:p>
-							<vbox id="hide_single_sets">
-								<label value="&meta.single.sets;" />
-								<html:ul id="single_sets_list"></html:ul>
-								<menulist id="single_set" tabindex="4">
-									<menupopup>
-										<menuitem value="0" label="&settings.sets.none;" />
-									</menupopup>
-								</menulist>
-								<html:table border="0" cellpadding="0" cellspacing="0">
-								<html:tr>
-									<html:td><label id="single_sets_create" class="link"
-									value="&settings.sets.create;" onclick="meta.create_set();"
-									/></html:td>
-									<html:td><html:div id="single_sets_add" class="button"
-									onclick="meta.add_to_set();"
-									><html:div>&settings.sets.add;</html:div></html:div></html:td>
-								</html:tr>
-								</html:table>
-							</vbox>
 						</vbox>
 						<vbox class="column">
 							<vbox id="hide_single_explain" class="status"
@@ -141,9 +120,23 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							</vbox>
 						</vbox>
 					</hbox>
+					<hbox id="hide_single_sets">
+						<vbox>
+							<label value="&meta.sets.add;" />
+							<html:ul id="single_sets_add"></html:ul>
+							<label id="single_sets_create" class="link"
+							value="&meta.sets.create;" onclick="meta.create_set();" />
+						</vbox>
+						<vbox>
+							<label value="&meta.single.sets.added;" />
+							<html:ul id="single_sets_added">
+								<html:li class="sets_added_none">&meta.sets.added.none;</html:li>
+							</html:ul>
+						</vbox>
+					</hbox>
 				</vbox>
 				<vbox id="batch_meta" flex="1">
-					<vbox class="status"><html:h3
+					<vbox class="status thumb_height"><html:h3
 					id="batch_prompt"> </html:h3><html:p>&meta.batch.prompt;</html:p></vbox>
 					<hbox>
 						<vbox class="column">
@@ -159,26 +152,6 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<textbox id="batch_tags" tabindex="3"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
-							<html:p> </html:p>
-							<vbox id="hide_batch_sets">
-								<label value="&meta.batch.sets;" />
-								<html:ul id="batch_sets_list"></html:ul>
-								<menulist id="batch_set" tabindex="4">
-									<menupopup>
-										<menuitem value="0" label="&settings.sets.none;" />
-									</menupopup>
-								</menulist>
-								<html:table border="0" cellpadding="0" cellspacing="0">
-								<html:tr>
-									<html:td><label id="batch_sets_create" class="link"
-									value="&settings.sets.create;" onclick="meta.create_set();"
-									/></html:td>
-									<html:td><html:div id="batch_sets_add" class="button"
-									onclick="meta.add_to_set();"
-									><html:div>&settings.sets.add;</html:div></html:div></html:td>
-								</html:tr>
-								</html:table>
-							</vbox>
 						</vbox>
 						<vbox class="column">
 							<vbox id="hide_batch_explain" class="status"
@@ -219,6 +192,20 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									</menupopup>
 								</menulist>
 							</vbox>
+						</vbox>
+					</hbox>
+					<hbox id="hide_batch_sets">
+						<vbox>
+							<label value="&meta.sets.add;" />
+							<html:ul id="batch_sets_add"></html:ul>
+							<label id="batch_sets_create" class="link"
+							value="&meta.sets.create;" onclick="meta.create_set();" />
+						</vbox>
+						<vbox>
+							<label value="&meta.batch.sets.added;" />
+							<html:ul id="batch_sets_added">
+								<html:li class="sets_added_none">&meta.sets.added.none;</html:li>
+							</html:ul>
 						</vbox>
 					</hbox>
 				</vbox>

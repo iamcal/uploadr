@@ -45,6 +45,7 @@ var ThumbCallback = function(id, result) {
 ThumbCallback.prototype = {
 	run: function() {
 		try {
+			--photos.loading;
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<title>###<description>###<tags>###<thumb_path>
@@ -71,8 +72,7 @@ ThumbCallback.prototype = {
 				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
 
 				// Select newly added images if the user hasn't clicked
-				//   This isn't exactly right - it only works the first time they open photos
-				if (meta.first) {
+				if (meta.auto_select) {
 					mouse.click({
 						target: img,
 						ctrlKey: true,

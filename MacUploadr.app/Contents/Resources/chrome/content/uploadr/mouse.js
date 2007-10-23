@@ -352,6 +352,11 @@ var mouse = {
 		// Clicks cancel the special behavior when first adding photos
 		meta.first = false;
 
+		// Clicks while adding photos prevents auto-selecting photos when added
+		if (0 != photos.loading) {
+			meta.auto_select = false;
+		}
+
 		// Prevent conflicts with select-all behavior
 		document.getElementById('photos').focus();
 

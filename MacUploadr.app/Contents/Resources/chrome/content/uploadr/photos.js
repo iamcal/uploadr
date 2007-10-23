@@ -9,6 +9,9 @@ var photos = {
 	sort: true,
 	batch_size: 0,
 
+	// Number of photos that are loading
+	loading: 0,
+
 	// Upload tracking
 	uploading: [],
 	current: 0,
@@ -61,6 +64,7 @@ var photos = {
 		var id = photos.list.length;
 		photos.list.push(new Photo(id, path));
 		++photos.count;
+		++photos.loading;
 		photos.unsaved = true;
 
 		// Create a spot for the image, leaving a spinning placeholder

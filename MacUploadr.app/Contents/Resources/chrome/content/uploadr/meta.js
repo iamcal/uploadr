@@ -8,6 +8,9 @@ var meta = {
 	// Show a special status message for their first batch
 	first: true,
 
+	// Auto-select, which is cancellable by a click during thumbing
+	auto_select: true,
+
 	// Load a photo's metadata from JS into the DOM
 	load: function(id) {
 
@@ -37,11 +40,15 @@ var meta = {
 			document.getElementById('batch_safety_level').value = settings.safety_level;
 
 			// Clear the old sets list
-			var ul = document.getElementById('batch_sets_list');
+			var ul = document.getElementById('batch_sets_added');
 			while (ul.hasChildNodes()) {
 				ul.removeChild(ul.firstChild);
 			}
-			document.getElementById('batch_set').selectedIndex = 0;
+			var li = document.createElementNS(NS_HTML, 'li')
+			li.className = 'sets_added_none';
+			li.appendChild(document.createTextNode(
+				locale.getString('meta.sets.added.none')));
+			ul.appendChild(li);
 
 		}
 
@@ -81,17 +88,22 @@ var meta = {
 			document.getElementById('single_safety_level').value = p.safety_level;
 
 			// Sets list
-			var ul = document.getElementById('single_sets_list');
+			var ul = document.getElementById('single_sets_added');
 			while (ul.hasChildNodes()) {
 				ul.removeChild(ul.firstChild);
 			}
-			if (null != meta.sets) {
+			if (null == meta.sets) {
+				var li = document.createElementNS(NS_HTML, 'li')
+				li.className = 'sets_added_none';
+				li.appendChild(document.createTextNode(
+					locale.getString('meta.sets.added.none')));
+				ul.appendChild(li);
+			} else {
 				var ii = p.sets.length;
 				for (var i = 0; i < ii; ++i) {
 					meta.select_set(ul, p.sets[i], meta.sets[p.sets[i]]);
 				}
 			}
-			document.getElementById('single_set').selectedIndex = 0;
 
 		}
 
@@ -284,6 +296,7 @@ var meta = {
 		li.appendChild(document.createTextNode(name + ' '));
 		var a = document.createElementNS(NS_HTML, 'a');
 		a.appendChild(document.createTextNode(String.fromCharCode(215)));
+		/*
 		a.onclick = function(e) {
 			var ii = photos.selected.length;
 			for (var i = 0; i < ii; ++i) {
@@ -299,6 +312,7 @@ var meta = {
 			}
 			e.target.parentNode.parentNode.removeChild(e.target.parentNode);
 		};
+		*/
 		li.appendChild(a);
 		ul.appendChild(li);
 	},
@@ -308,21 +322,23 @@ var meta = {
 
 		// Do we have any sets to give?
 		if (-1 == users.sets || 0 < users.sets) {
-			var name = prompt(locale.getString('settings.set.add'),
-				locale.getString('settings.set.add.title'));
+			var name = prompt(locale.getString('meta.sets.create'),
+				locale.getString('meta.sets.create.title'));
 			if (!name) {
 				return;
 			}
 			meta.created_sets.push(name);
 			meta.sets[name] = name;
-			var dropdowns = ['single_set', 'batch_set'];
-			for each (var dropdown in dropdowns) {
-				var d = document.getElementById(dropdown);
-				d.removeItemAt(0);
-				d.insertItemAt(0, locale.getString('settings.set.dont'), '', '');
-				d.insertItemAt(1, name, name, '');
-				d.selectedIndex = 1;
-				d.disabled = false;
+			var lists = ['single_sets_added', 'batch_sets_added'];
+			for each (var list in lists) {
+				var ul = document.getElementById(list);
+				ul.removeChild(ul.firstChild);
+				var li = document.createElementNS(NS_HTML, 'li');
+				li.appendChild(document.createTextNode(name));
+				ul.insertBefore(li, ul.firstChild);
+				li = document.createElementNS(NS_HTML, 'li');
+				li.appendChild(document.createTextNode(locale.getString('settings.set.dont')));
+				ul.insertBefore(li, ul.firstChild);
 			}
 			meta.add_to_set();
 		}
@@ -338,11 +354,12 @@ var meta = {
 	// Add selected photos to the selected set
 	add_to_set: function() {
 
+return;
 		// Single photo or group of photos?
 		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
 
 		// Get the set we're adding to
-		var set = document.getElementById(prefix + '_set');
+		var set = document.getElementById(prefix + '_sets_add');
 		var set_id = set.value;
 		var name = set.selectedItem.label;
 		if ('' == set_id) {

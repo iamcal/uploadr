@@ -2,10 +2,10 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/bandwidth.css" type="text/css"?>
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
-<dialog id="dialog_bandwidth" title="&dialog.bandwidth;"
+<dialog id="dialog_bandwidth" title="&dialog.bandwidth.title;"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept,cancel"
-buttonlabelcancel="&dialog.bandwidth.switch;" buttonlabelaccept="&dialog.bandwidth.go_pro;"
+buttonlabelcancel="&dialog.bandwidth.cancel;" buttonlabelaccept="&dialog.bandwidth.ok;"
 ondialogcancel="return window.arguments[0]();"
 ondialogaccept="return window.arguments[1]();"
 onload="centerWindowOnScreen();">

@@ -15,31 +15,28 @@
 <!ENTITY menu.help.faq "FAQ">
 <!ENTITY menu.help.console "Console">
 
-<!ENTITY notloggedin "You aren't signed in">
+<!ENTITY notloggedin "You're working offline.">
 <!ENTITY login "Sign in">
 
-<!ENTITY auth.confirm "Come back here after authorizing Flickr Uploadr on the website.  Ready?">
+<!ENTITY auth.confirm "When you've given the Flickr Uploadr permission to connect to your account on the Flickr website, click the big READY! button.">
+<!ENTITY auth.confirm.oops "Give permission again?">
 
 <!ENTITY tools.add "+ Add">
 <!ENTITY tools.remove "− Remove">
 
 <!ENTITY buttons.upload "Upload photos">
 <!ENTITY buttons.cancel "Cancel">
-<!ENTITY buttons.auth "Go!">
+<!ENTITY buttons.auth "Ready!">
 <!ENTITY buttons.ok "OK">
 
 <!ENTITY bandwidth "Bandwidth:">
 <!ENTITY bandwidth.go_pro "Go Pro!">
 
-<!ENTITY progress.overall "Overall:">
-<!ENTITY progress.this_file "This file:">
-
 <!ENTITY photos.sort.default "Photos are sorted by date taken.  You can click-and-drag to reorder.">
 <!ENTITY photos.sort.revert "Re-sort photos by date taken">
 <!ENTITY photos.init "Drag photos here to get started.">
 <!ENTITY photos.init.text "Or, click +ADD to find photos on your computer.">
-<!ENTITY photos.new "You can add more photos while your other are uploading.">
-<!ENTITY photos.new.text "Or, go to Flickr.">
+<!ENTITY photos.new "While that batch is uploading, you can start a new one.">
 
 <!ENTITY settings "Settings">
 <!ENTITY settings.notloggedin "You need to sign in to adjust your preferences">
@@ -76,17 +73,18 @@
 <!ENTITY meta.tags "Tags:">
 <!ENTITY meta.first "All photos are selected">
 <!ENTITY meta.batch.prompt "Any changes you make here will affect all selected photos.">
-<!ENTITY meta.single.sets "Add this photo to sets">
-<!ENTITY meta.batch.sets "Add these photos to sets">
-<!ENTITY settings.sets.none "No sets">
-<!ENTITY settings.sets.add "Add">
-<!ENTITY settings.sets.create "Create a set...">
+<!ENTITY meta.sets.add "Add to set:">
+<!ENTITY meta.sets.add.none "No sets">
+<!ENTITY meta.sets.create "Create a set...">
+<!ENTITY meta.single.sets.added "This will be added to:">
+<!ENTITY meta.batch.sets.added "These will be added to:">
+<!ENTITY meta.sets.added.none "You haven't selected any sets">
 <!ENTITY meta.hidden "Sign in to edit privacy metadata">
 
-<!ENTITY dialog.bandwidth "Available bandwidth exceeded!">
+<!ENTITY dialog.bandwidth.title "Available bandwidth exceeded!">
 <!ENTITY dialog.bandwidth.text "You're out of bandwidth for this month.  You can either switch to a different Flickr account to keep uploading or upgrade to a Pro account to get unlimited uploads.  If you upgrade to a Pro account you'll have to restart Flickr Uploadr.">
-<!ENTITY dialog.bandwidth.switch "Switch users">
-<!ENTITY dialog.bandwidth.go_pro "Go Pro!">
+<!ENTITY dialog.bandwidth.ok "Go Pro!">
+<!ENTITY dialog.bandwidth.cancel "Switch users">
 
 <!ENTITY dialog.about "About Flickr Uploadr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Yahoo!, Inc.">
