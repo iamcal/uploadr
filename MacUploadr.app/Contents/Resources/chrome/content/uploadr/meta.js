@@ -32,16 +32,16 @@ var meta = {
 			var is_family = document.getElementById('batch_is_family');
 			is_family.checked = 1 == settings.is_family;
 			is_family.disabled = dis;
-			document.getElementById('batch_content_type').selectedIndex = settings.content_type - 1;
-			document.getElementById('batch_hidden').selectedIndex = settings.hidden - 1;
-			document.getElementById('batch_safety_level').selectedIndex = settings.safety_level - 1;
-			document.getElementById('batch_set').selectedIndex = 0;
+			document.getElementById('batch_content_type').value = settings.content_type;
+			document.getElementById('batch_hidden').checked = 2 == settings.hidden;
+			document.getElementById('batch_safety_level').value = settings.safety_level;
 
 			// Clear the old sets list
 			var ul = document.getElementById('batch_sets_list');
 			while (ul.hasChildNodes()) {
 				ul.removeChild(ul.firstChild);
 			}
+			document.getElementById('batch_set').selectedIndex = 0;
 
 		}
 
@@ -76,9 +76,9 @@ var meta = {
 			document.getElementById('single_is_public').value = p.is_public;
 			document.getElementById('single_is_friend').checked = 1 == p.is_friend;
 			document.getElementById('single_is_family').checked = 1 == p.is_family;
-			document.getElementById('single_content_type').selectedIndex = p.content_type - 1;
-			document.getElementById('single_hidden').selectedIndex = p.hidden - 1;
-			document.getElementById('single_safety_level').selectedIndex = p.safety_level - 1;
+			document.getElementById('single_content_type').value = p.content_type;
+			document.getElementById('single_hidden').checked = 2 == p.hidden;
+			document.getElementById('single_safety_level').value = p.safety_level;
 
 			// Sets list
 			var ul = document.getElementById('single_sets_list');
@@ -128,9 +128,9 @@ var meta = {
 				p.is_public = parseInt(document.getElementById('batch_is_public').value);
 				p.is_friend = document.getElementById('batch_is_friend').checked ? 1 : 0;
 				p.is_family = document.getElementById('batch_is_family').checked ? 1 : 0;
-				p.content_type = document.getElementById('batch_content_type').selectedIndex + 1;
-				p.hidden = document.getElementById('batch_hidden').selectedIndex + 1;
-				p.safety_level = document.getElementById('batch_safety_level').selectedIndex + 1;
+				p.content_type = parseInt(document.getElementById('batch_content_type').value);
+				p.hidden = document.getElementById('batch_hidden').checked ? 2 : 1;
+				p.safety_level = parseInt(document.getElementById('batch_safety_level').value);
 
 			}
 			meta.load();
@@ -145,9 +145,9 @@ var meta = {
 			p.is_public = parseInt(document.getElementById('single_is_public').value);
 			p.is_friend = document.getElementById('single_is_friend').checked ? 1 : 0;
 			p.is_family = document.getElementById('single_is_family').checked ? 1 : 0;
-			p.content_type = document.getElementById('single_content_type').selectedIndex + 1;
-			p.hidden = document.getElementById('single_hidden').selectedIndex + 1;
-			p.safety_level = document.getElementById('single_safety_level').selectedIndex + 1;
+			p.content_type = parseInt(document.getElementById('single_content_type').value);
+			p.hidden = document.getElementById('single_hidden').checked ? 2 : 1;
+			p.safety_level = parseInt(document.getElementById('single_safety_level').value);
 		}
 
 	},
@@ -378,7 +378,9 @@ var meta = {
 				} else if ('radiogroup' == node.nodeName) {
 					node = node.getElementsByTagName('radio');
 				} else if ('checkbox' == node.nodeName) {
-					if (1 == map[m]) {
+					var checked_value = -1 == node.id.indexOf('hidden') ? 1 : 2;
+					node.label = node.label.replace(def, '');
+					if (checked_value == map[m]) {
 						node.label += def;
 						loop = false;
 					}

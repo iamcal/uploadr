@@ -107,7 +107,7 @@ var settings = {
 		var result = {};
 		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
 			'chrome,modal', null != users.username, s, u,
-			locale.getFormattedString('settings.resize.note',
+			locale.getFormattedString('settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
 			[users.filesize >> 10]), result);
 
 		// If we're adding a new user, auth and re-open the dialog
@@ -155,40 +155,42 @@ var settings = {
 				settings.is_public != s.is_public ||
 				settings.is_friend != s.is_friend ||
 				settings.is_family != s.is_family;
-			var changed_melons =
-				settings.content_type != s.content_type ||
-				settings.hidden != s.hidden ||
-				settings.safety_level != s.safety_level;
+			var changed_content_type = settings.content_type != s.content_type;
+			var changed_hidden = settings.hidden != s.hidden;
+			var changed_safety_level = settings.safety_level != s.safety_level;
 
 			// Get permission to overwrite any changes that were made
-			if (0 < photos.count && (changed_privacy || changed_melons) &&
+			if (0 < photos.count && (changed_privacy || changed_content_type ||
+				changed_hidden || changed_safety_level) &&
 				!confirm(locale.getString('settings.overwrite'),
 					locale.getString('settings.overwrite.title'))) {
 				return;
 			}
 
 			// Save back to the settings object
+			var defaults = {};
 			if (changed_privacy) {
 				settings.is_public = s.is_public;
 				settings.is_friend = s.is_friend;
 				settings.is_family = s.is_family;
-				meta.defaults({
-					is_public: settings.is_public,
-					is_friend: settings.is_friend,
-					is_family: settings.is_family
-				});
+				defaults.is_public = settings.is_public;
+				defaults.is_friend = settings.is_friend;
+				defaults.is_family = settings.is_family;
 			}
-			if (changed_melons) {
+			if (changed_content_type) {
 				settings.content_type = s.content_type;
+				defaults.content_type = settings.content_type;
+			}
+			if (changed_hidden) {
 				settings.hidden = s.hidden;
+				defaults.hidden = settings.hidden;
+			}
+			if (changed_safety_level) {
 				settings.safety_level = s.safety_level;
-				meta.defaults({
-					content_type: settings.content_type,
-					hidden: settings.hidden,
-					safety_level: settings.safety_level
-				});
+				defaults.safety_level = settings.safety_level;
 			}
 			settings.resize = s.resize;
+			meta.defaults(defaults);
 
 			// Save metadata for a single photo
 			if (1 == photos.selected.length) {
@@ -198,7 +200,6 @@ var settings = {
 			// Update all photos
 			var ii = photos.list.length;
 			var privacy_keys = ['is_public', 'is_friend', 'is_family'];
-			var melons_keys = ['content_type', 'hidden', 'safety_level'];
 			for (var i = 0; i < ii; ++i) {
 				var photo = photos.list[i];
 				if (null != photo) {
@@ -207,10 +208,14 @@ var settings = {
 							photo[k] = settings[k];
 						}
 					}
-					for each (var k in melons_keys) {
-						if (changed_melons || null == photo[k]) {
-							photo[k] = settings[k];
-						}
+					if (changed_content_type || null == photo.content_type) {
+						photo.content_type = settings.content_type;
+					}
+					if (changed_hidden || null == photo.hidden) {
+						photo.hidden = settings.hidden;
+					}
+					if (changed_safety_level || null == photo.safety_level) {
+						photo.safety_level = settings.safety_level;
 					}
 				}
 			}

@@ -3,6 +3,11 @@ var mouse = {
 	// Event handler for clicking anywhere in the photos pane
 	click: function(e) {
 
+		// If there are no photos, there's nothing to do
+		if (0 == photos.count) {
+			return;
+		}
+
 		// Save old metadata
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
@@ -10,18 +15,16 @@ var mouse = {
 			meta.abandon();
 		}
 	
-		// If we clicked on an image that isn't an error
-		if (e.target.src && 'error' != e.target.className) {
+		// If we clicked on an image that isn't an error and isn't loading
+		if (e.target.src && 'error' != e.target.className && 'loading' != e.target.className) {
 			var img = e.target;
 	
-			// Figure out what photos should be in photos.selected
-
 			// Without modifier keys, start with nothing selected
 			if (!(e.shiftKey || e.ctrlKey || e.metaKey)) {
 				var imgs = document.getElementById('photos_list').getElementsByTagName('img');
 				var ii = imgs.length;
 				for (var i = 0; i < ii; ++i) {
-					if ('error' != imgs[i].className) {
+					if ('error' != imgs[i].className && 'loading' != imgs[i].className) {
 						imgs[i].className = '';
 					}
 				}
@@ -91,8 +94,8 @@ var mouse = {
 			photos.sort = true;
 		}
 		
-		// If we clicked on an error, do nothing
-		else if ('error' == e.target.className) {
+		// If we clicked on an error or a spinner, do nothing
+		else if ('error' == e.target.className && 'loading' == e.target.className) {
 		}
 
 		// If we clicked on whitespace, hide the thumbnail and metadata, and disable buttons
@@ -101,7 +104,7 @@ var mouse = {
 			var imgs = document.getElementsByTagName('img');
 			var ii = imgs.length;
 			for (var i = 0; i < ii; ++i) {
-				if ('error' != imgs[i].className) {
+				if ('error' != imgs[i].className && 'loading' != imgs[i].className) {
 					imgs[i].className = '';
 				}
 			}
@@ -165,6 +168,13 @@ var mouse = {
 
 	// Initiate a drag
 	mousedown: function(e) {
+
+		// If there are no photos, there's nothing to do
+		if (0 == photos.count) {
+			return;
+		}
+
+		// Get the mouse position
 		if (null == mouse.box) {
 			mouse.box = document.getElementById('photos').boxObject.QueryInterface(
 				Ci.nsIScrollBoxObject);
@@ -197,6 +207,13 @@ var mouse = {
 
 	// Keep dragging
 	mousemove: function(e) {
+
+		// If there are no photos, there's nothing to do
+		if (0 == photos.count) {
+			return;
+		}
+
+		// Get the mouse position
 		if (null == mouse.box) {
 			mouse.box = document.getElementById('photos').boxObject.QueryInterface(
 				Ci.nsIScrollBoxObject);
@@ -326,6 +343,13 @@ var mouse = {
 
 	// Finish a drag
 	mouseup: function(e) {
+
+		// If there are no photos, there's nothing to do
+		if (0 == photos.count) {
+			return;
+		}
+
+		// Clicks cancel the special behavior when first adding photos
 		meta.first = false;
 
 		// Prevent conflicts with select-all behavior
@@ -405,7 +429,10 @@ var mouse = {
 			for (var i = p.length; i >= 0; --i) {
 				if (null != p[i]) {
 					var img = document.getElementById('photo' + i).getElementsByTagName('img')[0];
-					if (-1 == img.className.indexOf('error')) {
+
+					// Don't select things that are errors or are loading
+					if (-1 == img.className.indexOf('error') &&
+						-1 == img.className.indexOf('loading')) {
 						if ('selecting' == img.className) {
 							img.className = 'selected';
 							photos.selected.push(i);

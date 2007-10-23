@@ -29,6 +29,10 @@ var photos = {
 		// Disable stuff while thumbing (possible race condition for removing?)
 		buttons.upload.disable();
 
+		document.getElementById('photos_stack').style.visibility = 'visible';
+		document.getElementById('photos_init').style.display = 'none';
+		document.getElementById('photos_new').style.display = 'none';
+
 		var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
@@ -127,6 +131,7 @@ var photos = {
 		}
 		free.update();
 		photos.normalize();
+		meta.disable();
 
 		// Clear the selection
 		photos.selected = [];
@@ -185,6 +190,9 @@ var photos = {
 		buttons.upload.disable();
 		document.getElementById('photos_sort_default').style.display = 'block';
 		document.getElementById('photos_sort_revert').style.display = 'none';
+		document.getElementById('photos_stack').style.visibility = 'hidden';
+		document.getElementById('photos_init').style.display = 'none';
+		document.getElementById('photos_new').style.display = '-moz-box';
 
 		// If any photos need resizing to fit in the per-photo size limits, dispatch the
 		// jobs and wait
@@ -302,6 +310,11 @@ var photos = {
 		// Add the previous batch of photos
 		var list = obj.list;
 		var ii = list.length;
+		if (0 != ii) {
+			document.getElementById('photos_stack').style.visibility = 'visible';
+			document.getElementById('photos_init').style.display = 'none';
+			document.getElementById('photos_new').style.display = 'none';
+		}
 		for (var i  = 0; i < ii; ++i) {
 			photos._add(list[i].path);
 			photos.list[photos.list.length - 1] = list[i];

@@ -10,6 +10,9 @@ var drag = {
 			return;
 		}
 		buttons.upload.disable();
+		document.getElementById('photos_stack').style.visibility = 'visible';
+		document.getElementById('photos_init').style.display = 'none';
+		document.getElementById('photos_new').style.display = 'none';
 		for (var i = 0; i < ii; ++i) {
 			if ('-url' == cl.getArgument(i)) {
 				photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
@@ -43,6 +46,9 @@ var drag = {
 
 			// Add the files
 			buttons.upload.disable();
+			document.getElementById('photos_stack').style.visibility = 'visible';
+			document.getElementById('photos_init').style.display = 'none';
+			document.getElementById('photos_new').style.display = 'none';
 			data.dataList.forEach(function(d) {
 				if (d.first.data.isDirectory()) {
 					var files = d.first.data.directoryEntries;
@@ -60,11 +66,6 @@ var drag = {
 				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
 			} else {
 				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-			}
-
-			// Enable the upload button?
-			if (0 == photos.count) {
-				buttons.upload.disable();
 			}
 
 		},

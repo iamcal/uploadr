@@ -263,6 +263,10 @@ var upload = {
 				}
 			}
 			var ii = f.length;
+			if (0 != ii) {
+				document.getElementById('photos_init').style.display = 'none';
+				document.getElementById('photos_new').style.display = 'none';
+			}
 			for (var i  = 0; i < ii; ++i) {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
@@ -328,6 +332,10 @@ var upload = {
 			locale.getString('progress.failed.title'))) {
 			var f = photos.failed;
 			var ii = f.length;
+			if (0 != ii) {
+				document.getElementById('photos_init').style.display = 'none';
+				document.getElementById('photos_new').style.display = 'none';
+			}
 			for (var i  = 0; i < ii; ++i) {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
@@ -337,8 +345,14 @@ var upload = {
 
 		// If this was a cancellation, add photos we didn't get to back to the batch
 		if (upload.cancel) {
+			var need_to_hide = true;
 			for each (var p in photos.uploading) {
 				if (null != p) {
+					if (need_to_hide) {
+						document.getElementById('photos_init').style.display = 'none';
+						document.getElementById('photos_new').style.display = 'none';
+						need_to_hide = false;
+					}
 					photos._add(p.path);
 					photos.list[photos.list.length - 1] = p;
 				}

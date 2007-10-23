@@ -70,13 +70,16 @@ ThumbCallback.prototype = {
 				photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/, '');
 				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
 
-				// Select newly added images
-				mouse.click({
-					target: img,
-					ctrlKey: true,
-					metaKey: true,
-					shiftKey: false
-				});
+				// Select newly added images if the user hasn't clicked
+				//   This isn't exactly right - it only works the first time they open photos
+				if (meta.first) {
+					mouse.click({
+						target: img,
+						ctrlKey: true,
+						metaKey: true,
+						shiftKey: false
+					});
+				}
 
 				// If only one photo is selected, refresh the other thumbnail, too
 				if (1 == photos.selected.length && !meta.first) {

@@ -291,6 +291,25 @@ toolbarseparator {
 	overflow: auto;
 }
 
+/* Messages in the photos container */
+#photos_stack {
+	visibility: hidden;
+}
+#photos_new {
+	display: none;
+}
+#photos_init h1, #photos_new h1, #photos_init h2, #photos_new h2 {
+	color: #bbb;
+	text-align: center;
+	font-weight: normal;
+}
+#photos_init h1, #photos_new h1 {
+	margin: 150px 10px 0 10px;
+}
+#photos_init h2, #photos_new h2 {
+	margin: 10px;
+}
+
 /* Dragging photos into the container */
 .no_drag {
 	background: white;

@@ -14,12 +14,12 @@ var settings = {
 				document.getElementById('is_friend').checked = 1 == s.is_friend;
 				document.getElementById('is_family').checked = 1 == s.is_family;
 				settings.is_public();
-				document.getElementById('content_type').selectedIndex = s.content_type - 1;
-				document.getElementById('hidden').selectedIndex = s.hidden - 1;
-				document.getElementById('safety_level').selectedIndex = s.safety_level - 1;
+				document.getElementById('content_type').value = s.content_type;
+				document.getElementById('hidden').checked = 2 == s.hidden;
+				document.getElementById('safety_level').value = s.safety_level;
 				document.getElementById('resize').value = s.resize;
 			}
-			document.getElementById('resize_note').firstChild.nodeValue = window.arguments[3];
+			document.getElementById('resize_prompt').firstChild.nodeValue = window.arguments[3];
 
 			// Users
 			var u = window.arguments[2];
@@ -59,9 +59,9 @@ var settings = {
 		s.is_public = parseInt(document.getElementById('is_public').value);
 		s.is_friend = document.getElementById('is_friend').checked ? 1 : 0;
 		s.is_family = document.getElementById('is_family').checked ? 1 : 0;
-		s.content_type = document.getElementById('content_type').selectedIndex + 1;
-		s.hidden = document.getElementById('hidden').selectedIndex + 1;
-		s.safety_level = document.getElementById('safety_level').selectedIndex + 1;
+		s.content_type = document.getElementById('content_type').value;
+		s.hidden = document.getElementById('hidden').checked ? 2 : 1;
+		s.safety_level = document.getElementById('safety_level').value;
 		s.resize = parseInt(document.getElementById('resize').value);
 
 		// Users

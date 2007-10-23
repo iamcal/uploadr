@@ -19,15 +19,35 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 	<vbox flex="1" id="loggedin">
 		<groupbox flex="1">
 			<caption label="&settings.users;" />
-			<menulist id="user">
-				<menupopup />
-			</menulist>
+			<hbox>
+				<vbox>
+					<spacer flex="1" />
+					<label value="&settings.users.user;" />
+					<spacer flex="1" />
+				</vbox>
+				<menulist id="user" flex="1">
+					<menupopup />
+				</menulist>
+			</hbox>
 			<hbox>
 				<button label="&settings.users.remove;"
 				oncommand="settings.remove_user();" />
 				<button label="&settings.users.add;"
 				oncommand="settings.add_user();" />
 			</hbox>
+		</groupbox>
+		<groupbox flex="1">
+			<caption label="&settings.resize;" />
+			<html:p id="resize_prompt"> </html:p>
+			<menulist id="resize">
+				<menupopup>
+					<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
+					<menuitem value="800" label="&settings.resize.800;" />
+					<menuitem value="1280" label="&settings.resize.1280;" />
+					<menuitem value="1600" label="&settings.resize.1600;" />
+					<menuitem value="2048" label="&settings.resize.2048;" />
+				</menupopup>
+			</menulist>
 		</groupbox>
 		<hbox flex="1">
 			<groupbox flex="1">
@@ -42,49 +62,23 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						disabled="true" />
 					<radio value="1" label="&settings.privacy.public;" />
 				</radiogroup>
+				<checkbox id="hidden" label="&settings.hidden;" />
 			</groupbox>
 			<groupbox flex="1">
-				<caption label="&settings.melons;" />
-				<label control="content_type" value="&settings.content_type;" />
-				<menulist id="content_type">
-					<menupopup>
-						<menuitem value="1" label="&settings.content_type.photo;"
-						selected="true" />
-						<menuitem value="2" label="&settings.content_type.screenshot;" />
-						<menuitem value="3" label="&settings.content_type.other;" />
-					</menupopup>
-				</menulist>
-				<label control="safety_level" value="&settings.safety_level;" />
-				<menulist id="safety_level">
-					<menupopup>
-						<menuitem value="1" label="&settings.safety_level.safe;"
-						selected="true" />
-						<menuitem value="2" label="&settings.safety_level.moderate;" />
-						<menuitem value="3" label="&settings.safety_level.restricted;" />
-					</menupopup>
-				</menulist>
-				<label control="hidden" value="&settings.hidden;" />
-				<menulist id="hidden">
-					<menupopup>
-						<menuitem value="1" label="&settings.hidden.no;"
-						selected="true" />
-						<menuitem value="2" label="&settings.hidden.yes;" />
-					</menupopup>
-				</menulist>
+				<caption label="&settings.safety_level;" />
+				<radiogroup id="safety_level" value="1">
+					<radio value="1" label="&settings.safety_level.safe;" />
+					<radio value="2" label="&settings.safety_level.moderate;" />
+					<radio value="3" label="&settings.safety_level.restricted;" />
+				</radiogroup>
 			</groupbox>
 			<groupbox flex="1">
-				<caption label="&settings.resize;" />
-				<html:p>&settings.resize.prompt;</html:p>
-				<menulist id="resize">
-					<menupopup>
-						<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
-						<menuitem value="800" label="&settings.resize.800;" />
-						<menuitem value="1280" label="&settings.resize.1280;" />
-						<menuitem value="1600" label="&settings.resize.1600;" />
-						<menuitem value="2048" label="&settings.resize.2048;" />
-					</menupopup>
-				</menulist>
-				<html:p id="resize_note"> </html:p>
+				<caption label="&settings.content_type;" />
+				<radiogroup id="content_type" value="1">
+					<radio value="1" label="&settings.content_type.photo;" />
+					<radio value="2" label="&settings.content_type.screenshot;" />
+					<radio value="3" label="&settings.content_type.other;" />
+				</radiogroup>
 			</groupbox>
 		</hbox>
 	</vbox>

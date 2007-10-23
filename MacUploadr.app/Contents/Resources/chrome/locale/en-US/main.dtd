@@ -15,7 +15,7 @@
 <!ENTITY menu.help.faq "FAQ">
 <!ENTITY menu.help.console "Console">
 
-<!ENTITY notloggedin "Not signed in">
+<!ENTITY notloggedin "You aren't signed in">
 <!ENTITY login "Sign in">
 
 <!ENTITY auth.confirm "Come back here after authorizing Flickr Uploadr on the website.  Ready?">
@@ -36,38 +36,40 @@
 
 <!ENTITY photos.sort.default "Photos are sorted by date taken.  You can click-and-drag to reorder.">
 <!ENTITY photos.sort.revert "Re-sort photos by date taken">
+<!ENTITY photos.init "Drag photos here to get started.">
+<!ENTITY photos.init.text "Or, click +ADD to find photos on your computer.">
+<!ENTITY photos.new "You can add more photos while your other are uploading.">
+<!ENTITY photos.new.text "Or, go to Flickr.">
 
 <!ENTITY settings "Settings">
 <!ENTITY settings.notloggedin "You need to sign in to adjust your preferences">
-<!ENTITY settings.users "Users">
-<!ENTITY settings.users.user "Login as:">
+<!ENTITY settings.users "Authorization">
+<!ENTITY settings.users.user "Sign in as:">
 <!ENTITY settings.users.remove "Remove selected user">
 <!ENTITY settings.users.add "Add new user">
-<!ENTITY settings.privacy "Privacy">
+<!ENTITY settings.privacy "Default privacy">
 <!ENTITY settings.privacy.who "Who can see this photo?">
 <!ENTITY settings.privacy.private "Only you">
 <!ENTITY settings.privacy.friend "Your friends">
 <!ENTITY settings.privacy.family "Your family">
 <!ENTITY settings.privacy.public "Anyone">
-<!ENTITY settings.melons "Melons settings">
-<!ENTITY settings.content_type "Content type:">
+<!ENTITY settings.content_type "Default content type:">
 <!ENTITY settings.content_type.photo "Photo">
 <!ENTITY settings.content_type.screenshot "Screenshot">
 <!ENTITY settings.content_type.other "Other">
-<!ENTITY settings.safety_level "Safety Level:">
+<!ENTITY settings.safety_level "Default safety level:">
 <!ENTITY settings.safety_level.safe "Safe">
 <!ENTITY settings.safety_level.moderate "Moderate">
 <!ENTITY settings.safety_level.restricted "Restricted">
-<!ENTITY settings.hidden "Hide from search:">
-<!ENTITY settings.hidden.no "No">
-<!ENTITY settings.hidden.yes "Yes">
-<!ENTITY settings.resize "Resizing">
-<!ENTITY settings.resize.prompt "Flickr Uploadr can automatically resize large photos for faster uploading.">
+<!ENTITY settings.hidden "Hide from public site areas">
+<!ENTITY settings.resize "Automatic resizing">
 <!ENTITY settings.resize.dont "Don't resize my photos">
 <!ENTITY settings.resize.800 "800 pixels (suitable for on-screen viewing)">
 <!ENTITY settings.resize.1280 "1280 pixels (suitable for small prints)">
 <!ENTITY settings.resize.1600 "1600 pixels (suitable for larger prints)">
 <!ENTITY settings.resize.2048 "2048 pixels (best for archiving)">
+<!ENTITY settings.note "Note:">
+<!ENTITY settings.note.text "Your Privacy, Safety and Content-Type settings in Uploadr are separate from your flickr.com settings.">
 
 <!ENTITY meta.title "Title:">
 <!ENTITY meta.description "Description:">

@@ -32,7 +32,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			ondragover="nsDragAndDrop.dragOver(event, drag.observer); event.stopPropagation();"
 			ondragexit="nsDragAndDrop.dragExit(event, drag.observer); event.stopPropagation();"
 			ondragdrop="nsDragAndDrop.drop(event, drag.observer); event.stopPropagation();">
-				<stack>
+				<stack id="photos_stack">
 					<html:div>
 						<html:p id="photos_sort_default">&photos.sort.default;</html:p>
 						<html:p id="photos_sort_revert" class="link">&photos.sort.revert;</html:p>
@@ -41,6 +41,14 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<html:div id="drag_select" />
 					<html:p id="drag_follower"> </html:p>
 				</stack>
+				<vbox id="photos_init">
+					<html:h1>&photos.init;</html:h1>
+					<html:h2>&photos.init.text;</html:h2>
+				</vbox>
+				<vbox id="photos_new">
+					<html:h1>&photos.new;</html:h1>
+					<html:h2>&photos.new.text;</html:h2>
+				</vbox>
 			</scrollbox>
 			<vbox>
 				<vbox id="meta" flex="1">
@@ -104,21 +112,12 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 										label="&settings.privacy.family;" tabindex="8" />
 									<radio value="1" label="&settings.privacy.public;" />
 								</radiogroup>
+								<checkbox id="single_hidden" label="&settings.hidden;"
+								tabindex="9" />
 								<html:p> </html:p>
-								<label control="single_content_type"
-								value="&settings.content_type;" />
-								<menulist id="single_content_type" tabindex="9">
-									<menupopup>
-										<menuitem value="1" label="&settings.content_type.photo;"
-										selected="true" />
-										<menuitem value="2"
-										label="&settings.content_type.screenshot;" />
-										<menuitem value="3" label="&settings.content_type.other;" />
-									</menupopup>
-								</menulist>
 								<label control="single_safety_level"
 								value="&settings.safety_level;" />
-								<menulist id="single_safety_level" tabindex="11">
+								<menulist id="single_safety_level" tabindex="10">
 									<menupopup>
 										<menuitem value="1" label="&settings.safety_level.safe;"
 										selected="true" />
@@ -128,12 +127,15 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 										label="&settings.safety_level.restricted;" />
 									</menupopup>
 								</menulist>
-								<label control="single_hidden" value="&settings.hidden;" />
-								<menulist id="single_hidden" tabindex="10">
+								<label control="single_content_type"
+								value="&settings.content_type;" />
+								<menulist id="single_content_type" tabindex="11">
 									<menupopup>
-										<menuitem value="1" label="&settings.hidden.no;"
+										<menuitem value="1" label="&settings.content_type.photo;"
 										selected="true" />
-										<menuitem value="2" label="&settings.hidden.yes;" />
+										<menuitem value="2"
+										label="&settings.content_type.screenshot;" />
+										<menuitem value="3" label="&settings.content_type.other;" />
 									</menupopup>
 								</menulist>
 							</vbox>
@@ -192,19 +194,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 										label="&settings.privacy.family;" tabindex="8" />
 									<radio value="1" label="&settings.privacy.public;" />
 								</radiogroup>
+								<checkbox id="batch_hidden" label="&settings.hidden;"
+								tabindex="9" />
 								<html:p> </html:p>
-								<label control="batch_content_type" value="&settings.content_type;" />
-								<menulist id="batch_content_type" tabindex="9">
-									<menupopup>
-										<menuitem value="1" label="&settings.content_type.photo;"
-										selected="true" />
-										<menuitem value="2"
-										label="&settings.content_type.screenshot;" />
-										<menuitem value="3" label="&settings.content_type.other;" />
-									</menupopup>
-								</menulist>
 								<label control="batch_safety_level" value="&settings.safety_level;" />
-								<menulist id="batch_safety_level" tabindex="11">
+								<menulist id="batch_safety_level" tabindex="10">
 									<menupopup>
 										<menuitem value="1" label="&settings.safety_level.safe;"
 										selected="true" />
@@ -214,12 +208,14 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 										label="&settings.safety_level.restricted;" />
 									</menupopup>
 								</menulist>
-								<label control="batch_hidden" value="&settings.hidden;" />
-								<menulist id="batch_hidden" tabindex="10">
+								<label control="batch_content_type" value="&settings.content_type;" />
+								<menulist id="batch_content_type" tabindex="11">
 									<menupopup>
-										<menuitem value="1" label="&settings.hidden.no;"
+										<menuitem value="1" label="&settings.content_type.photo;"
 										selected="true" />
-										<menuitem value="2" label="&settings.hidden.yes;" />
+										<menuitem value="2"
+										label="&settings.content_type.screenshot;" />
+										<menuitem value="3" label="&settings.content_type.other;" />
 									</menupopup>
 								</menulist>
 							</vbox>
