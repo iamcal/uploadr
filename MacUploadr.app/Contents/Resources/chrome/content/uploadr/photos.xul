@@ -6,22 +6,6 @@
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml">
 	<vbox id="page_photos" flex="1">
-		<hbox id="tools" minheight="34" maxheight="34">
-			<toolbox>
-				<toolbar>
-					<html:div id="t_add" class="button" onclick="photos.add();"
-					><html:div>&tools.add;</html:div></html:div>
-					<html:div id="t_remove" class="disabled_button" onclick="photos.remove();"
-					><html:div>&tools.remove;</html:div></html:div>
-					<toolbarseparator />
-					<toolbarbutton id="t_rotate_l" class="disabled"
-					oncommand="photos.rotate(-90);" />
-					<toolbarbutton id="t_rotate_r" class="disabled"
-					oncommand="photos.rotate(90);" />
-				</toolbar>
-			</toolbox>
-			<box><html:p id="free"> </html:p></box>
-		</hbox>
 		<hbox flex="1">
 			<scrollbox id="photos" class="no_drag" flex="1" orient="vertical"
 			onclick="mouse.click(event);"
@@ -32,18 +16,29 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			ondragover="nsDragAndDrop.dragOver(event, drag.observer); event.stopPropagation();"
 			ondragexit="nsDragAndDrop.dragExit(event, drag.observer); event.stopPropagation();"
 			ondragdrop="nsDragAndDrop.drop(event, drag.observer); event.stopPropagation();">
-				<html:table id="photostream">
+				<html:table id="photostream" width="100%">
 					<html:tr>
 						<html:td><html:img src="http://flickr.com/images/buddyicon.jpg"
 						id="buddyicon" width="48" height="48" /></html:td>
-						<html:td>
-							<html:h1>&photostream.title;</html:h1>
-							<html:p id="photos_sort_default">&photos.sort.default;</html:p>
-							<html:p id="photos_sort_revert"
-							class="link">&photos.sort.revert;</html:p>
+						<html:td nowrap="nowrap">
+							<html:h1>&photostream.title; <html:img id="photostream_pro"
+							src="chrome://uploadr/skin/badge_pro.gif" width="20" height="12"
+							/></html:h1>
+							<label id="username" value="&notloggedin;" />
+						</html:td>
+						<html:td id="photostream_tools" width="100%">
+							<box>
+								<html:div id="switch" class="small button"
+								onclick="buttons.login.click();"
+								><html:div>&login;</html:div></html:div>
+							</box>
 						</html:td>
 					</html:tr>
 				</html:table>
+				<html:div>
+					<html:p id="photos_sort_default">&photos.sort.default;</html:p>
+					<html:p id="photos_sort_revert" class="link">&photos.sort.revert;</html:p>
+				</html:div>
 				<stack id="photos_stack">
 					<html:ul id="photos_list"></html:ul>
 					<html:div id="drag_select" />
@@ -88,7 +83,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
 							<label control="single_tags" value="&meta.tags;" />
-							<textbox id="single_tags" tabindex="3"
+							<textbox id="single_tags" multiline="true" rows="2" tabindex="3"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
 						</vbox>
@@ -163,7 +158,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
 							<label control="batch_tags" value="&meta.tags;" />
-							<textbox id="batch_tags" tabindex="3"
+							<textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
 						</vbox>

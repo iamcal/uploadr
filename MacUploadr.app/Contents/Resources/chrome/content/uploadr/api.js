@@ -546,7 +546,7 @@ var flickr = {
 	// Like the auth section, this is used by users.login() and won't need to be called
 	people: {
 
-		// Used exclusively for buddy icons right now
+		// Sets up the photostream header
 		getInfo: function(user_id) {
 			_api({
 				'method': 'flickr.people.getInfo',
@@ -559,11 +559,17 @@ var flickr = {
 				var p = rsp.getElementsByTagName('person')[0];
 				var s = p.getAttribute('iconserver');
 				if (0 != parseInt(s)) {
-Components.utils.reportError('http://farm' + p.getAttribute('iconfarm') + '.static.flickr.com/' +
-s + '/buddyicons/' + id + '.jpg');
 					document.getElementById('buddyicon').src =
 						'http://farm' + p.getAttribute('iconfarm') + '.static.flickr.com/' +
 						s + '/buddyicons/' + id + '.jpg';
+				} else {
+					document.getElementById('buddyicon').src =
+						'http://flickr.com/images/buddyicon.jpg';
+				}
+				if (1 == parseInt(p.getAttribute('ispro'))) {
+					document.getElementById('photostream_pro').style.visibility = 'visible';
+				} else {
+					document.getElementById('photostream_pro').style.visibility = 'hidden';
 				}
 			}
 		},

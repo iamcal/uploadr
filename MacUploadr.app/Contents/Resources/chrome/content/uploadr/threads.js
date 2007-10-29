@@ -13,10 +13,15 @@ var threads = {
 window._threads = threads;
 
 // Thumbnail thread wrapper
-var Thumb = function(id, thumbSize, path) {
+var Thumb = function(id, thumbSize, path, auto_select) {
 	this.id = id;
 	this.thumbSize = thumbSize;
 	this.path = path;
+	if (null == auto_select) {
+		this.auto_select = false;
+	} else {
+		this.auto_select = auto_select;
+	}
 };
 Thumb.prototype = {
 	run: function() {
@@ -24,7 +29,7 @@ Thumb.prototype = {
 
 			// Create a thumbnail and pass the result back to the UI thread
 			var result = threads.gm.thumb(this.thumbSize, this.path);
-			threads.main.dispatch(new ThumbCallback(this.id, result),
+			threads.main.dispatch(new ThumbCallback(this.id, result, this.auto_select),
 				threads.main.DISPATCH_NORMAL);
 
 		} catch (err) {
@@ -38,9 +43,10 @@ Thumb.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
-var ThumbCallback = function(id, result) {
+var ThumbCallback = function(id, result, auto_select) {
 	this.id = id;
 	this.result = result;
+	this.auto_select = auto_select;
 };
 ThumbCallback.prototype = {
 	run: function() {
@@ -61,7 +67,6 @@ ThumbCallback.prototype = {
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
 				photos.list[this.id].date_taken = thumb[3];
-//Components.utils.reportError(photos.list[this.id].date_taken);
 				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
@@ -73,7 +78,7 @@ ThumbCallback.prototype = {
 				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
 
 				// Select newly added images if the user hasn't clicked
-				if (meta.auto_select) {
+				if (meta.auto_select || this.auto_select) {
 					mouse.click({
 						target: img,
 						ctrlKey: true,
@@ -145,7 +150,7 @@ Rotate.prototype = {
 				threads.main.dispatch(new RotateCallback(this.id, rotate[1]),
 					threads.main.DISPATCH_NORMAL);
 				result = threads.gm.thumb(this.thumbSize, rotate[1]);
-				threads.main.dispatch(new ThumbCallback(this.id, result),
+				threads.main.dispatch(new ThumbCallback(this.id, result, true),
 					threads.main.DISPATCH_NORMAL);
 			}
 
@@ -167,7 +172,6 @@ var RotateCallback = function(id, path) {
 RotateCallback.prototype = {
 	run: function() {
 		photos.list[this.id].path = this.path;
-Components.utils.reportError(photos.selected.toSource());
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

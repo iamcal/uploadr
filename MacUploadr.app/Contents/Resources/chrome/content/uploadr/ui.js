@@ -21,6 +21,13 @@ var pages = {
 			document.getElementById('page_' + pages._list[i]).style.display = display;
 		}
 
+		// Only the photos page has the toolbar
+		if ('photos' == id) {
+			document.getElementById('tools').style.display = '-moz-box';
+		} else {
+			document.getElementById('tools').style.display = 'none';
+		}
+
 	},
 
 	// Return the current page name

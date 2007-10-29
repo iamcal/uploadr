@@ -95,7 +95,7 @@ var mouse = {
 		}
 		
 		// If we clicked on an error or a spinner, do nothing
-		else if ('error' == e.target.className && 'loading' == e.target.className) {
+		else if ('error' == e.target.className || 'loading' == e.target.className) {
 		}
 
 		// If we clicked on whitespace, hide the thumbnail and metadata, and disable buttons
@@ -142,8 +142,8 @@ var mouse = {
 
 	// Update the bounding box used during drag-selection
 	drag_select: function(e, pos) {
-		const OFFSET_X = -mouse.box.x - 5;
-		const OFFSET_Y = -mouse.box.y - 73;
+		const OFFSET_X = -mouse.box.x - grid.base.x;
+		const OFFSET_Y = -mouse.box.y - grid.base.y;
 		var ds = document.getElementById('drag_select');
 
 		// Invert positions if necessary
@@ -192,8 +192,8 @@ var mouse = {
 		// Clicking whitespace will start the drag-select
 		else if ('photos_sort_revert' != e.target.id) {
 			mouse.anchor = {
-				x: e.clientX + pos.x.value - mouse.box.x - 5,
-				y: e.clientY + pos.y.value - mouse.box.y - 73
+				x: e.clientX + pos.x.value - mouse.box.x - grid.base.x,
+				y: e.clientY + pos.y.value - mouse.box.y - grid.base.y
 			};
 			var ds = document.getElementById('drag_select');
 			ds.style.left = mouse.anchor.x + 'px';
@@ -218,8 +218,8 @@ var mouse = {
 			mouse.box = document.getElementById('photos').boxObject.QueryInterface(
 				Ci.nsIScrollBoxObject);
 		}
-		const OFFSET_X = -mouse.box.x - 5;
-		const OFFSET_Y = -mouse.box.y - 73;
+		const OFFSET_X = -mouse.box.x - grid.base.x;
+		const OFFSET_Y = -mouse.box.y - grid.base.y;
 		var pos = {x: {}, y: {}};
 		mouse.box.getPosition(pos.x, pos.y);
 

@@ -1,5 +1,11 @@
 var grid = {
 
+	// Base locations for grid calculations (pixels)
+	base: {
+		x: 5,
+		y: 78
+	},
+
 	// How many photos are in each full row?
 	width: function() {
 		var p = photos.list;
@@ -20,8 +26,8 @@ var grid = {
 
 	// Get photos in a bounding box
 	bounding_box: function(x1, y1, x2, y2) {
-		const OFFSET_X = -mouse.box.x - 5;
-		const OFFSET_Y = -mouse.box.y - 73;
+		const OFFSET_X = -mouse.box.x - grid.base.x;
+		const OFFSET_Y = -mouse.box.y - grid.base.y;
 		var pos = {x: {}, y: {}};
 		mouse.box.getPosition(pos.x, pos.y);
 

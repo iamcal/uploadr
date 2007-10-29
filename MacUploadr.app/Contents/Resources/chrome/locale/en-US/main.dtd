@@ -34,7 +34,7 @@
 
 <!ENTITY photostream.title "Your photos">
 
-<!ENTITY photos.sort.default "Photos are sorted by date taken.  You can click-and-drag to reorder.">
+<!ENTITY photos.sort.default "Your photos are currently ordered by date taken.  Drag and drop to reorder.">
 <!ENTITY photos.sort.revert "Re-sort photos by date taken">
 <!ENTITY photos.init "Drag photos here to get started.">
 <!ENTITY photos.init.text.1 "Or, click ">
@@ -87,3 +87,11 @@
 <!ENTITY dialog.about "About Flickr Uploadr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Yahoo!, Inc.">
 <!ENTITY dialog.about.copyright.open_source "XULRunner MPL, GraphicsMagick GPL, Exiv2 copyright © Andreas Huggel">
+
+<!ENTITY help "Tips and Tricks">
+<!ENTITY help.offline "You can {work offline}.">
+<!ENTITY help.offline.text.first "The Uploadr is designed to let you do the majority of your photo organization and tagging offline.  Once you're ready to upload to Flickr, sign in to your account, and press the enormous Upload Photos button.">
+<!ENTITY help.offline.text.second "You can be signed in all the time, if you like.  When you're signed in, you can organize your photos into sets.">
+<!ENTITY help.drag "{Drag and drop} is your friend.">
+<!ENTITY help.drag.text "The left-hand side of the Uploadr screen acts like your photostream page.  You can drag photos into the order that you'd like them to appear on your photos page when they're uploaded.  If you need to, you can also reset any arrangement you make so the photos go back to being ordered by the date they were taken.">
+<!ENTITY help.faq "If you have more questions, please visit our {Uploadr FAQ}">

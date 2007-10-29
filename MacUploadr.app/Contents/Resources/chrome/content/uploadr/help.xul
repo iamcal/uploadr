@@ -6,9 +6,34 @@
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml">
 	<vbox id="page_help" flex="1">
-		<html:h1>help</html:h1>
-		<hbox><spacer flex="1" /><html:div id="button_ok" class="button"
-		onclick="pages.go('photos');"
-		><html:div>&buttons.ok;</html:div></html:div></hbox>
+		<html:h1>&help;</html:h1>
+		<html:table>
+			<html:tr>
+				<html:td class="spacer"> </html:td>
+				<html:td class="column">
+					<html:h2 id="help_offline">&help.offline;</html:h2>
+					<html:p>&help.offline.text.first;</html:p>
+					<html:p>&help.offline.text.second;</html:p>
+				</html:td>
+				<html:td class="spacer"> </html:td>
+				<html:td class="column">
+					<html:h2 id="help_drag">&help.drag;</html:h2>
+					<html:p>&help.drag.text;</html:p>
+				</html:td>
+				<html:td class="spacer"> </html:td>
+			</html:tr>
+			<html:tr>
+				<html:td colspan="5" style="text-align: center;">
+					<html:div id="button_ok" class="button" onclick="pages.go('photos');"
+					style="margin: 0 auto;"
+					><html:div>&buttons.ok;</html:div></html:div>
+				</html:td>
+			</html:tr>
+			<html:tr>
+				<html:td colspan="5" style="text-align: center;">
+					<html:p id="help_faq">&help.faq;</html:p>
+				</html:td>
+			</html:tr>
+		</html:table>
 	</vbox>
 </overlay>

@@ -159,16 +159,6 @@ var settings = {
 			var changed_hidden = settings.hidden != s.hidden;
 			var changed_safety_level = settings.safety_level != s.safety_level;
 
-			// Get permission to overwrite any changes that were made
-			if (0 < photos.count && (changed_privacy || changed_content_type ||
-				changed_hidden || changed_safety_level) &&
-				!confirm(locale.getFormattedString('settings.overwrite.text', [photos.count]),
-					locale.getString('settings.overwrite.title'),
-					locale.getString('settings.overwrite.ok'),
-					locale.getString('settings.overwrite.cancel'))) {
-				return;
-			}
-
 			// Save back to the settings object
 			var defaults = {};
 			if (changed_privacy) {
@@ -193,6 +183,16 @@ var settings = {
 			}
 			settings.resize = s.resize;
 			meta.defaults(defaults);
+
+			// Get permission to overwrite any changes that were made
+			if (0 < photos.count && (changed_privacy || changed_content_type ||
+				changed_hidden || changed_safety_level) &&
+				!confirm(locale.getFormattedString('settings.overwrite.text', [photos.count]),
+					locale.getString('settings.overwrite.title'),
+					locale.getString('settings.overwrite.ok'),
+					locale.getString('settings.overwrite.cancel'))) {
+				return;
+			}
 
 			// Save metadata for a single photo
 			if (1 == photos.selected.length) {

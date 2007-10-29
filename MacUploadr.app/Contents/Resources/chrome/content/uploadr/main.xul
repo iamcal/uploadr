@@ -37,6 +37,8 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<key id="key_add" modifiers="accel" key="o" oncommand="photos.add();" />
 		<key id="key_upload" modifiers="shift accel" key="u" oncommand="photos.upload();" />
 		<key id="key_prefs" modifiers="accel" key="," oncommand="settings.show();" />
+		<key id="key_help" modifiers="accel" key="/" oncommand="help.tips();" />
+		<key id="key_help_fake" modifiers="accel" key="?" oncommand="help.tips();" />
 		<key id="key_quit" modifiers="accel" key="q" oncommand="exit();" />
 		<key id="key_back" keycode="VK_BACK" oncommand="photos.remove();" />
 		<key id="key_delete" keycode="VK_DELETE" oncommand="photos.remove();" />
@@ -96,7 +98,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 				<menupopup>
 					<menuitem id="aboutName" label="&menu.help.about;"
 					oncommand="help.about();" />
-					<menuitem id="menu_help_tips" label="&menu.help.tips;"
+					<menuitem id="menu_help_tips" label="&menu.help.tips;" key="key_help_fake"
 					oncommand="help.tips();" />
 					<menuitem id="menu_faq" label="&menu.help.faq;"
 					oncommand="help.faq();" />
@@ -112,13 +114,20 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 
 		<!-- Header -->
 		<hbox id="head">
-			<box id="logo" />
-			<box flex="1" />
-			<hbox>
-				<vbox><label id="username" value="&notloggedin;" /></vbox>
-				<vbox><html:div id="switch" class="small button" onclick="buttons.login.click();"
-				><html:div>&login;</html:div></html:div></vbox>
+			<hbox id="tools">
+				<html:div id="t_add" class="button" onclick="photos.add();"
+				><html:div>&tools.add;</html:div></html:div>
+				<html:div id="t_remove" class="disabled_button" onclick="photos.remove();"
+				><html:div>&tools.remove;</html:div></html:div>
+				<html:div class="toolbarseparator" />
+				<html:div id="t_rotate_l" class="disabled"
+				onclick="photos.rotate(-90);" />
+				<html:div id="t_rotate_r" class="disabled"
+				onclick="photos.rotate(90);" />
 			</hbox>
+			<box><html:p id="free"> </html:p></box>
+			<box flex="1" />
+			<box id="logo" />
 		</hbox>
 
 		<!-- Placeholder for photos and metadata overlay -->
