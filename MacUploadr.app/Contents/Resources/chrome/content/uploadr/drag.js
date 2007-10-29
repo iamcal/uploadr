@@ -23,6 +23,8 @@ var drag = {
 			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
 		} else {
 			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+			document.getElementById('photos_sort_default').style.display = 'none';
+			document.getElementById('photos_sort_revert').style.display = 'block';
 		}
 	},
 

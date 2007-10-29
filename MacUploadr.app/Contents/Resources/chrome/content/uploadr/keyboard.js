@@ -19,7 +19,7 @@ var keyboard = {
 			ii = list.length;
 			for (var i = 0; i < ii; ++i) {
 				var img = list[i].getElementsByTagName('img')[0];
-				if ('error' != img.className) {
+				if ('error' != img.className && 'loading' != img.className) {
 					img.className = 'selected';
 				}
 			}

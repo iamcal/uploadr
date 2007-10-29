@@ -23,7 +23,7 @@ id="dock" title="" width="0" height="0">
 				if (win) {
 					win._threads.worker.dispatch(new win.PhotoAdd(
 						Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-							Ci.nsIFileProtocolHandler).getFileFromURLSpec(window.arguments[0]).path),
+						Ci.nsIFileProtocolHandler).getFileFromURLSpec(window.arguments[0]).path),
 						win._threads.worker.DISPATCH_NORMAL);
 					if (win._photos.sort) {
 						win._threads.worker.dispatch(new win.Sort(),

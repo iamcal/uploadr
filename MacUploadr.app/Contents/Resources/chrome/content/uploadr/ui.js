@@ -183,6 +183,15 @@ var unblock_remove = function() {
 	}
 };
 
+// Allow functions to block sorting
+var _block_sort = 0;
+var block_sort = function() {
+	++_block_sort;
+};
+var unblock_sort = function() {
+	--_block_sort;
+};
+
 // Allow functions to block exiting
 var _block_exit = 0;
 var block_exit = function() {
@@ -200,7 +209,9 @@ var exit = function(force) {
 
 	// Don't exit if exit is blocked
 	if (!force && 0 < _block_exit && !confirm(locale.getString('dialog.exit.text'),
-		locale.getString('dialog.exit'))) {
+		locale.getString('dialog.exit.title'),
+		locale.getString('dialog.exit.ok'),
+		locale.getString('dialog.exit.cancel'))) {
 		return;
 	}
 
@@ -227,20 +238,20 @@ var exit = function(force) {
 };
 
 // Override the alert, confirm and prompt functions to take a 2nd arg as a title
-var alert = function(msg, title) {
+var alert = function(msg, title, ok) {
 	window.openDialog('chrome://uploadr/content/alert.xul', 'dialog_alert',
-		'chrome,modal', msg, title);
+		'chrome,modal', msg, title, ok);
 };
-var confirm = function(msg, title) {
+var confirm = function(msg, title, ok, cancel) {
 	var result = {result: false};
 	window.openDialog('chrome://uploadr/content/confirm.xul', 'dialog_confirm',
-		'chrome,modal', msg, title, result);
+		'chrome,modal', msg, title, ok, cancel, result);
 	return result.result;
 };
-var prompt = function(msg, title) {
+var prompt = function(msg, title, ok, cancel) {
 	var result = {result: false};
 	window.openDialog('chrome://uploadr/content/prompt.xul', 'dialog_prompt',
-		'chrome,modal', msg, title, result);
+		'chrome,modal', msg, title, ok, cancel, result);
 	return result.result;
 };
 

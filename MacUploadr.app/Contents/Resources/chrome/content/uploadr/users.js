@@ -34,6 +34,7 @@ var users = {
 		if (users.username) {
 
 			// User specific API calls that must be made (and havent already been)
+			flickr.people.getInfo(users.nsid);
 			flickr.people.getUploadStatus();
 			flickr.photosets.getList(users.nsid);
 

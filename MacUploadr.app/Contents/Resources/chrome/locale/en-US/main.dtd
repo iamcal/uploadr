@@ -32,10 +32,13 @@
 <!ENTITY bandwidth "Bandwidth:">
 <!ENTITY bandwidth.go_pro "Go Pro!">
 
+<!ENTITY photostream.title "Your photos">
+
 <!ENTITY photos.sort.default "Photos are sorted by date taken.  You can click-and-drag to reorder.">
 <!ENTITY photos.sort.revert "Re-sort photos by date taken">
 <!ENTITY photos.init "Drag photos here to get started.">
-<!ENTITY photos.init.text "Or, click +ADD to find photos on your computer.">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find photos on your computer.">
 <!ENTITY photos.new "While that batch is uploading, you can start a new one.">
 
 <!ENTITY settings "Settings">
@@ -79,12 +82,7 @@
 <!ENTITY meta.single.sets.added "This will be added to:">
 <!ENTITY meta.batch.sets.added "These will be added to:">
 <!ENTITY meta.sets.added.none "You haven't selected any sets">
-<!ENTITY meta.hidden "Sign in to edit privacy metadata">
-
-<!ENTITY dialog.bandwidth.title "Available bandwidth exceeded!">
-<!ENTITY dialog.bandwidth.text "You're out of bandwidth for this month.  You can either switch to a different Flickr account to keep uploading or upgrade to a Pro account to get unlimited uploads.  If you upgrade to a Pro account you'll have to restart Flickr Uploadr.">
-<!ENTITY dialog.bandwidth.ok "Go Pro!">
-<!ENTITY dialog.bandwidth.cancel "Switch users">
+<!ENTITY meta.hidden "Sign in to see your sets">
 
 <!ENTITY dialog.about "About Flickr Uploadr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Yahoo!, Inc.">

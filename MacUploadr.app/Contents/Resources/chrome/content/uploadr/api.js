@@ -35,8 +35,9 @@ var upload = {
 
 		// Update the UI
 		if (null == upload.progress_bar) {
+			document.getElementById('footer').style.display = '-moz-box';
 			upload.progress_bar = new ProgressBar('progress_bar');
-			document.getElementById('progress').style.visibility = 'visible';
+			document.getElementById('progress_text').className = 'spinning';
 		}
 
 		// Pass the photo to the API
@@ -75,9 +76,12 @@ var upload = {
 
 		// If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-			photos.uploading[id].progress_bar.done(false);
-			++photos.fail;
-			photos.failed.push(photos.uploading[id]);
+			if (null != photos.uploading[id]) {
+				photos.uploading[id].progress_bar.done(false);
+				++photos.fail;
+				photos.failed.push(photos.uploading[id]);
+			}
+			photos.uploading[id] = null;
 			if (upload.bandwidth(rsp)) {
 				return;
 			}
@@ -87,7 +91,7 @@ var upload = {
 		}
 
 		// Otherwise, spin for a ticket
-		else {
+		else if (null != photos.uploading[id]) {
 			photos.uploading[id].progress_bar.done(true);
 			upload.tickets[rsp.getElementsByTagName('ticketid')[0].firstChild.nodeValue] = id;
 			++upload.tickets_count;
@@ -133,8 +137,10 @@ var upload = {
 			stat = 'fail';
 		}
 		if ('ok' == stat) {
-			photos.uploading[id].progress_bar.done(true);
-			++photos.ok;
+			if (null != photos.uploading[id]) {
+				photos.uploading[id].progress_bar.done(true);
+				++photos.ok;
+			}
 			if ('object' == typeof rsp) {
 				photo_id = parseInt(rsp.getElementsByTagName('photoid')[0].firstChild.nodeValue);
 			}
@@ -209,12 +215,17 @@ var upload = {
 		}
 		var percent = photos.kb.sent / photos.kb.total;
 		upload.progress_bar.update(percent);
-		document.getElementById('progress_text').value = locale.getFormattedString(
-			'progress.status', [
-				id + 1, // Since starting to use photos.normalize, this should be correct
-				photos.total,
-				Math.round(100 * percent)
-			]);
+		if (100 == Math.round(100 * percent)) { // Why doesn't (1 == percent) work here?
+			document.getElementById('progress_text').value =
+				locale.getString('upload.waiting.status');
+		} else {
+			document.getElementById('progress_text').value = locale.getFormattedString(
+				'upload.progress.status', [
+					id + 1, // Since starting to use photos.normalize, this should be correct
+					photos.total,
+					Math.round(100 * percent)
+				]);
+		}
 
 	},
 
@@ -224,6 +235,7 @@ var upload = {
 			Components.utils.reportError('UPLOAD TIMEOUT: ' + id);
 		}
 		window.clearInterval(upload.progress_handle);
+		upload.progress_handle = null;
 		upload.cancel = true;
 		upload._start(false, id);
 	},
@@ -279,49 +291,41 @@ var upload = {
 			photos.ok = 0;
 			photos.fail = 0;
 			unblock_exit();
-			window.openDialog('chrome://uploadr/content/bandwidth.xul', 'dialog_bandwidth',
-				'chrome,modal', function() {
-					buttons.login.click();
-				}, function() {
-					launch_browser('http://flickr.com/upgrade/');
-				});
+			if (confirm(locale.getFormattedString('dialog.bandwidth.text', ['foo']),
+				locale.getString('dialog.bandwidth.title'),
+				locale.getString('dialog.bandwidth.ok'),
+				locale.getString('dialog.bandwidth.cancel'))) {
+				launch_browser('http://flickr.com/upgrade/');
+			} else {
+				buttons.login.click();
+			}
 			return true;
 		} else {
 			return false;
 		}
 	},
 
-	// Clean up after an upload finishes
+	// Start to clean up after an upload finishes
 	done: function() {
 		window.clearTimeout(upload.timeout_handle);
+		upload.timeout_handle = null;
 		window.clearInterval(upload.progress_handle);
+		upload.progress_handle = null;
+		document.getElementById('photos_stack').style.visibility = 'visible';
 		document.getElementById('photos_init').style.display = 'none';
 		document.getElementById('photos_new').style.display = 'none';
-
-		// Kick off the chain of adding photos to a set
-		var not_adding_to_sets = true;
-		for (var set_id in meta.sets_map) {
-			status.set(locale.getString('status.sets'));
-			not_adding_to_sets = false;
-			if (-1 == meta.created_sets.indexOf(set_id)) {
-				flickr.photosets.addPhoto(set_id, meta.sets_map[set_id].shift());
-			} else {
-				flickr.photosets.create(set_id, '', meta.sets_map[set_id].shift());
-			}
-		}
-
-		// Here be dragons: If we are adding photos to a set, the last one will call this,
-		// otherwise we have to here.  If it doesn't get called then limits and such will not
-		// be updated for the next upload.
-		if (not_adding_to_sets) {
-			flickr.people.getUploadStatus();
-		}
 
 		// Update the UI
 		photos.batch_size = 0;
 		free.update();
-		document.getElementById('progress').style.visibility = 'hidden';
-		document.getElementById('progress_bar').style.width = '0';
+		var text = document.getElementById('progress_text');
+		if (0 == photos.fail) {
+			text.className = 'done';
+			text.value = locale.getString('upload.success.status');
+		} else {
+			text.className = 'error';
+			text.value = locale.getString('upload.error.status');
+		}
 		mouse.show_photos();
 		var queue = document.getElementById('queue_list');
 		while (queue.hasChildNodes()) {
@@ -329,19 +333,17 @@ var upload = {
 		}
 		status.clear();
 
-		// Alert the user of any failures and possibly re-add them to the batch
-		if (0 < photos.fail && confirm(locale.getString('progress.failed'),
-			locale.getString('progress.failed.title'))) {
-			var f = photos.failed;
-			var ii = f.length;
+		// Re-add failures to the batch
+		var f = photos.failed;
+		var ii = f.length;
+		if (0 != ii) {
 			for (var i  = 0; i < ii; ++i) {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
 			}
-			photos.normalize();
 		}
 
-		// If this was a cancellation, add photos we didn't get to back to the batch
+		// If this was a cancellation, re-add photos we didn't get to
 		if (upload.cancel) {
 			for each (var p in photos.uploading) {
 				if (null != p) {
@@ -349,43 +351,117 @@ var upload = {
 					photos.list[photos.list.length - 1] = p;
 				}
 			}
-			photos.normalize();
+		}
+		photos.normalize();
+
+		// Kick off the chain of adding photos to a set
+		var not_adding_to_sets = true;
+		for (var set_id in meta.sets_map) {
+			if (0 == meta.sets_map[set_id].length) {
+				continue;
+			}
+			status.set(locale.getString('status.sets'));
+			not_adding_to_sets = false;
+			if (-1 == meta.created_sets.indexOf(set_id)) {
+				flickr.photosets.addPhoto(set_id, meta.sets_map[set_id][0]);
+			} else {
+				flickr.photosets.create(set_id, '', meta.sets_map[set_id][0]);
+			}
 		}
 
-		// Offer to open the uploaded batch on the site
-		if (0 < photos.ok && confirm(locale.getString('upload.success.text'),
-			locale.getString('upload.success.title'))) {
-			launch_browser('http://flickr.com/tools/uploader_edit.gne?ids=' +
-				photos.uploaded.join(','));
+		// Here be dragons: If we are adding photos to a set, the last one will call this,
+		// otherwise we have to here.  If it doesn't get called then limits and such will not
+		// be updated for the next upload.
+		if (not_adding_to_sets) {
+			upload.finalize();
 		}
 
-		// Make sure the upload button is enabled if it should be
-		//   The confirm() box above can prevent this from happening after sorting, so force it
-		buttons.upload.enable();
-
-		// Clear out the uploading batch
-		photos.uploading = [];
-		photos.uploaded = [];
-		photos.add_to_set = [];
-		photos.failed = [];
-		photos.total = 0;
-		photos.ok = 0;
-		photos.fail = 0;
-		photos.kb.sent = 0;
-		photos.kb.total = 0;
-
-		upload.progress_bar = null;
-		upload.cancel = false;
-		unblock_exit();
 	},
 
 	// Finally give the user feedback on their upload
 	finalize: function() {
 
 		// Make sure the sets map is actually empty
-		///
+		var not_empty = false;
+		for (var set_id in meta.sets_map) {
+			not_empty = 0 == meta.sets_map[set_id].length ? not_empty : true;
+		}
+		if (not_empty) {
+			return;
+		}
 
-		// Decide
+		// Ask the site for an update
+		flickr.photosets.getList(users.nsid);
+		flickr.people.getUploadStatus();
+
+		// Decide which message to show
+		var go_to_flickr = false;
+		var try_again = false;
+		if (0 == photos.fail && 0 < photos.ok && photos.sets) {
+			go_to_flickr = confirm(locale.getString('upload.success.text'),
+				locale.getString('upload.success.title'),
+				locale.getString('upload.success.ok'),
+				locale.getString('upload.success.cancel'));
+		} else if (0 < photos.fail && 0 < photos.ok) {
+			var c = confirm(locale.getFormattedString('upload.error.some.text',
+				[photos.total - photos.ok, photos.total]),
+				locale.getString('upload.error.some.title'),
+				locale.getString('upload.error.some.ok'),
+				locale.getString('upload.error.some.cancel'));
+			if (c) {
+				try_again = true;
+			} else {
+				go_to_flickr = true;
+			}
+		} else if (0 == photos.fail && 0 < photos.ok && !photos.sets) {
+			go_to_flickr = confirm([locale.getString('upload.error.sets.text'),
+				locale.getString('upload.error.sets.more')],
+				locale.getString('upload.error.sets.more'),
+				locale.getString('upload.error.sets.title'),
+				locale.getString('upload.error.sets.ok'),
+				locale.getString('upload.error.sets.cancel'));
+		} else { // if (0 < photos.fail && 0 == photos.ok) {
+			try_again = confirm([locale.getString('upload.error.all.text'),
+				locale.getString('upload.error.all.more')],
+				locale.getString('upload.error.all.title'),
+				locale.getString('upload.error.all.ok'),
+				locale.getString('upload.error.all.cancel'));
+		}
+
+		// Hide the progress bar now that the user has realized we're done
+		document.getElementById('progress_bar').style.width = '0';
+		document.getElementById('footer').style.display = 'none';
+
+		// If requested, open the site
+		if (go_to_flickr) {
+			launch_browser('http://flickr.com/tools/uploader_edit.gne?ids=' +
+				photos.uploaded.join(','));
+		}
+
+		// Really finally actually done, so reset
+		buttons.upload.enable();
+		photos.uploading = [];
+		photos.add_to_set = [];
+		photos.failed = [];
+		photos.uploaded = [];
+		photos.total = 0;
+		photos.ok = 0;
+		photos.fail = 0;
+		photos.sets = true;
+		photos.kb.sent = 0;
+		photos.kb.total = 0;
+		upload.progress_bar = null;
+		upload.cancel = false;
+		upload.tickets = {};
+		upload.tickets_count = 0;
+		upload.tickets_delta = 1000;
+		upload.tickets_handle = null;
+		unblock_exit();
+
+		// Try again without deleting the list of <photoid>s
+		if (try_again) {
+			threads.worker.dispatch(new RetryUpload(), threads.worker.DISPATCH_NORMAL);
+		}
 
 	}
 
@@ -428,8 +504,10 @@ var flickr = {
 				users.logout();
 			} else {
 				users.frob = rsp.getElementsByTagName('frob')[0].firstChild.nodeValue;
-				if (!confirm(locale.getString('auth.prompt'),
-					locale.getString('auth.prompt.title'))) {
+				if (!confirm(locale.getString('auth.prompt.text'),
+					locale.getString('auth.prompt.title'),
+					locale.getString('auth.prompt.ok'),
+					locale.getString('auth.prompt.cancel'))) {
 					return;
 				}
 				_api({
@@ -467,6 +545,28 @@ var flickr = {
 
 	// Like the auth section, this is used by users.login() and won't need to be called
 	people: {
+
+		// Used exclusively for buddy icons right now
+		getInfo: function(user_id) {
+			_api({
+				'method': 'flickr.people.getInfo',
+				'auth_token': users.token,
+				'user_id': user_id
+			}, null, null, null, user_id);
+		},
+		_getInfo: function(rsp, id) {
+			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
+				var p = rsp.getElementsByTagName('person')[0];
+				var s = p.getAttribute('iconserver');
+				if (0 != parseInt(s)) {
+Components.utils.reportError('http://farm' + p.getAttribute('iconfarm') + '.static.flickr.com/' +
+s + '/buddyicons/' + id + '.jpg');
+					document.getElementById('buddyicon').src =
+						'http://farm' + p.getAttribute('iconfarm') + '.static.flickr.com/' +
+						s + '/buddyicons/' + id + '.jpg';
+				}
+			}
+		},
 
 		getUploadStatus: function() {
 			_api({
@@ -513,6 +613,7 @@ var flickr = {
 				block_exit();
 				_api({
 					'method': 'flickr.photos.upload.checkTickets',
+					'auth_token': users.token,
 					'tickets': tickets.join(',')
 				});
 			},
@@ -564,15 +665,13 @@ var flickr = {
 		},
 		_addPhoto: function(rsp, id) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				alert(locale.getString('errors.add_to_set'),
-					locale.getString('errors.add_to_set.title'));
+				photos.sets = false;
+			}
+			meta.sets_map[id].shift();
+			if (0 != meta.sets_map[id].length) {
+				flickr.photosets.addPhoto(id, meta.sets_map[id][0]);
 			} else {
-				if (0 != meta.sets_map[id].length) {
-					flickr.photosets.addPhoto(id, meta.sets_map[id].shift());
-				} else {
-					flickr.photosets.getList(users.nsid);
-					flickr.people.getUploadStatus();
-				}
+				upload.finalize();
 			}
 			unblock_exit();
 		},
@@ -588,9 +687,11 @@ var flickr = {
 			}, null, null, true, title);
 		},
 		_create: function(rsp, id) {
+			meta.sets_map[id].shift();
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				alert(locale.getString('errors.create_set'),
-					locale.getString('errors.create_set.title'));
+				photos.sets = false;
+				meta.sets_map[id] = [];
+				upload.finalize();
 			} else {
 
 				// Update the map with this new set ID
@@ -600,10 +701,9 @@ var flickr = {
 				delete meta.sets_map[id];
 
 				if (0 != meta.sets_map[set_id].length) {
-					flickr.photosets.addPhoto(set_id, meta.sets_map[set_id].shift());
+					flickr.photosets.addPhoto(set_id, meta.sets_map[set_id][0]);
 				} else {
-					flickr.photosets.getList(users.nsid);
-					flickr.people.getUploadStatus();
+					upload.finalize();
 				}
 			}
 			unblock_exit();
@@ -612,31 +712,35 @@ var flickr = {
 		getList: function(user_id) {
 			_api({
 				'method': 'flickr.photosets.getList',
-				'user_id': user_id,
+				'auth_token': users.token
 			});
 		},
 		_getList: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
+				meta.sets = {};
 				var sets = rsp.getElementsByTagName('photosets')[0].getElementsByTagName('photoset');
 				var ii = sets.length;
 				for (var i = 0; i < ii; ++i) {
 					meta.sets[sets[i].getAttribute('id')] =
 						sets[i].getElementsByTagName('title')[0].firstChild.nodeValue;
 				}
-				var lists = ['single_sets_add', 'batch_sets_add'];
-				for each (var list in lists) {
-					var ul = document.getElementById(list);
+				var prefixes = ['single', 'batch'];
+				for each (var prefix in prefixes) {
+					var ul = document.getElementById(prefix + '_sets_add');
 					while (ul.hasChildNodes()) {
 						ul.removeChild(ul.firstChild);
 					}
-					if (0 == ii) {
+					if (0 == ii && 0 == meta.created_sets.length) {
 						var li = document.createElementNS(NS_HTML, 'li');
+						li.className = 'sets_none';
 						li.appendChild(document.createTextNode(
 							locale.getString('meta.sets.add.none')));
 						ul.appendChild(li);
 					} else {
 						for (var set_id in meta.sets) {
 							var li = document.createElementNS(NS_HTML, 'li');
+							li.id = prefix + '_sets_' + set_id;
+							li.className = 'sets_plus';
 							li.appendChild(document.createTextNode(meta.sets[set_id]));
 							ul.appendChild(li);
 						}
@@ -653,7 +757,11 @@ var flickr = {
 							ul.removeChild(ul.firstChild);
 						}
 						for (var i = 0; i < ii; ++i) {
-							meta.select_set(ul, meta.sets[p.sets[i]]);
+							var li = document.createElementNS(NS_HTML, 'li');
+							li.id = 'single_sets_' + p.sets[i];
+							li.className = 'sets_trash';
+							li.appendChild(document.createTextNode(meta.sets[p.sets[i]]));
+							ul.appendChild(li);
 						}
 					}
 				}
@@ -898,7 +1006,7 @@ var _api = function(params, url, browser, post, id) {
 		xhr.send(mstream);
 
 		// Setup upload progress indicator
-		if (post && -1 != id) {
+		if (post && -1 != id && !params.method) {
 			upload.progress_handle = window.setInterval(function() {
 				upload.progress(mstream, id);
 			}, uploadr.conf.check);

@@ -22,13 +22,17 @@ var upgrade = {
 				// Force upgrade
 				if (f && f > c) {
 					launch_browser('http://flickr.com/tools/');
-					alert(locale.getString('dialog.force.text'), locale.getString('dialog.force'));
+					alert(locale.getString('dialog.force.text'),
+						locale.getString('dialog.force.title'),
+						locale.getString('dialog.force.ok'));
 					exit(true);
 				}
 
 				// Offered upgrade
 				else if (u && u > c && confirm(locale.getString('dialog.upgrade.text'),
-					locale.getString('dialog.upgrade'))) {
+					locale.getString('dialog.upgrade.title'),
+					locale.getString('dialog.upgrade.ok'),
+					locale.getString('dialog.upgrade.cancel'))) {
 					launch_browser('http://flickr.com/tools/');
 					exit(true);
 				}

@@ -32,18 +32,33 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			ondragover="nsDragAndDrop.dragOver(event, drag.observer); event.stopPropagation();"
 			ondragexit="nsDragAndDrop.dragExit(event, drag.observer); event.stopPropagation();"
 			ondragdrop="nsDragAndDrop.drop(event, drag.observer); event.stopPropagation();">
+				<html:table id="photostream">
+					<html:tr>
+						<html:td><html:img src="http://flickr.com/images/buddyicon.jpg"
+						id="buddyicon" width="48" height="48" /></html:td>
+						<html:td>
+							<html:h1>&photostream.title;</html:h1>
+							<html:p id="photos_sort_default">&photos.sort.default;</html:p>
+							<html:p id="photos_sort_revert"
+							class="link">&photos.sort.revert;</html:p>
+						</html:td>
+					</html:tr>
+				</html:table>
 				<stack id="photos_stack">
-					<html:div>
-						<html:p id="photos_sort_default">&photos.sort.default;</html:p>
-						<html:p id="photos_sort_revert" class="link">&photos.sort.revert;</html:p>
-						<html:ul id="photos_list"></html:ul>
-					</html:div>
+					<html:ul id="photos_list"></html:ul>
 					<html:div id="drag_select" />
 					<html:p id="drag_follower"> </html:p>
 				</stack>
 				<vbox id="photos_init">
 					<html:h1>&photos.init;</html:h1>
-					<html:h2>&photos.init.text;</html:h2>
+					<hbox flex="1">
+						<spacer flex="1" />
+						<box><html:h2>&photos.init.text.1;</html:h2></box>
+						<box><html:div class="button" onclick="photos.add();"
+						><html:div>&tools.add;</html:div></html:div></box>
+						<box><html:h2>&photos.init.text.2;</html:h2></box>
+						<spacer flex="1" />
+					</hbox>
 				</vbox>
 				<vbox id="photos_new">
 					<html:h1>&photos.new;</html:h1>
@@ -78,59 +93,58 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							onblur="keyboard._select_all = null;" />
 						</vbox>
 						<vbox class="column">
-							<vbox id="hide_single_explain" class="status"
-							><html:p>&meta.hidden;</html:p></vbox>
-							<vbox id="hide_single_privacy">
-								<label control="single_is_public" value="&settings.privacy.who;" />
-								<radiogroup id="single_is_public" value="1" tabindex="6"
-								oncommand="meta.is_public(this.value);">
-									<radio value="0" label="&settings.privacy.private;" />
-										<checkbox id="single_is_friend"
-										label="&settings.privacy.friend;" tabindex="7" />
-										<checkbox id="single_is_family"
-										label="&settings.privacy.family;" tabindex="8" />
-									<radio value="1" label="&settings.privacy.public;" />
-								</radiogroup>
-								<checkbox id="single_hidden" label="&settings.hidden;"
-								tabindex="9" />
-								<html:p> </html:p>
-								<label control="single_safety_level"
-								value="&settings.safety_level;" />
-								<menulist id="single_safety_level" tabindex="10">
-									<menupopup>
-										<menuitem value="1" label="&settings.safety_level.safe;"
-										selected="true" />
-										<menuitem value="2"
-										label="&settings.safety_level.moderate;" />
-										<menuitem value="3"
-										label="&settings.safety_level.restricted;" />
-									</menupopup>
-								</menulist>
-								<label control="single_content_type"
-								value="&settings.content_type;" />
-								<menulist id="single_content_type" tabindex="11">
-									<menupopup>
-										<menuitem value="1" label="&settings.content_type.photo;"
-										selected="true" />
-										<menuitem value="2"
-										label="&settings.content_type.screenshot;" />
-										<menuitem value="3" label="&settings.content_type.other;" />
-									</menupopup>
-								</menulist>
-							</vbox>
+							<label control="single_is_public" value="&settings.privacy.who;" />
+							<radiogroup id="single_is_public" value="1" tabindex="6"
+							oncommand="meta.is_public(this.value);">
+								<radio value="0" label="&settings.privacy.private;" />
+									<checkbox id="single_is_friend"
+									label="&settings.privacy.friend;" tabindex="7" />
+									<checkbox id="single_is_family"
+									label="&settings.privacy.family;" tabindex="8" />
+								<radio value="1" label="&settings.privacy.public;" />
+							</radiogroup>
+							<checkbox id="single_hidden" label="&settings.hidden;"
+							tabindex="9" />
+							<html:p> </html:p>
+							<label control="single_safety_level"
+							value="&settings.safety_level;" />
+							<menulist id="single_safety_level" tabindex="10">
+								<menupopup>
+									<menuitem value="1" label="&settings.safety_level.safe;"
+									selected="true" />
+									<menuitem value="2"
+									label="&settings.safety_level.moderate;" />
+									<menuitem value="3"
+									label="&settings.safety_level.restricted;" />
+								</menupopup>
+							</menulist>
+							<label control="single_content_type"
+							value="&settings.content_type;" />
+							<menulist id="single_content_type" tabindex="11">
+								<menupopup>
+									<menuitem value="1" label="&settings.content_type.photo;"
+									selected="true" />
+									<menuitem value="2"
+									label="&settings.content_type.screenshot;" />
+									<menuitem value="3" label="&settings.content_type.other;" />
+								</menupopup>
+							</menulist>
 						</vbox>
 					</hbox>
+					<hbox id="hide_single_explain" class="status"
+					><html:p>&meta.hidden;</html:p></hbox>
 					<hbox id="hide_single_sets">
 						<vbox>
 							<label value="&meta.sets.add;" />
-							<html:ul id="single_sets_add"></html:ul>
+							<html:ul id="single_sets_add" onclick="meta.add_to_set(event);"
+							></html:ul>
 							<label id="single_sets_create" class="link"
 							value="&meta.sets.create;" onclick="meta.create_set();" />
 						</vbox>
 						<vbox>
 							<label value="&meta.single.sets.added;" />
-							<html:ul id="single_sets_added">
-								<html:li class="sets_added_none">&meta.sets.added.none;</html:li>
+							<html:ul id="single_sets_added" onclick="meta.remove_from_set(event);">
+								<html:li class="sets_none">&meta.sets.added.none;</html:li>
 							</html:ul>
 						</vbox>
 					</hbox>
@@ -154,57 +168,56 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							onblur="keyboard._select_all = null;" />
 						</vbox>
 						<vbox class="column">
-							<vbox id="hide_batch_explain" class="status"
-							><html:p>&meta.hidden;</html:p></vbox>
-							<vbox id="hide_batch_privacy">
-								<label control="batch_is_public" value="&settings.privacy.who;" />
-								<radiogroup id="batch_is_public" value="1" tabindex="6"
-								oncommand="meta.is_public(this.value);">
-									<radio value="0" label="&settings.privacy.private;" />
-										<checkbox id="batch_is_friend"
-										label="&settings.privacy.friend;" tabindex="7" />
-										<checkbox id="batch_is_family"
-										label="&settings.privacy.family;" tabindex="8" />
-									<radio value="1" label="&settings.privacy.public;" />
-								</radiogroup>
-								<checkbox id="batch_hidden" label="&settings.hidden;"
-								tabindex="9" />
-								<html:p> </html:p>
-								<label control="batch_safety_level" value="&settings.safety_level;" />
-								<menulist id="batch_safety_level" tabindex="10">
-									<menupopup>
-										<menuitem value="1" label="&settings.safety_level.safe;"
-										selected="true" />
-										<menuitem value="2"
-										label="&settings.safety_level.moderate;" />
-										<menuitem value="3"
-										label="&settings.safety_level.restricted;" />
-									</menupopup>
-								</menulist>
-								<label control="batch_content_type" value="&settings.content_type;" />
-								<menulist id="batch_content_type" tabindex="11">
-									<menupopup>
-										<menuitem value="1" label="&settings.content_type.photo;"
-										selected="true" />
-										<menuitem value="2"
-										label="&settings.content_type.screenshot;" />
-										<menuitem value="3" label="&settings.content_type.other;" />
-									</menupopup>
-								</menulist>
-							</vbox>
+							<label control="batch_is_public" value="&settings.privacy.who;" />
+							<radiogroup id="batch_is_public" value="1" tabindex="6"
+							oncommand="meta.is_public(this.value);">
+								<radio value="0" label="&settings.privacy.private;" />
+									<checkbox id="batch_is_friend"
+									label="&settings.privacy.friend;" tabindex="7" />
+									<checkbox id="batch_is_family"
+									label="&settings.privacy.family;" tabindex="8" />
+								<radio value="1" label="&settings.privacy.public;" />
+							</radiogroup>
+							<checkbox id="batch_hidden" label="&settings.hidden;"
+							tabindex="9" />
+							<html:p> </html:p>
+							<label control="batch_safety_level" value="&settings.safety_level;" />
+							<menulist id="batch_safety_level" tabindex="10">
+								<menupopup>
+									<menuitem value="1" label="&settings.safety_level.safe;"
+									selected="true" />
+									<menuitem value="2"
+									label="&settings.safety_level.moderate;" />
+									<menuitem value="3"
+									label="&settings.safety_level.restricted;" />
+								</menupopup>
+							</menulist>
+							<label control="batch_content_type" value="&settings.content_type;" />
+							<menulist id="batch_content_type" tabindex="11">
+								<menupopup>
+									<menuitem value="1" label="&settings.content_type.photo;"
+									selected="true" />
+									<menuitem value="2"
+									label="&settings.content_type.screenshot;" />
+									<menuitem value="3" label="&settings.content_type.other;" />
+								</menupopup>
+							</menulist>
 						</vbox>
 					</hbox>
+					<hbox id="hide_batch_explain" class="status"
+					><html:p>&meta.hidden;</html:p></hbox>
 					<hbox id="hide_batch_sets">
 						<vbox>
 							<label value="&meta.sets.add;" />
-							<html:ul id="batch_sets_add"></html:ul>
+							<html:ul id="batch_sets_add" onclick="meta.add_to_set(event);"
+							></html:ul>
 							<label id="batch_sets_create" class="link"
 							value="&meta.sets.create;" onclick="meta.create_set();" />
 						</vbox>
 						<vbox>
 							<label value="&meta.batch.sets.added;" />
-							<html:ul id="batch_sets_added">
-								<html:li class="sets_added_none">&meta.sets.added.none;</html:li>
+							<html:ul id="batch_sets_added" onclick="meta.remove_from_set(event);">
+								<html:li class="sets_none">&meta.sets.added.none;</html:li>
 							</html:ul>
 						</vbox>
 					</hbox>

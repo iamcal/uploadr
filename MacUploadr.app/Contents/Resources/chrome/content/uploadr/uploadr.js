@@ -29,9 +29,9 @@ var uploadr = {
 
 		// Configure what types of API events should be written to the console
 		console: {
-			request: false,
-			response: false,
-			timeout: false
+			request: true,
+			response: true,
+			timeout: true
 		},
 
 		// Should we warn users when they're about to clobber data when leaving a batch?

@@ -21,7 +21,7 @@ var grid = {
 	// Get photos in a bounding box
 	bounding_box: function(x1, y1, x2, y2) {
 		const OFFSET_X = -mouse.box.x - 5;
-		const OFFSET_Y = -mouse.box.y - 5;
+		const OFFSET_Y = -mouse.box.y - 73;
 		var pos = {x: {}, y: {}};
 		mouse.box.getPosition(pos.x, pos.y);
 

@@ -55,8 +55,10 @@ var buttons = {
 
 	cancel: {
 		click: function() {
-			if (confirm(locale.getString('progress.cancel'),
-				locale.getString('progress.cancel.title'))) {
+			if (confirm(locale.getString('upload.cancel.text'),
+				locale.getString('upload.cancel.title'),
+				locale.getString('upload.cancel.ok'),
+				locale.getString('upload.cancel.cancel'))) {
 				upload.cancel = true;
 			}
 		}

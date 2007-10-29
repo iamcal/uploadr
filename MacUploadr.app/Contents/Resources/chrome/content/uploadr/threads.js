@@ -61,6 +61,7 @@ ThumbCallback.prototype = {
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
 				photos.list[this.id].date_taken = thumb[3];
+//Components.utils.reportError(photos.list[this.id].date_taken);
 				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
@@ -109,6 +110,7 @@ ThumbCallback.prototype = {
 		} catch (err) {
 			Components.utils.reportError(err);
 		}
+		unblock_sort();
 		unblock_remove();
 	},
 	QueryInterface: function(iid) {
@@ -214,6 +216,11 @@ var SortCallback = function() {
 };
 SortCallback.prototype = {
 	run: function() {
+
+		// Allow blocking sorts during loading
+		if (0 != _block_sort) {
+			return;
+		}
 
 		// Perform the sort
 		if (1 >= photos.list.length) {
@@ -390,12 +397,14 @@ RetryUploadCallback.prototype = {
 
 // Job to force ordering of photo._add calls
 //   This is a hack for dock.xul and will be replaced with AppleEvents code
-var PhotoAdd = function(path) {
+var PhotoAdd = function(path, obj) {
 	this.path = path;
+	this.obj = obj;
 };
 PhotoAdd.prototype = {
 	run: function() {
-		threads.main.dispatch(new PhotoAddCallback(this.path), threads.main.DISPATCH_NORMAL);
+		threads.main.dispatch(new PhotoAddCallback(this.path, this.obj),
+			threads.main.DISPATCH_NORMAL);
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
@@ -404,12 +413,16 @@ PhotoAdd.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
-var PhotoAddCallback = function(path) {
+var PhotoAddCallback = function(path, obj) {
 	this.path = path;
+	this.obj = obj;
 };
 PhotoAddCallback.prototype = {
 	run: function() {
 		photos._add(this.path);
+		if (null != this.obj) {
+			photos.list[photos.list.length - 1] = this.obj;
+		}
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

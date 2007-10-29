@@ -21,6 +21,7 @@ var photos = {
 	total: 0,
 	ok: 0,
 	fail: 0,
+	sets: true,
 	kb: {
 		sent: 0,
 		total: 0,
@@ -59,6 +60,8 @@ var photos = {
 		}
 	},
 	_add: function(path) {
+		block_remove();
+		block_sort();
 
 		// Add the original image to the list and set our status
 		var id = photos.list.length;
@@ -70,7 +73,6 @@ var photos = {
 		// Create a spot for the image, leaving a spinning placeholder
 		//   Add images to the start of the list because this is our best guess for ordering
 		//   newest to oldest
-		block_remove();
 		var img = document.createElementNS(NS_HTML, 'img');
 		img.className = 'loading';
 		img.setAttribute('width', 16);
@@ -90,11 +92,6 @@ var photos = {
 		var size = file.size(photos.list[id].path);
 		photos.batch_size += size;
 		if (users.username) {
-			if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
-				status.set(locale.getString('status.limit'));
-			} else {
-				status.clear();
-			}
 			free.update();
 		}
 
@@ -197,6 +194,7 @@ var photos = {
 		document.getElementById('photos_stack').style.visibility = 'hidden';
 		document.getElementById('photos_init').style.display = 'none';
 		document.getElementById('photos_new').style.display = '-moz-box';
+		meta.disable();
 
 		// If any photos need resizing to fit in the per-photo size limits, dispatch the
 		// jobs and wait
@@ -325,14 +323,17 @@ var photos = {
 		}
 
 		// Sort photos based on previous sort setting
-		if (photos.count) {
+		if (list.length) {
 			photos.sort = obj.sort;
-			if (photos.sort) {
-				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-			} else {
-				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-				document.getElementById('photos_sort_default').style.display = 'none';
-				document.getElementById('photos_sort_revert').style.display = 'block';
+			var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
+			if (0 == cl.length) {
+				if (photos.sort) {
+					threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+				} else {
+					threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+					document.getElementById('photos_sort_default').style.display = 'none';
+					document.getElementById('photos_sort_revert').style.display = 'block';
+				}
 			}
 		}
 

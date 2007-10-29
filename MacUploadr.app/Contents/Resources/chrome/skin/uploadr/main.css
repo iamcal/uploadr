@@ -38,6 +38,7 @@ box, toolbox, hbox, vbox {
  */
 
 #footer {
+	display: none;
 	height: 28px;
 	background: white;
 }
@@ -59,7 +60,7 @@ box, toolbox, hbox, vbox {
 
 /* Upload progress meter */
 #progress {
-	visibility: hidden;
+	/*visibility: hidden;*/
 }
 #progress_queue {
 	height: 28px;
@@ -85,11 +86,19 @@ box, toolbox, hbox, vbox {
 	background: #f8f8f8;
 }
 #progress_text {
-	margin: 4px 0 0 0;
-	padding-left: 32px;
-	background: url(balls-16x8-trans.gif) no-repeat 8px 6px;
+	margin: 2px 0 0 0;
+	padding: 2px 0 0 32px;
 	font-size: 14px;
 	font-weight: bold;
+}
+#progress_text.spinning {
+	background: url(balls-16x8-trans.gif) no-repeat 8px 8px;
+}
+#progress_text.done {
+	background: url(icon_upload_success.png) no-repeat 4px 0;
+}
+#progress_text.error {
+	background: url(icon_alert.png) no-repeat 9px 2px;
 }
 .progress_bar {
 	height: 12px;
@@ -291,6 +300,20 @@ toolbarseparator {
 	overflow: auto;
 }
 
+/* Photostream look and feel */
+#photostream {
+	height: 48px;
+	padding: 5px;
+}
+#photostream img {
+	margin: 0;
+	padding: 0 5px 0 0;
+}
+#photostream h1, #photostream p {
+	margin: 0;
+	padding: 0;
+}
+
 /* Messages in the photos container */
 #photos_stack {
 	visibility: hidden;
@@ -308,6 +331,16 @@ toolbarseparator {
 }
 #photos_init h2, #photos_new h2 {
 	margin: 10px 50px;
+}
+#photos_init hbox {
+	margin: 5px;
+}
+#photos_init hbox box {
+	/*border: 1px solid red;*/
+}
+#photos_init hbox box h2 {
+	margin: 0;
+	padding: 0 5px 0 0;
 }
 
 /* Dragging photos into the container */
@@ -427,12 +460,12 @@ toolbarseparator {
 	padding: 5px;
 }
 
-/* Initially, and while logged-out, don't show detailed metadata */
-#hide_single_sets, #hide_single_privacy, #hide_batch_sets, #hide_batch_privacy {
+/* Initially, and while logged-out, don't show sets */
+#hide_single_sets, #hide_batch_sets {
 	visibility: hidden;
 }
 
-/* The upload button, which is always visible */
+/* The upload button, which is big */
 #meta_button {
 	height: 38px;
 	padding: 5px;
@@ -466,6 +499,9 @@ toolbarseparator {
 	background: white;
 	list-style-type: none;
 }
+#single_sets_added, #batch_sets_added {
+	border-left: 1px solid #ddd;
+}
 /*
 #single_sets_add, #batch_sets_add {
 	margin: 0 0 0 5px;
@@ -474,22 +510,28 @@ toolbarseparator {
 	margin: 0 5px 0 0;
 }
 */
-#single_sets_added_none, #batch_sets_added_none {
-	padding: 2px;
+.sets_none {
+	margin: 2px;
 	color: #bbb;
 	font-style: italic;
 	text-align: center;
 	background: transparent;
 }
-#single_sets_add li, #batch_sets_add li, #single_sets_added li, #batch_sets_added li {
-	margin: 0;
-	padding: 2px 2px 2px 16px;
+.sets_plus, .sets_trash {
+	margin: 2px;
+	padding: 0 0 0 16px;
+	cursor: pointer;
 }
-#single_sets_add li, #batch_sets_add li {
+.sets_plus {
 	background: url(icon_add.png) no-repeat center left;
 }
-#single_sets_added li, #batch_sets_added li {
+.sets_trash {
 	background: url(icon_trash.png) no-repeat center left;
+}
+
+/* Must explicitly allow the creating of sets */
+#single_sets_create, #batch_sets_create {
+	visibility: hidden;
 }
 
 
@@ -511,7 +553,7 @@ toolbarseparator {
 
 #page_auth {
 	display: none;
-	padding: 40px 24px 24px 24px;
+	padding: 0 200px;
 	background: white;
 	text-align: center;
 }

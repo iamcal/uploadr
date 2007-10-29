@@ -5,12 +5,27 @@
 <dialog id="dialog_prompt" title=""
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept,cancel"
-ondialogaccept="window.arguments[2].result = document.getElementById('result').value; return true;"
-ondialogcancel="window.arguments[2].result = false; return true;" onload="
-document.getElementById('dialog_prompt').setAttribute('title', window.arguments[1]);
+ondialogaccept="window.arguments[4].result = document.getElementById('result').value; return true;"
+ondialogcancel="window.arguments[4].result = false; return true;" onload="
+var d = document.getElementById('dialog_prompt');
+if ('string' == typeof window.arguments[0]) {
+	document.getElementById('msg').firstChild.nodeValue = window.arguments[0];
+} else {
+	var msg = document.getElementById('msg');
+	var extra = document.createElement('description');
+	extra.appendChild(document.createTextNode(window.arguments[0][0]));
+	d.insertBefore(extra, msg);
+	msg.firstChild.nodeValue = window.arguments[0][1];
+}
 document.getElementById('title').firstChild.nodeValue = window.arguments[1];
-document.getElementById('msg').firstChild.nodeValue = window.arguments[0];
-centerWindowOnScreen();
+d.setAttribute('title', window.arguments[1]);
+if ('string' == typeof window.arguments[2]) {
+	d.getButton('accept').label = window.arguments[2];
+}
+if ('string' == typeof window.arguments[3]) {
+	d.getButton('cancel').label = window.arguments[3];
+}
+moveToAlertPosition();
 ">
 	<html:h3 id="title"> </html:h3>
 	<description id="msg"> </description>

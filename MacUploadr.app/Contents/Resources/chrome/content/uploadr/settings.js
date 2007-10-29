@@ -162,8 +162,10 @@ var settings = {
 			// Get permission to overwrite any changes that were made
 			if (0 < photos.count && (changed_privacy || changed_content_type ||
 				changed_hidden || changed_safety_level) &&
-				!confirm(locale.getString('settings.overwrite'),
-					locale.getString('settings.overwrite.title'))) {
+				!confirm(locale.getFormattedString('settings.overwrite.text', [photos.count]),
+					locale.getString('settings.overwrite.title'),
+					locale.getString('settings.overwrite.ok'),
+					locale.getString('settings.overwrite.cancel'))) {
 				return;
 			}
 

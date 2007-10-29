@@ -45,10 +45,12 @@ var meta = {
 				ul.removeChild(ul.firstChild);
 			}
 			var li = document.createElementNS(NS_HTML, 'li')
-			li.className = 'sets_added_none';
+			li.className = 'sets_none';
 			li.appendChild(document.createTextNode(
 				locale.getString('meta.sets.added.none')));
 			ul.appendChild(li);
+			document.getElementById('batch_sets_create').style.visibility =
+				meta.created_sets.length == users.sets ? 'hidden' : 'visible';
 
 		}
 
@@ -92,18 +94,24 @@ var meta = {
 			while (ul.hasChildNodes()) {
 				ul.removeChild(ul.firstChild);
 			}
-			if (null == meta.sets) {
+			var ii = p.sets.length;
+			if (0 == ii) {
 				var li = document.createElementNS(NS_HTML, 'li')
-				li.className = 'sets_added_none';
+				li.className = 'sets_none';
 				li.appendChild(document.createTextNode(
 					locale.getString('meta.sets.added.none')));
 				ul.appendChild(li);
 			} else {
-				var ii = p.sets.length;
 				for (var i = 0; i < ii; ++i) {
-					meta.select_set(ul, p.sets[i], meta.sets[p.sets[i]]);
+					var li = document.createElementNS(NS_HTML, 'li');
+					li.id = 'single_sets_' + p.sets[i];
+					li.className = 'sets_trash';
+					li.appendChild(document.createTextNode(meta.sets[p.sets[i]]));
+					ul.appendChild(li);
 				}
 			}
+			document.getElementById('single_sets_create').style.visibility =
+				meta.created_sets.length == users.sets ? 'hidden' : 'visible';
 
 		}
 
@@ -224,8 +232,10 @@ var meta = {
 		if ('-moz-box' == document.getElementById('batch_meta').style.display &&
 			1 < photos.selected.length) {
 			if (uploadr.conf.confirm_save_batch) {
-				if (confirm(locale.getString('meta.abandon'),
-					locale.getString('meta.abandon.title'))) {
+				if (confirm(locale.getString('meta.abandon.text'),
+					locale.getString('meta.abandon.title'),
+					locale.getString('meta.abandon.ok'),
+					locale.getString('meta.abandon.cancel'))) {
 					meta.save();
 				}
 			} else {
@@ -290,84 +300,48 @@ var meta = {
 			(quotes ? '"' : '');
 	},
 
-	// Show a set in the list of selected sets
-	select_set: function(ul, set_id, name) {
-		var li = document.createElementNS(NS_HTML, 'li');
-		li.appendChild(document.createTextNode(name + ' '));
-		var a = document.createElementNS(NS_HTML, 'a');
-		a.appendChild(document.createTextNode(String.fromCharCode(215)));
-		/*
-		a.onclick = function(e) {
-			var ii = photos.selected.length;
-			for (var i = 0; i < ii; ++i) {
-				var p = photos.list[photos.selected[i]];
-				var new_sets = [];
-				var jj = p.sets.length;
-				for (var j = 0; j < jj; ++j) {
-					if (set_id != p.sets[j]) {
-						new_sets.push(p.sets[j]);
-					}
-				}
-				p.sets = new_sets;
-			}
-			e.target.parentNode.parentNode.removeChild(e.target.parentNode);
-		};
-		*/
-		li.appendChild(a);
-		ul.appendChild(li);
-	},
-
-	// Create a new set
+	// Create a new set if we have any left
 	create_set: function() {
-
-		// Do we have any sets to give?
 		if (-1 == users.sets || 0 < users.sets) {
-			var name = prompt(locale.getString('meta.sets.create'),
+			var name = prompt('', //locale.getString('meta.sets.create.text'),
 				locale.getString('meta.sets.create.title'));
 			if (!name) {
 				return;
 			}
 			meta.created_sets.push(name);
 			meta.sets[name] = name;
-			var lists = ['single_sets_added', 'batch_sets_added'];
-			for each (var list in lists) {
-				var ul = document.getElementById(list);
-				ul.removeChild(ul.firstChild);
+			var prefixes = ['single', 'batch'];
+			for each (var prefix in prefixes) {
+				var ul = document.getElementById(prefix + '_sets_add');
+				if ('sets_none' == ul.firstChild.className) {
+					ul.removeChild(ul.firstChild);
+				}
 				var li = document.createElementNS(NS_HTML, 'li');
+				li.id = prefix + '_sets_' + name;
+				li.className = 'sets_plus';
 				li.appendChild(document.createTextNode(name));
 				ul.insertBefore(li, ul.firstChild);
-				li = document.createElementNS(NS_HTML, 'li');
-				li.appendChild(document.createTextNode(locale.getString('settings.set.dont')));
-				ul.insertBefore(li, ul.firstChild);
 			}
-			meta.add_to_set();
+			meta.add_to_set({target: ul.firstChild});
+			if (meta.created_sets.length == users.sets) {
+				var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+				document.getElementById(prefix + '_sets_create').style.visibility = 'hidden';
+			}
 		}
-
-		// No sets remaining
-		else {
-			alert(locale.getString('settings.set.exhausted'),
-				locale.getString('settings.set.exhausted,title'));
-		}
-
 	},
 
 	// Add selected photos to the selected set
-	add_to_set: function() {
+	add_to_set: function(e) {
 
-return;
-		// Single photo or group of photos?
-		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
-
-		// Get the set we're adding to
-		var set = document.getElementById(prefix + '_sets_add');
-		var set_id = set.value;
-		var name = set.selectedItem.label;
-		if ('' == set_id) {
+		// Get the item that was clicked
+		if ('li' != e.target.nodeName || 'sets_plus' != e.target.className) {
 			return;
 		}
+		var li = e.target;
+		var set_id = li.id.replace(/^(single|batch)_sets_/, '');
+		var name = li.firstChild.nodeValue;
 
 		// Add each selected photo to this set
-		var ul = document.getElementById(prefix + '_sets_list');
 		var ii = photos.selected.length;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[photos.selected[i]];
@@ -375,10 +349,55 @@ return;
 				p.sets.push(set_id);
 			}
 		}
-		set.selectedIndex = 0;
 
-		// Add it to the list
-		meta.select_set(ul, set_id, name);
+		// Update the UI
+		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+		var ul = document.getElementById(prefix + '_sets_added');
+		if ('sets_none' == ul.firstChild.className) {
+			ul.removeChild(ul.firstChild);
+		}
+		var li = document.createElementNS(NS_HTML, 'li');
+		li.id = prefix + '_sets_' + set_id;
+		li.className = 'sets_trash';
+		li.appendChild(document.createTextNode(name));
+		ul.appendChild(li);
+
+	},
+
+	remove_from_set: function(e) {
+
+		// Get the item that was clicked
+		if ('li' != e.target.nodeName || 'sets_trash' != e.target.className) {
+			return;
+		}
+		var li = e.target;
+		var set_id = li.id.replace(/^(single|batch)_sets_/, '');
+		var name = li.firstChild.nodeValue;
+
+		// Remove each selected photo from this set
+		var ii = photos.selected.length;
+		for (var i = 0; i < ii; ++i) {
+			var p = photos.list[photos.selected[i]];
+			var new_sets = [];
+			var jj = p.sets.length;
+			for (var j = 0; j < jj; ++j) {
+				if (set_id != p.sets[j]) {
+					new_sets.push(p.sets[j]);
+				}
+			}
+			p.sets = new_sets;
+		}
+
+		// Update the UI
+		li.parentNode.removeChild(li);
+		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+		var ul = document.getElementById(prefix + '_sets_added');
+		if (0 == ul.getElementsByTagName('li').length) {
+			li = document.createElementNS(NS_HTML, 'li');
+			li.className = 'sets_none';
+			li.appendChild(document.createTextNode(locale.getString('meta.sets.added.none')));
+			ul.appendChild(li);
+		}
 
 	},
 
@@ -415,20 +434,16 @@ return;
 		}
 	},
 
-	// Only show detailed metadata to logged-in users
+	// Only show sets to logged-in users
 	login: function() {
 		document.getElementById('hide_single_sets').style.visibility = 'visible';
-		document.getElementById('hide_single_privacy').style.visibility = 'visible';
 		document.getElementById('hide_batch_sets').style.visibility = 'visible';
-		document.getElementById('hide_batch_privacy').style.visibility = 'visible';
 		document.getElementById('hide_single_explain').style.display = 'none';
 		document.getElementById('hide_batch_explain').style.display = 'none';
 	},
 	logout: function() {
 		document.getElementById('hide_single_sets').style.visibility = 'hidden';
-		document.getElementById('hide_single_privacy').style.visibility = 'hidden';
 		document.getElementById('hide_batch_sets').style.visibility = 'hidden';
-		document.getElementById('hide_batch_privacy').style.visibility = 'hidden';
 		document.getElementById('hide_single_explain').style.display = '-moz-box';
 		document.getElementById('hide_batch_explain').style.display = '-moz-box';
 	}
