@@ -122,6 +122,7 @@ var free = {
 				}
 			}
 
+			/*
 			var f = document.getElementById('free');
 			f.firstChild.nodeValue = locale.getFormattedString('free.status', [
 				Math.round(100 * users.bandwidth.used / users.bandwidth.total),
@@ -131,12 +132,28 @@ var free = {
 				Math.round(photos.batch_size / 102.4) / 10
 			]);
 			f.style.display = 'block';
+			*/
+			var used = Math.min(100, Math.round(100 * users.bandwidth.used /
+				users.bandwidth.total));
+			var batch = Math.max(0, Math.round(100 * photos.batch_size / users.bandwidth.total));
+			var remaining = Math.max(0,
+			Math.round(100 * users.bandwidth.remaining / users.bandwidth.total));
+			batch = Math.min(batch, remaining);
+			remaining += 100 - (used + batch + remaining);
+			document.getElementById('bw_used').style.width = used + 'px';
+			var bw_batch = document.getElementById('bw_batch');
+			bw_batch.style.width = batch + 'px';
+			bw_batch.style.backgroundPosition = '-' + used + 'px -34px';
+			var bw_remaining = document.getElementById('bw_remaining');
+			bw_remaining.style.width = remaining + 'px';
+			bw_remaining.style.backgroundPosition = '-' + (used + batch) + 'px -17px';
+			document.getElementById('bandwidth').style.visibility = 'visible';
 		}
 
 	},
 
 	hide: function() {
-		document.getElementById('free').style.display = 'none';
+		document.getElementById('bandwidth').style.visibility = 'hidden';
 	}
 
 };

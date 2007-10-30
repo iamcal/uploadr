@@ -292,7 +292,7 @@ div.toolbarseparator {
 	height: 48px;
 	padding: 5px;
 }
-#photostream img {
+#buddyicon {
 	margin: 0;
 	padding: 0 5px 0 0;
 }
@@ -300,12 +300,47 @@ div.toolbarseparator {
 	margin: 0;
 	padding: 0;
 }
-#photostream_pro {
-	visibility: hidden;
+#photostream_pro, #photostream_free {
+	display: none;
+}
+#photostream_free {
+	font-size: 12px;
 }
 #photostream_tools {
 	text-align: right;
 	vertical-align: bottom;
+}
+/*
+#photostream_tools vbox {
+	text-align: right;
+}
+*/
+
+/* Free account bandwidth meter */
+#bandwidth {
+	margin: 0 0 5px 0;
+}
+#bandwidth hbox {
+	width: 100px;
+	background: white;
+	border: 1px solid #ddd;
+}
+#bw_used, #bw_batch, #bw_remaining {
+	height: 14px;
+}
+#bw_used, #bw_batch {
+	width: 0;
+}
+#bw_used {
+	background: #ff0084;
+	opacity: 0.75;
+}
+#bw_batch {
+	background: #ff0084;
+}
+#bw_remaining {
+	width: 100px;
+	background: #f8f8f8;
 }
 
 /* Messages in the photos container */

@@ -97,9 +97,9 @@ ThumbCallback.prototype = {
 
 			// If unsuccessful, replace with the error image
 			else {
-				img.setAttribute('src', 'chrome://uploadr/skin/logo_flickr.png');
-				img.setAttribute('width', 100);
-				img.setAttribute('height', 20);
+				img.setAttribute('src', 'chrome://uploadr/skin/icon_alert.png');
+				img.setAttribute('width', 16);
+				img.setAttribute('height', 16);
 				img.className = 'error';
 				img.parentNode.appendChild(document.createTextNode(photos.list[this.id].filename));
 				img.onclick = function() {

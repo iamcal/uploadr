@@ -567,9 +567,11 @@ var flickr = {
 						'http://flickr.com/images/buddyicon.jpg';
 				}
 				if (1 == parseInt(p.getAttribute('ispro'))) {
-					document.getElementById('photostream_pro').style.visibility = 'visible';
+					document.getElementById('photostream_pro').style.display = 'inline';
+					document.getElementById('photostream_free').style.display = 'none';
 				} else {
-					document.getElementById('photostream_pro').style.visibility = 'hidden';
+					document.getElementById('photostream_pro').style.display = 'none';
+					document.getElementById('photostream_free').style.display = 'inline';
 				}
 			}
 		},

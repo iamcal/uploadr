@@ -75,6 +75,9 @@ var users = {
 		document.getElementById('free').style.display = 'none';
 		status.set(locale.getString('status.disconnected'));
 		meta.logout();
+		document.getElementById('buddyicon').src = 'http://flickr.com/images/buddyicon.jpg';
+		document.getElementById('photostream_pro').style.display = 'none';
+		document.getElementById('photostream_free').style.display = 'inline';
 
 	},
 

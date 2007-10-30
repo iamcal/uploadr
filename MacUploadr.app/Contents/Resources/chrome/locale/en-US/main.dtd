@@ -43,11 +43,11 @@
 
 <!ENTITY settings "Settings">
 <!ENTITY settings.notloggedin "You need to sign in to adjust your preferences">
-<!ENTITY settings.users "Authorization">
+<!ENTITY settings.users "Authorization:">
 <!ENTITY settings.users.user "Sign in as:">
 <!ENTITY settings.users.remove "Remove selected user">
 <!ENTITY settings.users.add "Add new user">
-<!ENTITY settings.privacy "Default privacy">
+<!ENTITY settings.privacy "Default privacy:">
 <!ENTITY settings.privacy.who "Who can see this photo?">
 <!ENTITY settings.privacy.private "Only you">
 <!ENTITY settings.privacy.friend "Your friends">
@@ -62,7 +62,7 @@
 <!ENTITY settings.safety_level.moderate "Moderate">
 <!ENTITY settings.safety_level.restricted "Restricted">
 <!ENTITY settings.hidden "Hide from public site areas">
-<!ENTITY settings.resize "Automatic resizing">
+<!ENTITY settings.resize "Automatic resizing:">
 <!ENTITY settings.resize.dont "Don't resize my photos">
 <!ENTITY settings.resize.800 "800 pixels (suitable for on-screen viewing)">
 <!ENTITY settings.resize.1280 "1280 pixels (suitable for small prints)">
@@ -74,6 +74,8 @@
 <!ENTITY meta.title "Title:">
 <!ENTITY meta.description "Description:">
 <!ENTITY meta.tags "Tags:">
+<!ENTITY meta.content_type "Content type:">
+<!ENTITY meta.safety_level "Safety level:">
 <!ENTITY meta.first "All photos are selected">
 <!ENTITY meta.batch.prompt "Any changes you make here will affect all selected photos.">
 <!ENTITY meta.sets.add "Add to set:">

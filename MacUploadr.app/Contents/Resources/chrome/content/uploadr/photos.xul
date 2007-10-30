@@ -18,20 +18,30 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			ondragdrop="nsDragAndDrop.drop(event, drag.observer); event.stopPropagation();">
 				<html:table id="photostream" width="100%">
 					<html:tr>
-						<html:td><html:img src="http://flickr.com/images/buddyicon.jpg"
+						<html:td rowspan="2"><html:img src="http://flickr.com/images/buddyicon.jpg"
 						id="buddyicon" width="48" height="48" /></html:td>
 						<html:td nowrap="nowrap">
 							<html:h1>&photostream.title; <html:img id="photostream_pro"
 							src="chrome://uploadr/skin/badge_pro.gif" width="20" height="12"
-							/></html:h1>
+							/><html:span id="photostream_free"
+							onclick="buttons.go_pro.click();"
+							class="link">&bandwidth.go_pro;</html:span></html:h1>
 							<label id="username" value="&notloggedin;" />
 						</html:td>
-						<html:td id="photostream_tools" width="100%">
-							<box>
-								<html:div id="switch" class="small button"
+						<html:td id="photostream_tools" width="100%" rowspan="2">
+							<vbox align="right">
+								<hbox id="bandwidth">
+									<label value="&bandwidth;" />
+									<hbox>
+										<box id="bw_used" />
+										<box id="bw_batch" />
+										<box id="bw_remaining" />
+									</hbox>
+								</hbox>
+								<box><html:div id="switch" class="small button"
 								onclick="buttons.login.click();"
-								><html:div>&login;</html:div></html:div>
-							</box>
+								><html:div>&login;</html:div></html:div></box>
+							</vbox>
 						</html:td>
 					</html:tr>
 				</html:table>
@@ -101,8 +111,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<checkbox id="single_hidden" label="&settings.hidden;"
 							tabindex="9" />
 							<html:p> </html:p>
-							<label control="single_safety_level"
-							value="&settings.safety_level;" />
+							<label control="single_safety_level" value="&meta.safety_level;" />
 							<menulist id="single_safety_level" tabindex="10">
 								<menupopup>
 									<menuitem value="1" label="&settings.safety_level.safe;"
@@ -113,8 +122,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									label="&settings.safety_level.restricted;" />
 								</menupopup>
 							</menulist>
-							<label control="single_content_type"
-							value="&settings.content_type;" />
+							<label control="single_content_type" value="&meta.content_type;" />
 							<menulist id="single_content_type" tabindex="11">
 								<menupopup>
 									<menuitem value="1" label="&settings.content_type.photo;"
@@ -176,7 +184,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<checkbox id="batch_hidden" label="&settings.hidden;"
 							tabindex="9" />
 							<html:p> </html:p>
-							<label control="batch_safety_level" value="&settings.safety_level;" />
+							<label control="batch_safety_level" value="&meta.safety_level;" />
 							<menulist id="batch_safety_level" tabindex="10">
 								<menupopup>
 									<menuitem value="1" label="&settings.safety_level.safe;"
@@ -187,7 +195,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									label="&settings.safety_level.restricted;" />
 								</menupopup>
 							</menulist>
-							<label control="batch_content_type" value="&settings.content_type;" />
+							<label control="batch_content_type" value="&meta.content_type;" />
 							<menulist id="batch_content_type" tabindex="11">
 								<menupopup>
 									<menuitem value="1" label="&settings.content_type.photo;"

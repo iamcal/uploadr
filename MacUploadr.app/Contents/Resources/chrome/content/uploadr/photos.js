@@ -196,6 +196,16 @@ var photos = {
 		document.getElementById('photos_new').style.display = '-moz-box';
 		meta.disable();
 
+		// Kill off error indicators, they're dead to me
+		var li = document.getElementById('photos_list').getElementsByTagName('li');
+		var ii = li.length;
+		for (var i = 0; i < ii; ++i) {
+			var img = li[i].getElementsByTagName('img')[0];
+			if ('error' == img.className) {
+				img.onclick();
+			}
+		}
+
 		// If any photos need resizing to fit in the per-photo size limits, dispatch the
 		// jobs and wait
 		var resizing = false;
