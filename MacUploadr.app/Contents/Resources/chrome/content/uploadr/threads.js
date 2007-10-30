@@ -64,18 +64,28 @@ ThumbCallback.prototype = {
 
 			// If successful, replace with the thumb and update the Photo object
 			if (10 == thumb.length) {
+
+				// Undo escaping done in XPCOM
+				var ii = thumb.length;
+				for (var i = 0; i < ii; ++i) {
+					thumb[i] = thumb[i];
+				}
+
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
 				photos.list[this.id].date_taken = thumb[3];
 				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
-				var title = thumb[6].replace(/^\s+|\s+$/, '');
+				var title = thumb[6].replace(/^\s+|\s+$/,
+					'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
 				if ('' != title) {
 					photos.list[this.id].title = title;
 				}
-				photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/, '');
-				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/, '');
+				photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/g,
+					'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/g,
+					'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
 
 				// Select newly added images if the user hasn't clicked
 				if (meta.auto_select || this.auto_select) {
