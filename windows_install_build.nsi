@@ -58,8 +58,7 @@ Section "Install" SecInstall
 	File MacUploadr.app\Contents\Resources\icons.ico
 	File MacUploadr.app\Contents\Resources\magic.mgk
 	File MacUploadr.app\Contents\Resources\modules.mgk
-
-	CreateShortCut "$INSTDIR\Flickr Uploadr.lnk" "$INSTDIR\xulrunner\xulrunner.exe" "application.ini" "$INSTDIR\icons.ico"
+	File "MacUploadr.app\Contents\Resources\Flickr Uploadr.exe"
 
 	WriteRegStr HKCU "Software\Flickr Uploadr" "" $INSTDIR
 
@@ -79,7 +78,7 @@ SectionEnd
 
 Section "Start Menu Shortcuts"
 
-	CreateShortCut "$SMPROGRAMS\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.lnk" "" "$INSTDIR\Flickr Uploadr.lnk" 0
+	CreateShortCut "$SMPROGRAMS\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.exe" "" "$INSTDIR\Flickr Uploadr.exe" 0
 
 	!insertmacro MUI_INSTALLOPTIONS_READ $INI_VALUE "io.ini" "Field 1" "State"
 
