@@ -119,7 +119,7 @@ DeleteRegKey /ifempty HKCU "Software\Flickr Uploadr"
 
 	Delete "$INSTDIR"
 
-	Delete "$SMPROGRAMS\Flickr Uploadr\*.*"
+	Delete "$SMPROGRAMS\Flickr Uploadr.lnk"
 	Delete "$DESKTOP\Flickr Uploadr.lnk" 
 
 	RMDir "$SMPROGRAMS\Flickr Uploadr"
