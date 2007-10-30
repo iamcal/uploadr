@@ -13,11 +13,13 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 	</stringbundleset>
 	<hbox>
 		<box id="logo" />
-		<vbox>
+		<vbox flex="1">
 			<html:h3>&dialog.about;</html:h3>
 			<html:p id="version"> </html:p>
 			<html:p>&dialog.about.copyright.yahoo;</html:p>
-			<html:p>&dialog.about.copyright.open_source;</html:p>
+			<html:p>&dialog.about.copyright.xulrunner;
+			<html:br />&dialog.about.copyright.graphicsmagick;
+			<html:br />&dialog.about.copyright.exiv2;</html:p>
 		</vbox>
 	</hbox>
 </dialog>

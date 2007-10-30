@@ -10,12 +10,11 @@ dialog {
  */
 
 #dialog_about {
-	width: 400px;
-	background: #f8f8f8;
+	width: 500px;
 }
 
 #logo {
 	width: 120px;
-	height: 67px;
-	background: url(logo.png) no-repeat;
+	margin: 15px 0 0 0;
+	background: url(logo_flickr.png) no-repeat;
 }
