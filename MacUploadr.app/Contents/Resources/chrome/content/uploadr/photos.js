@@ -30,12 +30,11 @@ var photos = {
 	// Let the user select some files, thumbnail them and track them
 	add: function() {
 
-		// Disable stuff while thumbing (possible race condition for removing?)
 		buttons.upload.disable();
-
 		document.getElementById('photos_stack').style.visibility = 'visible';
 		document.getElementById('photos_init').style.display = 'none';
 		document.getElementById('photos_new').style.display = 'none';
+		mouse.show_photos();
 
 		var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),

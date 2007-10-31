@@ -77,7 +77,7 @@ var users = {
 		meta.logout();
 		document.getElementById('buddyicon').src = 'http://flickr.com/images/buddyicon.jpg';
 		document.getElementById('photostream_pro').style.display = 'none';
-		document.getElementById('photostream_free').style.display = 'inline';
+		document.getElementById('photostream_free').style.display = 'none';
 
 	},
 

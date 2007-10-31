@@ -169,6 +169,8 @@ var mouse = {
 	// Initiate a drag
 	mousedown: function(e) {
 
+Components.utils.reportError(e.target.nodeName);
+
 		// If there are no photos, there's nothing to do
 		if (0 == photos.count) {
 			return;
@@ -190,7 +192,7 @@ var mouse = {
 		}
 
 		// Clicking whitespace will start the drag-select
-		else if ('photos_sort_revert' != e.target.id) {
+		else if ('photos_sort_revert' != e.target.id && 'scrollbox' != e.target.nodeName) {
 			mouse.anchor = {
 				x: e.clientX + pos.x.value - mouse.box.x - grid.base.x,
 				y: e.clientY + pos.y.value - mouse.box.y - grid.base.y
@@ -309,7 +311,7 @@ var mouse = {
 		// If we're reaching the edge of the box and can scroll, do so
 		if ((0 != mouse.dragging || null != mouse.anchor) &&
 			(uploadr.conf.scroll > e.clientY + OFFSET_Y ||
-			 uploadr.conf.scroll > mouse.box.height - e.clientY - OFFSET_Y)) {
+			 uploadr.conf.scroll > mouse.box.height - e.clientY - OFFSET_Y - grid.base.y)) {
 			if (null == mouse.auto_scroll) {
 				var clientX = e.clientX;
 				var clientY = e.clientY;
@@ -318,7 +320,8 @@ var mouse = {
 					if (uploadr.conf.scroll > clientY + OFFSET_Y) {
 						delta = -uploadr.conf.scroll;
 					}
-					if (uploadr.conf.scroll > mouse.box.height - clientY - OFFSET_Y) {
+					if (uploadr.conf.scroll >
+						mouse.box.height - clientY - OFFSET_Y - grid.base.y) {
 						delta = uploadr.conf.scroll;
 					}
 					var pos = {x: {}, y: {}};

@@ -28,7 +28,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							class="link">&bandwidth.go_pro;</html:span></html:h1>
 							<label id="username" value="&notloggedin;" />
 						</html:td>
-						<html:td id="photostream_tools" width="100%" rowspan="2">
+						<html:td id="photostream_tools" width="100%">
 							<vbox align="right">
 								<hbox id="bandwidth">
 									<label value="&bandwidth;" />

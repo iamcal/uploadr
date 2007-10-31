@@ -121,17 +121,15 @@ var settings = {
 		else {
 
 			// Remove removed users
-			var list = [];
-			for each (var user in u) {
-				list.push(user.username);
-			}
-			var deleted_current = false;
-			for (var username in users.list) {
-				if (-1 == list.indexOf(username)) {
-					deleted_current |= users.list[username].current;
-					delete users.list[username];
+			var deleted_current = true;
+			var new_list = {};
+			for each (var username in result.list) {
+				if (users.list[username].current) {
+					deleted_current = false;
 				}
+				new_list[username] = users.list[username];
 			}
+			users.list = new_list;
 			if (deleted_current) {
 				users.username = null;
 				users.logout();

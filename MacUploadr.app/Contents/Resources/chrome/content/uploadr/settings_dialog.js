@@ -65,6 +65,13 @@ var settings = {
 		s.resize = parseInt(document.getElementById('resize').value);
 
 		// Users
+		window.arguments[4].list = [];
+		var item = document.getElementById('user').getElementsByTagName(
+			'menupopup')[0].getElementsByTagName('menuitem');
+		var ii = item.length;
+		for (var i = 0; i < ii; ++i) {
+			window.arguments[4].list.push(item[i].value);
+		}
 		window.arguments[4].change_user = document.getElementById('user').value;
 
 	},
@@ -72,15 +79,6 @@ var settings = {
 	// Remove a user from the list, which will be made permanent by pressing OK
 	remove_user: function() {
 		var dropdown = document.getElementById('user');
-		var u = window.arguments[2];
-		var i = 0;
-		for each (var user in u) {
-			if (dropdown.value == user.username) {
-				delete u[i];
-				break;
-			}
-			++i;
-		}
 		dropdown.removeItemAt(dropdown.selectedIndex);
 		dropdown.selectedIndex = 0;
 	},

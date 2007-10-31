@@ -244,25 +244,32 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		out << "###";
 
 		// Extract IPTC data that we care about
-		Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
-		meta_r->readMetadata();
-		Exiv2::IptcData & iptc = meta_r->iptcData();
-		string title = iptc["Iptc.Application2.ObjectName"].toString();
-		if (0 == title.size()) {
-			title = iptc["Iptc.Application2.Headline"].toString();
-		}
-		string description = iptc["Iptc.Application2.Caption"].toString();
-		if (0 == description.size()) {
-			Exiv2::ExifData & exif = meta_r->exifData();
-			description = exif["Exif.Image.ImageDescription"].toString();
-		}
-		string tags = iptc["Iptc.Application2.Keywords"].toString();
-		tags.append(" ");
-		tags.append(iptc["Iptc.Application2.City"].toString());
-		tags.append(" ");
-		tags.append(iptc["Iptc.Application2.ProvinceState"].toString());
-		tags.append(" ");
-		tags.append(iptc["Iptc.Application2.CountryName"].toString());
+		string title = "", description = "", tags = "";
+		try {
+			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+			meta_r->readMetadata();
+			Exiv2::IptcData & iptc = meta_r->iptcData();
+			title = iptc["Iptc.Application2.ObjectName"].toString();
+			if (0 == title.size()) {
+				title = iptc["Iptc.Application2.Headline"].toString();
+			}
+			description = iptc["Iptc.Application2.Caption"].toString();
+			if (0 == description.size()) {
+				try {
+					Exiv2::ExifData & exif = meta_r->exifData();
+					description = exif["Exif.Image.ImageDescription"].toString();
+				} catch (Exiv2::Error &) {}
+			}
+//		} catch (Exiv2::Error &) {}
+//		try {
+			tags = iptc["Iptc.Application2.Keywords"].toString();
+			tags.append(" ");
+			tags.append(iptc["Iptc.Application2.City"].toString());
+			tags.append(" ");
+			tags.append(iptc["Iptc.Application2.ProvinceState"].toString());
+			tags.append(" ");
+			tags.append(iptc["Iptc.Application2.CountryName"].toString());
+		} catch (Exiv2::Error &) {}
 
 		// Hide ### strings within the IPTC data
 		size_t pos = title.find("###", pos);
