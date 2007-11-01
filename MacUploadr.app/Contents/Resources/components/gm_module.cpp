@@ -8,7 +8,7 @@ static nsModuleComponentInfo components[] = {
 		GM_CLASSNAME, 
 		GM_CID,
 		GM_CONTRACTID,
-		CGMConstructor,
+		CGMConstructor
 	}
 };
 

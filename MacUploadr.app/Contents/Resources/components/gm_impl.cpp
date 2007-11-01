@@ -260,8 +260,6 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 					description = exif["Exif.Image.ImageDescription"].toString();
 				} catch (Exiv2::Error &) {}
 			}
-//		} catch (Exiv2::Error &) {}
-//		try {
 			tags = iptc["Iptc.Application2.Keywords"].toString();
 			tags.append(" ");
 			tags.append(iptc["Iptc.Application2.City"].toString());

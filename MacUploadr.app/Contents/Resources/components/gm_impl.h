@@ -15,8 +15,6 @@ public:
 	CGM();
 private:
 	~CGM();
-protected:
-	nsString mName;
 };
 
 #endif
