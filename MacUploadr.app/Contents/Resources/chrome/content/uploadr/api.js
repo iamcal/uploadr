@@ -8,6 +8,15 @@
 //   Upload batches should be kicked off using photos.upload() in photos.js.  The setting
 //   uploadr.conf.mode in uploadr.js can select either synchronous or asynchronous uploads.
 
+// API key is defined in keys.js
+// The secret is defined in C code and accessed here
+var secret;
+try {
+	secret = Cc['@flickr.com/secret;1'].createInstance(Ci.ISecret);
+} catch (err) {
+	Components.utils.reportError(err);
+}
+
 // The upload API
 var upload = {
 
@@ -889,7 +898,7 @@ var _api = function(params, url, browser, post, id) {
 		}
 	}
 	sig.sort();
-	var calc = [secret];
+	var calc = [secret.secret()];
 	var ii = sig.length;
 	for (var i = 0; i < ii; ++i) {
 		calc.push(sig[i] + params[sig[i]]);

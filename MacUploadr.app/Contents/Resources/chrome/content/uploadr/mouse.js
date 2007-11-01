@@ -169,8 +169,6 @@ var mouse = {
 	// Initiate a drag
 	mousedown: function(e) {
 
-Components.utils.reportError(e.target.nodeName);
-
 		// If there are no photos, there's nothing to do
 		if (0 == photos.count) {
 			return;
