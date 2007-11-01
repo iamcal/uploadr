@@ -84,6 +84,9 @@ Add the path to your GraphicsMagick build's VisualMagick\lib directory
 to your library path.  Add the path to VisualMagick\include to your
 include path.
 
+For Windows, the magic.mgk and modules.mgk files must be in the root of
+the application (with application.ini).
+
 Mac
 ---
 
@@ -102,6 +105,10 @@ XPCOM component, move this file to /opt/local/lib/libjpeg.dylib.sav
 CPPFLAGS="-I/opt/local/include -I/usr/local/include" --without-perl \
 --disable-installed
 make && sudo make install
+
+For Mac, the magic.mgk and modules.mgk files must be in
+Contents/lib/GraphicsMagick-<version>/config/.  This is taken care of
+by the build script, provided the version is defined properly there.
 
 Linux
 -----
