@@ -9,7 +9,7 @@ var meta = {
 	first: true,
 
 	// Auto-select, which is cancellable by a click during thumbing
-	auto_select: true,
+	auto_select: uploadr.conf.auto_select,
 
 	// Load a photo's metadata from JS into the DOM
 	load: function(id) {

@@ -11,6 +11,9 @@ var uploadr = {
 		// Scrolling threshold for dragging (pixels);
 		scroll: 20,
 
+		// Scrollbar width to prevent craziness when clicking the scrollbar (pixels)
+		scrollbar_width: 14,
+
 		// Upload mode
 		//   Must be 'sync' or 'async'
 		mode: 'async',
@@ -27,7 +30,7 @@ var uploadr = {
 		// What version am I?
 		version: '3.0.1',
 
-		// Configure what types of API events should be written to the console
+		// What types of API events should be written to the console?
 		console: {
 			request: true,
 			response: true,
@@ -35,7 +38,10 @@ var uploadr = {
 		},
 
 		// Should we warn users when they're about to clobber data when leaving a batch?
-		confirm_batch_save: false
+		confirm_batch_save: false,
+
+		// Should we auto-select images as they're added? (at least until the user clicks)
+		auto_select: false
 
 	}
 };

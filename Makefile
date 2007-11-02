@@ -1,32 +1,21 @@
 SRC := MacUploadr.app/Contents
-BUILD := ~/Desktop/build/Flickr\ Uploadr.app/Contents
+PKG := ~/Desktop/build/
+BUILD := $(PKG)/Flickr\ Uploadr.app/Contents
 GM_VER := 1.1.10
 
 all:
 	@echo "This target doesn't do anything!  Specify one of these:"
-	@echo "  setup     Setup symlinks for development environment"
-	@echo "  teardown  Teardown symlinks for development environment"
 	@echo "  build     Copy everything of interest to ~/Desktop/build/"
 
-setup:
-	ln -s ../../uploadr MacUploadr.app/Contents/Resources
-	mkdir MacUploadr.app/Contents/Frameworks
-	ln -s /Library/Frameworks/XUL.framework \
-		MacUploadr.app/Contents/Frameworks/XUL.framework
-	mkdir MacUploadr.app/Contents/MacOS
-	ln -s /Library/Frameworks/XUL.framework/Versions/Current/xulrunner \
-		MacUploadr.app/Contents/MacOS/xulrunner
-
-teardown:
-	rm MacUploadr.app/Contents/Resources
-	rm MacUploadr.app/Contents/MacOS/xulrunner
-	rmdir MacUploadr.app/Contents/MacOS
-
 build:
-	rm -rf $(BUILD)/Frameworks/*
-	rm -rf $(BUILD)/MacOS/*
-	rm -rf $(BUILD)/Resources/*
-	rm -rf $(BUILD)/lib/*
+	rm -rf $(PKG)/*
+	mkdir $(PKG)/Flickr\ Uploadr.app
+	ln -s /Applications $(PKG)/Applications
+	mkdir $(BUILD)
+	mkdir $(BUILD)/lib
+	mkdir $(BUILD)/Frameworks
+	mkdir $(BUILD)/MacOS
+	mkdir $(BUILD)/Resources
 	cp $(SRC)/Info.plist $(BUILD)/
 	mkdir $(BUILD)/lib/GraphicsMagick-$(GM_VER)
 	mkdir $(BUILD)/lib/GraphicsMagick-$(GM_VER)/config

@@ -155,8 +155,14 @@ var mouse = {
 		}
 
 		// New width and height
-		ds.style.width = Math.abs(e.clientX + pos.x.value + OFFSET_X -
-			mouse.anchor.x) + 'px';
+		var width;
+		if (mouse.box.width - 2 * uploadr.conf.scrollbar_width <
+			e.clientX + pos.x.value + OFFSET_X) {
+			width = mouse.box.width - 2 * uploadr.conf.scrollbar_width - mouse.anchor.x;
+		} else {
+			width = Math.abs(e.clientX + pos.x.value + OFFSET_X - mouse.anchor.x);
+		}
+		ds.style.width = width + 'px';
 		ds.style.height = Math.abs(e.clientY + pos.y.value + OFFSET_Y -
 			mouse.anchor.y) + 'px';
 
@@ -190,7 +196,8 @@ var mouse = {
 		}
 
 		// Clicking whitespace will start the drag-select
-		else if ('photos_sort_revert' != e.target.id && 'scrollbox' != e.target.nodeName) {
+		else if ('photos_sort_revert' != e.target.id &&
+			uploadr.conf.scrollbar_width < mouse.box.width - e.clientX) {
 			mouse.anchor = {
 				x: e.clientX + pos.x.value - mouse.box.x - grid.base.x,
 				y: e.clientY + pos.y.value - mouse.box.y - grid.base.y
