@@ -487,6 +487,9 @@ div.toolbarseparator {
 	padding: 0 5px;
 	vertical-align: top;
 }
+#meta table tr td label, #batch_meta table tr td label {
+	display: block;
+}
 #meta table tr td textbox, #batch_meta table tr td textbox {
 	width: 180px;
 }
