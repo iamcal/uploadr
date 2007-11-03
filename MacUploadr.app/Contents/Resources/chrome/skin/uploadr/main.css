@@ -4,6 +4,14 @@ box, toolbox, hbox, vbox {
 	padding: 0;
 	border: 0;
 }
+/*
+* {
+	font-family: Arial, sans-serif;
+}
+label, p, div {
+	font-size: 12px;
+}
+*/
 
 
 
@@ -289,15 +297,16 @@ div.toolbarseparator {
 	margin: 0;
 	padding: 0 5px 0 0;
 }
-#photostream h1, #photostream p {
-	margin: 0;
+#photostream h1 {
+	margin: -5px 0 -5px 0;
 	padding: 0;
 }
-#photostream_pro, #photostream_free {
+#photostream p {
+	margin: 0;
+	padding: 0;
+}	
+#photostream_pro {
 	display: none;
-}
-#photostream_free {
-	font-size: 12px;
 }
 #photostream_tools {
 	text-align: right;
@@ -473,9 +482,13 @@ div.toolbarseparator {
 }
 
 /* Two columns */
-#meta vbox.column, #batch_meta vbox.column {
+#meta table tr td, #batch_meta table tr td {
 	width: 200px;
-	padding: 5px;
+	padding: 0 5px;
+	vertical-align: top;
+}
+#meta table tr td textbox, #batch_meta table tr td textbox {
+	width: 180px;
 }
 
 /* Initially, and while logged-out, don't show sets */

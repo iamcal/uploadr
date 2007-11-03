@@ -71,21 +71,21 @@ ifeq (mac, $(PLATFORM))
 		-I$(GECKO_SDK).$(PLATFORM)/idl \
 		gm.idl
 endif
-	g++ -w -c \
+	g++ -w -c -O2 \
 		-o gm_impl.o \
 		-I$(GECKO_SDK).$(PLATFORM)/include \
 		-I$(GM_INCLUDE) \
 		-I$(EXIV_INCLUDE) \
 		$(DEFINE) \
 		gm_impl.cpp
-	g++ -w -c \
+	g++ -w -c -O2 \
 		-o gm_module.o \
 		-I$(GECKO_SDK).$(PLATFORM)/include \
 		-I$(GM_INCLUDE) \
 		-I$(EXIV_INCLUDE) \
 		$(DEFINE) \
 		gm_module.cpp
-	g++ -dynamiclib \
+	g++ -dynamiclib -O2 \
 		-o gm.dylib.$(PLATFORM) \
 		gm_impl.o gm_module.o \
 		-L$(GECKO_SDK).$(PLATFORM)/lib \
@@ -121,17 +121,17 @@ ifeq (mac, $(PLATFORM))
 		-I$(GECKO_SDK).$(PLATFORM)/idl \
 		secret.idl
 endif
-	g++ -w -c \
+	g++ -w -c -O2 \
 		-o secret_impl.o \
 		-I$(GECKO_SDK).$(PLATFORM)/include \
 		$(DEFINE) \
 		secret_impl.cpp
-	g++ -w -c \
+	g++ -w -c -O2 \
 		-o secret_module.o \
 		-I$(GECKO_SDK).$(PLATFORM)/include \
 		$(DEFINE) \
 		secret_module.cpp
-	g++ -dynamiclib \
+	g++ -dynamiclib -O2 \
 		-o secret.dylib.$(PLATFORM) \
 		secret_impl.o secret_module.o \
 		-L$(GECKO_SDK).$(PLATFORM)/lib \
@@ -144,8 +144,14 @@ endif
 
 
 test:
-	g++ -w -c -o gm_test.o -I/usr/local/include/GraphicsMagick gm_test.cpp
-	g++ -o gm_test gm_test.o -L/usr/local/lib -L/usr/X11R6/lib \
-	-L/Developer/SDKs/MacOSX10.4u.sdk/usr/lib -L/opt/local/lib \
-	-lGraphicsMagick++ -lGraphicsMagick -lX11 -lz -lbz2 -lxml2 -lXext \
-	-ljpeg -lpng -lungif
+	g++ -w -c -O2 -o gm_test.o -I$(GM_INCLUDE) gm_test.cpp
+	g++ -O2 -o gm_test gm_test.o \
+		-L$(GM_LIB) \
+		-L$(X11_LIB) \
+		-L$(PORTS_LIB) \
+		-lGraphicsMagick++ -lGraphicsMagick \
+		-lX11 \
+		-lz -lbz2 \
+		-lxml2 \
+		-lXext \
+		-ljpeg -lpng

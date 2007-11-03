@@ -101,9 +101,15 @@ make sure libjpeg.dylib is available in /opt/local/lib.  To build the
 XPCOM component, move this file to /opt/local/lib/libjpeg.dylib.sav
 (or somewhere else, just so it is away from the expected location).
 
-./configure LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
-CPPFLAGS="-I/opt/local/include -I/usr/local/include" --without-perl \
---disable-installed
+./configure \
+	CFLAGS="-O3" \
+	CXXFLAGS="-O3" \
+	CPPFLAGS="-I/opt/local/include -I/usr/local/include" \
+	LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
+	--without-perl \
+	--disable-installed \
+	--without-dps --without-fpx --without-jbig --without-jp2 \
+	--without-lcms --without-trio --without-ttf --without-wmf
 make && sudo make install
 
 For Mac, the magic.mgk and modules.mgk files must be in

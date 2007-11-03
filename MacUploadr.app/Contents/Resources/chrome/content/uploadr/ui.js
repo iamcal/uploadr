@@ -51,6 +51,33 @@ var help = {
 
 	faq: function() {
 		launch_browser('http://flickr.com/help/faq/');
+	},
+
+	// Sneaky reformatting of help text
+	_pretty: function() {
+		for each (var id in ['help_offline', 'help_drag']) {
+			var node = document.getElementById(id);
+			var pink = node.firstChild.nodeValue.match(/\{(.+)\}/);
+			var black = node.firstChild.nodeValue.split(pink[0]);
+			node.removeChild(node.firstChild);
+			node.appendChild(document.createTextNode(black[0]));
+			var span = document.createElementNS(NS_HTML, 'span');
+			span.style.color = '#ff0084';
+			span.appendChild(document.createTextNode(pink[1]));
+			node.appendChild(span);
+			node.appendChild(document.createTextNode(black[1]));
+		}
+		var node = document.getElementById('help_faq');
+		var link = node.firstChild.nodeValue.match(/\{(.+)\}/);
+		var black = node.firstChild.nodeValue.split(link[0]);
+		node.removeChild(node.firstChild);
+		node.appendChild(document.createTextNode(black[0]));
+		var span = document.createElementNS(NS_HTML, 'span');
+		span.className = 'link';
+		span.onclick = help.faq;
+		span.appendChild(document.createTextNode(link[1]));
+		node.appendChild(span);
+		node.appendChild(document.createTextNode(black[1]));
 	}
 
 };

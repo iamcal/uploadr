@@ -17,13 +17,6 @@ var buttons = {
 		}
 	},
 
-	go_pro: {
-		click: function() {
-			launch_browser('http://flickr.com/upgrade/');
-			alert(locale.getString('dialog.go_pro.text'), locale.getString('dialog.go_pro.title'));
-		}
-	},
-
 	remove: {
 		enable: function() {
 			document.getElementById('t_remove').className = 'button';
