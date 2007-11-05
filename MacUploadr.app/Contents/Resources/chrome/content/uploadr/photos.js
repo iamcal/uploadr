@@ -40,6 +40,7 @@ var photos = {
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
 		fp.appendFilters(Ci.nsIFilePicker.filterImages);
+		fp.appendFilter('TIFF', 'tiff; TIFF; tif; TIF');
 		var res = fp.show();
 		if (Ci.nsIFilePicker.returnOK == res) {
 			var files = fp.files;

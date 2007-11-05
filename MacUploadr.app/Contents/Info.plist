@@ -12,15 +12,24 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>jpeg</string>
+				<string>JPEG</string>
 				<string>jpg</string>
+				<string>JPG</string>
 				<string>png</string>
+				<string>PNG</string>
 				<string>gif</string>
+				<string>GIF</string>
+				<string>tiff</string>
+				<string>TIFF</string>
+				<string>tif</string>
+				<string>TIF</string>
 			</array>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>GIFf</string>
 				<string>JPEG</string>
 				<string>PNGf</string>
+				<string>TIFF</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>

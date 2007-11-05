@@ -118,7 +118,7 @@ var settings = {
 		}
 
 		// Otherwise, save changes to settings and users
-		else {
+		else if (result.list) {
 
 			// Remove removed users
 			var deleted_current = true;
