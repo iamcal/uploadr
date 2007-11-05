@@ -356,9 +356,6 @@ div.toolbarseparator {
 #photos_init hbox {
 	margin: 5px;
 }
-#photos_init hbox box {
-	/*border: 1px solid red;*/
-}
 #photos_init hbox box h2 {
 	margin: 0;
 	padding: 0 5px 0 0;

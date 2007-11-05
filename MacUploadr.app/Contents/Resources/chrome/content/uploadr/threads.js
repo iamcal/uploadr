@@ -77,15 +77,21 @@ ThumbCallback.prototype = {
 				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
-				var title = thumb[6].replace(/^\s+|\s+$/,
-					'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
-				if ('' != title) {
-					photos.list[this.id].title = title;
+				if ('' == photos.list[this.id].title) {
+					var title = thumb[6].replace(/^\s+|\s+$/,
+						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+					if ('' != title) {
+						photos.list[this.id].title = title;
+					}
 				}
-				photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/g,
-					'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
-				photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/g,
-					'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				if ('' == photos.list[this.id].description) {
+					photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/g,
+						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				}
+				if ('' == photos.list[this.id].tags) {
+					photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/g,
+						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				}
 
 				// Select newly added images if the user hasn't clicked
 				if (meta.auto_select || this.auto_select) {
@@ -433,6 +439,10 @@ var PhotoAddCallback = function(path, obj) {
 };
 PhotoAddCallback.prototype = {
 	run: function() {
+		photos._add(this.path);
+		if (null != this.obj) {
+			photos.list[photos.list.length - 1] = this.obj;
+		}
 
 		// All the normal stuff from photos.add to make it look right
 		buttons.upload.disable();
@@ -441,10 +451,6 @@ PhotoAddCallback.prototype = {
 		document.getElementById('photos_new').style.display = 'none';
 		mouse.show_photos();
 
-		photos._add(this.path);
-		if (null != this.obj) {
-			photos.list[photos.list.length - 1] = this.obj;
-		}
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

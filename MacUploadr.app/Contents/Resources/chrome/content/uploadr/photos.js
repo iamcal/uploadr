@@ -322,7 +322,7 @@ var photos = {
 		// Add the previous batch of photos
 		var list = obj.list;
 		var ii = list.length;
-		if (0 != ii) {
+		if (ii) {
 			document.getElementById('photos_stack').style.visibility = 'visible';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
