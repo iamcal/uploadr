@@ -2,7 +2,7 @@
 
 	# Get the project name
 	if (isset($argv[1])) {
-		$project = preg_replace('/[^a-z0-9]/i', '', $argv[1]);
+		$project = preg_replace('/[^a-z0-9_]/i', '', $argv[1]);
 	} else {
 		die("Usage: $argv[0] <project> [<locale-path>]\n");
 	}
@@ -48,11 +48,11 @@
 			$content .= "<!ENTITY $k.joined \"<!! dev=\"$project\">$v</!!>\">\n";
 		}
 
-		$fh = fopen("$dir/ext_$project_$file.txt", 'w');
+		$fh = fopen("$dir/ext_{$project}_{$file}.txt", 'w');
 		fwrite($fh, $content);
 		fclose($fh);
 
-		echo "wrote $dir/ext_$project_$file.txt\n";
+		echo "wrote $dir/ext_{$project}_{$file}.txt\n";
 	}
 
 	function markup_dtd($m){
@@ -83,11 +83,11 @@
 		$content = preg_replace('!^([a-z0-9._]+)=(.*)$!m', "$1=<!! dev=\"$project\">$2</!!>",
 			$content);
 
-		$fh = fopen("$dir/ext_$project_$file.txt", 'w');
+		$fh = fopen("$dir/ext_{$project}_{$file}.txt", 'w');
 		fwrite($fh, $content);
 		fclose($fh);
 
-		echo "wrote $dir/ext_$project_$file.txt\n";
+		echo "wrote $dir/ext_{$project}_{$file}.txt\n";
 	}
 
 	##############################################################################################
