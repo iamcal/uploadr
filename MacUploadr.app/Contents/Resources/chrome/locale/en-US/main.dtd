@@ -29,8 +29,8 @@
 <!ENTITY buttons.auth "Ready!">
 <!ENTITY buttons.ok "OK">
 
-<!ENTITY bandwidth "Bandwidth:">
-<!ENTITY bandwidth.go_pro "Go Pro!">
+<!ENTITY bandwidth.remaining "Left this month">
+<!ENTITY bandwidth.batch "This batch">
 
 <!ENTITY photostream.title "Your photos">
 

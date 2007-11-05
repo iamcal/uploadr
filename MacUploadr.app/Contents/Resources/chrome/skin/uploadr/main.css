@@ -4,14 +4,6 @@ box, toolbox, hbox, vbox {
 	padding: 0;
 	border: 0;
 }
-/*
-* {
-	font-family: Arial, sans-serif;
-}
-label, p, div {
-	font-size: 12px;
-}
-*/
 
 
 
@@ -111,6 +103,10 @@ label, p, div {
 .progress_bar box {
 	height: 12px;
 	margin: 0;
+}
+.progress_bar box.done {
+	border: 0;
+	background: white url(icon_check.png) no-repeat center right;
 }
 
 /* Buttons */
@@ -243,12 +239,15 @@ radiogroup checkbox {
 }
 div.toolbarseparator {
 	width: 1px;
-	margin: 0 15px 5px 10px;
+	margin: 0 15px;
 	background: #eee;
+}
+#t_add, #t_remove {
+	margin: 0 5px 0 0;
 }
 #t_rotate_l, #t_rotate_r {
 	width: 30px;
-	height: 20px;
+	height: 24px;
 	margin: 0 5px 0 0;
 	background: url(buttons.png) no-repeat;
 	border: 0;
@@ -262,9 +261,6 @@ div.toolbarseparator {
 #t_rotate_l.enabled:active {
 	background-position: -42px -67px;
 }
-#t_rotate_r {
-	width: 30px;
-}
 #t_rotate_r.disabled {
 	background-position: -72px -3px;
 }
@@ -273,6 +269,32 @@ div.toolbarseparator {
 }
 #t_rotate_r.enabled:active {
 	background-position: -72px -67px;
+}
+
+/* Bandwidth indicators */
+#bw_remaining, #bw_batch {
+	display: none;
+	text-align: center;
+}
+#bw_remaining {
+	margin: 0 15px 0 0;
+}
+#bw_batch {
+	margin: 0 15px;
+	padding: 0 0 0 15px;
+	border-left: 1px solid #eee;
+}
+#bw_remaining p, #bw_batch p, #bw_remaining_mb, #bw_batch_mb {
+	margin: 0;
+}
+#bw_remaining p, #bw_batch p {
+	color: #bbb;
+}
+#bw_remaining_mb.almost, #bw_batch_mb.almost {
+	color: #800;
+}
+#bw_remaining_mb.exhausted, #bw_batch_mb.exhausted {
+	color: #f00;
 }
 
 
@@ -311,34 +333,6 @@ div.toolbarseparator {
 #photostream_tools {
 	text-align: right;
 	vertical-align: bottom;
-}
-
-/* Free account bandwidth meter */
-#bandwidth {
-	visibility: hidden;
-	margin: 0 0 5px 0;
-}
-#bandwidth hbox {
-	width: 100px;
-	background: white;
-	border: 1px solid #ddd;
-}
-#bw_used, #bw_batch, #bw_remaining {
-	height: 14px;
-}
-#bw_used, #bw_batch {
-	width: 0;
-}
-#bw_used {
-	background: #ff0084;
-	opacity: 0.75;
-}
-#bw_batch {
-	background: #ff0084;
-}
-#bw_remaining {
-	width: 100px;
-	background: #f8f8f8;
 }
 
 /* Messages in the photos container */

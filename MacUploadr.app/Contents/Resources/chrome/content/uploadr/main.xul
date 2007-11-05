@@ -115,15 +115,35 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<!-- Header -->
 		<hbox id="head">
 			<hbox id="tools">
-				<html:div id="t_add" class="button" onclick="photos.add();"
-				><html:div>&tools.add;</html:div></html:div>
-				<html:div id="t_remove" class="disabled_button" onclick="photos.remove();"
-				><html:div>&tools.remove;</html:div></html:div>
-				<html:div class="toolbarseparator" />
-				<html:div id="t_rotate_l" class="disabled"
-				onclick="photos.rotate(-90);" />
-				<html:div id="t_rotate_r" class="disabled"
-				onclick="photos.rotate(90);" />
+				<vbox id="bw_remaining">
+					<html:p>&bandwidth.remaining;</html:p>
+					<html:h3 id="bw_remaining_mb"> </html:h3>
+				</vbox>
+				<vbox>
+					<spacer flex="1" />
+					<html:div id="t_add" class="button" onclick="photos.add();"
+					><html:div>&tools.add;</html:div></html:div>
+					<spacer flex="1" />
+				</vbox>
+				<vbox id="bw_batch">
+					<html:p>&bandwidth.batch;</html:p>
+					<html:h3 id="bw_batch_mb"> </html:h3>
+				</vbox>
+				<vbox>
+					<spacer flex="1" />
+					<html:div id="t_remove" class="disabled_button" onclick="photos.remove();"
+					><html:div>&tools.remove;</html:div></html:div>
+					<spacer flex="1" />
+				</vbox>
+					<html:div class="toolbarseparator" />
+				<vbox>
+					<html:div id="t_rotate_l" class="disabled"
+					onclick="photos.rotate(-90);" />
+				</vbox>
+				<vbox>
+					<html:div id="t_rotate_r" class="disabled"
+					onclick="photos.rotate(90);" />
+				</vbox>
 			</hbox>
 			<box><html:p id="free"> </html:p></box>
 			<box flex="1" />

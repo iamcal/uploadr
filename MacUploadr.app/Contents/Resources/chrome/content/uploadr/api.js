@@ -300,7 +300,7 @@ var upload = {
 			photos.ok = 0;
 			photos.fail = 0;
 			unblock_exit();
-			if (confirm(locale.getFormattedString('dialog.bandwidth.text', ['foo']),
+			if (confirm(locale.getString('dialog.bandwidth.text'),
 				locale.getString('dialog.bandwidth.title'),
 				locale.getString('dialog.bandwidth.ok'),
 				locale.getString('dialog.bandwidth.cancel'))) {
@@ -308,6 +308,7 @@ var upload = {
 			} else {
 				buttons.login.click();
 			}
+			mouse.show_photos();
 			return true;
 		} else {
 			return false;

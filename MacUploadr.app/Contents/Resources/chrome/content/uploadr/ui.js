@@ -99,6 +99,7 @@ ProgressBar.prototype = {
 	// Do something special when the bar is finished
 	done: function(success) {
 		this.update(1);
+		document.getElementById(this.id).className = 'done';
 	},
 
 	// Generate DOM nodes for this progress bar
@@ -149,38 +150,37 @@ var free = {
 				}
 			}
 
-			/*
-			var f = document.getElementById('free');
-			f.firstChild.nodeValue = locale.getFormattedString('free.status', [
-				Math.round(100 * users.bandwidth.used / users.bandwidth.total),
-				Math.round(users.bandwidth.total / 102.4) / 10,
-				Math.round(users.bandwidth.remaining / 102.4) / 10,
-				photos.count,
-				Math.round(photos.batch_size / 102.4) / 10
-			]);
-			f.style.display = 'block';
-			*/
-			var used = Math.min(100, Math.round(100 * users.bandwidth.used /
-				users.bandwidth.total));
-			var batch = Math.max(0, Math.round(100 * photos.batch_size / users.bandwidth.total));
-			var remaining = Math.max(0,
-			Math.round(100 * users.bandwidth.remaining / users.bandwidth.total));
-			batch = Math.min(batch, remaining);
-			remaining += 100 - (used + batch + remaining);
-			document.getElementById('bw_used').style.width = used + 'px';
-			var bw_batch = document.getElementById('bw_batch');
-			bw_batch.style.width = batch + 'px';
-			bw_batch.style.backgroundPosition = '-' + used + 'px -34px';
-			var bw_remaining = document.getElementById('bw_remaining');
-			bw_remaining.style.width = remaining + 'px';
-			bw_remaining.style.backgroundPosition = '-' + (used + batch) + 'px -17px';
-			document.getElementById('bandwidth').style.visibility = 'visible';
+			var remaining = document.getElementById('bw_remaining_mb');
+			remaining.firstChild.nodeValue =
+				locale.getFormattedString('bandwidth.mb',
+				[Math.max(0, users.bandwidth.remaining >> 10)]);
+			if (0 >= users.bandwidth.remaining) {
+				remaining.className = 'exhausted';
+			} else if (6 << 10 > users.bandwidth.remaining) {
+				remaining.className = 'almost';
+			} else {
+				remaining.className = '';
+			}
+			document.getElementById('bw_remaining').style.display = '-moz-box';
+			var batch = document.getElementById('bw_batch_mb');
+			batch.firstChild.nodeValue =
+				locale.getFormattedString('bandwidth.mb', [photos.batch_size >> 10]);
+			if (photos.batch_size > users.bandwidth.remaining) {
+				batch.className = 'exhausted';
+			} else if (photos.batch_size + (6 << 10) > users.bandwidth.remaining) {
+				batch.className = 'almost';
+			} else {
+				batch.className = '';
+			}
+			document.getElementById('bw_batch').style.display = '-moz-box';
 		}
 
 	},
 
 	hide: function() {
-		document.getElementById('bandwidth').style.visibility = 'hidden';
+		document.getElementById('bw_remaining').style.display = 'none';
+		document.getElementById('bw_batch').style.display = 'none';
+		//document.getElementById('bandwidth').style.visibility = 'hidden';
 	}
 
 };

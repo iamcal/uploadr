@@ -433,6 +433,14 @@ var PhotoAddCallback = function(path, obj) {
 };
 PhotoAddCallback.prototype = {
 	run: function() {
+
+		// All the normal stuff from photos.add to make it look right
+		buttons.upload.disable();
+		document.getElementById('photos_stack').style.visibility = 'visible';
+		document.getElementById('photos_init').style.display = 'none';
+		document.getElementById('photos_new').style.display = 'none';
+		mouse.show_photos();
+
 		photos._add(this.path);
 		if (null != this.obj) {
 			photos.list[photos.list.length - 1] = this.obj;

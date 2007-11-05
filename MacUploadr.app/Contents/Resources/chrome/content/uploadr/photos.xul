@@ -28,14 +28,6 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						</html:td>
 						<html:td id="photostream_tools" width="100%">
 							<vbox align="right">
-								<hbox id="bandwidth">
-									<label value="&bandwidth;" />
-									<hbox>
-										<box id="bw_used" />
-										<box id="bw_batch" />
-										<box id="bw_remaining" />
-									</hbox>
-								</hbox>
 								<box><html:div id="switch" class="small button"
 								onclick="buttons.login.click();"
 								><html:div>&login;</html:div></html:div></box>
