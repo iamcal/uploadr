@@ -3,7 +3,7 @@
 <?xml-stylesheet href="chrome://uploadr/skin/dialog.css" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://uploadr/locale/main.dtd">
 <dialog id="dialog_about" title="&dialog.about;" buttons="accept"
-onload="document.getElementById('version').fistChild.nodeValue =
+onload="document.getElementById('version').firstChild.nodeValue =
 	document.getElementById('locale').getFormattedString('dialog.about.version',
 	[window.arguments[0]]);"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"

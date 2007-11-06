@@ -201,6 +201,22 @@ var status = {
 
 };
 
+// Make sure we don't resize too small
+var resize = function() {
+/*
+var arr = [];
+for (var a in window) arr.push(a);
+Components.utils.reportError(arr.toSource());
+*/
+//Components.utils.reportError('width: ' + window.outerWidth + ', height: ' + window.outerHeight);
+	if (uploadr.conf.min_width > window.outerWidth) {
+		window.outerWidth = uploadr.conf.min_width;
+	}
+	if (uploadr.conf.min_height > window.outerHeight) {
+		window.outerHeight = uploadr.conf.min_height;
+	}
+};
+
 // Get the locale object (a StringBundle) from the DOM
 var locale = document.getElementById('locale');
 
@@ -227,7 +243,7 @@ var block_remove = function() {
 };
 var unblock_remove = function() {
 	--_block_remove;
-	if (0 == _block_remove) {
+	if (0 == _block_remove && photos.selected.length) {
 		var b = document.getElementById('t_remove');
 		b.disabled = false;
 		b.className = 'button';

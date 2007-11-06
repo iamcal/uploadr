@@ -356,10 +356,14 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 		}
 
 		// Yank out all the metadata we want to save
-		Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
-		meta_r->readMetadata();
-		Exiv2::ExifData & exif = meta_r->exifData();
-		Exiv2::IptcData & iptc = meta_r->iptcData();
+		Exiv2::ExifData exif;
+		Exiv2::IptcData iptc;
+		try {
+			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+			meta_r->readMetadata();
+			exif = meta_r->exifData();
+			iptc = meta_r->iptcData();
+		} catch (Exiv2::Error &) {}
 
 		// Create a new path
 		rotate_str = find_path(path_str, "-rotate");
@@ -379,10 +383,12 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 		exif["Exif.Image.Orientation"] = uint32_t(1);
 
 		// Put saved metadata into the resized image
-		Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*rotate_str);
-		meta_w->setExifData(exif);
-		meta_w->setIptcData(iptc);
-		meta_w->writeMetadata();
+		try {
+			Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*rotate_str);
+			meta_w->setExifData(exif);
+			meta_w->setIptcData(iptc);
+			meta_w->writeMetadata();
+		} catch (Exiv2::Error &) {}
 
 		// If all went well, return stuff
 		_retval.Append('o');
@@ -421,10 +427,14 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 		}
 
 		// Yank out all the metadata we want to save
-		Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
-		meta_r->readMetadata();
-		Exiv2::ExifData & exif = meta_r->exifData();
-		Exiv2::IptcData & iptc = meta_r->iptcData();
+		Exiv2::ExifData exif;
+		Exiv2::IptcData iptc;
+		try {
+			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+			meta_r->readMetadata();
+			exif = meta_r->exifData();
+			iptc = meta_r->iptcData();
+		} catch (Exiv2::Error &) {}
 
 		// Open the image
 		Magick::Image img(*path_str);
@@ -485,10 +495,12 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 		img.write(*resize_str);
 
 		// Put saved metadata into the resized image
-		Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*resize_str);
-		meta_w->setExifData(exif);
-		meta_w->setIptcData(iptc);
-		meta_w->writeMetadata();
+		try {
+			Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*resize_str);
+			meta_w->setExifData(exif);
+			meta_w->setIptcData(iptc);
+			meta_w->writeMetadata();
+		} catch (Exiv2::Error &) {}
 
 		// If all went well, return stuff
 		string o_str = out.str();

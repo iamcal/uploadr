@@ -52,6 +52,8 @@ Section "Install" SecInstall
 	CreateDirectory "$INSTDIR\components"
 	File /oname=components\gm.dll MacUploadr.app\Contents\Resources\components\gm.dll
 	File /oname=components\gm.xpt MacUploadr.app\Contents\Resources\components\gm.xpt
+	File /oname=components\secret.dll MacUploadr.app\Contents\Resources\components\secret.dll
+	File /oname=components\secret.xpt MacUploadr.app\Contents\Resources\components\secret.xpt
 	File /r /x CVS MacUploadr.app\Contents\Resources\defaults
 	File /r /x CVS MacUploadr.app\Contents\Resources\xulrunner
 	File MacUploadr.app\Contents\Resources\application.ini

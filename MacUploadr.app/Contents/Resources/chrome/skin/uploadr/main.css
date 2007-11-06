@@ -1,3 +1,9 @@
+/* Window minimums */
+#main {
+	min-width: 847px;
+	min-height: 641px;
+}
+
 /* Baseline style, not sure how necessary it is */
 box, toolbox, hbox, vbox {
 	margin: 0;
