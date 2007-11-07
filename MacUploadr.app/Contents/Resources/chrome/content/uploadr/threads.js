@@ -104,7 +104,7 @@ ThumbCallback.prototype = {
 				}
 
 				// If only one photo is selected, refresh the other thumbnail, too
-				if (1 == photos.selected.length && !meta.first) {
+				if (1 == photos.selected.length && this.id == photos.selected[0] && !meta.first) {
 					document.getElementById('meta_div').getElementsByTagName('img')[0].src =
 						img.src;
 				}

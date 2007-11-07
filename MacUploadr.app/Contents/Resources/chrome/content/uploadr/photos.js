@@ -311,13 +311,6 @@ var photos = {
 
 		}
 
-		// Refresh metadata
-		if (1 == photos.selected.length) {
-			meta.save(photos.selected[0]);
-		} else if (1 < photos.selected.length) {
-			meta.abandon();
-		}
-
 	},
 
 	// Load saved metadata
