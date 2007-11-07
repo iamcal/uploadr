@@ -1,9 +1,3 @@
-/* Window minimums */
-#main {
-	min-width: 847px;
-	min-height: 641px;
-}
-
 /* Baseline style, not sure how necessary it is */
 box, toolbox, hbox, vbox {
 	margin: 0;
@@ -310,6 +304,7 @@ div.toolbarseparator {
  */
 
 #photos {
+	min-width: 426px;
 	margin: 0;
 	padding: 5px;
 	overflow: auto;
@@ -470,6 +465,10 @@ div.toolbarseparator {
 	border-left: 1px solid #ddd;
 }
 #meta, #batch_meta {
+	display: none;
+	overflow: hidden;
+}
+#no_meta_prompt {
 	display: none;
 }
 

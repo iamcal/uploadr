@@ -78,6 +78,8 @@
 <!ENTITY meta.safety_level "Safety level:">
 <!ENTITY meta.first "All photos are selected">
 <!ENTITY meta.batch.prompt "Any changes you make here will affect all selected photos.">
+<!ENTITY meta.no.title "Select photos to edit metadata">
+<!ENTITY meta.no.text "You can select photos by clicking, command/control/shift clicking or dragging across a selection.  After you select photos you can add metadata.">
 <!ENTITY meta.sets.add "Add to set:">
 <!ENTITY meta.sets.add.none "No sets">
 <!ENTITY meta.sets.create "Create a set...">

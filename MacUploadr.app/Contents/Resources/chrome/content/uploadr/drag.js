@@ -13,6 +13,7 @@ var drag = {
 		document.getElementById('photos_stack').style.visibility = 'visible';
 		document.getElementById('photos_init').style.display = 'none';
 		document.getElementById('photos_new').style.display = 'none';
+		document.getElementById('no_meta_prompt').style.display = '-moz-box';
 		for (var i = 0; i < ii; ++i) {
 			if ('-url' == cl.getArgument(i)) {
 				photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
@@ -51,6 +52,7 @@ var drag = {
 			document.getElementById('photos_stack').style.visibility = 'visible';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
+			document.getElementById('no_meta_prompt').style.display = '-moz-box';
 			data.dataList.forEach(function(d) {
 				if (d.first.data.isDirectory()) {
 					var files = d.first.data.directoryEntries;

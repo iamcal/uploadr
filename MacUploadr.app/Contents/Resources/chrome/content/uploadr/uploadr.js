@@ -49,11 +49,3 @@ var uploadr = {
 
 	}
 };
-
-// Make the $ plain old getElementById and jQuery not conflict
-/*
-jQuery.noConflict();
-var $ = function(id) {
-	return document.getElementById(id);
-};
-*/

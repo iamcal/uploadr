@@ -449,6 +449,7 @@ PhotoAddCallback.prototype = {
 		document.getElementById('photos_stack').style.visibility = 'visible';
 		document.getElementById('photos_init').style.display = 'none';
 		document.getElementById('photos_new').style.display = 'none';
+		document.getElementById('no_meta_prompt').style.display = '-moz-box';
 		mouse.show_photos();
 
 	},

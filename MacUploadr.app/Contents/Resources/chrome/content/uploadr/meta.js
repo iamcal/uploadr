@@ -77,8 +77,14 @@ var meta = {
 			}
 			document.getElementById('meta_dim').value = locale.getFormattedString('meta.dim',
 				[p.width, p.height]);
-			document.getElementById('meta_size').value = locale.getFormattedString('meta.size',
-				[(Math.round(file.size(p.path) / 102.4) / 10)]);
+			var size = file.size(p.path);
+			if (1024 > size) {
+				document.getElementById('meta_size').value = locale.getFormattedString('kb',
+					[size]);
+			} else {
+				document.getElementById('meta_size').value = locale.getFormattedString('mb',
+					[(Math.round(file.size(p.path) / 102.4) / 10)]);
+			}
 			document.getElementById('single_title').value = p.title;
 			document.getElementById('single_description').value = p.description;
 			document.getElementById('single_tags').value = p.tags;

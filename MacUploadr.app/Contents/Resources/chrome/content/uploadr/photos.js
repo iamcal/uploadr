@@ -29,12 +29,7 @@ var photos = {
 
 	// Let the user select some files, thumbnail them and track them
 	add: function() {
-
 		buttons.upload.disable();
-		document.getElementById('photos_stack').style.visibility = 'visible';
-		document.getElementById('photos_init').style.display = 'none';
-		document.getElementById('photos_new').style.display = 'none';
-		mouse.show_photos();
 
 		var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
@@ -57,6 +52,13 @@ var photos = {
 
 		} else if (photos.count) {
 			buttons.upload.enable();
+		}
+		if (photos.count) {
+			document.getElementById('photos_stack').style.visibility = 'visible';
+			document.getElementById('photos_init').style.display = 'none';
+			document.getElementById('photos_new').style.display = 'none';
+			document.getElementById('no_meta_prompt').style.display = '-moz-box';
+			mouse.show_photos();
 		}
 	},
 	_add: function(path) {
@@ -147,6 +149,7 @@ var photos = {
 			buttons.upload.disable();
 			document.getElementById('photos_sort_default').style.display = 'block';
 			document.getElementById('photos_sort_revert').style.display = 'none';
+			document.getElementById('no_meta_prompt').style.display = 'none';
 		}
 
 	},
@@ -306,6 +309,13 @@ var photos = {
 				photos.selected.push(new_id);
 			}
 
+		}
+
+		// Refresh metadata
+		if (1 == photos.selected.length) {
+			meta.save(photos.selected[0]);
+		} else if (1 < photos.selected.length) {
+			meta.abandon();
 		}
 
 	},

@@ -263,7 +263,10 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						</vbox>
 					</hbox>
 				</vbox>
-				<vbox id="no_meta" flex="1" />
+				<vbox id="no_meta" flex="1">
+					<vbox id="no_meta_prompt" class="status"
+					><html:h3>&meta.no.title;</html:h3><html:p>&meta.no.text;</html:p></vbox>
+				</vbox>
 				<hbox id="meta_button"><spacer flex="1" /><html:div id="button_upload"
 				class="disabled_button" onclick="buttons.upload.click();"
 				><html:div>&buttons.upload;</html:div></html:div><spacer flex="1" /></hbox>

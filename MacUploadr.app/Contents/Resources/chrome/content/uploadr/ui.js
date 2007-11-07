@@ -152,8 +152,7 @@ var free = {
 
 			var remaining = document.getElementById('bw_remaining_mb');
 			remaining.firstChild.nodeValue =
-				locale.getFormattedString('bandwidth.mb',
-				[Math.max(0, users.bandwidth.remaining >> 10)]);
+				locale.getFormattedString('mb', [Math.max(0, users.bandwidth.remaining >> 10)]);
 			if (0 >= users.bandwidth.remaining) {
 				remaining.className = 'exhausted';
 			} else if (6 << 10 > users.bandwidth.remaining) {
@@ -164,7 +163,7 @@ var free = {
 			document.getElementById('bw_remaining').style.display = '-moz-box';
 			var batch = document.getElementById('bw_batch_mb');
 			batch.firstChild.nodeValue =
-				locale.getFormattedString('bandwidth.mb', [photos.batch_size >> 10]);
+				locale.getFormattedString('mb', [photos.batch_size >> 10]);
 			if (photos.batch_size > users.bandwidth.remaining) {
 				batch.className = 'exhausted';
 			} else if (photos.batch_size + (6 << 10) > users.bandwidth.remaining) {
@@ -199,22 +198,6 @@ var status = {
 		status.label = '';
 	}
 
-};
-
-// Make sure we don't resize too small
-var resize = function() {
-/*
-var arr = [];
-for (var a in window) arr.push(a);
-Components.utils.reportError(arr.toSource());
-*/
-//Components.utils.reportError('width: ' + window.outerWidth + ', height: ' + window.outerHeight);
-	if (uploadr.conf.min_width > window.outerWidth) {
-		window.outerWidth = uploadr.conf.min_width;
-	}
-	if (uploadr.conf.min_height > window.outerHeight) {
-		window.outerHeight = uploadr.conf.min_height;
-	}
 };
 
 // Get the locale object (a StringBundle) from the DOM

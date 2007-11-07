@@ -25,11 +25,13 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<label value="&settings.users.user;" />
 					<spacer flex="1" />
 				</vbox>
-				<menulist id="user" flex="1">
-					<menupopup />
-				</menulist>
-			</hbox>
-			<hbox>
+				<vbox flex="1">
+					<spacer flex="1" />
+					<menulist id="user" flex="1">
+						<menupopup />
+					</menulist>
+					<spacer flex="1" />
+				</vbox>
 				<button label="&settings.users.remove;"
 				oncommand="settings.remove_user();" />
 				<button label="&settings.users.add;"
@@ -39,15 +41,17 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 		<groupbox flex="1">
 			<caption label="&settings.resize;" />
 			<html:p id="resize_prompt"> </html:p>
-			<menulist id="resize">
-				<menupopup>
-					<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
-					<menuitem value="800" label="&settings.resize.800;" />
-					<menuitem value="1280" label="&settings.resize.1280;" />
-					<menuitem value="1600" label="&settings.resize.1600;" />
-					<menuitem value="2048" label="&settings.resize.2048;" />
-				</menupopup>
-			</menulist>
+			<box>
+				<menulist id="resize">
+					<menupopup>
+						<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
+						<menuitem value="800" label="&settings.resize.800;" />
+						<menuitem value="1280" label="&settings.resize.1280;" />
+						<menuitem value="1600" label="&settings.resize.1600;" />
+						<menuitem value="2048" label="&settings.resize.2048;" />
+					</menupopup>
+				</menulist>
+			</box>
 		</groupbox>
 		<hbox flex="1">
 			<groupbox flex="1">
