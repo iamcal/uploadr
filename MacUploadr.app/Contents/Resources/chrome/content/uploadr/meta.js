@@ -83,7 +83,7 @@ var meta = {
 					[size]);
 			} else {
 				document.getElementById('meta_size').value = locale.getFormattedString('mb',
-					[(Math.round(file.size(p.path) / 102.4) / 10)]);
+					[Math.round(file.size(p.path) / 102.4) / 10]);
 			}
 			document.getElementById('single_title').value = p.title;
 			document.getElementById('single_description').value = p.description;

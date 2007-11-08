@@ -57,7 +57,7 @@ var photos = {
 			document.getElementById('photos_stack').style.visibility = 'visible';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
-			document.getElementById('no_meta_prompt').style.display = '-moz-box';
+			document.getElementById('no_meta_prompt').style.visibility = 'visible';
 			mouse.show_photos();
 		}
 	},
@@ -93,9 +93,7 @@ var photos = {
 		// Check the size of this file if we're logged in
 		var size = file.size(photos.list[id].path);
 		photos.batch_size += size;
-		if (users.username) {
-			free.update();
-		}
+		free.update();
 
 	},
 
@@ -149,7 +147,7 @@ var photos = {
 			buttons.upload.disable();
 			document.getElementById('photos_sort_default').style.display = 'block';
 			document.getElementById('photos_sort_revert').style.display = 'none';
-			document.getElementById('no_meta_prompt').style.display = 'none';
+			document.getElementById('no_meta_prompt').style.visibility = 'hidden';
 		}
 
 	},

@@ -19,13 +19,12 @@ var users = {
 	after_login: null,
 
 	// Shortcut for the auth sequence
-	login: function() {
-		free.hide();
+	login: function(fresh) {
 		status.set(locale.getString('status.login'));
 		if (users.token) {
 			flickr.auth.checkToken(users.token);
 		} else {
-			flickr.auth.getFrob();
+			flickr.auth.getFrob(fresh);
 		}
 	},
 	_login: function() {
@@ -39,10 +38,10 @@ var users = {
 			flickr.photosets.getList(users.nsid);
 
 			// Update the UI
-			var username = locale.getFormattedString('username', [users.username]);
-			document.getElementById('username').value = username;
-			document.getElementById('switch').firstChild.firstChild.nodeValue =
-				locale.getString('switch');
+			document.getElementById('username').firstChild.nodeValue =
+				locale.getFormattedString('username', [users.username]) + '  ';
+			document.getElementById('switch').style.display = 'inline';
+			document.getElementById('login').style.display = 'none';
 			status.set(locale.getString('status.ready'));
 			buttons.upload.enable();
 			meta.login();
@@ -69,10 +68,11 @@ var users = {
 		users.sets = null;
 
 		// Update the UI
-		document.getElementById('username').value = locale.getString('notloggedin');
-		document.getElementById('switch').firstChild.firstChild.nodeValue =
-			locale.getString('login');
-		document.getElementById('free').style.display = 'none';
+		document.getElementById('username').firstChild.nodeValue =
+			locale.getString('notloggedin') + '  ';
+		document.getElementById('switch').style.display = 'none';
+		document.getElementById('login').style.display = 'block';
+		document.getElementById('bw_remaining').style.display = 'none';
 		status.set(locale.getString('status.disconnected'));
 		meta.logout();
 		document.getElementById('buddyicon').src = 'http://flickr.com/images/buddyicon.jpg';
@@ -122,6 +122,11 @@ var users = {
 				users.login();
 				break;
 			}
+		}
+
+		// Force the bandwidth meter if there's no one logged in
+		if (!users.username) {
+			free.update();
 		}
 
 	},

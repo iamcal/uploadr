@@ -504,12 +504,12 @@ var flickr = {
 			}
 		},
 
-		getFrob: function() {
+		getFrob: function(fresh) {
 			_api({
 				'method': 'flickr.auth.getFrob'
-			});
+			}, null, null, null, fresh);
 		},
-		_getFrob: function(rsp) {
+		_getFrob: function(rsp, fresh) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 				users.logout();
 			} else {
@@ -523,7 +523,7 @@ var flickr = {
 				_api({
 					'perms': 'write',
 					'frob': users.frob,
-				}, 'http://api.flickr.com/services/auth/', true);
+				}, 'http://api.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
 				pages.go('auth');
 			}
 		},

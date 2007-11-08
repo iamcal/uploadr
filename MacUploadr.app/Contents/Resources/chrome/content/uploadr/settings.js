@@ -114,7 +114,7 @@ var settings = {
 		if (result.add_user) {
 			users.after_login = settings.show;
 			users.logout();
-			users.login();
+			users.login(true);
 		}
 
 		// Otherwise, save changes to settings and users

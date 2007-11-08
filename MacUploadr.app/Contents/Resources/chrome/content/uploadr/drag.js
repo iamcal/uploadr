@@ -9,13 +9,17 @@ var drag = {
 		if (0 == ii) {
 			return;
 		}
-		buttons.upload.disable();
-		document.getElementById('photos_stack').style.visibility = 'visible';
-		document.getElementById('photos_init').style.display = 'none';
-		document.getElementById('photos_new').style.display = 'none';
-		document.getElementById('no_meta_prompt').style.display = '-moz-box';
+		var first = true;
 		for (var i = 0; i < ii; ++i) {
 			if ('-url' == cl.getArgument(i)) {
+				if (first) {
+					buttons.upload.disable();
+					document.getElementById('photos_stack').style.visibility = 'visible';
+					document.getElementById('photos_init').style.display = 'none';
+					document.getElementById('photos_new').style.display = 'none';
+					document.getElementById('no_meta_prompt').style.visibility = 'visible';
+					first = false;
+				}
 				photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
 					Ci.nsIFileProtocolHandler).getFileFromURLSpec(cl.getArgument(++i)).path);
 			}
@@ -52,7 +56,7 @@ var drag = {
 			document.getElementById('photos_stack').style.visibility = 'visible';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
-			document.getElementById('no_meta_prompt').style.display = '-moz-box';
+			document.getElementById('no_meta_prompt').style.visibility = 'visible';
 			data.dataList.forEach(function(d) {
 				if (d.first.data.isDirectory()) {
 					var files = d.first.data.directoryEntries;

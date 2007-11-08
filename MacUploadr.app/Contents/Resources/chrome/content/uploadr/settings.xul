@@ -57,7 +57,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			<groupbox flex="1">
 				<caption label="&settings.privacy;" />
 				<label control="is_public" value="&settings.privacy.who;" />
-				<radiogroup id="is_public" value="1" style="padding: 0 0 0 16px;"
+				<radiogroup id="is_public" value="1"
 				oncommand="settings.is_public(this.value);">
 					<radio value="0" label="&settings.privacy.private;" />
 						<checkbox id="is_friend" label="&settings.privacy.friend;"

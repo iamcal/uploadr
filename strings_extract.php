@@ -48,11 +48,11 @@
 			$content .= "<!ENTITY $k.joined \"<!! dev=\"$project\">$v</!!>\">\n";
 		}
 
-		$fh = fopen("$dir/ext_{$project}_{$file}.txt", 'w');
+		$fh = fopen("$dir/ext_uploadr3_{$file}.txt", 'w');
 		fwrite($fh, $content);
 		fclose($fh);
 
-		echo "wrote $dir/ext_{$project}_{$file}.txt\n";
+		echo "wrote $dir/ext_uploadr3_{$file}.txt\n";
 	}
 
 	function markup_dtd($m){
@@ -83,11 +83,11 @@
 		$content = preg_replace('!^([a-z0-9._]+)=(.*)$!m', "$1=<!! dev=\"$project\">$2</!!>",
 			$content);
 
-		$fh = fopen("$dir/ext_{$project}_{$file}.txt", 'w');
+		$fh = fopen("$dir/ext_uploadr3_{$file}.txt", 'w');
 		fwrite($fh, $content);
 		fclose($fh);
 
-		echo "wrote $dir/ext_{$project}_{$file}.txt\n";
+		echo "wrote $dir/ext_uploadr3_{$file}.txt\n";
 	}
 
 	##############################################################################################

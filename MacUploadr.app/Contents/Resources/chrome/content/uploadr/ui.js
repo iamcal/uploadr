@@ -24,8 +24,10 @@ var pages = {
 		// Only the photos page has the toolbar
 		if ('photos' == id) {
 			document.getElementById('tools').style.display = '-moz-box';
+			document.getElementById('bw_batch').style.display = '-moz-box';
 		} else {
 			document.getElementById('tools').style.display = 'none';
+			document.getElementById('bw_batch').style.display = 'none';
 		}
 
 	},
@@ -121,38 +123,29 @@ var free = {
 
 	update: function() {
 
-		// Don't do anything if we're not logged in
-		if (null == users.username) {
-			return;
-		}
-
-		// If this is a pro user, hide the bandwidth bars
-		if (users.is_pro) {
-			free.hide();
-		}
-
-		// If this is a free user, adjust and show the bandwidth bars
-		else {
-
-			// Calculate the batch size if it hasn't been calculated
-			if (0 == photos.batch_size && 0 != photos.count) {
-				for each (var p in photos.list) {
-					if (null != p) {
-						var size = file.size(p.path);
+		// Calculate the batch size if it hasn't been calculated
+		if (0 == photos.batch_size && 0 != photos.count) {
+			for each (var p in photos.list) {
+				if (null != p) {
+					var size = file.size(p.path);
+					if (users.username) {
 						if (!users.is_pro &&
 							users.bandwidth.remaining - photos.batch_size < size) {
 							status.set(locale.getString('status.limit'));
 						} else {
 							status.clear();
 						}
-						photos.batch_size += size;
 					}
+					photos.batch_size += size;
 				}
 			}
+		}
 
+		if (users.bandwidth && !users.is_pro) {
 			var remaining = document.getElementById('bw_remaining_mb');
 			remaining.firstChild.nodeValue =
-				locale.getFormattedString('mb', [Math.max(0, users.bandwidth.remaining >> 10)]);
+				locale.getFormattedString('mb', [Math.max(0,
+				Math.round(users.bandwidth.remaining / 102.4) / 10)]);
 			if (0 >= users.bandwidth.remaining) {
 				remaining.className = 'exhausted';
 			} else if (6 << 10 > users.bandwidth.remaining) {
@@ -161,9 +154,11 @@ var free = {
 				remaining.className = '';
 			}
 			document.getElementById('bw_remaining').style.display = '-moz-box';
-			var batch = document.getElementById('bw_batch_mb');
-			batch.firstChild.nodeValue =
-				locale.getFormattedString('mb', [photos.batch_size >> 10]);
+		}
+		var batch = document.getElementById('bw_batch_mb');
+		batch.firstChild.nodeValue =
+			locale.getFormattedString('mb', [Math.round(photos.batch_size / 102.4) / 10]);
+		if (users.bandwidth) {
 			if (photos.batch_size > users.bandwidth.remaining) {
 				batch.className = 'exhausted';
 			} else if (photos.batch_size + (6 << 10) > users.bandwidth.remaining) {
@@ -171,15 +166,8 @@ var free = {
 			} else {
 				batch.className = '';
 			}
-			document.getElementById('bw_batch').style.display = '-moz-box';
 		}
 
-	},
-
-	hide: function() {
-		document.getElementById('bw_remaining').style.display = 'none';
-		document.getElementById('bw_batch').style.display = 'none';
-		//document.getElementById('bandwidth').style.visibility = 'hidden';
 	}
 
 };

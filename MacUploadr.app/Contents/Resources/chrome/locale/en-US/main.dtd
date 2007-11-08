@@ -17,6 +17,7 @@
 
 <!ENTITY notloggedin "You're working offline.">
 <!ENTITY login "Sign in">
+<!ENTITY switch "Switch users?">
 
 <!ENTITY auth.confirm "When you've given the Flickr Uploadr permission to connect to your account on the Flickr website, click the big READY! button.">
 <!ENTITY auth.confirm.oops "Give permission again?">
@@ -48,7 +49,7 @@
 <!ENTITY settings.users.remove "Remove selected user">
 <!ENTITY settings.users.add "Add new user">
 <!ENTITY settings.privacy "Default privacy:">
-<!ENTITY settings.privacy.who "Who can see this photo?">
+<!ENTITY settings.privacy.who "Who can see your photos?">
 <!ENTITY settings.privacy.private "Only you">
 <!ENTITY settings.privacy.friend "Your friends">
 <!ENTITY settings.privacy.family "Your family">
@@ -72,12 +73,19 @@
 <!ENTITY settings.note.text "Your Privacy, Safety and Content-Type settings in Uploadr are separate from your flickr.com settings.">
 
 <!ENTITY meta.title "Title:">
+<!ENTITY meta.title.tooltip "This title will overwrite the titles of selected photos.">
 <!ENTITY meta.description "Description:">
+<!ENTITY meta.description.tooltip "This description will be appended to the descriptions of selected photos.">
 <!ENTITY meta.tags "Tags:">
+<!ENTITY meta.single.tags.tooltip "Separate each tag with a space: cameraphone urban moblog. Or to join 2 words together in one tag, use double quotes: &#34;daily commute&#34;.">
+<!ENTITY meta.batch.tags.tooltip "These tags will be appended to the tags of selected photos.">
+<!ENTITY meta.single.who "Who can see this photo?">
+<!ENTITY meta.batch.who "Who can see these photos?">
 <!ENTITY meta.content_type "Content type:">
 <!ENTITY meta.safety_level "Safety level:">
 <!ENTITY meta.first "All photos are selected">
 <!ENTITY meta.batch.prompt "Any changes you make here will affect all selected photos.">
+<!ENTITY meta.batch.prompt2 "Setting the title here will overwrite the title on each selected photo.  Descriptions and tags will be appended to each photo's description and tags.">
 <!ENTITY meta.no.title "Select photos to edit metadata">
 <!ENTITY meta.no.text "You can select photos by clicking, command/control/shift clicking or dragging across a selection.  After you select photos you can add metadata.">
 <!ENTITY meta.sets.add "Add to set:">

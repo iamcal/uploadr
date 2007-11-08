@@ -24,11 +24,12 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<html:h1>&photostream.title; <html:img id="photostream_pro"
 							src="chrome://uploadr/skin/badge_pro.gif" width="20" height="12"
 							/></html:h1>
-							<label id="username" value="&notloggedin;" />
+							<html:p id="username">&notloggedin; <html:span id="switch"
+							class="link" onclick="settings.show();">&switch;</html:span></html:p>
 						</html:td>
 						<html:td id="photostream_tools" width="100%">
 							<vbox align="right">
-								<box><html:div id="switch" class="small button"
+								<box><html:div id="login" class="small button"
 								onclick="buttons.login.click();"
 								><html:div>&login;</html:div></html:div></box>
 							</vbox>
@@ -72,32 +73,25 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<spacer flex="1" />
 						</vbox>
 					</hbox>
-					<html:table cellpadding="0" cellspacing="0">
-					<html:tr>
-						<html:td>
+					<hbox>
+						<vbox class="column">
 							<label control="single_title" value="&meta.title;" />
-						</html:td>
-						<html:td> </html:td>
-					</html:tr>
-					<html:tr>
-						<html:td>
 							<textbox id="single_title" tabindex="1"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
-						</html:td>
-						<html:td style="vertical-align: middle;">
-							<label control="single_is_public" value="&settings.privacy.who;" />
-						</html:td>
-					</html:tr>
-					<html:tr>
-						<html:td>
 							<label control="single_description" value="&meta.description;" />
 							<textbox id="single_description" multiline="true" rows="3" tabindex="2"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
-							<label control="single_tags" value="&meta.tags;" />
-						</html:td>
-						<html:td style="padding: 0 0 0 16px;">
+							<label control="single_tags" value="&meta.tags;"
+							tooltiptext="&meta.single.tags.tooltip;" />
+							<textbox id="single_tags" multiline="true" rows="2" tabindex="3"
+							onfocus="keyboard._select_all = this;"
+							onblur="keyboard._select_all = null;"
+							tooltiptext="&meta.single.tags.tooltip;" />
+						</vbox>
+						<vbox class="column">
+							<label control="single_is_public" value="&meta.single.who;" />
 							<radiogroup id="single_is_public" value="1" tabindex="5"
 							oncommand="meta.is_public(this.value);">
 								<radio value="0" label="&settings.privacy.private;" />
@@ -107,21 +101,13 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									label="&settings.privacy.family;" tabindex="7" />
 								<radio value="1" label="&settings.privacy.public;" />
 							</radiogroup>
-						</html:td>
-					</html:tr>
-					<html:tr>
-						<html:td>
-							<textbox id="single_tags" multiline="true" rows="2" tabindex="3"
-							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;" />
-						</html:td>
-						<html:td>
+							<html:p> </html:p>
 							<checkbox id="single_hidden" label="&settings.hidden;"
 							tabindex="8" />
-						</html:td>
-					</html:tr>
-					<html:tr>
-						<html:td>
+						</vbox>
+					</hbox>
+					<hbox>
+						<vbox class="column">
 							<label control="single_safety_level" value="&meta.safety_level;" />
 							<menulist id="single_safety_level" tabindex="4">
 								<menupopup>
@@ -133,8 +119,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									label="&settings.safety_level.restricted;" />
 								</menupopup>
 							</menulist>
-						</html:td>
-						<html:td>
+						</vbox>
+						<vbox class="column">
 							<label control="single_content_type" value="&meta.content_type;" />
 							<menulist id="single_content_type" tabindex="9">
 								<menupopup>
@@ -145,9 +131,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									<menuitem value="3" label="&settings.content_type.other;" />
 								</menupopup>
 							</menulist>
-						</html:td>
-					</html:tr>
-					</html:table>
+						</vbox>
+					</hbox>
 					<hbox id="hide_single_explain" class="status"
 					><html:p>&meta.hidden;</html:p></hbox>
 					<hbox id="hide_single_sets">
@@ -155,8 +140,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<label value="&meta.sets.add;" />
 							<html:ul id="single_sets_add" onclick="meta.add_to_set(event);"
 							></html:ul>
-							<label id="single_sets_create" class="link"
-							value="&meta.sets.create;" onclick="meta.create_set();" />
+							<box><html:div id="single_sets_create" onclick="meta.create_set();"
+							class="button"><html:div>&meta.sets.create;</html:div></html:div></box>
 						</vbox>
 						<vbox>
 							<label value="&meta.single.sets.added;" />
@@ -168,33 +153,27 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				</vbox>
 				<vbox id="batch_meta" flex="1">
 					<vbox class="status thumb_height"><html:h3
-					id="batch_prompt"> </html:h3><html:p>&meta.batch.prompt;</html:p></vbox>
-					<html:table cellpadding="0" cellspacing="0">
-					<html:tr>
-						<html:td>
+					id="batch_prompt"> </html:h3><html:p>&meta.batch.prompt;</html:p><html:p
+					>&meta.batch.prompt2;</html:p></vbox>
+					<hbox>
+						<vbox class="column">
 							<label control="batch_title" value="&meta.title;" />
-						</html:td>
-						<html:td> </html:td>
-					</html:tr>
-					<html:tr>
-						<html:td>
 							<textbox id="batch_title" tabindex="1"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
-						</html:td>
-						<html:td style="vertical-align: middle;">
-							<label control="batch_is_public" value="&settings.privacy.who;" />
-						</html:td>
-					</html:tr>
-					<html:tr>
-						<html:td>
 							<label control="batch_description" value="&meta.description;" />
 							<textbox id="batch_description" multiline="true" rows="3" tabindex="2"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
-							<label control="batch_tags" value="&meta.tags;" />
-						</html:td>
-						<html:td style="padding: 0 0 0 16px;">
+							<label control="batch_tags" value="&meta.tags;"
+							tooltiptext="&meta.batch.tags.tooltip;" />
+							<textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
+							onfocus="keyboard._select_all = this;"
+							onblur="keyboard._select_all = null;"
+							tooltiptext="&meta.batch.tags.tooltip;" />
+						</vbox>
+						<vbox class="column">
+							<label control="batch_is_public" value="&meta.batch.who;" />
 							<radiogroup id="batch_is_public" value="1" tabindex="5"
 							oncommand="meta.is_public(this.value);">
 								<radio value="0" label="&settings.privacy.private;" />
@@ -204,21 +183,13 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									label="&settings.privacy.family;" tabindex="7" />
 								<radio value="1" label="&settings.privacy.public;" />
 							</radiogroup>
-						</html:td>
-					</html:tr>
-					<html:tr>
-						<html:td>
-							<textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
-							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;" />
-						</html:td>
-						<html:td>
+							<html:p> </html:p>
 							<checkbox id="batch_hidden" label="&settings.hidden;"
 							tabindex="8" />
-						</html:td>
-					</html:tr>
-					<html:tr>
-						<html:td>
+						</vbox>
+					</hbox>
+					<hbox>
+						<vbox class="column">
 							<label control="batch_safety_level" value="&meta.safety_level;" />
 							<menulist id="batch_safety_level" tabindex="4">
 								<menupopup>
@@ -230,8 +201,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									label="&settings.safety_level.restricted;" />
 								</menupopup>
 							</menulist>
-						</html:td>
-						<html:td>
+						</vbox>
+						<vbox class="column">
 							<label control="batch_content_type" value="&meta.content_type;" />
 							<menulist id="batch_content_type" tabindex="9">
 								<menupopup>
@@ -242,9 +213,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									<menuitem value="3" label="&settings.content_type.other;" />
 								</menupopup>
 							</menulist>
-						</html:td>
-					</html:tr>
-					</html:table>
+						</vbox>
+					</hbox>
 					<hbox id="hide_batch_explain" class="status"
 					><html:p>&meta.hidden;</html:p></hbox>
 					<hbox id="hide_batch_sets">
@@ -252,8 +222,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<label value="&meta.sets.add;" />
 							<html:ul id="batch_sets_add" onclick="meta.add_to_set(event);"
 							></html:ul>
-							<label id="batch_sets_create" class="link"
-							value="&meta.sets.create;" onclick="meta.create_set();" />
+							<box><html:div id="batch_sets_create" onclick="meta.create_set();"
+							class="button"><html:div>&meta.sets.create;</html:div></html:div></box>
 						</vbox>
 						<vbox>
 							<label value="&meta.batch.sets.added;" />
@@ -264,7 +234,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					</hbox>
 				</vbox>
 				<vbox id="no_meta" flex="1">
-					<vbox id="no_meta_prompt" class="status"
+					<vbox id="no_meta_prompt" class="status thumb_height"
 					><html:h3>&meta.no.title;</html:h3><html:p>&meta.no.text;</html:p></vbox>
 				</vbox>
 				<hbox id="meta_button"><spacer flex="1" /><html:div id="button_upload"

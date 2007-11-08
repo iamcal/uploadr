@@ -114,19 +114,11 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<!-- Header -->
 		<hbox id="head">
 			<hbox id="tools">
-				<vbox id="bw_remaining">
-					<html:p>&bandwidth.remaining;</html:p>
-					<html:h3 id="bw_remaining_mb"> </html:h3>
-				</vbox>
 				<vbox>
 					<spacer flex="1" />
 					<html:div id="t_add" class="button" onclick="photos.add();"
 					><html:div>&tools.add;</html:div></html:div>
 					<spacer flex="1" />
-				</vbox>
-				<vbox id="bw_batch">
-					<html:p>&bandwidth.batch;</html:p>
-					<html:h3 id="bw_batch_mb"> </html:h3>
 				</vbox>
 				<vbox>
 					<spacer flex="1" />
@@ -146,6 +138,14 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			</hbox>
 			<box><html:p id="free"> </html:p></box>
 			<box flex="1" />
+			<vbox id="bw_remaining">
+				<html:p>&bandwidth.remaining;</html:p>
+				<html:h3 id="bw_remaining_mb"> </html:h3>
+			</vbox>
+			<vbox id="bw_batch">
+				<html:p>&bandwidth.batch;</html:p>
+				<html:h3 id="bw_batch_mb"> </html:h3>
+			</vbox>
 			<box id="logo" />
 		</hbox>
 

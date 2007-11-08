@@ -20,12 +20,16 @@ box, toolbox, hbox, vbox {
 #logo {
 	width: 100px;
 	height: 37px;
+	margin: 0 0 0 320px;
 	background: url(logo_flickr.png) no-repeat 0 5px;
 }
 
 /* User indicator */
 #username {
 	margin: 5px 5px 0 0;
+}
+#switch {
+	display: none;
 }
 
 
@@ -216,7 +220,7 @@ radiogroup checkbox {
 	background: #ffc;
 }
 .status h3, .status p {
-	margin: 0;
+	margin: 0 0 4px 0;
 }
 
 /* Make anything look like a link */
@@ -273,16 +277,18 @@ div.toolbarseparator {
 
 /* Bandwidth indicators */
 #bw_remaining, #bw_batch {
-	display: none;
+	margin: 3px 0 3px 10px;
 	text-align: center;
+	border: 1px solid #eee;
 }
 #bw_remaining {
-	margin: 0 15px 0 0;
+	display: none;
+	padding: 0 0 0 10px;
+	border-width: 0 0 0 1px;
 }
 #bw_batch {
-	margin: 0 15px;
-	padding: 0 0 0 15px;
-	border-left: 1px solid #eee;
+	padding: 0 10px;
+	border-width: 0 1px;
 }
 #bw_remaining p, #bw_batch p, #bw_remaining_mb, #bw_batch_mb {
 	margin: 0;
@@ -304,7 +310,7 @@ div.toolbarseparator {
  */
 
 #photos {
-	min-width: 426px;
+	min-width: 370px;
 	margin: 0;
 	padding: 5px;
 	overflow: auto;
@@ -321,7 +327,7 @@ div.toolbarseparator {
 	padding: 0 5px 0 0;
 }
 #photostream h1 {
-	margin: -5px 0 -5px 0;
+	margin: -5px 0 0 0;
 	padding: 0;
 }
 #photostream p {
@@ -466,10 +472,10 @@ div.toolbarseparator {
 }
 #meta, #batch_meta {
 	display: none;
-	overflow: hidden;
+	overflow: auto;
 }
 #no_meta_prompt {
-	display: none;
+	visibility: hidden;
 }
 
 /* Minimize jumping around with a min-height on the status messages */
@@ -478,21 +484,22 @@ div.toolbarseparator {
 }
 
 /* Two columns */
-#meta table tr td, #batch_meta table tr td {
+.column {
 	width: 200px;
 	padding: 0 5px;
 	vertical-align: top;
 }
-#meta table tr td label, #batch_meta table tr td label {
+#meta label, #batch_meta label {
 	display: block;
 }
-#meta table tr td textbox, #batch_meta table tr td textbox {
+#meta textbox, #batch_meta textbox {
 	width: 180px;
 }
 
 /* Initially, and while logged-out, don't show sets */
 #hide_single_sets, #hide_batch_sets {
 	visibility: hidden;
+	margin: 5px;
 }
 
 /* The upload button, which is big */
@@ -516,10 +523,12 @@ div.toolbarseparator {
 	border: 0;
 }
 
-/* Sets lists */
-#hide_single_sets, #hide_batch_sets {
-	margin: 5px;
+/* Indent the privacy options */
+#single_is_public, #batch_is_public {
+	padding: 0 0 0 16px;
 }
+
+/* Sets lists */
 #single_sets_add, #batch_sets_add, #single_sets_added, #batch_sets_added {
 	width: 199px;
 	height: 90px;
@@ -554,6 +563,7 @@ div.toolbarseparator {
 /* Must explicitly allow the creating of sets */
 #single_sets_create, #batch_sets_create {
 	visibility: hidden;
+	margin: 5px 0 0 0;
 }
 
 

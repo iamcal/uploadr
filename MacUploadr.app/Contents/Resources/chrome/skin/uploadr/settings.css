@@ -2,6 +2,10 @@
 	width: 700px;
 }
 
+#is_public {
+	padding: 0 0 0 16px;
+}
+
 radiogroup checkbox {
 	margin-left: 16px;
 }
