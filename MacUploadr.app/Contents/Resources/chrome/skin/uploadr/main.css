@@ -472,10 +472,20 @@ div.toolbarseparator {
 }
 #meta, #batch_meta {
 	display: none;
+}
+#meta, #batch_meta, #no_meta {
 	overflow: auto;
 }
 #no_meta_prompt {
 	visibility: hidden;
+}
+
+/* No meta has disabled fields and lots of grey */
+#no_meta label {
+	color: #bbb;
+}
+#no_meta_sets {
+	margin: 5px;
 }
 
 /* Minimize jumping around with a min-height on the status messages */
@@ -489,10 +499,10 @@ div.toolbarseparator {
 	padding: 0 5px;
 	vertical-align: top;
 }
-#meta label, #batch_meta label {
+#meta label, #batch_meta label, #no_meta label {
 	display: block;
 }
-#meta textbox, #batch_meta textbox {
+#meta textbox, #batch_meta textbox, #no_meta textbox {
 	width: 180px;
 }
 
@@ -524,12 +534,13 @@ div.toolbarseparator {
 }
 
 /* Indent the privacy options */
-#single_is_public, #batch_is_public {
+#single_is_public, #batch_is_public, #no_is_public {
 	padding: 0 0 0 16px;
 }
 
 /* Sets lists */
-#single_sets_add, #batch_sets_add, #single_sets_added, #batch_sets_added {
+/*#single_sets_add, #batch_sets_add, #single_sets_added, #batch_sets_added {*/
+#meta ul, #batch_meta ul, #no_meta ul {
 	width: 199px;
 	height: 90px;
 	overflow: auto;
@@ -537,6 +548,9 @@ div.toolbarseparator {
 	padding: 0;
 	background: white;
 	list-style-type: none;
+}
+#no_meta ul {
+	background: #f2f2f2;
 }
 #single_sets_added, #batch_sets_added {
 	border-left: 1px solid #ddd;
@@ -563,6 +577,8 @@ div.toolbarseparator {
 /* Must explicitly allow the creating of sets */
 #single_sets_create, #batch_sets_create {
 	visibility: hidden;
+}
+#single_sets_create, #batch_sets_create, #no_sets_create {
 	margin: 5px 0 0 0;
 }
 

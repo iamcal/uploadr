@@ -236,6 +236,56 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				<vbox id="no_meta" flex="1">
 					<vbox id="no_meta_prompt" class="status thumb_height"
 					><html:h3>&meta.no.title;</html:h3><html:p>&meta.no.text;</html:p></vbox>
+					<hbox>
+						<vbox class="column">
+							<label value="&meta.title;" />
+							<textbox disabled="true" />
+							<label value="&meta.description;" />
+							<textbox multiline="true" rows="3" disabled="true" />
+							<label value="&meta.tags;" />
+							<textbox multiline="true" rows="2" disabled="true" />
+						</vbox>
+						<vbox class="column">
+							<label value="&meta.single.who;" />
+							<radiogroup id="no_is_public" disabled="true">
+								<radio value="0" label="&settings.privacy.private;" />
+									<checkbox label="&settings.privacy.friend;" disabled="true" />
+									<checkbox label="&settings.privacy.family;" disabled="true" />
+								<radio value="1" label="&settings.privacy.public;" />
+							</radiogroup>
+							<html:p> </html:p>
+							<checkbox label="&settings.hidden;" disabled="true" />
+						</vbox>
+					</hbox>
+					<hbox>
+						<vbox class="column">
+							<label value="&meta.safety_level;" />
+							<menulist disabled="true">
+								<menupopup />
+							</menulist>
+						</vbox>
+						<vbox class="column">
+							<label value="&meta.content_type;" />
+							<menulist disabled="true">
+								<menupopup />
+							</menulist>
+						</vbox>
+					</hbox>
+					<hbox id="no_meta_sets">
+						<vbox>
+							<label value="&meta.sets.add;" />
+							<html:ul></html:ul>
+							<box><html:div id="no_sets_create" class="disabled_button"><html:div
+							>&meta.sets.create;</html:div></html:div></box>
+						</vbox>
+						<vbox>
+							<label value="&meta.single.sets.added;" />
+							<html:ul></html:ul>
+						</vbox>
+					</hbox>
+
+
+
 				</vbox>
 				<hbox id="meta_button"><spacer flex="1" /><html:div id="button_upload"
 				class="disabled_button" onclick="buttons.upload.click();"

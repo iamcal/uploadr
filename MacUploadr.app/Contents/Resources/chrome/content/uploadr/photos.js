@@ -327,6 +327,7 @@ var photos = {
 			document.getElementById('photos_stack').style.visibility = 'visible';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
+			document.getElementById('no_meta_prompt').style.visibility = 'visible';
 		}
 		for (var i  = 0; i < ii; ++i) {
 			photos._add(list[i].path);
