@@ -195,6 +195,7 @@ var photos = {
 		document.getElementById('photos_stack').style.visibility = 'hidden';
 		document.getElementById('photos_init').style.display = 'none';
 		document.getElementById('photos_new').style.display = '-moz-box';
+		document.getElementById('no_meta_prompt').style.visibility = 'hidden';
 		meta.disable();
 
 		// Kill off error indicators, they're dead to me
