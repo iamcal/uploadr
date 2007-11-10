@@ -315,7 +315,7 @@ var mouse = {
 
 		// If we're reaching the edge of the box and can scroll, do so
 		if ((0 != mouse.dragging || null != mouse.anchor) &&
-			(uploadr.conf.scroll > e.clientY + OFFSET_Y ||
+			(uploadr.conf.scroll > e.clientY + OFFSET_Y && 0 != pos.y.value ||
 			 uploadr.conf.scroll > mouse.box.height - e.clientY - OFFSET_Y - grid.base.y)) {
 			if (null == mouse.auto_scroll) {
 				var clientX = e.clientX;

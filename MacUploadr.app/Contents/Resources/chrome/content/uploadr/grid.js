@@ -3,7 +3,7 @@ var grid = {
 	// Base locations for grid calculations (pixels)
 	base: {
 		x: 5,
-		y: 78
+		y: 86
 	},
 
 	// How many photos are in each full row?
