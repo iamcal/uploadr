@@ -100,7 +100,7 @@ endif
 		-lz -lbz2 \
 		-lxml2 \
 		-lXext \
-		-ljpeg -lpng
+		-ljpeg -lpng -ltiff
 else
 	@echo "Not building the GraphicsMagick XPCOM component"
 endif

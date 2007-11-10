@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
-<?xml-stylesheet href="chrome://hacks/skin/hacks.css" type="text/css"?>
+<!--<?xml-stylesheet href="chrome://hacks/skin/hacks.css" type="text/css"?>-->
 <?xul-overlay href="chrome://uploadr/content/photos.xul"?>
 <?xul-overlay href="chrome://uploadr/content/help.xul"?>
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">

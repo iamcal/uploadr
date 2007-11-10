@@ -8,3 +8,5 @@ skin uploadr default file:skin/uploadr/
 # The hacks package is available for OS-specific tweaks
 #content hacks file:content/hacks/ platform
 #skin hacks default file:skin/hacks/
+
+# Don't forget to update chrome.manifest.prod if you change things here

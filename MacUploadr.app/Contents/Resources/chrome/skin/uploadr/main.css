@@ -436,6 +436,9 @@ div.toolbarseparator {
 #photos_list li.drop_right {
 	border-right: 2px solid black;
 }
+#photos_list li.error {
+	display: block;
+}
 
 /* Cursor follower for dragging */
 #drag_follower {
