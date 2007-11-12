@@ -157,20 +157,24 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					>&meta.batch.prompt2;</html:p></vbox>
 					<hbox>
 						<vbox class="column">
-							<label control="batch_title" value="&meta.title;" />
+							<label control="batch_title" value="&meta.title;"
+							tooltiptext="&meta.title.tooltip;" />
 							<textbox id="batch_title" tabindex="1"
 							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;" />
-							<label control="batch_description" value="&meta.description;" />
+							onblur="keyboard._select_all = null;"
+							tooltiptext="&meta.title.tooltip;" />
+							<label control="batch_description" value="&meta.description;"
+							tooltiptext="&meta.description.tooltip;" />
 							<textbox id="batch_description" multiline="true" rows="3" tabindex="2"
 							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;" />
+							onblur="keyboard._select_all = null;"
+							tooltiptext="&meta.description.tooltip;" />
 							<label control="batch_tags" value="&meta.tags;"
-							tooltiptext="&meta.batch.tags.tooltip;" />
+							tooltiptext="&meta.batch.tags.tooltip; &meta.single.tags.tooltip;" />
 							<textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;"
-							tooltiptext="&meta.batch.tags.tooltip;" />
+							tooltiptext="&meta.batch.tags.tooltip; &meta.single.tags.tooltip;" />
 						</vbox>
 						<vbox class="column">
 							<label control="batch_is_public" value="&meta.batch.who;" />

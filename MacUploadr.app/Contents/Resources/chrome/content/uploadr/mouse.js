@@ -376,13 +376,13 @@ var mouse = {
 
 		// If we're reordering
 		if (null == mouse.anchor) {
+			var list = document.getElementById('photos_list');
 			if (3 == mouse.dragging) {
 
 				// Reorder the photo list
 				photos.selected.sort(function(a, b) {
 					return a < b;
 				});
-				var list = document.getElementById('photos_list');
 				for each (var id in photos.selected) {
 					var p = document.getElementById('photo' + id);
 
@@ -418,6 +418,15 @@ var mouse = {
 			mouse.dragging = 0;
 			mouse.target = null;
 			mouse.left = false;
+
+			// For false-starts where we don't really drag, make sure dragging class is removed
+			var li = list.getElementsByTagName('li');
+			var ii = li.length;
+			for (var i = 0; i < ii; ++i) {
+				var img = li[i].getElementsByTagName('img')[0];
+				img.className = img.className.replace('dragging', '');
+			}
+
 		}
 
 		// If we're selecting, finalize the selection

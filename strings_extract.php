@@ -1,19 +1,8 @@
 <?
 
-	# Get the project name
-	if (isset($argv[1])) {
-		$project = preg_replace('/[^a-z0-9_]/i', '', $argv[1]);
-	} else {
-		die("Usage: $argv[0] <project> [<locale-path>]\n");
-	}
-
-	# Get a specific path, if passed
+	# Aaaand back to the way it was
 	$dir = dirname(__FILE__);
-	if (isset($argv[2])) {
-		$locale = $argv[2];
-	} else {
-		$locale = "$dir/MacUploadr.app/Contents/Resources/chrome/locale/en-US";
-	}
+	$locale = "$dir/MacUploadr.app/Contents/Resources/chrome/locale/en-US";
 
 	#
 	# find files we care about
@@ -45,7 +34,7 @@
 		foreach ($str_hash as $k => $v){
 
 			$v = implode('{TOKEN}', $v);
-			$content .= "<!ENTITY $k.joined \"<!! dev=\"$project\">$v</!!>\">\n";
+			$content .= "<!ENTITY $k.joined \"<!! dev=\"uploadr3\">$v</!!>\">\n";
 		}
 
 		$fh = fopen("$dir/ext_uploadr3_{$file}.txt", 'w');
@@ -69,7 +58,7 @@
 			}
 		}
 
-		return "ENTITY $m[1] \"<!! dev=\"$project\">$m[2]</!!>\"";
+		return "ENTITY $m[1] \"<!! dev=\"uploadr3\">$m[2]</!!>\"";
 	}
 
 	##############################################################################################

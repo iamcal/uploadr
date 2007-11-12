@@ -86,8 +86,8 @@
 <!ENTITY meta.first "All photos are selected">
 <!ENTITY meta.batch.prompt "Any changes you make here will affect all selected photos.">
 <!ENTITY meta.batch.prompt2 "Setting the title here will overwrite the title on each selected photo.  Descriptions and tags will be appended to each photo's description and tags.">
-<!ENTITY meta.no.title "Select photos to edit metadata">
-<!ENTITY meta.no.text "You can select photos by clicking, command/control/shift clicking or dragging across a selection.  After you select photos you can add metadata.">
+<!ENTITY meta.no.title "Select some photos to edit">
+<!ENTITY meta.no.text "You can select photos by clicking or by dragging.  After you select photos you can add titles, tags and descriptions or add your photos to sets.">
 <!ENTITY meta.sets.add "Add to set:">
 <!ENTITY meta.sets.add.none "No sets">
 <!ENTITY meta.sets.create "Create a set...">

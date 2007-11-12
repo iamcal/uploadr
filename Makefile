@@ -58,7 +58,8 @@ build:
 	zip uploadr -r content locale skin
 	rm -rf content locale skin
 	mkdir $(BUILD)/Resources/chrome
-	mv uploadr.zip $(BUILD)/Resources/chrome/uploadr.jar
+	mv uploadr.zip $(SRC)/Resources/chrome/uploadr.jar
+	cp $(SRC)/Resources/chrome/uploadr.jar $(BUILD)/Resources/chrome/
 	cp $(SRC)/Resources/chrome/chrome.manifest.prod $(BUILD)/Resources/chrome/chrome.manifest	
 
 	# XPCOM
