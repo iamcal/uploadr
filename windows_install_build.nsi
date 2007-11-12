@@ -16,8 +16,8 @@ InstallDir "$PROGRAMFILES\Flickr Uploadr"
 InstallDirRegKey HKCU "Software\Flickr Uploadr" ""
 
 VIProductVersion "${VERSION_DATE}"
-VIAddVersionKey "CompanyName" "Yahoo!, Inc."
-VIAddVersionKey "LegalCopyright" "Copyright (c) Yahoo! Inc."
+VIAddVersionKey "CompanyName" "Flickr"
+VIAddVersionKey "LegalCopyright" "Copyright © 2007 — Flickr and Contributors"
 VIAddVersionKey "FileDescription" "Flickr Uploadr ${VERSION}"
 VIAddVersionKey "FileVersion" "${VERSION_DATE}"
 
@@ -48,7 +48,10 @@ Section "Install" SecInstall
 
 	SetOverwrite on  
 
-	File /r /x CVS /x *.psd MacUploadr.app\Contents\Resources\chrome
+	;File /r /x CVS /x *.psd MacUploadr.app\Contents\Resources\chrome
+	CreateDirectory "$INSTDIR\chrome"
+	File /oname=chrome\uploadr.jar uploadr.jar
+	File /oname=chrome\chrome.manifest MacUploadr.app\Contents\Resources\chrome\chrome.manifest.prod
 	CreateDirectory "$INSTDIR\components"
 	File /oname=components\gm.dll MacUploadr.app\Contents\Resources\components\gm.dll
 	File /oname=components\gm.xpt MacUploadr.app\Contents\Resources\components\gm.xpt
