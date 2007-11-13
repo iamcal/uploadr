@@ -2,11 +2,22 @@ var buttons = {
 
 	login: {
 		click: function() {
+			if ('small button' != document.getElementById('login').className) {
+				Components.utils.reportError('foo');
+				return;
+			}
 			if (users.username) {
 				settings.show();
 			} else {
 				users.login();
+				buttons.login.disable();
 			}
+		},
+		enable: function() {
+			document.getElementById('login').className = 'small button';
+		},
+		disable: function() {
+			document.getElementById('login').className = 'small disabled_button';
 		}
 	},
 

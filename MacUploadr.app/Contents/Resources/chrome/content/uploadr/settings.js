@@ -149,6 +149,12 @@ var settings = {
 			}				
 
 			// Decide what's changed
+			s.is_public = parseInt(s.is_public);
+			s.is_friend = parseInt(s.is_friend);
+			s.is_family = parseInt(s.is_family);
+			s.content_type = parseInt(s.content_type);
+			s.hidden = parseInt(s.hidden);
+			s.safety_level = parseInt(s.safety_level);
 			var changed_privacy = 
 				settings.is_public != s.is_public ||
 				settings.is_friend != s.is_friend ||

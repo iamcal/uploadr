@@ -525,6 +525,7 @@ var flickr = {
 					'frob': users.frob,
 				}, 'http://api.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
 				pages.go('auth');
+				buttons.login.enable();
 			}
 		},
 
@@ -592,7 +593,10 @@ var flickr = {
 		},
 		_getUploadStatus: function(rsp) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				flickr.people.getUploadStatus();
+
+				// This can cause infinite looping, so stoppit
+				//flickr.people.getUploadStatus();
+
 			} else {
 				var user = rsp.getElementsByTagName('user')[0];
 				users.is_pro = 1 == parseInt(user.getAttribute('ispro'));
@@ -831,9 +835,9 @@ var flickr = {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				var privacy =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('privacy'));
-				settings.is_public = 1 == privacy;
-				settings.is_friend = 2 == privacy || 4 == privacy;
-				settings.is_family = 3 == privacy || 4 == privacy;
+				settings.is_public = 1 == privacy ? 1 : 0;
+				settings.is_friend = 2 == privacy || 4 == privacy ? 1 : 0;
+				settings.is_family = 3 == privacy || 4 == privacy ? 1 : 0;
 				settings.save();
 				meta.defaults({
 					is_public: settings.is_public,
