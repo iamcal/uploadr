@@ -69,7 +69,7 @@
 
 		$content = implode(file("$locale/$file"));
 
-		$content = preg_replace('!^([a-z0-9._]+)=(.*)$!m', "$1=<!! dev=\"$project\">$2</!!>",
+		$content = preg_replace('!^([a-z0-9._]+)=(.*)$!m', "$1=<!! dev=\"uploadr3\">$2</!!>",
 			$content);
 
 		$fh = fopen("$dir/ext_uploadr3_{$file}.txt", 'w');
