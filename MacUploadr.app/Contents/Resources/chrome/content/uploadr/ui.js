@@ -52,7 +52,7 @@ var help = {
 	},
 
 	faq: function() {
-		launch_browser('http://flickr.com/help/faq/');
+		launch_browser('http://flickr.com/help/tools/');
 	},
 
 	// Sneaky reformatting of help text

@@ -75,20 +75,20 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					</hbox>
 					<hbox>
 						<vbox class="column">
-							<label control="single_title" value="&meta.title;" />
+							<label control="single_title" value="&meta.single.title;" />
 							<textbox id="single_title" tabindex="1"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
-							<label control="single_description" value="&meta.description;" />
+							<label control="single_description" value="&meta.single.description;" />
 							<textbox id="single_description" multiline="true" rows="3" tabindex="2"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;" />
-							<label control="single_tags" value="&meta.tags;"
-							tooltiptext="&meta.single.tags.tooltip;" />
+							<label control="single_tags" value="&meta.single.tags;"
+							tooltiptext="&meta.tags.tooltip;" />
 							<textbox id="single_tags" multiline="true" rows="2" tabindex="3"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;"
-							tooltiptext="&meta.single.tags.tooltip;" />
+							tooltiptext="&meta.tags.tooltip;" />
 						</vbox>
 						<vbox class="column">
 							<label control="single_is_public" value="&meta.single.who;" />
@@ -153,28 +153,27 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				</vbox>
 				<vbox id="batch_meta" flex="1">
 					<vbox class="status thumb_height"><html:h3
-					id="batch_prompt"> </html:h3><html:p>&meta.batch.prompt;</html:p><html:p
-					>&meta.batch.prompt2;</html:p></vbox>
+					id="batch_prompt"> </html:h3><html:p>&meta.batch.prompt;</html:p></vbox>
 					<hbox>
 						<vbox class="column">
-							<label control="batch_title" value="&meta.title;"
-							tooltiptext="&meta.title.tooltip;" />
+							<label control="batch_title" value="&meta.batch.title;"
+							tooltiptext="&meta.batch.title.tooltip;" />
 							<textbox id="batch_title" tabindex="1"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;"
-							tooltiptext="&meta.title.tooltip;" />
-							<label control="batch_description" value="&meta.description;"
-							tooltiptext="&meta.description.tooltip;" />
+							tooltiptext="&meta.batch.title.tooltip;" />
+							<label control="batch_description" value="&meta.batch.description;"
+							tooltiptext="&meta.batch.description.tooltip;" />
 							<textbox id="batch_description" multiline="true" rows="3" tabindex="2"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;"
-							tooltiptext="&meta.description.tooltip;" />
-							<label control="batch_tags" value="&meta.tags;"
-							tooltiptext="&meta.batch.tags.tooltip; &meta.single.tags.tooltip;" />
+							tooltiptext="&meta.batch.description.tooltip;" />
+							<label control="batch_tags" value="&meta.batch.tags;"
+							tooltiptext="&meta.tags.tooltip;" />
 							<textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
 							onfocus="keyboard._select_all = this;"
 							onblur="keyboard._select_all = null;"
-							tooltiptext="&meta.batch.tags.tooltip; &meta.single.tags.tooltip;" />
+							tooltiptext="&meta.tags.tooltip;" />
 						</vbox>
 						<vbox class="column">
 							<label control="batch_is_public" value="&meta.batch.who;" />
@@ -239,14 +238,14 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				</vbox>
 				<vbox id="no_meta" flex="1">
 					<vbox id="no_meta_prompt" class="status thumb_height"
-					><html:h3>&meta.no.title;</html:h3><html:p>&meta.no.text;</html:p></vbox>
+					><html:h3>&meta.no.prompt;</html:h3></vbox>
 					<hbox>
 						<vbox class="column">
-							<label value="&meta.title;" />
+							<label value="&meta.single.title;" />
 							<textbox disabled="true" />
-							<label value="&meta.description;" />
+							<label value="&meta.single.description;" />
 							<textbox multiline="true" rows="3" disabled="true" />
-							<label value="&meta.tags;" />
+							<label value="&meta.single.tags;" />
 							<textbox multiline="true" rows="2" disabled="true" />
 						</vbox>
 						<vbox class="column">
@@ -287,9 +286,6 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<html:ul></html:ul>
 						</vbox>
 					</hbox>
-
-
-
 				</vbox>
 				<hbox id="meta_button"><spacer flex="1" /><html:div id="button_upload"
 				class="disabled_button" onclick="buttons.upload.click();"

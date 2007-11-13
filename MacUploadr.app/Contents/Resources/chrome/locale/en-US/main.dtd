@@ -72,22 +72,22 @@
 <!ENTITY settings.note "Note:">
 <!ENTITY settings.note.text "Your Privacy, Safety and Content-Type settings in Uploadr are separate from your flickr.com settings.">
 
-<!ENTITY meta.title "Title:">
-<!ENTITY meta.title.tooltip "This title will overwrite the titles of selected photos.">
-<!ENTITY meta.description "Description:">
-<!ENTITY meta.description.tooltip "This description will be appended to the descriptions of selected photos.">
-<!ENTITY meta.tags "Tags:">
-<!ENTITY meta.single.tags.tooltip "Separate each tag with a space: cameraphone urban moblog. Or to join 2 words together in one tag, use double quotes: &#34;daily commute&#34;.">
-<!ENTITY meta.batch.tags.tooltip "These tags will be appended to the tags of selected photos.">
+<!ENTITY meta.single.title "Title:">
+<!ENTITY meta.batch.title "Replace titles:">
+<!ENTITY meta.batch.title.tooltip "Entering a title her will overwrite the titles of selected photos.">
+<!ENTITY meta.single.description "Description:">
+<!ENTITY meta.batch.description "Add description:">
+<!ENTITY meta.batch.description.tooltip "Entering a description will append it to the descriptions of selected photos.">
+<!ENTITY meta.single.tags "Tags:">
+<!ENTITY meta.batch.tags "Add tags:">
+<!ENTITY meta.tags.tooltip "Separate each tag with a space: cameraphone urban moblog. Or to join 2 words together in one tag, use double quotes: &#34;daily commute&#34;.">
 <!ENTITY meta.single.who "Who can see this photo?">
 <!ENTITY meta.batch.who "Who can see these photos?">
 <!ENTITY meta.content_type "Content type:">
 <!ENTITY meta.safety_level "Safety level:">
 <!ENTITY meta.first "All photos are selected">
 <!ENTITY meta.batch.prompt "Any changes you make here will affect all selected photos.">
-<!ENTITY meta.batch.prompt2 "Setting the title here will overwrite the title on each selected photo.  Descriptions and tags will be appended to each photo's description and tags.">
-<!ENTITY meta.no.title "Select some photos to edit">
-<!ENTITY meta.no.text "You can select photos by clicking or by dragging.  After you select photos you can add titles, tags and descriptions or add your photos to sets.">
+<!ENTITY meta.no.prompt "Select a photo (or many) to add titles, tags and descriptions or add your photos to sets">
 <!ENTITY meta.sets.add "Add to set:">
 <!ENTITY meta.sets.add.none "No sets">
 <!ENTITY meta.sets.create "Create a set...">
@@ -104,8 +104,8 @@
 
 <!ENTITY help "Tips and Tricks">
 <!ENTITY help.offline "You can {work offline}.">
-<!ENTITY help.offline.text.first "The Uploadr is designed to let you do the majority of your photo organization and tagging offline.  Once you're ready to upload to Flickr, sign in to your account, and press the enormous Upload Photos button.">
+<!ENTITY help.offline.text.first "The Uploadr is designed to let you do much of your photo organization and tagging offline.  Once you're ready to upload to Flickr, sign in to your account, and press the enormous Upload Photos button.">
 <!ENTITY help.offline.text.second "You can be signed in all the time, if you like.  When you're signed in, you can organize your photos into sets.">
 <!ENTITY help.drag "{Drag and drop} is your friend.">
-<!ENTITY help.drag.text "The left-hand side of the Uploadr screen acts like your photostream page.  You can drag photos into the order that you'd like them to appear on your photos page when they're uploaded.  If you need to, you can also reset any arrangement you make so the photos go back to being ordered by the date they were taken.">
+<!ENTITY help.drag.text "You can drag photos into the order that you'd like them to appear on your photos page when they're uploaded.  If you need to, you can also reset any arrangement you make so the photos go back to being ordered by the date they were taken.">
 <!ENTITY help.faq "If you have more questions, please visit our {Uploadr FAQ}">
