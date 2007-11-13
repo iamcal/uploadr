@@ -46,8 +46,12 @@ var photos = {
 			// After the last file is added, sort the images by date taken if we're sorting
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default').style.display = 'block';
+				document.getElementById('photos_sort_revert').style.display = 'none';
 			} else {
 				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default').style.display = 'none';
+				document.getElementById('photos_sort_revert').style.display = 'block';
 			}
 
 		} else if (photos.count) {
@@ -145,8 +149,9 @@ var photos = {
 			photos.unsaved = false;
 			photos.sort = true;
 			buttons.upload.disable();
-			document.getElementById('photos_sort_default').style.display = 'block';
+			document.getElementById('photos_sort_default').style.display = 'none';
 			document.getElementById('photos_sort_revert').style.display = 'none';
+			document.getElementById('photos_init').style.display = '-moz-box';
 			document.getElementById('no_meta_prompt').style.visibility = 'hidden';
 		}
 
@@ -190,7 +195,7 @@ var photos = {
 		// Update the UI
 		status.set(locale.getString('status.uploading'));
 		buttons.upload.disable();
-		document.getElementById('photos_sort_default').style.display = 'block';
+		document.getElementById('photos_sort_default').style.display = 'none';
 		document.getElementById('photos_sort_revert').style.display = 'none';
 		document.getElementById('photos_stack').style.visibility = 'hidden';
 		document.getElementById('photos_init').style.display = 'none';

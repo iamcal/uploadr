@@ -1,0 +1,90 @@
+<!ENTITY title "Flickr Uploadr">
+<!ENTITY menu.upload "上載">
+<!ENTITY menu.upload.add "增加">
+<!ENTITY menu.upload.preferences "偏好">
+<!ENTITY menu.upload.exit "終止">
+<!ENTITY menu.edit "編輯">
+<!ENTITY menu.edit.cut "剪下">
+<!ENTITY menu.edit.copy "複製">
+<!ENTITY menu.edit.paste "貼上">
+<!ENTITY menu.edit.select_all "全選">
+<!ENTITY menu.help "Flickr 小幫手">
+<!ENTITY menu.help.about "關於 Flickr Uploadr">
+<!ENTITY menu.help.tips "提示和竅門">
+<!ENTITY menu.help.faq "常見問題">
+<!ENTITY menu.help.console "控制台">
+<!ENTITY notloggedin "你正離線工作。">
+<!ENTITY login "登入">
+<!ENTITY auth.confirm "在授權 Flickr Uploadr 連接至 Flickr 網站上你的帳戶後，按一下大的「準備就緒！」按鈕。">
+<!ENTITY auth.confirm.oops "是否再授權一次？">
+<!ENTITY tools.add "+ 增加">
+<!ENTITY tools.remove "- 移除">
+<!ENTITY buttons.upload "上載相片">
+<!ENTITY buttons.cancel "取消">
+<!ENTITY buttons.auth "準備就緒！">
+<!ENTITY buttons.ok "確定">
+<!ENTITY bandwidth "頻寬：">
+<!ENTITY bandwidth.go_pro "移往 Pro！">
+<!ENTITY photostream.title "你的相片">
+<!ENTITY photos.sort.default "你的相片目前按拍攝日期排序。可透過拖放作業重新排序。">
+<!ENTITY photos.sort.revert "按拍攝日期重新排序相片">
+<!ENTITY photos.init "將相片拖曳至此處即可開始。">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.new "該批次正在上載，你可以開始新批次。">
+<!ENTITY settings "設定">
+<!ENTITY settings.notloggedin "你需要登入來調整你的偏好">
+<!ENTITY settings.users "授權：">
+<!ENTITY settings.users.user "登入身分：">
+<!ENTITY settings.users.remove "移除所選使用者">
+<!ENTITY settings.users.add "新增使用者">
+<!ENTITY settings.privacy "預設私隱：">
+<!ENTITY settings.privacy.who "誰可以查看此相片？">
+<!ENTITY settings.privacy.private "僅你自己">
+<!ENTITY settings.privacy.friend "你的朋友">
+<!ENTITY settings.privacy.family "你的家人">
+<!ENTITY settings.privacy.public "任何人">
+<!ENTITY settings.content_type "預設內容類型︰">
+<!ENTITY settings.content_type.photo "相片">
+<!ENTITY settings.content_type.screenshot "螢幕截圖">
+<!ENTITY settings.content_type.other "其他">
+<!ENTITY settings.safety_level "預設安全層級：">
+<!ENTITY settings.safety_level.safe "安全">
+<!ENTITY settings.safety_level.moderate "中等">
+<!ENTITY settings.safety_level.restricted "受限制">
+<!ENTITY settings.hidden "在公開網站區域隱藏">
+<!ENTITY settings.resize "自動調整大小：">
+<!ENTITY settings.resize.dont "不要調整我的相片的大小">
+<!ENTITY settings.resize.800 "800 圖素 (適合在屏幕上欣賞)">
+<!ENTITY settings.resize.1280 "1280 圖素(適合小張列印)">
+<!ENTITY settings.resize.1600 "1600 圖素(適合大張列印)">
+<!ENTITY settings.resize.2048 "2048 圖素(最適合存檔)">
+<!ENTITY settings.note "注意：">
+<!ENTITY settings.note.text "你在 Uploadr 中的私隱、安全和內容類型設定與你的 flickr.com 設定是相互獨立的。">
+<!ENTITY meta.title "標題：">
+<!ENTITY meta.description "描述：">
+<!ENTITY meta.tags "標籤：">
+<!ENTITY meta.content_type "內容類型︰">
+<!ENTITY meta.safety_level "安全水平：">
+<!ENTITY meta.first "已選擇所有相片">
+<!ENTITY meta.batch.prompt "你在此處所做的所有變更均將影響所選的所有相片。">
+<!ENTITY meta.sets.add "新增至相片集：">
+<!ENTITY meta.sets.add.none "沒有相片集">
+<!ENTITY meta.sets.create "建立相片集...">
+<!ENTITY meta.single.sets.added "會將其增加至：">
+<!ENTITY meta.batch.sets.added "會將其增加至：">
+<!ENTITY meta.sets.added.none "你尚未選擇任何相片集">
+<!ENTITY meta.hidden "請登入以查看你的相片集">
+<!ENTITY dialog.about "關於 Flickr Uploadr">
+<!ENTITY dialog.about.copyright.yahoo "版權所有 © 2007 — Flickr 和貢獻者">
+<!ENTITY dialog.about.copyright.xulrunner "XULRunner 根據 Mozilla Public License 使用。">
+<!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick 根據 GNU General Public License 使用。">
+<!ENTITY dialog.about.copyright.exiv2 "Exiv2，copyright © 2004-2007 Andreas Huggel 版權所有，根據 GNU General Public License 使用。">
+<!ENTITY help "提示和竅門">
+<!ENTITY help.offline "你可以。">
+<!ENTITY help.offline.text.first "Uploadr 旨在讓你可以在離線狀態下執行大部分的相片管理和加標籤的工作。準備好上載至 Flickr 後，請登入你的帳戶，然後按很大的「上載相片」按鈕。">
+<!ENTITY help.offline.text.second "如果你愿意可以一直保持登入狀態。登入後，你可以管理相片組成相片集。">
+<!ENTITY help.drag "是你的好幫手。">
+<!ENTITY help.drag.text "Uploadr 螢幕的左側類似於你的所有相片頁面。相片上載後，你可以將其拖曳至你想要它們在相片頁面上顯示的順序。如果需要的話，你還可以重新設定所做的任何排列方式，以使相片恢復為按拍攝日期排序。">
+<!ENTITY help.faq "如果你還有其他問題，請訪問我們的">
+<!ENTITY photos.init.text.joined "或者，按一下  在你的電腦上尋找相片。">

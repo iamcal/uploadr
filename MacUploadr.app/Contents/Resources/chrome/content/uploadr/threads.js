@@ -451,6 +451,13 @@ PhotoAddCallback.prototype = {
 		document.getElementById('photos_new').style.display = 'none';
 		document.getElementById('no_meta_prompt').style.visibility = 'visible';
 		mouse.show_photos();
+		if (photos.sort) {
+			document.getElementById('photos_sort_default').style.display = 'block';
+			document.getElementById('photos_sort_revert').style.display = 'none';
+		} else {
+			document.getElementById('photos_sort_default').style.display = 'none';
+			document.getElementById('photos_sort_revert').style.display = 'block';
+		}
 
 	},
 	QueryInterface: function(iid) {

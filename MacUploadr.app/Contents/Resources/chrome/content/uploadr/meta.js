@@ -14,6 +14,14 @@ var meta = {
 	// Load a photo's metadata from JS into the DOM
 	load: function(id) {
 
+		// Start the sets list all enabled
+		var ul = document.getElementById((null == id ? 'batch' : 'single') +
+			'_sets_add').getElementsByTagName('li');
+		var ii = ul.length;
+		for (var i = 0; i < ii; ++i) {
+			ul[i].className = 'sets_plus';
+		}
+
 		// Load the defaults for a partial batch
 		if (null == id) {
 			if (meta.first) {
@@ -40,7 +48,7 @@ var meta = {
 			document.getElementById('batch_safety_level').value = settings.safety_level;
 
 			// Clear the old sets list
-			var ul = document.getElementById('batch_sets_added');
+			ul = document.getElementById('batch_sets_added');
 			while (ul.hasChildNodes()) {
 				ul.removeChild(ul.firstChild);
 			}
@@ -109,8 +117,10 @@ var meta = {
 				ul.appendChild(li);
 			} else {
 				for (var i = 0; i < ii; ++i) {
+					document.getElementById('single_sets_add_' + p.sets[i]).className =
+						'sets_disabled';
 					var li = document.createElementNS(NS_HTML, 'li');
-					li.id = 'single_sets_' + p.sets[i];
+					li.id = 'single_sets_added_' + p.sets[i];
 					li.className = 'sets_trash';
 					li.appendChild(document.createTextNode(meta.sets[p.sets[i]]));
 					ul.appendChild(li);
@@ -344,7 +354,8 @@ var meta = {
 			return;
 		}
 		var li = e.target;
-		var set_id = li.id.replace(/^(single|batch)_sets_/, '');
+		li.className = 'sets_disabled';
+		var set_id = li.id.replace(/^(single|batch)_sets_add_/, '');
 		var name = li.firstChild.nodeValue;
 
 		// Add each selected photo to this set
@@ -363,7 +374,7 @@ var meta = {
 			ul.removeChild(ul.firstChild);
 		}
 		var li = document.createElementNS(NS_HTML, 'li');
-		li.id = prefix + '_sets_' + set_id;
+		li.id = prefix + '_sets_added_' + set_id;
 		li.className = 'sets_trash';
 		li.appendChild(document.createTextNode(name));
 		ul.appendChild(li);

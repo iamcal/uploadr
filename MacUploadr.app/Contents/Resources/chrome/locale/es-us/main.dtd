@@ -1,0 +1,90 @@
+<!ENTITY title "Uploadr de Flickr">
+<!ENTITY menu.upload "Subir fotos">
+<!ENTITY menu.upload.add "Agregar">
+<!ENTITY menu.upload.preferences "Preferencias">
+<!ENTITY menu.upload.exit "Salir">
+<!ENTITY menu.edit "Editar">
+<!ENTITY menu.edit.cut "Cortar">
+<!ENTITY menu.edit.copy "Copiar">
+<!ENTITY menu.edit.paste "Pegar">
+<!ENTITY menu.edit.select_all "Seleccionar todas">
+<!ENTITY menu.help "Ayuda">
+<!ENTITY menu.help.about "Acerca del Uploadr de Flickr">
+<!ENTITY menu.help.tips "Trucos y sugerencias">
+<!ENTITY menu.help.faq "Preguntas frecuentes">
+<!ENTITY menu.help.console "Consola">
+<!ENTITY notloggedin "Estás trabajando sin conexión.">
+<!ENTITY login "Iniciar sesión">
+<!ENTITY auth.confirm "Cuando le hayas dado permiso al Uploadr de Flickr para conectarse a tu cuenta en el sitio Web de Flickr, haz clic en el gran botón ¡LISTO!">
+<!ENTITY auth.confirm.oops "¿Deseas dar permiso otra vez?">
+<!ENTITY tools.add "+ Agregar">
+<!ENTITY tools.remove "- Quitar">
+<!ENTITY buttons.upload "Subir fotos">
+<!ENTITY buttons.cancel "Cancelar">
+<!ENTITY buttons.auth "¡Listo!">
+<!ENTITY buttons.ok "ACEPTAR">
+<!ENTITY bandwidth "Ancho de banda:">
+<!ENTITY bandwidth.go_pro "¡Hazte pro!">
+<!ENTITY photostream.title "Tus fotos">
+<!ENTITY photos.sort.default "En este momento, tus fotos están ordenadas por la fecha en que se tomaron.  Arrastra y coloca para reordenar.">
+<!ENTITY photos.sort.revert "Reordenar fotos por fecha en que se tomaron">
+<!ENTITY photos.init "Arrastra fotos aquí para comenzar.">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.new "Mientras ese lote se carga, puedes comenzar uno nuevo.">
+<!ENTITY settings "Configuración">
+<!ENTITY settings.notloggedin "Debes iniciar sesión para ajustar tus preferencias">
+<!ENTITY settings.users "Autorización:">
+<!ENTITY settings.users.user "Iniciar sesión como:">
+<!ENTITY settings.users.remove "Quitar usuario seleccionado">
+<!ENTITY settings.users.add "Añadir usuario nuevo">
+<!ENTITY settings.privacy "Privacidad predeterminada:">
+<!ENTITY settings.privacy.who "¿Quiénes pueden ver esta foto?">
+<!ENTITY settings.privacy.private "Sólo tú">
+<!ENTITY settings.privacy.friend "Tus amigos">
+<!ENTITY settings.privacy.family "Tus familiares">
+<!ENTITY settings.privacy.public "Cualquier persona">
+<!ENTITY settings.content_type "Tipo de contenido predeterminado:">
+<!ENTITY settings.content_type.photo "Foto">
+<!ENTITY settings.content_type.screenshot "Captura de pantalla">
+<!ENTITY settings.content_type.other "Otro">
+<!ENTITY settings.safety_level "Nivel de seguridad predeterminado:">
+<!ENTITY settings.safety_level.safe "Segura">
+<!ENTITY settings.safety_level.moderate "Moderada">
+<!ENTITY settings.safety_level.restricted "Restringida">
+<!ENTITY settings.hidden "Ocultar en áreas de sitios públicos">
+<!ENTITY settings.resize "Cambio de tamaño automático:">
+<!ENTITY settings.resize.dont "No cambiarles el tamaño a mis fotos">
+<!ENTITY settings.resize.800 "800 píxeles (adecuado para visualización en pantalla)">
+<!ENTITY settings.resize.1280 "1280 píxeles (adecuado para impresiones pequeñas)">
+<!ENTITY settings.resize.1600 "1600 píxeles (adecuado para impresiones grandes)">
+<!ENTITY settings.resize.2048 "2048 píxeles (óptimo para almacenamiento)">
+<!ENTITY settings.note "Atención:">
+<!ENTITY settings.note.text "Tu configuración de privacidad, seguridad y tipo de contenido en el Uploadr es independiente de tu configuración de flickr.com.">
+<!ENTITY meta.title "Título:">
+<!ENTITY meta.description "Descripción:">
+<!ENTITY meta.tags "Etiquetas:">
+<!ENTITY meta.content_type "Tipo de contenido:">
+<!ENTITY meta.safety_level "Nivel de seguridad:">
+<!ENTITY meta.first "Todas las fotos están seleccionadas">
+<!ENTITY meta.batch.prompt "Los cambios que hagas aquí afectarán a todas las fotos seleccionadas.">
+<!ENTITY meta.sets.add "Incluir en álbum:">
+<!ENTITY meta.sets.add.none "Ningún álbum">
+<!ENTITY meta.sets.create "Crear un álbum...">
+<!ENTITY meta.single.sets.added "Se agregará a:">
+<!ENTITY meta.batch.sets.added "Se agregarán a:">
+<!ENTITY meta.sets.added.none "No has seleccionado ningún álbum">
+<!ENTITY meta.hidden "Inicia sesión para ver tus álbumes">
+<!ENTITY dialog.about "Acerca del Uploadr de Flickr">
+<!ENTITY dialog.about.copyright.yahoo "Derechos de autor © 2007 — Flickr y contribuyentes">
+<!ENTITY dialog.about.copyright.xulrunner "XULRunner está disponible con la licencia pública de Mozilla.">
+<!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick está disponible con la licencia pública general GNU.">
+<!ENTITY dialog.about.copyright.exiv2 "Exiv2 tiene derechos de autor © 2004-2007 de Andreas Huggel y está disponible con la licencia pública general GNU.">
+<!ENTITY help "Trucos y sugerencias">
+<!ENTITY help.offline "Puedes .">
+<!ENTITY help.offline.text.first "El Uploadr está diseñado para permitirte realizar la mayoría de tus actividades de organización y etiquetado de fotos sin conexión.  Cuando estés listo para cargar a Flickr, inicia sesión en tu cuenta y presiona el enorme botón Cargar fotos.">
+<!ENTITY help.offline.text.second "Si lo deseas, puedes mantener la sesión abierta todo el tiempo.  Cuando hayas iniciado sesión, puedes organizar tus fotos en álbumes.">
+<!ENTITY help.drag " es tu amigo.">
+<!ENTITY help.drag.text "El lado izquierdo de la pantalla del Uploadr funciona como la página de tu fotosecuencia.  Puedes arrastrar fotos en el orden que desees que aparezcan en tu página de fotos cuando estén cargadas.  Si necesitas hacerlo, también puedes restablecer la organización de modo que las fotos vuelvan a estar ordenadas por la fecha en que se tomaron.">
+<!ENTITY help.faq "Si tienes alguna duda más, visita nuestra ">
+<!ENTITY photos.init.text.joined "O bien, haz clic en  para buscar fotos en tu computadora.">

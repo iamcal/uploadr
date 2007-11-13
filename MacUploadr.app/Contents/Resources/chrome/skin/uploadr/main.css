@@ -378,14 +378,12 @@ div.toolbarseparator {
 
 /* Sort indicators */
 #photos_sort_default, #photos_sort_revert {
+	display: none;
 	margin: 0;
 	padding: 0;
 }
 #photos_sort_default {
 	color: #bbb;
-}
-#photos_sort_revert {
-	display: none;
 }
 
 /* The actual list of photos and similar properties of the queue */
@@ -565,13 +563,16 @@ div.toolbarseparator {
 	text-align: center;
 	background: transparent;
 }
-.sets_plus, .sets_trash {
+.sets_plus, .sets_disabled, .sets_trash {
 	margin: 2px;
 	padding: 0 0 0 16px;
 	cursor: pointer;
 }
 .sets_plus {
 	background: url(icon_add.png) no-repeat center left;
+}
+.sets_disabled {
+	color: #bbb;
 }
 .sets_trash {
 	background: url(icon_trash.png) no-repeat center left;

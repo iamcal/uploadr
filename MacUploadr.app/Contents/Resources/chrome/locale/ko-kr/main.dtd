@@ -1,0 +1,90 @@
+<!ENTITY title "Flickr Uploadr">
+<!ENTITY menu.upload "사진 업로드">
+<!ENTITY menu.upload.add "추가">
+<!ENTITY menu.upload.preferences "기본 설정">
+<!ENTITY menu.upload.exit "종료">
+<!ENTITY menu.edit "수정">
+<!ENTITY menu.edit.cut "잘라내기">
+<!ENTITY menu.edit.copy "복사">
+<!ENTITY menu.edit.paste "붙여넣기">
+<!ENTITY menu.edit.select_all "모두 선택">
+<!ENTITY menu.help "도움말">
+<!ENTITY menu.help.about "Flickr Uploadr 정보">
+<!ENTITY menu.help.tips "팁과 트릭">
+<!ENTITY menu.help.faq "FAQ">
+<!ENTITY menu.help.console "콘솔">
+<!ENTITY notloggedin "오프라인으로 작업하고 있습니다.">
+<!ENTITY login "로그인">
+<!ENTITY auth.confirm "Flickr Uploadr가 Flickr 웹사이트의 귀하 계정에 연결하는 것을 허가하려면 커다란 준비! 단추를 클릭합니다.">
+<!ENTITY auth.confirm.oops "다시 허가하겠습니까?">
+<!ENTITY tools.add "+ 추가">
+<!ENTITY tools.remove "- 제거">
+<!ENTITY buttons.upload "사진 업로드">
+<!ENTITY buttons.cancel "취소">
+<!ENTITY buttons.auth "준비!">
+<!ENTITY buttons.ok "확인">
+<!ENTITY bandwidth "대역폭:">
+<!ENTITY bandwidth.go_pro "프로로 이동!">
+<!ENTITY photostream.title "내 사진">
+<!ENTITY photos.sort.default "사진은 현재 촬영 날짜 순으로 정렬되어 있습니다.  끌어다 놓아서 재정렬하십시오.">
+<!ENTITY photos.sort.revert "촬영 날짜 순으로 사진 재정렬">
+<!ENTITY photos.init "사진을 여기로 끌어서 시작하십시오.">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.new "그 배치를 업로드하는 중에 새로운 배치를 시작할 수 있습니다.">
+<!ENTITY settings "설정">
+<!ENTITY settings.notloggedin "기본 설정을 조정하려면 로그인해야 합니다">
+<!ENTITY settings.users "권한 부여:">
+<!ENTITY settings.users.user "다음으로 로그인:">
+<!ENTITY settings.users.remove "선택된 사용자 제거">
+<!ENTITY settings.users.add "새 사용자 추가">
+<!ENTITY settings.privacy "기본 개인 정보:">
+<!ENTITY settings.privacy.who "이 사진을 볼 수 있는 사람은 누구입니까?">
+<!ENTITY settings.privacy.private "나만">
+<!ENTITY settings.privacy.friend "내 친구">
+<!ENTITY settings.privacy.family "내 가족">
+<!ENTITY settings.privacy.public "모두">
+<!ENTITY settings.content_type "기본 컨텐츠 유형:">
+<!ENTITY settings.content_type.photo "사진">
+<!ENTITY settings.content_type.screenshot "스크린샷">
+<!ENTITY settings.content_type.other "기타">
+<!ENTITY settings.safety_level "기본 안전 수준:">
+<!ENTITY settings.safety_level.safe "안전함(safe) ">
+<!ENTITY settings.safety_level.moderate "미분류(Moderate) : 어떤 사용자들에게는 안전하지 못함">
+<!ENTITY settings.safety_level.restricted "제한됨(Restricted) : 제한된 사용자들만 접근 가능">
+<!ENTITY settings.hidden "공개 사이트 영역에서 숨기기">
+<!ENTITY settings.resize "자동 크기 조정:">
+<!ENTITY settings.resize.dont "내 사진의 크기를 조정하지 말 것">
+<!ENTITY settings.resize.800 "800픽셀(화면 보기에 적합)">
+<!ENTITY settings.resize.1280 "1280픽셀(작은 인쇄용으로 적합)">
+<!ENTITY settings.resize.1600 "1600픽셀(큰 인쇄용으로 적합)">
+<!ENTITY settings.resize.2048 "2048픽셀(저장에 최적)">
+<!ENTITY settings.note "참고:">
+<!ENTITY settings.note.text "Uploadr에서의 개인 정보, 안전, 컨텐츠 유형 설정은 flickr.com 설정과 별개입니다.">
+<!ENTITY meta.title "제목:">
+<!ENTITY meta.description "설명:">
+<!ENTITY meta.tags "태그:">
+<!ENTITY meta.content_type "컨텐츠 유형:">
+<!ENTITY meta.safety_level "안전 수준:">
+<!ENTITY meta.first "모든 사진이 선택되었습니다">
+<!ENTITY meta.batch.prompt "여기서 수행하는 변경은 선택된 모든 사진에 적용됩니다.">
+<!ENTITY meta.sets.add "세트에 추가:">
+<!ENTITY meta.sets.add.none "세트 없음">
+<!ENTITY meta.sets.create "세트 만들기...">
+<!ENTITY meta.single.sets.added "다음에 추가됩니다:">
+<!ENTITY meta.batch.sets.added "다음에 추가됩니다:">
+<!ENTITY meta.sets.added.none "세트를 선택하지 않았습니다">
+<!ENTITY meta.hidden "세트를 보려면 로그인하십시오">
+<!ENTITY dialog.about "Flickr Uploadr 정보">
+<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Flickr 및 제휴사">
+<!ENTITY dialog.about.copyright.xulrunner "XULRunner는 Mozilla 공개 사용권에 따라 사용할 수 있습니다.">
+<!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick은 GNU 일반 공개 사용권에 따라 사용할 수 있습니다.">
+<!ENTITY dialog.about.copyright.exiv2 "Exiv2는 copyright © 2004-2007 Andreas Huggel이며 GNU 일반 공개 사용권에 따라 사용할 수 있습니다.">
+<!ENTITY help "팁과 트릭">
+<!ENTITY help.offline "할 수 있습니다.">
+<!ENTITY help.offline.text.first "Uploadr는 대부분의 사진 관리 및 태그 붙이기를 오프라인으로 할 수 있게 되어 있습니다.  Flickr에 업로드할 준비가 되었으면, 계정에 로그인하여 커다란 사진 업로드 단추를 누르십시오.">
+<!ENTITY help.offline.text.second "원하는 경우 언제든지 로그인할 수 있습니다.  로그인하면 사진을 세트로 관리할 수 있습니다.">
+<!ENTITY help.drag "는 편리한 기능입니다.">
+<!ENTITY help.drag.text "Uploadr 화면의 왼쪽은 포토스트림 페이지처럼 사용할 수 있습니다.  사진을 업로드할 때 사진 페이지에 표시되길 원하는 순서로 사진을 끌어올 수 있습니다.  또한 필요하면 정렬 기준을 재설정하여 촬영 날짜 순으로 사진이 정렬되도록 되돌릴 수도 있습니다.">
+<!ENTITY help.faq "더 궁금하신 것이 있으시다면 를 방문해 보세요.">
+<!ENTITY photos.init.text.joined "또는 을 클릭하여 컴퓨터에서 사진을 찾습니다.">

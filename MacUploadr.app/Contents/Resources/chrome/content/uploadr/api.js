@@ -222,7 +222,7 @@ var upload = {
 		if (null != photos.uploading[id]) {
 			photos.uploading[id].progress_bar.update(1 - a / upload.progress_total);
 		}
-		var percent = photos.kb.sent / photos.kb.total;
+		var percent = Math.max(0, Math.min(100, photos.kb.sent / photos.kb.total));
 		upload.progress_bar.update(percent);
 		if (100 == Math.round(100 * percent)) { // Why doesn't (1 == percent) work here?
 			document.getElementById('progress_text').value =
@@ -322,7 +322,7 @@ var upload = {
 		window.clearInterval(upload.progress_handle);
 		upload.progress_handle = null;
 		document.getElementById('photos_stack').style.visibility = 'visible';
-		document.getElementById('photos_init').style.display = 'none';
+		document.getElementById('photos_init').style.display = '-moz-box';
 		document.getElementById('photos_new').style.display = 'none';
 
 		// Update the UI
@@ -755,7 +755,7 @@ var flickr = {
 					} else {
 						for (var set_id in meta.sets) {
 							var li = document.createElementNS(NS_HTML, 'li');
-							li.id = prefix + '_sets_' + set_id;
+							li.id = prefix + '_sets_add_' + set_id;
 							li.className = 'sets_plus';
 							li.appendChild(document.createTextNode(meta.sets[set_id]));
 							ul.appendChild(li);
