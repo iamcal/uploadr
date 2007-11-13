@@ -50,7 +50,10 @@ Section "Install" SecInstall
 
 	;File /r /x CVS /x *.psd MacUploadr.app\Contents\Resources\chrome
 	CreateDirectory "$INSTDIR\chrome"
-	File /oname=chrome\uploadr.jar uploadr.jar
+	CreateDirectory "$INSTDIR\chrome\icons"
+	CreateDirectory "$INSTDIR\chrome\icons\default"
+	File /oname=chrome\icons\default\main.ico MacUploadr.app\Contents\Resources\chrome\icons\default\main.ico
+	File /oname=chrome\uploadr.jar MacUploadr.app\Contents\Resources\chrome\uploadr.jar
 	File /oname=chrome\chrome.manifest MacUploadr.app\Contents\Resources\chrome\chrome.manifest.prod
 	CreateDirectory "$INSTDIR\components"
 	File /oname=components\gm.dll MacUploadr.app\Contents\Resources\components\gm.dll
