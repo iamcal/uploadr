@@ -93,7 +93,8 @@ Mac
 First make sure you install libjpeg et. al. using MacPorts, then run
 these commands.
 
-sudo port install jpeg
+sudo port install jpeg configure.flags=-O3
+sudo port install tiff configure.flags=-O3
 sudo port install libpng
 
 Because of dynamic/static linker weirdness, to build GraphicsMagick,
