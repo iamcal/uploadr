@@ -740,9 +740,16 @@ var flickr = {
 				meta.sets = {};
 				var sets = rsp.getElementsByTagName('photosets')[0].getElementsByTagName('photoset');
 				var ii = sets.length;
+				var order = []
 				for (var i = 0; i < ii; ++i) {
-					meta.sets[sets[i].getAttribute('id')] =
-						sets[i].getElementsByTagName('title')[0].firstChild.nodeValue;
+					order.push([sets[i].getAttribute('id'),
+						sets[i].getElementsByTagName('title')[0].firstChild.nodeValue]);
+				}
+				order.sort(function(a, b) {
+					return a[1] > b[1];
+				});
+				for (var i = 0; i < ii; ++i) {
+					meta.sets[order[i][0]] = order[i][1];
 				}
 				var prefixes = ['single', 'batch'];
 				for each (var prefix in prefixes) {

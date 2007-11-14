@@ -197,17 +197,6 @@ RotateCallback.prototype = {
 	}
 };
 
-// Comparator for sorting Photo objects
-var _sort = function(a, b) {
-	if (null == a) {
-		return false;
-	} else if (null == b) {
-		return true;
-	} else {
-		return a.date_taken > b.date_taken;
-	}
-};
-
 // Sorting thread wrapper
 //   The sorting all happens in the UI thread but this empty background job ensures it
 //   happens after all the added photos have been processed
@@ -256,7 +245,15 @@ SortCallback.prototype = {
 				date_taken: photo.date_taken
 			});
 		}
-		p.sort(_sort);
+		p.sort(function(a, b) {
+			if (null == a) {
+				return false;
+			} else if (null == b) {
+				return true;
+			} else {
+				return a.date_taken > b.date_taken;
+			}
+		});
 
 		// Lazily do the UI refresh by appendChild'ing everything in the right order
 		//   This is far from being a bottleneck, so leave it alone until it is
