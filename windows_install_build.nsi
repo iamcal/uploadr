@@ -17,7 +17,7 @@ InstallDirRegKey HKCU "Software\Flickr Uploadr" ""
 
 VIProductVersion "${VERSION_DATE}"
 VIAddVersionKey "CompanyName" "Flickr"
-VIAddVersionKey "LegalCopyright" "Copyright © 2007 — Flickr and Contributors"
+VIAddVersionKey "LegalCopyright" "Copyright � 2007 - Flickr and Contributors"
 VIAddVersionKey "FileDescription" "Flickr Uploadr ${VERSION}"
 VIAddVersionKey "FileVersion" "${VERSION_DATE}"
 
@@ -66,6 +66,7 @@ Section "Install" SecInstall
 	File MacUploadr.app\Contents\Resources\icons.ico
 	File MacUploadr.app\Contents\Resources\magic.mgk
 	File MacUploadr.app\Contents\Resources\modules.mgk
+	File MacUploadr.app\Contents\Resources\delegates.mgk
 	File "MacUploadr.app\Contents\Resources\Flickr Uploadr.exe"
 
 	WriteRegStr HKCU "Software\Flickr Uploadr" "" $INSTDIR
