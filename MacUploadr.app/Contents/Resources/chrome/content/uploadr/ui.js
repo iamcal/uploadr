@@ -44,7 +44,8 @@ var help = {
 
 	about: function() {
 		window.openDialog('chrome://uploadr/content/about.xul', 'dialog_about',
-			'chrome,modal', uploadr.conf.version);
+			'chrome,modal', locale.getFormattedString('dialog.about.version',
+			[uploadr.conf.version]));
 	},
 
 	tips: function() {
@@ -239,7 +240,6 @@ var unblock_exit = function() {
 	--_block_exit;
 };
 
-// Why is exiting such a pain?
 var exit = function(force) {
 	if (null == force) {
 		force = false;
@@ -275,7 +275,7 @@ var exit = function(force) {
 
 };
 
-// Override the alert, confirm and prompt functions to take a 2nd arg as a title
+// Override the alert, confirm and prompt functions to take a title and text for OK/Cancel buttons
 var alert = function(msg, title, ok) {
 	window.openDialog('chrome://uploadr/content/alert.xul', 'dialog_alert',
 		'chrome,modal', msg, title, ok);

@@ -13,8 +13,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 	<script src="chrome://uploadr/content/settings_dialog.js" />
 	<vbox flex="1" id="notloggedin">
 		<html:h3>&settings.notloggedin;</html:h3>
-		<button label="&login;"
-		oncommand="settings.add_user();" />
+		<box align="center"><button label="&login;"
+		oncommand="settings.add_user();" /></box>
 	</vbox>
 	<vbox flex="1" id="loggedin">
 		<groupbox flex="1">

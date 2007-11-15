@@ -379,9 +379,9 @@ var upload = {
 			}
 		}
 
-		// Here be dragons: If we are adding photos to a set, the last one will call this,
-		// otherwise we have to here.  If it doesn't get called then limits and such will not
-		// be updated for the next upload.
+		// If we are adding photos to a set, the last one will call this, otherwise we
+		// have to here.  If it doesn't get called then limits and such will not be
+		// updated for the next upload.
 		if (not_adding_to_sets) {
 			upload.finalize();
 		}
@@ -913,7 +913,7 @@ var _api = function(params, url, browser, post, id) {
 	for (var i = 0; i < ii; ++i) {
 		calc.push(sig[i] + params[sig[i]]);
 	}
-	esc_params['api_sig'] = hex_md5(calc.join(''));
+	esc_params['api_sig'] = md5(calc.join(''));
 
 	// Build either a POST payload or a GET URL
 	//   There is an assumption here that no one will be sending a file over GET
@@ -1106,4 +1106,40 @@ var escape_utf8 = function(data, url) {
 		}
 	}
 	return buffer.join('');
+};
+
+// Get the MD5 hash of a string
+var _md5 = null;
+try {
+	_md5 = Cc['@mozilla.org/security/hash;1'].createInstance(Ci.nsICryptoHash);
+} catch (err) {
+	Components.utils.reportError(err);
+}
+var md5 = function(str) {
+	if (null == _md5) {
+		return '';
+	}
+
+	// Build array of character codes to MD5
+	var arr = [];
+	var ii = str.length;
+	for (var i = 0; i < ii; ++i) {
+		arr.push(str.charCodeAt(i));
+	}
+	_md5.init(Ci.nsICryptoHash.MD5);
+	_md5.update(arr, arr.length);
+	var hash = _md5.finish(false);
+
+	// Unpack the binary data bin2hex style
+	var ascii = [];
+	ii = hash.length;
+	for (var i = 0; i < ii; ++i) {
+		var c = hash.charCodeAt(i);
+		var ones = c % 16;
+		var tens = c >> 4;
+		ascii.push(String.fromCharCode(tens + (tens > 9 ? 87 : 48)) +
+			String.fromCharCode(ones + (ones > 9 ? 87 : 48)));
+	}
+
+	return ascii.join('');
 };

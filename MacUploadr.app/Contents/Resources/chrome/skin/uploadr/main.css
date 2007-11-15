@@ -1,4 +1,3 @@
-/* Baseline style, not sure how necessary it is */
 box, toolbox, hbox, vbox {
 	margin: 0;
 	padding: 0;
@@ -540,7 +539,6 @@ div.toolbarseparator {
 }
 
 /* Sets lists */
-/*#single_sets_add, #batch_sets_add, #single_sets_added, #batch_sets_added {*/
 #meta ul, #batch_meta ul, #no_meta ul {
 	width: 199px;
 	height: 90px;
@@ -566,16 +564,18 @@ div.toolbarseparator {
 .sets_plus, .sets_disabled, .sets_trash {
 	margin: 2px;
 	padding: 0 0 0 16px;
-	cursor: pointer;
 }
 .sets_plus {
 	background: url(icon_add.png) no-repeat center left;
+	cursor: pointer;
 }
 .sets_disabled {
 	color: #bbb;
+	cursor: auto;
 }
 .sets_trash {
 	background: url(icon_trash.png) no-repeat center left;
+	cursor: pointer;
 }
 
 /* Must explicitly allow the creating of sets */
@@ -600,7 +600,7 @@ div.toolbarseparator {
 
 
 /*
- * Authorization cleanup
+ * Authorization confirmation
  */
 
 #page_auth {

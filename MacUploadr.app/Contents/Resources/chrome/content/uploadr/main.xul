@@ -15,7 +15,6 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	</stringbundleset>
 	<script src="chrome://global/content/globalOverlay.js" />
 	<script src="chrome://global/content/nsDragAndDrop.js" />
-	<script src="chrome://uploadr/content/md5.js" />
 	<script src="chrome://uploadr/content/keys.js" />
 	<script src="chrome://uploadr/content/uploadr.js" />
 	<script src="chrome://uploadr/content/upgrade.js" />

@@ -378,7 +378,7 @@ EnableUploadCallback.prototype = {
 };
 
 
-// We need a job to retry an upload batch after we finish resizing
+// Retry an upload batch after we finish resizing
 var RetryUpload = function() {
 };
 RetryUpload.prototype = {
@@ -413,7 +413,7 @@ RetryUploadCallback.prototype = {
 };
 
 // Job to force ordering of photo._add calls
-//   This is a hack for dock.xul and will be replaced with AppleEvents code
+//   This is for dock.xul
 var PhotoAdd = function(path, obj) {
 	this.path = path;
 	this.obj = obj;

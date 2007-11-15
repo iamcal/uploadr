@@ -300,7 +300,7 @@ NS_IMETHODIMP CGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _re
 		}
 		out << *thumb_str;
 
-		// Find the sharpen sigma as in flickr/include/daemon_new.js
+		// Find the sharpen sigma as the website does
 		double sigma;
 		if (base <= 800) {
 			sigma = 1.9;
@@ -395,7 +395,7 @@ NS_IMETHODIMP CGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _
 			meta_w->writeMetadata();
 		} catch (Exiv2::Error &) {}
 
-		// If all went well, return stuff
+		// If all went well, return new path
 		_retval.Append('o');
 		_retval.Append('k');
 		char * o = (char *)rotate_str->c_str();
@@ -489,8 +489,8 @@ NS_IMETHODIMP CGM::Resize(PRInt32 square, const nsAString & path, nsAString & _r
 		delete path_str; path_str = 0;
 		out << *resize_str;
 
-		// Find the sharpen sigma as in flickr/include/daemon_new.js
-		//   Which is dumb, because right now it's just 0.95
+		// Find the sharpen sigma as the website does
+		//   Which is easy, because for these sizes it's just 0.95
 		double sigma = 0.95;
 
 		// Resize the image

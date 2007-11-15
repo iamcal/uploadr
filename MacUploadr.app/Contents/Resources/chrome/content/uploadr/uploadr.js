@@ -43,9 +43,5 @@ var uploadr = {
 		// Should we auto-select images as they're added? (at least until the user clicks)
 		auto_select: false,
 
-		// Minimum size of the app (pixels)
-		min_width: 847,
-		min_height: 641
-
 	}
 };

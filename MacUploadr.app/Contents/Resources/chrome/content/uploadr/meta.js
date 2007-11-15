@@ -138,9 +138,6 @@ var meta = {
 
 		// Save a partial batch into the selected photos
 		if (null == id) {
-
-			// Could ask for permission/confirmation here, but let's not get pushy
-
 			var ii = photos.selected.length;
 			for (var i = 0; i < ii; ++i) {
 				var p = photos.list[photos.selected[i]];
@@ -333,7 +330,7 @@ var meta = {
 					ul.removeChild(ul.firstChild);
 				}
 				var li = document.createElementNS(NS_HTML, 'li');
-				li.id = prefix + '_sets_' + name;
+				li.id = prefix + '_sets_add_' + name;
 				li.className = 'sets_plus';
 				li.appendChild(document.createTextNode(name));
 				ul.insertBefore(li, ul.firstChild);
@@ -388,7 +385,7 @@ var meta = {
 			return;
 		}
 		var li = e.target;
-		var set_id = li.id.replace(/^(single|batch)_sets_/, '');
+		var set_id = li.id.replace(/^(single|batch)_sets_added_/, '');
 		var name = li.firstChild.nodeValue;
 
 		// Remove each selected photo from this set
@@ -415,6 +412,7 @@ var meta = {
 			li.appendChild(document.createTextNode(locale.getString('meta.sets.added.none')));
 			ul.appendChild(li);
 		}
+		document.getElementById(prefix + '_sets_add_' + set_id).className = 'sets_plus';
 
 	},
 

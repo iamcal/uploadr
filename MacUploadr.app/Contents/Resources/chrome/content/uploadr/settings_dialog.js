@@ -13,7 +13,7 @@ var settings = {
 				document.getElementById('is_public').value = s.is_public;
 				document.getElementById('is_friend').checked = 1 == s.is_friend;
 				document.getElementById('is_family').checked = 1 == s.is_family;
-				settings.is_public();
+				settings.is_public(s.is_public);
 				document.getElementById('content_type').value = s.content_type;
 				document.getElementById('hidden').checked = 2 == s.hidden;
 				document.getElementById('safety_level').value = s.safety_level;
@@ -46,7 +46,7 @@ var settings = {
 			document.getElementById('loggedin').style.display = 'none';
 		}
 
-		centerWindowOnScreen();
+		moveToAlertPosition();
 	},
 
 	cancel: function() {

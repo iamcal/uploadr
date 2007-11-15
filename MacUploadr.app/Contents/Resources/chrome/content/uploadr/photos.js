@@ -203,7 +203,7 @@ var photos = {
 		document.getElementById('no_meta_prompt').style.visibility = 'hidden';
 		meta.disable();
 
-		// Kill off error indicators, they're dead to me
+		// Remove error indicators
 		var li = document.getElementById('photos_list').getElementsByTagName('li');
 		var ii = li.length;
 		for (var i = 0; i < ii; ++i) {
