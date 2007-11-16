@@ -16,24 +16,26 @@ Checkout the flickrUploadr project from CVS.
 XULRunner trunk builds can be found at
 ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
 
-If you are on Windows, download a version of XULRunner trunk and put
-it in flickrUploadr/uploadr/.
+If you are on Windows, download a version of XULRunner trunk and unzip
+it into flickrUploadr3/MacUploadr.app/Contents/Resources/.
 
 If you are fortunate enough to be on a Mac you have two more steps.
 First install the Mac version of XULRunner, which will live in
-/Library/Frameworks.  Then run `make setup` to symlink the skeleton
-Mac app (flickrUploadr/MacUploadr.app) into the source code and the
-XULRunner framework.  Should you ever need to unlink things run
-`make teardown`.  Don't commit the symlinks to CVS (God knows what
-would happen).
+/Library/Frameworks.  Then run this (substituting your path to
+flickrUploadr3):
+
+mkdir flickrUploadr3/MacUplaodr.app/Contents/Frameworks
+sudo mv /Library/Frameworks/XUL.framework \
+	flickrUploadr3/MacUploadr.app/Contents/Frameworks
 
 Also included in the source is the Gecko SDK for both Windows and Mac.
 These are used by the XPCOM extension build scripts.  The Windows
-XPCOM extension can be built using Visual Studio 2005.  The Mac XPCOM
-extension can be built using the included Makefile.  After rebuilding
+XPCOM extensions can be built using Visual Studio 2005.  The Mac XPCOM
+extensions can be built using the included Makefile.  After rebuilding
 the XPCOM extensions you must copy the new XPT file (identical for
 Windows and Mac) as well as the new DLL (Windows) and DyLib (Mac) and
-increment the BuildID defined in flickrUploadr/uploadr/application.ini.
+increment the BuildID defined in
+flickrUploadr3/MacUploadr.app/Contents/Resources/application.ini.
 
 
 
@@ -49,7 +51,7 @@ The file should look like this:
 
 const api_key = 'xxxxxxxxxx';
 
-The secret is hidden away in:
+The secret is hidden away in (which is actually in CVS right now):
 
 MacUploadr.app/Contents/Resources/components/secret_impl.cpp
 
