@@ -103,7 +103,7 @@ var ProgressBar = function(id, width) {
 ProgressBar.prototype = {
 	update: function(percent) {
 		var bar = document.getElementById(this.id);
-		bar.width = Math.round(this.width * Math.max(0, Math.min(100, percent)));
+		bar.width = Math.round(this.width * Math.max(0, Math.min(1, percent)));
 	},
 	clear: function() {
 		this.update(0);

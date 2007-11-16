@@ -232,7 +232,7 @@ var upload = {
 		if (null != photos.uploading[id]) {
 			photos.uploading[id].progress_bar.update(1 - a / upload.progress_total);
 		}
-		var percent = Math.max(0, Math.min(100, photos.kb.sent / photos.kb.total));
+		var percent = Math.max(0, Math.min(1, photos.kb.sent / photos.kb.total));
 		upload.progress_bar.update(percent);
 		if (100 == Math.round(100 * percent)) { // Why doesn't (1 == percent) work here?
 			document.getElementById('progress_text').value =
@@ -338,6 +338,7 @@ var upload = {
 		// Update the UI
 		photos.batch_size = 0;
 		free.update();
+		upload.progress_bar.update(1);
 		var text = document.getElementById('progress_text');
 		if (0 == photos.fail) {
 			text.className = 'done';
