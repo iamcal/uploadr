@@ -1,3 +1,13 @@
+/*
+ * Flickr Uploadr
+ *
+ * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
+ * software; you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License (GPL), version 2 only.  This library is
+ * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+ * GPL for more details (http://www.gnu.org/licenses/gpl.html)
+ */
+
 var meta = {
 
 	// Map of set IDs to names
@@ -34,18 +44,16 @@ var meta = {
 			document.getElementById('batch_title').value = '';
 			document.getElementById('batch_description').value = '';
 			document.getElementById('batch_tags').value = '';
-			var is_public = document.getElementById('batch_is_public');
-			is_public.value = settings.is_public;
-			var dis = 1 == settings.is_public;
+			document.getElementById('batch_is_public').value = 2;
 			var is_friend = document.getElementById('batch_is_friend');
-			is_friend.checked = 1 == settings.is_friend;
-			is_friend.disabled = dis;
+			is_friend.checked = false;
+			is_friend.disabled = true;
 			var is_family = document.getElementById('batch_is_family');
-			is_family.checked = 1 == settings.is_family;
-			is_family.disabled = dis;
-			document.getElementById('batch_content_type').value = settings.content_type;
-			document.getElementById('batch_hidden').checked = 2 == settings.hidden;
-			document.getElementById('batch_safety_level').value = settings.safety_level;
+			is_family.checked = false;
+			is_family.disabled = true;
+			document.getElementById('batch_content_type').value = 0;
+			document.getElementById('batch_hidden').value = 0;
+			document.getElementById('batch_safety_level').value = 0;
 
 			// Clear the old sets list
 			ul = document.getElementById('batch_sets_added');
@@ -100,7 +108,7 @@ var meta = {
 			document.getElementById('single_is_friend').checked = 1 == p.is_friend;
 			document.getElementById('single_is_family').checked = 1 == p.is_family;
 			document.getElementById('single_content_type').value = p.content_type;
-			document.getElementById('single_hidden').checked = 2 == p.hidden;
+			document.getElementById('single_hidden').value = p.hidden;
 			document.getElementById('single_safety_level').value = p.safety_level;
 
 			// Sets list
@@ -158,12 +166,24 @@ var meta = {
 				p.tags = meta.tags(p.tags + ' ' + document.getElementById('batch_tags').value);
 
 				// Overwrite privacy, content type, hidden and safety level
-				p.is_public = parseInt(document.getElementById('batch_is_public').value);
-				p.is_friend = document.getElementById('batch_is_friend').checked ? 1 : 0;
-				p.is_family = document.getElementById('batch_is_family').checked ? 1 : 0;
-				p.content_type = parseInt(document.getElementById('batch_content_type').value);
-				p.hidden = document.getElementById('batch_hidden').checked ? 2 : 1;
-				p.safety_level = parseInt(document.getElementById('batch_safety_level').value);
+				var is_public = parseInt(document.getElementById('batch_is_public').value);
+				if (2 != is_public) {
+					p.is_public = is_public;
+					p.is_friend = document.getElementById('batch_is_friend').checked ? 1 : 0;
+					p.is_family = document.getElementById('batch_is_family').checked ? 1 : 0;
+				}
+				var content_type = parseInt(document.getElementById('batch_content_type').value);
+				if (0 != content_type) {
+					p.content_type = content_type;
+				}
+				var hidden = parseInt(document.getElementById('batch_hidden').value);
+				if (0 != hidden) {
+					p.hidden = hidden;
+				}
+				var safety_level = parseInt(document.getElementById('batch_safety_level').value);
+				if (0 != safety_level) {
+					p.safety_level = safety_level;
+				}
 
 			}
 			meta.load();
@@ -179,7 +199,7 @@ var meta = {
 			p.is_friend = document.getElementById('single_is_friend').checked ? 1 : 0;
 			p.is_family = document.getElementById('single_is_family').checked ? 1 : 0;
 			p.content_type = parseInt(document.getElementById('single_content_type').value);
-			p.hidden = document.getElementById('single_hidden').checked ? 2 : 1;
+			p.hidden = parseInt(document.getElementById('single_hidden').value);
 			p.safety_level = parseInt(document.getElementById('single_safety_level').value);
 		}
 

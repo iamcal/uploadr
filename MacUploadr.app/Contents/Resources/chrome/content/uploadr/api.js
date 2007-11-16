@@ -1,3 +1,13 @@
+/*
+ * Flickr Uploadr
+ *
+ * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
+ * software; you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License (GPL), version 2 only.  This library is
+ * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+ * GPL for more details (http://www.gnu.org/licenses/gpl.html)
+ */
+
 // A note about the authentication API:
 //   Because authentication is rather involved, involving a bunch of API calls in sequence,
 //   authentication should be kicked off using users.login() in users.js.  The login sequence

@@ -1,4 +1,15 @@
 <?xml version="1.0"?>
+<!--
+
+Flickr Uploadr
+
+Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
+software; you can redistribute it and/or modify it under the terms of the
+GNU General Public License (GPL), version 2 only.  This library is
+distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
+-->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://uploadr/locale/main.dtd">
@@ -102,8 +113,13 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 								<radio value="1" label="&settings.privacy.public;" />
 							</radiogroup>
 							<html:p> </html:p>
-							<checkbox id="single_hidden" label="&settings.hidden;"
-							tabindex="8" />
+							<label control="single_hidden" value="&settings.hidden;" />
+							<menulist id="single_hidden" tabindex="8">
+								<menupopup>
+									<menuitem value="1" label="&settings.hidden.no;" />
+									<menuitem value="2" label="&settings.hidden.yes;" />
+								</menupopup>
+							</menulist>
 						</vbox>
 					</hbox>
 					<hbox>
@@ -177,7 +193,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						</vbox>
 						<vbox class="column">
 							<label control="batch_is_public" value="&meta.batch.who;" />
-							<radiogroup id="batch_is_public" value="1" tabindex="5"
+							<radiogroup id="batch_is_public" value="2" tabindex="5"
 							oncommand="meta.is_public(this.value);">
 								<radio value="0" label="&settings.privacy.private;" />
 									<checkbox id="batch_is_friend"
@@ -185,10 +201,17 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 									<checkbox id="batch_is_family"
 									label="&settings.privacy.family;" tabindex="7" />
 								<radio value="1" label="&settings.privacy.public;" />
+								<radio value="2" label="" style="display: none;" />
 							</radiogroup>
 							<html:p> </html:p>
-							<checkbox id="batch_hidden" label="&settings.hidden;"
-							tabindex="8" />
+							<label control="batch_hidden" value="&settings.hidden;" />
+							<menulist id="batch_hidden" tabindex="8">
+								<menupopup>
+									<menuitem value="0" label="" selected="true" />
+									<menuitem value="1" label="&settings.hidden.no;" />
+									<menuitem value="2" label="&settings.hidden.yes;" />
+								</menupopup>
+							</menulist>
 						</vbox>
 					</hbox>
 					<hbox>
@@ -196,8 +219,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<label control="batch_safety_level" value="&meta.safety_level;" />
 							<menulist id="batch_safety_level" tabindex="4">
 								<menupopup>
-									<menuitem value="1" label="&settings.safety_level.safe;"
-									selected="true" />
+									<menuitem value="0" label="" selected="true" />
+									<menuitem value="1" label="&settings.safety_level.safe;" />
 									<menuitem value="2"
 									label="&settings.safety_level.moderate;" />
 									<menuitem value="3"
@@ -209,8 +232,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<label control="batch_content_type" value="&meta.content_type;" />
 							<menulist id="batch_content_type" tabindex="9">
 								<menupopup>
-									<menuitem value="1" label="&settings.content_type.photo;"
-									selected="true" />
+									<menuitem value="0" label="" selected="true" />
+									<menuitem value="1" label="&settings.content_type.photo;" />
 									<menuitem value="2"
 									label="&settings.content_type.screenshot;" />
 									<menuitem value="3" label="&settings.content_type.other;" />
@@ -250,14 +273,18 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						</vbox>
 						<vbox class="column">
 							<label value="&meta.single.who;" />
-							<radiogroup id="no_is_public" disabled="true">
+							<radiogroup id="no_is_public" value="2" disabled="true">
 								<radio value="0" label="&settings.privacy.private;" />
 									<checkbox label="&settings.privacy.friend;" disabled="true" />
 									<checkbox label="&settings.privacy.family;" disabled="true" />
 								<radio value="1" label="&settings.privacy.public;" />
+								<radio value="2" label="" style="display: none;" />
 							</radiogroup>
 							<html:p> </html:p>
-							<checkbox label="&settings.hidden;" disabled="true" />
+							<label value="&settings.hidden;" />
+							<menulist disabled="true">
+								<menupopup />
+							</menulist>
 						</vbox>
 					</hbox>
 					<hbox>

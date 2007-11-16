@@ -62,7 +62,9 @@
 <!ENTITY settings.safety_level.safe "Safe">
 <!ENTITY settings.safety_level.moderate "Moderate">
 <!ENTITY settings.safety_level.restricted "Restricted">
-<!ENTITY settings.hidden "Hide from public site areas">
+<!ENTITY settings.hidden "Hide from public site areas?">
+<!ENTITY settings.hidden.no "No, don't hide">
+<!ENTITY settings.hidden.yes "Yes, hide">
 <!ENTITY settings.resize "Automatic resizing:">
 <!ENTITY settings.resize.dont "Don't resize my photos">
 <!ENTITY settings.resize.800 "800 pixels (suitable for on-screen viewing)">

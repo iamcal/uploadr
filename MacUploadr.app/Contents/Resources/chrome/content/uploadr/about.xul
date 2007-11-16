@@ -1,4 +1,15 @@
 <?xml version="1.0"?>
+<!--
+
+Flickr Uploadr
+
+Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
+software; you can redistribute it and/or modify it under the terms of the
+GNU General Public License (GPL), version 2 only.  This library is
+distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
+-->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/dialog.css" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://uploadr/locale/main.dtd">
