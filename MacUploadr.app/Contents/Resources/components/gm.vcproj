@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="Windows-1252"?>
 <!--
 
 Flickr Uploadr
@@ -9,7 +10,6 @@ distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 -->
-<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
