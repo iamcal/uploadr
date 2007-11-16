@@ -78,6 +78,7 @@ Section "Install" SecInstall
 	File MacUploadr.app\Contents\Resources\modules.mgk
 	File MacUploadr.app\Contents\Resources\delegates.mgk
 	File "MacUploadr.app\Contents\Resources\Flickr Uploadr.exe"
+	File "MacUploadr.app\Contents\Resources\LICENSE.txt"
 
 	WriteRegStr HKCU "Software\Flickr Uploadr" "" $INSTDIR
 
