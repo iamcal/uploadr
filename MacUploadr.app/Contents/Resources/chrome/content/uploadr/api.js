@@ -49,6 +49,12 @@ var upload = {
 	tickets_delta: 1000, // Milliseconds
 	tickets_handle: null,
 
+	// Timestamps for defining this batch on the site
+	timestamps: {
+		earliest: 0,
+		latest: 0
+	},
+
 	// Upload a photo
 	start: function(id) {
 
@@ -162,6 +168,10 @@ var upload = {
 			}
 			if ('object' == typeof rsp) {
 				photo_id = parseInt(rsp.getElementsByTagName('photoid')[0].firstChild.nodeValue);
+
+				// If we were ever to use sync upload, we would need imported
+				// timestamps here
+
 			}
 			photos.uploaded.push(photo_id);
 
@@ -457,8 +467,9 @@ var upload = {
 
 		// If requested, open the site
 		if (go_to_flickr) {
-			launch_browser('http://flickr.com/tools/uploader_edit.gne?ids=' +
-				photos.uploaded.join(','));
+			launch_browser('http://flickr.com/photos/upload/done/?b=' +
+				upload.timestamps.earliest + '-' + upload.timestamps.latest +
+				'-' + users.nsid);
 		}
 
 		// Really finally actually done, so reset
@@ -666,6 +677,18 @@ var flickr = {
 								delete upload.tickets[ticket_id];
 							} else if (1 == complete) {
 								--upload.tickets_count;
+
+								// Check this photo against stored timestamps
+								var imported = parseInt(tickets[i].getAttribute('imported'));
+								if (0 == upload.timestamps.earliest ||
+									imported < upload.timestamps.earliest) {
+									upload.timestamps.earliest = imported;
+								}
+								if (0 == upload.timestamps.latest ||
+									imported > upload.timestamps.latest) {
+									upload.timestamps.latest = imported;
+								}
+
 								upload._sync(parseInt(tickets[i].getAttribute('photoid')),
 									upload.tickets[ticket_id]);
 								delete upload.tickets[ticket_id];
