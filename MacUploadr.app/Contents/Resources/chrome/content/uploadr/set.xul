@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+
+Flickr Uploadr
+
+Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
+software; you can redistribute it and/or modify it under the terms of the
+GNU General Public License (GPL), version 2 only.  This library is
+distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
+-->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://uploadr/skin/dialog.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
+<dialog id="dialog_set" title="&dialog.set.title;"
+xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept,cancel"
+ondialogaccept="window.arguments[0].name = document.getElementById('name').value;
+window.arguments[0].desc = document.getElementById('desc').value; return true;"
+ondialogcancel="window.arguments[0].name = false; window.arguments[0].desc = false;
+return true;" onload="moveToAlertPosition();">
+	<html:h3>&dialog.set.title;</html:h3>
+	<label control="name" value="&dialog.set.name;" />
+	<textbox id="name" />
+	<label control="desc" value="&dialog.set.description;" />
+	<textbox id="desc" multiline="true" rows="2" />
+</dialog>

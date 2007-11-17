@@ -383,10 +383,12 @@ var upload = {
 			}
 			status.set(locale.getString('status.sets'));
 			not_adding_to_sets = false;
-			if (-1 == meta.created_sets.indexOf(set_id)) {
+			var index = meta.created_sets.indexOf(set_id);
+			if (-1 == index) {
 				flickr.photosets.addPhoto(set_id, meta.sets_map[set_id][0]);
 			} else {
-				flickr.photosets.create(set_id, '', meta.sets_map[set_id][0]);
+				flickr.photosets.create(set_id, meta.created_sets_desc[index],
+					meta.sets_map[set_id][0]);
 			}
 		}
 
@@ -751,7 +753,7 @@ var flickr = {
 				meta.sets = {};
 				var sets = rsp.getElementsByTagName('photosets')[0].getElementsByTagName('photoset');
 				var ii = sets.length;
-				var order = []
+				var order = [];
 				for (var i = 0; i < ii; ++i) {
 					order.push([sets[i].getAttribute('id'),
 						sets[i].getElementsByTagName('title')[0].firstChild.nodeValue]);
@@ -759,6 +761,9 @@ var flickr = {
 				order.sort(function(a, b) {
 					return a[1] > b[1];
 				});
+				for each (var name in meta.created_sets) {
+					meta.sets[name] = name;
+				}
 				for (var i = 0; i < ii; ++i) {
 					meta.sets[order[i][0]] = order[i][1];
 				}

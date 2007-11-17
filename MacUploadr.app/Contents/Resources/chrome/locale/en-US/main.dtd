@@ -98,6 +98,10 @@
 <!ENTITY meta.sets.added.none "You haven't selected any sets">
 <!ENTITY meta.hidden "Sign in to see your sets">
 
+<!ENTITY dialog.set.title "Create a set">
+<!ENTITY dialog.set.name "Give your new set a name:">
+<!ENTITY dialog.set.description "And a description (optional):">
+
 <!ENTITY dialog.about "About Flickr Uploadr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc.  All rights reserved.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License (GPL), version 2 only.">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner is copyright © 2007 Mozilla Foundation.  It is available under the Mozilla Public License.">

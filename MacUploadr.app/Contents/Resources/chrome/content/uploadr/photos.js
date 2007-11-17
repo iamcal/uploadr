@@ -370,6 +370,9 @@ var photos = {
 			meta.created_sets.push(name);
 			meta.sets[name] = name;
 		}
+		for each (var desc in obj.sets_desc) {
+			meta.created_sets_desc.push(desc);
+		}
 
 	},
 
@@ -380,10 +383,12 @@ var photos = {
 		}
 		if (0 == photos.count) {
 			meta.created_sets = [];
+			meta.created_sets_desc = [];
 		}
 		file.write('photos.json', {
 			sort: photos.sort,
 			sets: meta.created_sets,
+			sets_desc: meta.created_sets_desc,
 			list: photos.list
 		});
 	}

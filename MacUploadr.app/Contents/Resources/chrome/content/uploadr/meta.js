@@ -13,6 +13,7 @@ var meta = {
 	// Map of set IDs to names
 	sets: {},
 	created_sets: [],
+	created_sets_desc: [],
 	sets_map: {},
 
 	// Show a special status message for their first batch
@@ -336,12 +337,16 @@ var meta = {
 	// Create a new set if we have any left
 	create_set: function() {
 		if (-1 == users.sets || 0 < users.sets) {
-			var name = prompt('', //locale.getString('meta.sets.create.text'),
-				locale.getString('meta.sets.create.title'));
+			var result = {};
+			window.openDialog('chrome://uploadr/content/set.xul',
+				'dialog_set', 'chrome,modal', result);
+			var name = result.name;
+			var desc = result.desc;
 			if (!name) {
 				return;
 			}
 			meta.created_sets.push(name);
+			meta.created_sets_desc.push(desc);
 			meta.sets[name] = name;
 			var prefixes = ['single', 'batch'];
 			for each (var prefix in prefixes) {
@@ -352,12 +357,15 @@ var meta = {
 				var li = document.createElementNS(NS_HTML, 'li');
 				li.id = prefix + '_sets_add_' + name;
 				li.className = 'sets_plus';
+				li.style.fontWeight = 'bold';
 				li.appendChild(document.createTextNode(name));
 				ul.insertBefore(li, ul.firstChild);
 			}
-			meta.add_to_set({target: ul.firstChild});
+			var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+			meta.add_to_set({
+				target: document.getElementById(prefix + '_sets_add').firstChild
+			});
 			if (meta.created_sets.length == users.sets) {
-				var prefix = 1 == photos.selected.length ? 'single' : 'batch';
 				document.getElementById(prefix + '_sets_create').style.visibility = 'hidden';
 			}
 		}
