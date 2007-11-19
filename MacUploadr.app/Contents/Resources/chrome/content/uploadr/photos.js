@@ -280,6 +280,7 @@ var photos = {
 		while (list.hasChildNodes()) {
 			list.removeChild(list.firstChild);
 		}
+		free.update();
 
 		// Find out how many photos we actually have
 		photos.total = 0;
