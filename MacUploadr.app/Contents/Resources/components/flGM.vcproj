@@ -53,7 +53,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.9\Magick++\lib&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.9&quot;;&quot;..\..\..\..\..\exiv2-0.15\src&quot;"
+				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10\Magick++\lib&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10&quot;;&quot;..\..\..\..\..\exiv2-0.15\src&quot;"
 				PreprocessorDefinitions="XP_WIN;XP_WIN32;NDEBUG;WIN32;_CONSOLE;_VISUALC_;NeedFunctionPrototypes;_MAGICKMOD_;_LIB;NEED_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -80,7 +80,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 				AdditionalDependencies="CORE_RL_Magick++_.lib CORE_RL_bzlib_.lib CORE_RL_coders_.lib CORE_RL_filters_.lib CORE_RL_jbig_.lib CORE_RL_jp2_.lib CORE_RL_jpeg_.lib CORE_RL_lcms_.lib CORE_RL_libxml_.lib CORE_RL_magick_.lib CORE_RL_png_.lib CORE_RL_tiff_.lib CORE_RL_ttf_.lib CORE_RL_wand_.lib CORE_RL_wmf_.lib CORE_RL_xlib_.lib CORE_RL_zlib_.lib X11.lib Xext.lib Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib exiv2.lib"
 				OutputFile="$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.9\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;;&quot;..\..\..\..\..\exiv2-0.15\msvc\exiv2lib\Release&quot;"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.10\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;;&quot;..\..\..\..\..\exiv2-0.15\msvc\exiv2lib\Release&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
