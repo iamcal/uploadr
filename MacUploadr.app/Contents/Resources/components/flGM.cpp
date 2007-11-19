@@ -280,17 +280,17 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		} catch (Exiv2::Error &) {}
 
 		// Hide ### strings within the IPTC data
-		size_t pos = title.find("###", pos);
+		size_t pos = title.find("###", 0);
 		while (string::npos != pos) {
 			title.replace(pos, 3, "{---THREE---POUND---DELIM---}");
 			pos = title.find("###", pos);
 		}
-		pos = description.find("###", pos);
+		pos = description.find("###", 0);
 		while (string::npos != pos) {
 			description.replace(pos, 3, "{---THREE---POUND---DELIM---}");
 			pos = description.find("###", pos);
 		}
-		pos = tags.find("###", pos);
+		pos = tags.find("###", 0);
 		while (string::npos != pos) {
 			tags.replace(pos, 3, "{---THREE---POUND---DELIM---}");
 			pos = tags.find("###", pos);
