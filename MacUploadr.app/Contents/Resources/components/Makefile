@@ -19,7 +19,7 @@ PORTS_LIB := /opt/local/lib
 XULRUNNER := ../../Frameworks/XUL.framework/Versions/Current
 
 PLATFORM := $(filter mac ppc linux universal, $(MAKECMDGOALS))
-COMPONENT := $(filter gm secret, $(MAKECMDGOALS))
+COMPONENT := $(filter gm key, $(MAKECMDGOALS))
 
 ifeq (mac, $(PLATFORM))
 DEFINE := -DXP_UNIX -DXP_MACOSX
@@ -39,10 +39,7 @@ all:
 	@echo "  universal (combines mac and ppc dylibs using lipo)"
 	@echo "Components:"
 	@echo "  gm"
-	@echo "  secret"
-	@echo "Steps:"
-	@echo "  xpt (Works on Intel Mac only)"
-	@echo "  dylib"
+	@echo "  key"
 	@echo "Mix & match from the above lists to build components for platforms"
 	@echo ""
 	@echo "Usage: make <platform> <component>"
@@ -75,29 +72,29 @@ ifeq (mac, $(PLATFORM))
 	$(GECKO_SDK).$(PLATFORM)/bin/xpidl \
 		-m header \
 		-I$(GECKO_SDK).$(PLATFORM)/idl \
-		gm.idl
+		flIGM.idl
 	$(GECKO_SDK).$(PLATFORM)/bin/xpidl \
 		-m typelib \
 		-I$(GECKO_SDK).$(PLATFORM)/idl \
-		gm.idl
+		flIGM.idl
 endif
 	g++ -w -c -O2 \
-		-o gm_impl.o \
+		-o flGM.o \
 		-I$(GECKO_SDK).$(PLATFORM)/include \
 		-I$(GM_INCLUDE) \
 		-I$(EXIV_INCLUDE) \
 		$(DEFINE) \
-		gm_impl.cpp
+		flGM.cpp
 	g++ -w -c -O2 \
-		-o gm_module.o \
+		-o flGMModule.o \
 		-I$(GECKO_SDK).$(PLATFORM)/include \
 		-I$(GM_INCLUDE) \
 		-I$(EXIV_INCLUDE) \
 		$(DEFINE) \
-		gm_module.cpp
+		flGMModule.cpp
 	g++ -dynamiclib -O2 \
 		-o gm.dylib.$(PLATFORM) \
-		gm_impl.o gm_module.o \
+		flGM.o flGMModule.o \
 		-L$(GECKO_SDK).$(PLATFORM)/lib \
 		-L$(GM_LIB) \
 		-L$(X11_LIB) \
@@ -117,38 +114,38 @@ endif
 
 
 
-secret:
+key:
 ifneq (universal, $(PLATFORM))
-	@echo "Building the API Secret XPCOM component..."
+	@echo "Building the API key XPCOM component..."
 ifeq (mac, $(PLATFORM))
 	@echo "Building XPT file..."
 	$(GECKO_SDK).$(PLATFORM)/bin/xpidl \
 		-m header \
 		-I$(GECKO_SDK).$(PLATFORM)/idl \
-		secret.idl
+		flIKey.idl
 	$(GECKO_SDK).$(PLATFORM)/bin/xpidl \
 		-m typelib \
 		-I$(GECKO_SDK).$(PLATFORM)/idl \
-		secret.idl
+		flIKey.idl
 endif
 	g++ -w -c -O2 \
-		-o secret_impl.o \
+		-o flKey.o \
 		-I$(GECKO_SDK).$(PLATFORM)/include \
 		$(DEFINE) \
-		secret_impl.cpp
+		flKey.cpp
 	g++ -w -c -O2 \
-		-o secret_module.o \
+		-o flKeyModule.o \
 		-I$(GECKO_SDK).$(PLATFORM)/include \
 		$(DEFINE) \
-		secret_module.cpp
+		flKeyModule.cpp
 	g++ -dynamiclib -O2 \
-		-o secret.dylib.$(PLATFORM) \
-		secret_impl.o secret_module.o \
+		-o key.dylib.$(PLATFORM) \
+		flKey.o flKeyModule.o \
 		-L$(GECKO_SDK).$(PLATFORM)/lib \
 		-L$(XULRUNNER) -Wl,-executable_path,$(XULRUNNER) \
 		-lxpcomglue_s -lxpcom -lnspr4
 else
-	@echo "Not building the API Secret XPCOM component"
+	@echo "Not building the API key XPCOM component"
 endif
 
 
