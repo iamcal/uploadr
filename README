@@ -19,14 +19,14 @@ XULRunner trunk builds can be found at:
 
 If you are on Windows, download a version of XULRunner trunk and unzip
 it into:
-  flickrUploadr3/MacUploadr.app/Contents/Resources/
+  UPLOADR/MacUploadr.app/Contents/Resources/
 
 If you are on a Mac you have two more steps.  First install the Mac
 version of XULRunner, which will live in /Library/Frameworks.  Then
-run this (substituting your path to flickrUploadr3 if necessary):
-  $ mkdir flickrUploadr3/MacUplaodr.app/Contents/Frameworks
+run this (substituting your path to UPLOADR if necessary):
+  $ mkdir UPLOADR/MacUplaodr.app/Contents/Frameworks
   $ sudo mv /Library/Frameworks/XUL.framework \
-      flickrUploadr3/MacUploadr.app/Contents/Frameworks
+      UPLOADR/MacUploadr.app/Contents/Frameworks
 
 To build the XPCOM components you will need the Gecko SDK.  PPC Mac
 and Windows versions are available here:
@@ -36,13 +36,20 @@ An Intel Mac version is available here:
   http://www.oxymoronical.com/view/1114
 
 The SDKs should be placed in the following directories:
-  flickrUploadr3/MacUploadr.app/Contents/Resources/gecko-sdk.mac (Intel Mac)
-  flickrUploadr3/MacUploadr.app/Contents/Resources/gecko-sdk.ppc (PPC Mac)
-  flickrUploadr3/MacUploadr.app/Contents/Resources/gecko-sdk.win (Windows)
+  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.mac (Intel Mac)
+  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.ppc (PPC Mac)
+  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.win (Windows)
 
 The Windows XPCOM extensions can be built using Visual Studio 2005.
 The Mac XPCOM extensions can be built using the included Makefile.
 Running `make` with no arguments will give you the available targets.
+
+Under Windows, you'll also need bits from Mozilla's Wintools.  You can
+download Wintools here:
+  http://ftp.mozilla.org/pub/mozilla.org/mozilla/source/wintools.zip
+
+Extract that and copy glib-1.2.dll and libIDL-0.6.dll from
+wintools/buildtools/windows/bin/x86/ to your gecko-sdk.win/bin/ directory.
 
 
 
@@ -52,7 +59,7 @@ API Keys
 You'll need your own API key and secret from Flickr to build Uploadr.
 These can be obtained at http://flickr.com/services/api/.  The key
 and secret must be placed in flKey.cpp as indicated.  This file is at:
-  flickrUploadr3/MacUploadr.app/Contents/Resources/components/flKey.cpp
+  UPLOADR/MacUploadr.app/Contents/Resources/components/flKey.cpp
 
 The API key is stored as a string.  The secret is stored as individual
 characters so it is not easily readable from the binary.
@@ -172,17 +179,17 @@ Windows
 -------
 
 Use the Visual Studio projects in:
-  flickrUploadr3/MacUploadr.app/Contents/Resourcescomponents/*.vcproj
+  UPLOADR/MacUploadr.app/Contents/Resourcescomponents/*.vcproj
 
 Mac
 ---
 
 Use the Makefile in:
-  flickrUploadr3/MacUploadr.app/Contents/Resourcescomponents/
+  UPLOADR/MacUploadr.app/Contents/Resourcescomponents/
 
 After rebuilding the XPCOM extensions you must increment the BuildID
 defined in:
-  flickrUploadr3/MacUploadr.app/Contents/Resources/application.ini
+  UPLOADR/MacUploadr.app/Contents/Resources/application.ini
 
 
 
@@ -194,7 +201,7 @@ Win
 
 On Windows, there is very little left to be done.  The root of your
 application is actually:
-  flickrUploadr3/MacUploadr.app/Contents/Resources/
+  UPLOADR/MacUploadr.app/Contents/Resources/
 
 Copy xulrunner-stub.exe from the xulrunner/ directory into the root
 of your app, rename it to "Flickr Uploadr.exe" and double-click it
