@@ -18,11 +18,10 @@
 //   Upload batches should be kicked off using photos.upload() in photos.js.  The setting
 //   uploadr.conf.mode in uploadr.js can select either synchronous or asynchronous uploads.
 
-// API key is defined in keys.js
-// The secret is defined in C code and accessed here
-var secret;
+// The API key and secret are defined in flKey.cpp and included here
+var key;
 try {
-	secret = Cc['@flickr.com/secret;1'].createInstance(Ci.ISecret);
+	key = Cc['@flickr.com/key;1'].createInstance(Ci.flIKey);
 } catch (err) {
 	Components.utils.reportError(err);
 }
@@ -342,7 +341,9 @@ var upload = {
 		window.clearInterval(upload.progress_handle);
 		upload.progress_handle = null;
 		document.getElementById('photos_stack').style.visibility = 'visible';
-		document.getElementById('photos_init').style.display = '-moz-box';
+		if (0 == photos.count) {
+			document.getElementById('photos_init').style.display = '-moz-box';
+		}
 		document.getElementById('photos_new').style.display = 'none';
 
 		// Update the UI
@@ -935,7 +936,7 @@ var _api = function(params, url, browser, post, id) {
 	}
 
 	// Sign the call
-	params['api_key'] = api_key;
+	params['api_key'] = key.key();
 	var sig = [];
 	var esc_params = {};
 	for (var p in params) {
@@ -947,12 +948,12 @@ var _api = function(params, url, browser, post, id) {
 		}
 	}
 	sig.sort();
-	var calc = [secret.secret()];
+	var calc = [];
 	var ii = sig.length;
 	for (var i = 0; i < ii; ++i) {
 		calc.push(sig[i] + params[sig[i]]);
 	}
-	esc_params['api_sig'] = md5(calc.join(''));
+	esc_params['api_sig'] = key.sign(calc.join(''));
 
 	// Build either a POST payload or a GET URL
 	//   There is an assumption here that no one will be sending a file over GET

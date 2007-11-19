@@ -480,7 +480,7 @@ try {
 	var t = Cc['@mozilla.org/thread-manager;1'].getService();
 	threads.worker = t.newThread(0);
 	threads.main = t.mainThread;
-	threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.IGM);
+	threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
 } catch (err) {
 	Components.utils.reportError(err);
 }
