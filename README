@@ -11,49 +11,51 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 Development environment
 ------------------------------------------------------------------------
 
-Checkout the flickrUploadr project from CVS.
+Download the Flickr Uploadr source archive from:
+  http://flickr.com/tools/uploadr/
 
-XULRunner trunk builds can be found at
-ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
+XULRunner trunk builds can be found at:
+  ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
 
 If you are on Windows, download a version of XULRunner trunk and unzip
-it into flickrUploadr3/MacUploadr.app/Contents/Resources/.
+it into:
+  flickrUploadr3/MacUploadr.app/Contents/Resources/
 
-If you are fortunate enough to be on a Mac you have two more steps.
-First install the Mac version of XULRunner, which will live in
-/Library/Frameworks.  Then run this (substituting your path to
-flickrUploadr3):
+If you are on a Mac you have two more steps.  First install the Mac
+version of XULRunner, which will live in /Library/Frameworks.  Then
+run this (substituting your path to flickrUploadr3 if necessary):
+  $ mkdir flickrUploadr3/MacUplaodr.app/Contents/Frameworks
+  $ sudo mv /Library/Frameworks/XUL.framework \
+      flickrUploadr3/MacUploadr.app/Contents/Frameworks
 
-mkdir flickrUploadr3/MacUplaodr.app/Contents/Frameworks
-sudo mv /Library/Frameworks/XUL.framework \
-	flickrUploadr3/MacUploadr.app/Contents/Frameworks
+To build the XPCOM components you will need the Gecko SDK.  PPC Mac
+and Windows versions are available here:
+  http://developer.mozilla.org/en/docs/Gecko_SDK#Downloading
 
-Also included in the source is the Gecko SDK for both Windows and Mac.
-These are used by the XPCOM extension build scripts.  The Windows
-XPCOM extensions can be built using Visual Studio 2005.  The Mac XPCOM
-extensions can be built using the included Makefile.  After rebuilding
-the XPCOM extensions you must copy the new XPT file (identical for
-Windows and Mac) as well as the new DLL (Windows) and DyLib (Mac) and
-increment the BuildID defined in
-flickrUploadr3/MacUploadr.app/Contents/Resources/application.ini.
+An Intel Mac version is available here:
+  http://www.oxymoronical.com/view/1114
+
+The SDKs should be placed in the following directories:
+  flickrUploadr3/MacUploadr.app/Contents/Resources/gecko-sdk.mac (Intel Mac)
+  flickrUploadr3/MacUploadr.app/Contents/Resources/gecko-sdk.ppc (PPC Mac)
+  flickrUploadr3/MacUploadr.app/Contents/Resources/gecko-sdk.win (Windows)
+
+The Windows XPCOM extensions can be built using Visual Studio 2005.
+The Mac XPCOM extensions can be built using the included Makefile.
+Running `make` with no arguments will give you the available targets.
 
 
 
 API Keys
 ------------------------------------------------------------------------
 
-The CVS tree no longer contains API keys and secrets.  Get them from
-the site.  They API key belongs in:
+You'll need your own API key and secret from Flickr to build Uploadr.
+These can be obtained at http://flickr.com/services/api/.  The key
+and secret must be placed in flKey.cpp as indicated.  This file is at:
+  flickrUploadr3/MacUploadr.app/Contents/Resources/components/flKey.cpp
 
-MacUploadr.app/Contents/Resources/chrome/content/uploadr/keys.js
-
-The file should look like this:
-
-const api_key = 'xxxxxxxxxx';
-
-The secret is hidden away in (which is actually in CVS right now):
-
-MacUploadr.app/Contents/Resources/components/secret_impl.cpp
+The API key is stored as a string.  The secret is stored as individual
+characters so it is not easily readable from the binary.
 
 
 
@@ -62,6 +64,9 @@ GraphicsMagick
 
 Windows
 -------
+
+Download GraphicsMagick Windows SOURCE from:
+  ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/windows/
 
 Go to the VisualMagick/configure directory of the GraphicsMagick Windows
 source directory.  Edit the project configuration as follows:
@@ -93,49 +98,43 @@ Add the path to your GraphicsMagick build's VisualMagick\lib directory
 to your library path.  Add the path to VisualMagick\include to your
 include path.
 
-For Windows, the magic.mgk and modules.mgk files must be in the root of
-the application (with application.ini).
+For Windows, the magic.mgk, modules.mgk and delegates.mgk files must be
+in the root of the application (with application.ini).
 
 Mac
 ---
 
-First make sure you install libjpeg et. al. using MacPorts, then run
-these commands.
+First make sure you install MacPorts from:
+  http://svn.macosforge.org/repository/macports/downloads/MacPorts-1.5.0/
 
-sudo port install jpeg configure.flags=-O3
-sudo port install tiff configure.flags=-O3
-sudo port install libpng
+Then run these commands:
+  $ sudo port install jpeg configure.flags=-O3
+  $ sudo port install tiff configure.flags=-O3
+  $ sudo port install libpng
 
-Because of dynamic/static linker weirdness, to build GraphicsMagick,
-make sure libjpeg.dylib is available in /opt/local/lib.  To build the
-XPCOM component, move this file to /opt/local/lib/libjpeg.dylib.sav
-(or somewhere else, just so it is away from the expected location).
+Download GraphicsMagick from:
+  ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/
 
-./configure \
-	CFLAGS="-O3" \
-	CXXFLAGS="-O3" \
-	CPPFLAGS="-I/opt/local/include -I/usr/local/include" \
-	LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
-	--without-perl \
-	--disable-installed \
-	--without-dps --without-fpx --without-jbig --without-jp2 \
-	--without-lcms --without-trio --without-ttf --without-wmf
-make && sudo make install
+Configure and install GraphicsMagick like this:
+  $ ./configure \
+	  CFLAGS="-O3" \
+	  CXXFLAGS="-O3" \
+	  CPPFLAGS="-I/opt/local/include -I/usr/local/include" \
+	  LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
+	  --without-perl \
+	  --disable-installed \
+	  --without-dps --without-fpx --without-jbig --without-jp2 \
+	  --without-lcms --without-trio --without-ttf --without-wmf
+  $ make && sudo make install
 
-For Mac, the magic.mgk and modules.mgk files must be in
-Contents/lib/GraphicsMagick-<version>/config/.  This is taken care of
-by the build script, provided the version is defined properly there.
+Because of dynamic/static linker weirdness, after building GraphicsMagick,
+move libjpeg.dylib, libtiff.dylib and libpng.dylib out of the way like this:
+  $ sudo mv /opt/local/lib/libjpeg.dylib /opt/local/lib/libjpeg.dylib.sav
+  $ sudo mv /opt/local/lib/libtiff.dylib /opt/local/lib/libtiff.dylib.sav
+  $ sudo mv /opt/local/lib/libpng.dylib /opt/local/lib/libpng.dylib.sav
 
-Linux
------
-
-Building on Ubuntu is identical to the Mac but doesn't require the
-inclusion of /opt directories.
-
-./configure --without-perl --disable-installed
-make && sudo make install
-
-Currently this will build in Linux but will not work.
+For Mac, the magic.mgk, modules.mgk and delegates.mgk files must be in
+Contents/lib/GraphicsMagick-<version>/config/.
 
 
 
@@ -144,6 +143,9 @@ EXIV2
 
 Windows
 -------
+
+Download Exiv2 from:
+  http://exiv2.org/download.html
 
 Just like GraphicsMagick, let Visual Studio 8 eat the 7.1 project files
 and then make the following changes:
@@ -155,34 +157,51 @@ and then make the following changes:
       o localtime.c:965
       o private.h:136
 
-Mac / Linux
------------
+Mac
+---
 
-./configure --enable-commercial --disable-shared
-make && sudo make install
+  $ ./configure --disable-shared
+  $ make && sudo make install
 
 
 
-Building
+Building XPCOM components
 ------------------------------------------------------------------------
 
 Windows
 -------
 
-Use the Visual Studio project in components/.
+Use the Visual Studio projects in:
+  flickrUploadr3/MacUploadr.app/Contents/Resourcescomponents/*.vcproj
 
 Mac
 ---
 
-Use the Makefile in components/ with targets for Intel and PPC.
+Use the Makefile in:
+  flickrUploadr3/MacUploadr.app/Contents/Resourcescomponents/
+
+After rebuilding the XPCOM extensions you must increment the BuildID
+defined in:
+  flickrUploadr3/MacUploadr.app/Contents/Resources/application.ini
 
 
 
-Packaging for deployment
+Building Flickr Uploadr
 ------------------------------------------------------------------------
 
-Windows packaging will likely be handed by NSIS.
+Win
+---
 
-Mac packaging will be scripted to create a DMG.
+On Windows, there is very little left to be done.  The root of your
+application is actually:
+  flickrUploadr3/MacUploadr.app/Contents/Resources/
 
-Stay tuned.
+Copy xulrunner-stub.exe from the xulrunner/ directory into the root
+of your app, rename it to "Flickr Uploadr.exe" and double-click it
+to run Uploadr.
+
+Mac
+---
+
+On Mac, the app can be launched by double-clicking on MacUploadr.app
+in Finder.

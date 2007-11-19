@@ -107,7 +107,7 @@
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner is copyright © 2007 Mozilla Foundation.  It is available under the Mozilla Public License.">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick is copyright © 2007 GraphicsMagick Group.  It is available under the MIT/X11 License.">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 is copyright © 2004-2007 Andreas Huggel.  It is available under the GNU General Public License.">
-<!ENTITY dialog.about.code "Source code available at http://flickr.com/tools/.">
+<!ENTITY dialog.about.code "Source code available at http://flickr.com/tools/uploadr/.">
 
 <!ENTITY help "Tips and Tricks">
 <!ENTITY help.offline "You can {work offline}.">
