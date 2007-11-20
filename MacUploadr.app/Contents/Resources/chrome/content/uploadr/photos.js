@@ -105,8 +105,8 @@ var photos = {
 			threads.worker.DISPATCH_NORMAL);
 
 		// Check the size of this file if we're logged in
-		var size = file.size(photos.list[id].path);
-		photos.batch_size += size;
+		photos.list[id].size = file.size(photos.list[id].path);
+		photos.batch_size += photos.list[id].size;
 		free.update();
 
 	},
@@ -202,17 +202,6 @@ var photos = {
 			return;
 		}
 
-		// Update the UI
-		status.set(locale.getString('status.uploading'));
-		buttons.upload.disable();
-		document.getElementById('photos_sort_default').style.display = 'none';
-		document.getElementById('photos_sort_revert').style.display = 'none';
-		document.getElementById('photos_stack').style.visibility = 'hidden';
-		document.getElementById('photos_init').style.display = 'none';
-		document.getElementById('photos_new').style.display = '-moz-box';
-		document.getElementById('no_meta_prompt').style.visibility = 'hidden';
-		meta.disable();
-
 		// Remove error indicators
 		var li = document.getElementById('photos_list').getElementsByTagName('li');
 		var ii = li.length;
@@ -244,6 +233,17 @@ var photos = {
 			threads.worker.dispatch(new RetryUpload(), threads.worker.DISPATCH_NORMAL);
 			return;
 		}
+
+		// Update the UI
+		status.set(locale.getString('status.uploading'));
+		buttons.upload.disable();
+		document.getElementById('photos_sort_default').style.display = 'none';
+		document.getElementById('photos_sort_revert').style.display = 'none';
+		document.getElementById('photos_stack').style.visibility = 'hidden';
+		document.getElementById('photos_init').style.display = 'none';
+		document.getElementById('photos_new').style.display = '-moz-box';
+		document.getElementById('no_meta_prompt').style.visibility = 'hidden';
+		meta.disable();
 
 		// Decide if we're already in the midst of an upload
 		var not_started = 0 == photos.uploading.length;
@@ -416,6 +416,7 @@ var Photo = function(id, path) {
 	} else {
 		this.filename = filename[1];
 	}
+	this.size = 0; // Kilobytes
 	this.width = 0;
 	this.height = 0;
 	this.title = this.filename;

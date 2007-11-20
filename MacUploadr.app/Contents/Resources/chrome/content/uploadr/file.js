@@ -10,6 +10,7 @@
 
 var file = {
 
+	// Read a JSON file and return the object
 	read: function(name) {
 		try {
 			var profile = Cc['@mozilla.org/file/directory_service;1'].getService(
@@ -35,6 +36,7 @@ var file = {
 		}
 	},
 
+	// Write an object into a file as JSON
 	write: function(name, data) {
 		var profile = Cc['@mozilla.org/file/directory_service;1'].getService(
 			Ci.nsIProperties).get('ProfD', Ci.nsIFile);
@@ -54,6 +56,7 @@ var file = {
 		stream.close();
 	},
 
+	// File size in kilobytes
 	size: function(path) {
 		var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
 		file.initWithPath(path);

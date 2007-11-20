@@ -336,7 +336,7 @@ ResizeCallback.prototype = {
 
 				// Update bandwidth
 				var size = file.size(resize[3]);
-				photos.batch_size -= photos.list[this.id].filesize;
+				photos.batch_size -= photos.list[this.id].size;
 				if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
 					status.set(locale.getString('status.limit'));
 				} else {
