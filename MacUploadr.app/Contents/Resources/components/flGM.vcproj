@@ -13,7 +13,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="flGM"
+	Name="gm"
 	ProjectGUID="{575D254B-9B3B-4CBD-891E-22D3A870E4D9}"
 	RootNamespace="flGM"
 	Keyword="Win32Proj"

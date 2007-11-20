@@ -67,12 +67,13 @@ Section "Install" SecInstall
 	File /oname=chrome\chrome.manifest MacUploadr.app\Contents\Resources\chrome\chrome.manifest.prod
 	CreateDirectory "$INSTDIR\components"
 	File /oname=components\gm.dll MacUploadr.app\Contents\Resources\components\gm.dll
-	File /oname=components\gm.xpt MacUploadr.app\Contents\Resources\components\gm.xpt
-	File /oname=components\secret.dll MacUploadr.app\Contents\Resources\components\secret.dll
-	File /oname=components\secret.xpt MacUploadr.app\Contents\Resources\components\secret.xpt
+	File /oname=components\flIGM.xpt MacUploadr.app\Contents\Resources\components\flIGM.xpt
+	File /oname=components\key.dll MacUploadr.app\Contents\Resources\components\key.dll
+	File /oname=components\flIKey.xpt MacUploadr.app\Contents\Resources\components\flIKey.xpt
 	File /r /x CVS MacUploadr.app\Contents\Resources\defaults
 	File /r /x CVS MacUploadr.app\Contents\Resources\xulrunner
 	File MacUploadr.app\Contents\Resources\application.ini
+	File MacUploadr.app\Contents\Resources\LICENSE.txt
 	File MacUploadr.app\Contents\Resources\icons.ico
 	File MacUploadr.app\Contents\Resources\magic.mgk
 	File MacUploadr.app\Contents\Resources\modules.mgk
@@ -142,8 +143,8 @@ DeleteRegKey /ifempty HKCU "Software\Flickr Uploadr"
 	Delete "$SMPROGRAMS\Flickr Uploadr.lnk"
 	Delete "$DESKTOP\Flickr Uploadr.lnk" 
 
-	RMDir "$SMPROGRAMS\Flickr Uploadr"
-	RMDir "$INSTDIR"
+	RMDir /r "$SMPROGRAMS\Flickr Uploadr"
+	RMDir /r "$INSTDIR"
 
 SectionEnd  
 
