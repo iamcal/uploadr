@@ -305,7 +305,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		delete path_str; path_str = 0;
 
 		// If this image is a TIFF, force the thumbnail to be a JPEG
-		if (thumb_str->rfind(".tif") + 5 > thumb_str->length()) {
+		if (thumb_str->rfind(".tif") + 6 > thumb_str->length()) {
 			thumb_str->append(".jpg");
 		}
 		out << *thumb_str;
