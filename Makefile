@@ -42,6 +42,7 @@ build:
 	ln -s ../Frameworks/XUL.framework/Versions/Current/xulrunner \
 		$(BUILD)/MacOS/xulrunner
 	cp $(SRC)/Resources/application.ini $(BUILD)/Resources/
+	cp $(SRC)/Resources/LICENSE.txt $(BUILD)/Resources/
 	cp $(SRC)/Resources/icons.icns $(BUILD)/Resources/
 
 	# Chrome
