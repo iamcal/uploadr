@@ -90,7 +90,11 @@ ThumbCallback.prototype = {
 				if ('' == photos.list[this.id].title) {
 					var title = thumb[6].replace(/^\s+|\s+$/,
 						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
-					if ('' != title) {
+					if ('' == title) {
+						title = photos.list[this.id].filename.split(
+							/(.+)\.[a-z0-9]{3,4}/i);
+						photos.list[this.id].title = title[1];
+					} else {
 						photos.list[this.id].title = title;
 					}
 				}

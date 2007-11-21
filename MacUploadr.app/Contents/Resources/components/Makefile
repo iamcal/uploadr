@@ -92,21 +92,34 @@ endif
 		-I$(EXIV_INCLUDE) \
 		$(DEFINE) \
 		flGMModule.cpp
+#	g++ -dynamiclib -O2 \
+#		-o gm.dylib.$(PLATFORM) \
+#		flGM.o flGMModule.o \
+#		-L$(GECKO_SDK).$(PLATFORM)/lib \
+#		-L$(GM_LIB) \
+#		-L$(X11_LIB) \
+#		-L$(PORTS_LIB) \
+#		-L$(XULRUNNER) -Wl,-executable_path,$(XULRUNNER) \
+#		-lxpcomglue_s -lxpcom -lnspr4 \
+#		-lGraphicsMagick -lGraphicsMagick++ \
+#		-lexiv2 \
+#		-lX11 \
+#		-lz -lbz2 \
+#		-lxml2 \
+3		-lXext \
+#		-ljpeg -lpng -ltiff
 	g++ -dynamiclib -O2 \
 		-o gm.dylib.$(PLATFORM) \
 		flGM.o flGMModule.o \
 		-L$(GECKO_SDK).$(PLATFORM)/lib \
 		-L$(GM_LIB) \
-		-L$(X11_LIB) \
 		-L$(PORTS_LIB) \
 		-L$(XULRUNNER) -Wl,-executable_path,$(XULRUNNER) \
 		-lxpcomglue_s -lxpcom -lnspr4 \
 		-lGraphicsMagick -lGraphicsMagick++ \
 		-lexiv2 \
-		-lX11 \
 		-lz -lbz2 \
 		-lxml2 \
-		-lXext \
 		-ljpeg -lpng -ltiff
 else
 	@echo "Not building the GraphicsMagick XPCOM component"
@@ -151,14 +164,15 @@ endif
 
 
 test:
-	g++ -w -c -O2 -o gm_test.o -I$(GM_INCLUDE) gm_test.cpp
+	g++ -w -c -O2 -o gm_test.o -I$(GM_INCLUDE) -I$(EXIV_INCLUDE) gm_test.cpp
 	g++ -O2 -o gm_test gm_test.o \
 		-L$(GM_LIB) \
 		-L$(X11_LIB) \
 		-L$(PORTS_LIB) \
 		-lGraphicsMagick++ -lGraphicsMagick \
+		-lexiv2 \
 		-lX11 \
 		-lz -lbz2 \
 		-lxml2 \
 		-lXext \
-		-ljpeg -lpng
+		-ljpeg -lpng -ltiff

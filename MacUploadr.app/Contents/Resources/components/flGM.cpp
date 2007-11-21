@@ -270,13 +270,28 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 					description = exif["Exif.Image.ImageDescription"].toString();
 				} catch (Exiv2::Error &) {}
 			}
-			tags = iptc["Iptc.Application2.Keywords"].toString();
-			tags.append(" ");
-			tags.append(iptc["Iptc.Application2.City"].toString());
-			tags.append(" ");
-			tags.append(iptc["Iptc.Application2.ProvinceState"].toString());
-			tags.append(" ");
-			tags.append(iptc["Iptc.Application2.CountryName"].toString());
+			string key("Iptc.Application2.Keywords");
+			Exiv2::IptcKey k = Exiv2::IptcKey(key);
+			Exiv2::IptcMetadata::iterator i, ii = iptc.end();
+			for (i = iptc.begin(); i != ii; ++i) {
+				if (i->key() == key) {
+					string val = i->toString();
+					if (string::npos == val.find(" ", 0)) {
+						tags += val;
+					} else {
+						tags += "\"";
+						tags += val;
+						tags += "\"";
+					}
+					tags += " ";
+				}
+			}
+			tags += " ";
+			tags += iptc["Iptc.Application2.City"].toString();
+			tags += " ";
+			tags += iptc["Iptc.Application2.ProvinceState"].toString();
+			tags += " ";
+			tags += iptc["Iptc.Application2.CountryName"].toString();
 		} catch (Exiv2::Error &) {}
 
 		// Hide ### strings within the IPTC data

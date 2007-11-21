@@ -118,6 +118,7 @@ Then run these commands:
   $ sudo port install jpeg configure.flags=-O3
   $ sudo port install tiff configure.flags=-O3
   $ sudo port install libpng
+  $ sudo port install libidl
 
 Download GraphicsMagick from:
   ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/
@@ -128,7 +129,7 @@ Configure and install GraphicsMagick like this:
 	  CXXFLAGS="-O3" \
 	  CPPFLAGS="-I/opt/local/include -I/usr/local/include" \
 	  LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
-	  --without-perl \
+	  --without-x --without-perl \
 	  --disable-installed \
 	  --without-dps --without-fpx --without-jbig --without-jp2 \
 	  --without-lcms --without-trio --without-ttf --without-wmf

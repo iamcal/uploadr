@@ -181,6 +181,7 @@ var photos = {
 		// For each selected image, show the loading spinner and dispatch the rotate job
 		buttons.upload.disable();
 		for (var i = 0; i < ii; ++i) {
+			block_sort();
 			var p = photos.list[s[i]];
 			var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
 			img.className = 'loading';
@@ -419,7 +420,7 @@ var Photo = function(id, path) {
 	this.size = 0; // Kilobytes
 	this.width = 0;
 	this.height = 0;
-	this.title = this.filename;
+	this.title = '';
 	this.description = '';
 	this.tags = '';
 	this.is_public = settings.is_public;
