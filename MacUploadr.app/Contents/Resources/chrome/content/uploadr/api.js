@@ -1191,7 +1191,7 @@ var escape_utf16 = function(data) {
 		buffer.push(String.fromCharCode(c >>> 8));
 		buffer.push(String.fromCharCode(0x00ff & c));
 	}
-	return buffer.toSource();
+	return buffer.join('');
 };
 
 // Get the MD5 hash of a string
