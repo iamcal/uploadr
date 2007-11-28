@@ -26,8 +26,15 @@
 #include "nsCOMPtr.h"
 #include "nsIFile.h"
 #include "nsDirectoryServiceUtils.h"
+
+// _NSGetExecutablePath on Macs
 #ifdef XP_MACOSX
 #include <mach-o/dyld.h>
+#endif
+
+// GetShortPathName on Windows
+#ifdef XP_WIN
+#include <windows.h>
 #endif
 
 #define round(n) (int)(0 <= (n) ? (n) + 0.5 : (n) - 0.5)
@@ -210,6 +217,14 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		if (0 == path_str) {
 			return NS_ERROR_INVALID_ARG;
 		}
+
+		// Fun with Windows paths
+#ifdef XP_WIN
+		char foo[4096];
+		char bar[12];
+		GetShortPathName(path_str.c_str(), 4096, foo, bar);
+		out << foo << bar << "###";
+#endif
 
 		// Orient the image properly and return the orientation
 		Magick::Image img(*path_str);

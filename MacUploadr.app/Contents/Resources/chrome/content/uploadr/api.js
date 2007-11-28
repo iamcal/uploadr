@@ -1179,6 +1179,7 @@ var escape_utf8 = function(data, url) {
 	}
 	return buffer.join('');
 };
+/*
 var escape_utf16 = function(data) {
 	if ('' == data || null == data || undefined == data) {
 		return '';
@@ -1188,13 +1189,13 @@ var escape_utf16 = function(data) {
 	var ii = data.length;
 	for (var i = 0; i < ii; ++i) {
 		var c = data.charCodeAt(i);
-//		buffer.push(String.fromCharCode((0xff00 & c) >>> 8));
-//		buffer.push(String.fromCharCode(0x00ff & c));
-		buffer.push(c);
+		buffer.push(String.fromCharCode((0xff00 & c) >>> 8));
+		buffer.push(String.fromCharCode(0x00ff & c));
 	}
 Components.utils.reportError(buffer.toSource());
 	return buffer.join('');
 };
+*/
 
 // Get the MD5 hash of a string
 /*
