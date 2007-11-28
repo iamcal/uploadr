@@ -1188,7 +1188,7 @@ var escape_utf16 = function(data) {
 	var ii = data.length;
 	for (var i = 0; i < ii; ++i) {
 		var c = data.charCodeAt(i);
-		buffer.push(String.fromCharCode(c >>> 8));
+		buffer.push(String.fromCharCode((0xff00 & c) >>> 8));
 		buffer.push(String.fromCharCode(0x00ff & c));
 	}
 Components.utils.reportError(buffer.toSource());
