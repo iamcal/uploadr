@@ -30,11 +30,39 @@ var users = {
 
 	// Shortcut for the auth sequence
 	login: function(fresh) {
+		buttons.login.disable();
 		status.set(locale.getString('status.login'));
+
+		// If we have a token already, use it
 		if (users.token) {
 			flickr.auth.checkToken(users.token);
-		} else {
-			flickr.auth.getFrob(fresh);
+		}
+
+		// If we don't have a token
+		else {
+
+			// Try to find one
+			for each (var u in users.list) {
+				if (u.current) {
+					users.username = u.username;
+					users.nsid = u.nsid;
+					users.token = u.token;
+					users.is_pro = u.is_pro;
+					users.bandwidth = u.bandwidth;
+					users.filesize = u.filesize;
+					users.sets = u.sets;
+					break;
+				}
+			}
+			if (users.token) {
+				flickr.auth.checkToken(users.token);
+			}
+
+			// If we still don't have one, go get a frob
+			else {
+				flickr.auth.getFrob(fresh);
+			}
+
 		}
 	},
 	_login: function() {

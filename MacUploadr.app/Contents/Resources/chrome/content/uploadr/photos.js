@@ -28,7 +28,6 @@ var photos = {
 	uploaded: [],
 	add_to_set: [],
 	failed: [],
-	total: 0,
 	ok: 0,
 	fail: 0,
 	sets: true,
@@ -79,6 +78,9 @@ var photos = {
 		block_remove();
 		block_sort();
 
+Components.utils.reportError('path: ' + path);
+Components.utils.reportError('escape_utf8(path): ' + escape_utf8(path, false));
+
 		// Add the original image to the list and set our status
 		var id = photos.list.length;
 		photos.list.push(new Photo(id, path));
@@ -101,7 +103,7 @@ var photos = {
 		list.insertBefore(li, list.firstChild);
 
 		// Create and show the thumbnail
-		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, path),
+		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, escape_utf8(path, false)),
 			threads.worker.DISPATCH_NORMAL);
 
 		// Check the size of this file if we're logged in
@@ -183,6 +185,7 @@ var photos = {
 		for (var i = 0; i < ii; ++i) {
 			block_sort();
 			var p = photos.list[s[i]];
+			photos.batch_size -= file.size(p.path);
 			var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
 			img.className = 'loading';
 			img.setAttribute('width', 16);
@@ -282,15 +285,6 @@ var photos = {
 			list.removeChild(list.firstChild);
 		}
 		free.update();
-
-		// Find out how many photos we actually have
-		photos.total = 0;
-		var ii = photos.uploading.length;
-		for (var i = 0; i < ii; ++i) {
-			if (null != photos.uploading[i]) {
-				++photos.total;
-			}
-		}
 
 		// Kick off the first batch job if we haven't started
 		if (not_started) {

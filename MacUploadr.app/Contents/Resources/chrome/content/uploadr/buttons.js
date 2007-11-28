@@ -20,7 +20,6 @@ var buttons = {
 				settings.show();
 			} else {
 				users.login();
-				buttons.login.disable();
 			}
 		},
 		enable: function() {

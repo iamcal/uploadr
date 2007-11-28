@@ -194,7 +194,7 @@ var upload = {
 		photos.uploading[id] = null;
 
 		// For the last upload, we have some cleanup to do
-		if ((upload.cancel || photos.ok + photos.fail == photos.total) &&
+		if ((upload.cancel || photos.ok + photos.fail == photos.uploading.length) &&
 			0 == upload.tickets_count) {
 			upload.done();
 		}
@@ -250,7 +250,7 @@ var upload = {
 			document.getElementById('progress_text').value = locale.getFormattedString(
 				'upload.progress.status', [
 					id + 1, // Since starting to use photos.normalize, this should be correct
-					photos.total,
+					photos.uploading.length,
 					Math.round(100 * percent)
 				]);
 		}
@@ -295,17 +295,22 @@ var upload = {
 			6 == parseInt(rsp.getElementsByTagName('err')[0].getAttribute('code'))) {
 			document.getElementById('progress').style.display = 'none';
 			var f = photos.failed;
-			var f_str = '||' + f.join('||') + '||';
 			for each (var p in photos.uploading) {
-				if (null != p && -1 == f_str.indexOf(p.path)) {
+				if (null != p && -1 == f.indexOf(p.path)) {
 					f.push(p);
-					f_str += p.path + '||';
 				}
 			}
 			var ii = f.length;
 			if (0 != ii) {
 				document.getElementById('photos_init').style.display = 'none';
 				document.getElementById('photos_new').style.display = 'none';
+				if (photos.sort) {
+					document.getElementById('photos_sort_default').style.display = 'block';
+					document.getElementById('photos_sort_revert').style.display = 'none';
+				} else {
+					document.getElementById('photos_sort_default').style.display = 'none';
+					document.getElementById('photos_sort_revert').style.display = 'block';
+				}
 			}
 			for (var i  = 0; i < ii; ++i) {
 				photos._add(f[i].path);
@@ -315,7 +320,6 @@ var upload = {
 			photos.uploaded = [];
 			photos.add_to_set = [];
 			photos.failed = [];
-			photos.total = 0;
 			photos.ok = 0;
 			photos.fail = 0;
 			unblock_exit();
@@ -341,8 +345,16 @@ var upload = {
 		window.clearInterval(upload.progress_handle);
 		upload.progress_handle = null;
 		document.getElementById('photos_stack').style.visibility = 'visible';
-		if (0 == photos.count) {
+		if (0 == photos.count && 0 == photos.fail) {
 			document.getElementById('photos_init').style.display = '-moz-box';
+		} else {
+			if (photos.sort) {
+				document.getElementById('photos_sort_default').style.display = 'block';
+				document.getElementById('photos_sort_revert').style.display = 'none';
+			} else {
+				document.getElementById('photos_sort_default').style.display = 'none';
+				document.getElementById('photos_sort_revert').style.display = 'block';
+			}
 		}
 		document.getElementById('photos_new').style.display = 'none';
 
@@ -379,6 +391,7 @@ var upload = {
 		if (upload.cancel) {
 			for each (var p in photos.uploading) {
 				if (null != p) {
+Components.utils.reportError('path: ' + p.path);
 					photos._add(p.path);
 					photos.list[photos.list.length - 1] = p;
 				}
@@ -424,6 +437,17 @@ var upload = {
 			return;
 		}
 
+		// Normalize the list of created sets
+		var i = 0;
+		while (i < meta.created_sets.length) {
+			if (null == meta.created_sets[i]) {
+				meta.created_sets.shift();
+				meta.created_sets_desc.shift();
+			} else {
+				++i;
+			}
+		}
+
 		// Ask the site for an update
 		flickr.photosets.getList(users.nsid);
 		flickr.people.getUploadStatus();
@@ -438,7 +462,7 @@ var upload = {
 				locale.getString('upload.success.cancel'));
 		} else if (0 < photos.fail && 0 < photos.ok) {
 			var c = confirm(locale.getFormattedString('upload.error.some.text',
-				[photos.total - photos.ok, photos.total]),
+				[photos.uploading.length - photos.ok, photos.uploading.length]),
 				locale.getString('upload.error.some.title'),
 				locale.getString('upload.error.some.ok'),
 				locale.getString('upload.error.some.cancel'));
@@ -479,7 +503,6 @@ var upload = {
 		photos.add_to_set = [];
 		photos.failed = [];
 		photos.uploaded = [];
-		photos.total = 0;
 		photos.ok = 0;
 		photos.fail = 0;
 		photos.sets = true;
@@ -491,6 +514,8 @@ var upload = {
 		upload.tickets_count = 0;
 		upload.tickets_delta = 1000;
 		upload.tickets_handle = null;
+		upload.timestamps.earliest = 0;
+		upload.timestamps.latest = 0;
 		unblock_exit();
 
 		// Try again without deleting the list of <photoid>s
@@ -527,6 +552,7 @@ var flickr = {
 				users._login();
 
 			}
+			buttons.login.enable();
 		},
 
 		getFrob: function(fresh) {
@@ -543,6 +569,7 @@ var flickr = {
 					locale.getString('auth.prompt.title'),
 					locale.getString('auth.prompt.ok'),
 					locale.getString('auth.prompt.cancel'))) {
+					buttons.login.enable();
 					return;
 				}
 				_api({
@@ -550,8 +577,8 @@ var flickr = {
 					'frob': users.frob,
 				}, 'http://api.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
 				pages.go('auth');
-				buttons.login.enable();
 			}
+			buttons.login.enable();
 		},
 
 		getToken: function(frob) {
@@ -757,6 +784,11 @@ var flickr = {
 				meta.sets_map[set_id] = list;
 				delete meta.sets_map[id];
 
+				// Remove this from the list of sets to be created
+				var index = meta.created_sets.indexOf(id);
+				meta.created_sets[index] = null;
+				meta.created_sets_desc[index] = null;
+
 				if (0 != meta.sets_map[set_id].length) {
 					flickr.photosets.addPhoto(set_id, meta.sets_map[set_id][0]);
 				} else {
@@ -783,7 +815,7 @@ var flickr = {
 						sets[i].getElementsByTagName('title')[0].firstChild.nodeValue]);
 				}
 				order.sort(function(a, b) {
-					return a[1] > b[1];
+					return a[1].toLowerCase() > b[1].toLowerCase();
 				});
 				for each (var name in meta.created_sets) {
 					meta.sets[name] = name;
@@ -951,7 +983,7 @@ var _api = function(params, url, browser, post, id) {
 	var calc = [];
 	var ii = sig.length;
 	for (var i = 0; i < ii; ++i) {
-		calc.push(sig[i] + params[sig[i]]);
+		calc.push(sig[i] + (post ? esc_params[sig[i]] : escape_utf8('' + params[sig[i]], false)));
 	}
 	esc_params['api_sig'] = key.sign(calc.join(''));
 
@@ -1149,6 +1181,7 @@ var escape_utf8 = function(data, url) {
 };
 
 // Get the MD5 hash of a string
+/*
 var _md5 = null;
 try {
 	_md5 = Cc['@mozilla.org/security/hash;1'].createInstance(Ci.nsICryptoHash);
@@ -1183,3 +1216,4 @@ var md5 = function(str) {
 
 	return ascii.join('');
 };
+*/

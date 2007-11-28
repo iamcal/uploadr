@@ -8,6 +8,19 @@
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
 
+/*
+ * Cursor fixing (this really should be done by default in XULRunner)
+ */
+
+* {
+	cursor: default;
+}
+textbox, textbox * {
+	cursor: text;
+}
+
+
+
 #dialog_bandwidth {
 	width: 300px;
 }
