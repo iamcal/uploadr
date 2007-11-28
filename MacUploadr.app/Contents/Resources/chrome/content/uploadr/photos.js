@@ -80,6 +80,7 @@ var photos = {
 
 Components.utils.reportError('path: ' + path);
 Components.utils.reportError('escape_utf8(path): ' + escape_utf8(path, false));
+Components.utils.reportError('escape_utf16(path): ' + escape_utf16(path));
 
 		// Add the original image to the list and set our status
 		var id = photos.list.length;
@@ -103,7 +104,7 @@ Components.utils.reportError('escape_utf8(path): ' + escape_utf8(path, false));
 		list.insertBefore(li, list.firstChild);
 
 		// Create and show the thumbnail
-		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, escape_utf8(path, false)),
+		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, escape_utf16(path, false)),
 			threads.worker.DISPATCH_NORMAL);
 
 		// Check the size of this file if we're logged in

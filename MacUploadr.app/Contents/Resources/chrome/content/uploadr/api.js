@@ -1135,7 +1135,7 @@ var escape_utf8 = function(data, url) {
 	if ('' == data || null == data || undefined == data) {
 		return '';
 	}
-	var chars = '0123456789ABCDEF';
+	var chars = '0123456789abcdef';
 	data = data.toString();
 	var buffer = [];
 	var ii = data.length;
@@ -1143,17 +1143,17 @@ var escape_utf8 = function(data, url) {
 		var c = data.charCodeAt(i);
 		var bs = new Array();
 		if (c > 0x10000) {
-			bs[0] = 0xF0 | ((c & 0x1C0000) >>> 18);
-			bs[1] = 0x80 | ((c & 0x3F000) >>> 12);
-			bs[2] = 0x80 | ((c & 0xFC0) >>> 6);
-			bs[3] = 0x80 | (c & 0x3F);
+			bs[0] = 0xf0 | ((c & 0x1c0000) >>> 18);
+			bs[1] = 0x80 | ((c & 0x3f000) >>> 12);
+			bs[2] = 0x80 | ((c & 0xfc0) >>> 6);
+			bs[3] = 0x80 | (c & 0x3f);
 		} else if (c > 0x800) {
-			bs[0] = 0xE0 | ((c & 0xF000) >>> 12);
-			bs[1] = 0x80 | ((c & 0xFC0) >>> 6);
-			bs[2] = 0x80 | (c & 0x3F);
+			bs[0] = 0xe0 | ((c & 0xf000) >>> 12);
+			bs[1] = 0x80 | ((c & 0xfc0) >>> 6);
+			bs[2] = 0x80 | (c & 0x3f);
 		} else if (c > 0x80) {
-			bs[0] = 0xC0 | ((c & 0x7C0) >>> 6);
-			bs[1] = 0x80 | (c & 0x3F);
+			bs[0] = 0xc0 | ((c & 0x7c0) >>> 6);
+			bs[1] = 0x80 | (c & 0x3f);
 		} else {
 			bs[0] = c;
 		}
@@ -1162,7 +1162,7 @@ var escape_utf8 = function(data, url) {
 			if (url) {
 				for (var j = 0; j < jj; ++j) {
 					var b = bs[j];
-					buffer.push('%' + chars.charAt((b & 0xF0) >>> 4) + chars.charAt(b & 0x0F));
+					buffer.push('%' + chars.charAt((b & 0xf0) >>> 4) + chars.charAt(b & 0x0f));
 				}
 			} else {
 				for (var j = 0; j < jj; ++j) {
@@ -1178,6 +1178,20 @@ var escape_utf8 = function(data, url) {
 		}
 	}
 	return buffer.join('');
+};
+var escape_utf16 = function(data) {
+	if ('' == data || null == data || undefined == data) {
+		return '';
+	}
+	data = data.toString();
+	var buffer = [];
+	var ii = data.length;
+	for (var i = 0; i < ii; ++i) {
+		var c = data.charCodeAt(i);
+		buffer.push(String.fromCharCode(c >>> 8));
+		buffer.push(String.fromCharCode(0x00ff & c));
+	}
+	return buffer.toSource();
 };
 
 // Get the MD5 hash of a string
