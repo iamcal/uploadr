@@ -1191,6 +1191,7 @@ var escape_utf16 = function(data) {
 		buffer.push(String.fromCharCode(c >>> 8));
 		buffer.push(String.fromCharCode(0x00ff & c));
 	}
+Components.utils.reportError(buffer.toSource());
 	return buffer.join('');
 };
 
