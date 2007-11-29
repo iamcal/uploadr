@@ -179,7 +179,8 @@ Rotate.prototype = {
 			} else {
 				threads.main.dispatch(new RotateCallback(this.id, rotate[1]),
 					threads.main.DISPATCH_NORMAL);
-				result = threads.gm.thumb(this.thumbSize, rotate[1]);
+				result = threads.gm.thumb(this.thumbSize,
+					escape_utf8(rotate[1], false));
 				threads.main.dispatch(new ThumbCallback(this.id, result, true),
 					threads.main.DISPATCH_NORMAL);
 			}

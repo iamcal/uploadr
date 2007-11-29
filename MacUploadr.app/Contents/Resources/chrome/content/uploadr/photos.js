@@ -80,7 +80,6 @@ var photos = {
 
 Components.utils.reportError('path: ' + path);
 Components.utils.reportError('escape_utf8(path): ' + escape_utf8(path, false));
-//Components.utils.reportError('escape_utf16(path): ' + escape_utf16(path));
 
 		// Add the original image to the list and set our status
 		var id = photos.list.length;
@@ -193,7 +192,7 @@ Components.utils.reportError('escape_utf8(path): ' + escape_utf8(path, false));
 			img.setAttribute('height', 8);
 			img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
 			threads.worker.dispatch(new Rotate(p.id, degrees, uploadr.conf.thumbSize,
-				p.path), threads.worker.DISPATCH_NORMAL);
+				escape_utf8(p.path, false)), threads.worker.DISPATCH_NORMAL);
 		}
 		threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
 
@@ -225,11 +224,11 @@ Components.utils.reportError('escape_utf8(path): ' + escape_utf8(path, false));
 				if (null != settings.resize && -1 != settings.resize &&
 					(p.width > settings.resize || p.width > settings.resize)) {
 					resizing = true;
-					threads.worker.dispatch(new Resize(p.id, settings.resize, p.path),
-						threads.worker.DISPATCH_NORMAL);
+					threads.worker.dispatch(new Resize(p.id, settings.resize,
+						escape_utf8(p.path, false)), threads.worker.DISPATCH_NORMAL);
 				} else if (file.size(p.path) > users.filesize) {
 					resizing = true;
-					threads.worker.dispatch(new Resize(p.id, -1, p.path),
+					threads.worker.dispatch(new Resize(p.id, -1, escape_utf8(p.path, false)),
 						threads.worker.DISPATCH_NORMAL);
 				}
 			}
