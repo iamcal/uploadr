@@ -55,9 +55,6 @@ string * conv_str(const nsAString & fake) {
 	// UTF-8 nsCString to UTF-16 nsEmbedString
 	nsEmbedString & utf16 = NS_ConvertUTF8toUTF16(utf8);
 
-//	nsEmbedString ascii;
-//	ascii.Assign(utf16);
-
 	// UTF-16 nsEmbedString to wchar_t[]
 	wchar_t * w_arr = new wchar_t[utf16.Length() + 1];
 	if (0 == w_arr) return 0;
@@ -266,6 +263,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		// Orient the image properly and return the orientation
 		Magick::Image img(*path_str);
 		ostringstream out;
+//out << *path_str << "###";
 		int orient = base_orient(img);
 		out << orient << "###";
 
@@ -397,9 +395,26 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		string o_str = out.str();
 		delete thumb_str; thumb_str = 0;
 		char * o = (char *)o_str.c_str();
+#ifdef XP_MACOSX
+		nsCString utf8;
+#endif
 		while (*o) {
+
+			// Macs will still have UTF-8 at this point
+#ifdef XP_MACOSX
+			utf8.Append(*o++);
+
+			// Windows is good to go, being ASCII and all
+#else
 			_retval.Append(*o++);
+
+#endif
 		}
+
+		// Finish up the Mac transform to UTF-16
+#ifdef XP_MACOSX
+		_retval = NS_ConvertUTF8toUTF16(utf8);
+#endif
 
 		return NS_OK;
 	}
