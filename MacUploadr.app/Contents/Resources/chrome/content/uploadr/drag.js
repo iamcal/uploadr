@@ -21,7 +21,8 @@ var drag = {
 		}
 		var first = true;
 		for (var i = 0; i < ii; ++i) {
-			if ('-url' == cl.getArgument(i)) {
+			var arg = cl.getArgument(i);
+			if (photos.is_photo(arg)) {
 				if (first) {
 					buttons.upload.disable();
 					document.getElementById('photos_stack').style.visibility = 'visible';
@@ -30,8 +31,11 @@ var drag = {
 					document.getElementById('no_meta_prompt').style.visibility = 'visible';
 					first = false;
 				}
-				photos._add(Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-					Ci.nsIFileProtocolHandler).getFileFromURLSpec(cl.getArgument(++i)).path);
+				if (/^file:\/\//.test(arg)) {
+					arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
+						Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;
+				}
+				photos._add(arg);
 			}
 		}
 		if (photos.sort) {

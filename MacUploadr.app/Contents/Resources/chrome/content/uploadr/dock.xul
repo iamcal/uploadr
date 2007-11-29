@@ -31,18 +31,14 @@ id="dock" title="" width="0" height="0">
 				var win = windowMediator.getMostRecentWindow(singleton);
 
 				// Add this photo, converting file:// URL to a native path
-				if (win) {
-					win._threads.worker.dispatch(new win.PhotoAdd(
-						Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-						Ci.nsIFileProtocolHandler).getFileFromURLSpec(window.arguments[0]).path),
-						win._threads.worker.DISPATCH_NORMAL);
-					if (win._photos.sort) {
-						win._threads.worker.dispatch(new win.Sort(),
-							win._threads.worker.DISPATCH_NORMAL);
-					} else {
-						win._threads.worker.dispatch(new win.EnableUpload(),
-							win._threads.worker.DISPATCH_NORMAL);
+				var arg = window.arguments[0];
+				if (win && win.photos.is_photo(arg)) {
+					if (/^file:\/\//.test(arg)) {
+						arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
+							Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;
 					}
+					win.threads.worker.dispatch(new win.PhotoAdd(arg),
+						win.threads.worker.DISPATCH_NORMAL);
 					window.close();
 					win.focus();
 				}

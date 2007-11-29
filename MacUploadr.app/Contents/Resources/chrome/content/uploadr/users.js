@@ -81,7 +81,6 @@ var users = {
 			document.getElementById('switch').style.display = 'inline';
 			document.getElementById('login').style.display = 'none';
 			status.set(locale.getString('status.ready'));
-			buttons.upload.enable();
 			meta.login();
 
 		} else {

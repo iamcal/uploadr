@@ -68,7 +68,19 @@ string * conv_path(const nsAString & fake) {
 
 	// GetShortPathName to get guaranteed ASCII
 	wchar_t s_arr[4096];
-	GetShortPathNameW(w_arr, s_arr, 4096);
+	if (0 == GetShortPathNameW(w_arr, s_arr, 4096)) {
+		delete [] w_arr;
+		return 0;
+
+		// If GetShortPathName fails, try copying the file to TEMP
+		if (0 == GetTempPath(s_arr, 4096)) {
+			delete [] w_arr;
+			return 0;
+		}
+		///
+
+	}
+	delete [] w_arr;
 
 	// wchar_t[] to ASCII nsEmbedString
 	nsEmbedString ascii;
@@ -83,7 +95,7 @@ string * conv_path(const nsAString & fake) {
 	ascii.Assign(fake);
 #endif
 
-	// Now convert the now-ASCII nsEmbedString into an ASCII std::string
+	// Convert the now-ASCII nsEmbedString into an ASCII std::string
 	char * c_arr = c_arr = new char[ascii.Length() + 1];
 	if (0 == c_arr) return 0;
 	char * c_arr_p = c_arr;

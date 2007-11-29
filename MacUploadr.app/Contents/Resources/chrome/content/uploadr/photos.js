@@ -49,7 +49,10 @@ var photos = {
 		if (Ci.nsIFilePicker.returnOK == res) {
 			var files = fp.files;
 			while (files.hasMoreElements()) {
-				photos._add(files.getNext().QueryInterface(Ci.nsILocalFile).path);
+				var arg = files.getNext().QueryInterface(Ci.nsILocalFile).path;
+				if (photos.is_photo(arg)) {
+					photos._add(arg);
+				}
 			}
 
 			// After the last file is added, sort the images by date taken if we're sorting
@@ -77,9 +80,6 @@ var photos = {
 	_add: function(path) {
 		block_remove();
 		block_sort();
-
-Components.utils.reportError('path: ' + path);
-Components.utils.reportError('escape_utf8(path): ' + escape_utf8(path, false));
 
 		// Add the original image to the list and set our status
 		var id = photos.list.length;
@@ -387,6 +387,11 @@ Components.utils.reportError('escape_utf8(path): ' + escape_utf8(path, false));
 			sets_desc: meta.created_sets_desc,
 			list: photos.list
 		});
+	},
+
+	// Decide if a given path is a photo
+	is_photo: function(path) {
+		return /(jpe?g|tiff?|gif|png|bmp)$/i.test(path);
 	}
 
 };
