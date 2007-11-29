@@ -42,9 +42,9 @@
 
 using namespace std;
 
-// Convert a UTF-8 nsAString to an ASCII std::string
+// Convert a path from a UTF-8 nsAString to an ASCII std::string
 //   In Windows, this will handle all the Unicode weirdness that comes with paths
-string * conv_str(const nsAString & fake) {
+string * conv_path(const nsAString & fake) {
 
 	// Fun with Windows paths
 #ifdef XP_WIN
@@ -99,7 +99,7 @@ string * conv_str(const nsAString & fake) {
 
 }
 
-// Find a path for the new image file
+// Find a path for the new image file in our profile
 string * find_path(string * path_str, const char * extra) {
 	if (0 == path_str || 0 == extra) {
 		return 0;
@@ -119,7 +119,7 @@ string * find_path(string * path_str, const char * extra) {
 		}
 		nsString dir;
 		dir_ptr->GetPath(dir);
-		dir_str = conv_str(dir);
+		dir_str = conv_path(dir);
 		if (0 == dir_str) {
 			return 0;
 		}
@@ -234,6 +234,33 @@ void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 	}
 }
 
+// Get a path/string ready to send back to JavaScript-land
+//   On Windows there is little to do, but Macs must go from UTF-8 to UTF-16
+void unconv_path(string & str, nsAString & _retval) {
+	char * o = (char *)str.c_str();
+#ifdef XP_MACOSX
+	nsCString utf8;
+#endif
+	while (*o) {
+
+		// Macs will still have UTF-8 at this point
+#ifdef XP_MACOSX
+		utf8.Append(*o++);
+
+		// Windows is good to go, being ASCII and all
+#else
+		_retval.Append(*o++);
+
+#endif
+	}
+
+	// Finish up the Mac transform to UTF-16
+#ifdef XP_MACOSX
+	_retval.Assign(NS_ConvertUTF8toUTF16(utf8));
+#endif
+
+}
+
 NS_IMPL_ISUPPORTS1(flGM, flIGM)
 
 flGM::flGM() {
@@ -255,7 +282,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 	try {
 
 		// Get the path as a C++ string
-		path_str = conv_str(path);
+		path_str = conv_path(path);
 		if (0 == path_str) {
 			return NS_ERROR_INVALID_ARG;
 		}
@@ -263,7 +290,6 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		// Orient the image properly and return the orientation
 		Magick::Image img(*path_str);
 		ostringstream out;
-//out << *path_str << "###";
 		int orient = base_orient(img);
 		out << orient << "###";
 
@@ -390,31 +416,11 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);
 		img.write(*thumb_str);
+		delete thumb_str; thumb_str = 0;
 
 		// If all went well, return stuff
 		string o_str = out.str();
-		delete thumb_str; thumb_str = 0;
-		char * o = (char *)o_str.c_str();
-#ifdef XP_MACOSX
-		nsCString utf8;
-#endif
-		while (*o) {
-
-			// Macs will still have UTF-8 at this point
-#ifdef XP_MACOSX
-			utf8.Append(*o++);
-
-			// Windows is good to go, being ASCII and all
-#else
-			_retval.Append(*o++);
-
-#endif
-		}
-
-		// Finish up the Mac transform to UTF-16
-#ifdef XP_MACOSX
-		_retval = NS_ConvertUTF8toUTF16(utf8);
-#endif
+		unconv_path(o_str, _retval);
 
 		return NS_OK;
 	}
@@ -445,7 +451,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 			return NS_OK;
 		}
 
-		path_str = conv_str(path);
+		path_str = conv_path(path);
 		if (0 == path_str) {
 			return NS_ERROR_INVALID_ARG;
 		}
@@ -486,12 +492,8 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		} catch (Exiv2::Error &) {}
 
 		// If all went well, return new path
-		_retval.Append('o');
-		_retval.Append('k');
-		char * o = (char *)rotate_str->c_str();
-		while (*o) {
-			_retval.Append(*o++);
-		}
+		rotate_str->insert(0, "ok");
+		unconv_path(*rotate_str, _retval);
 		delete rotate_str;
 		return NS_OK;
 	}
@@ -514,7 +516,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 	string * path_str = 0;
 	string * resize_str = 0;
 	try {
-		path_str = conv_str(path);
+		path_str = conv_path(path);
 		if (0 == path_str) {
 			return NS_ERROR_INVALID_ARG;
 		}
@@ -594,14 +596,11 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 			meta_w->setIptcData(iptc);
 			meta_w->writeMetadata();
 		} catch (Exiv2::Error &) {}
+		delete resize_str; resize_str = 0;
 
 		// If all went well, return stuff
 		string o_str = out.str();
-		delete resize_str; resize_str = 0;
-		char * o = (char *)o_str.c_str();
-		while (*o) {
-			_retval.Append(*o++);
-		}
+		unconv_path(o_str, _retval);
 		return NS_OK;
 	}
 
