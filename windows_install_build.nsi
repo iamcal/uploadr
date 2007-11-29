@@ -10,30 +10,10 @@
 
 ; Compile-Time Variables:
 ; VERSION_DATE - yyyy.mm.dd.##
-; VERSION - #.#.#
+; VERSION - #.#.#.#
 ; VERSION_SHORT - #.#
 
 !include "MUI.nsh"
-
-!macro LANG_LOAD LANGLOAD
-	!insertmacro MUI_LANGUAGE "${LANGLOAD}"
-	!verbose off
-	!include "locale\${LANGLOAD}.nsh"
-	!verbose on
-	!undef LANG
-!macroend
-!macro LANG_STRING NAME VALUE
-	LangString "${NAME}" "${LANG_${LANG}}" "${VALUE}"
-!macroend 
-!macro LANG_UNSTRING NAME VALUE
-	!insertmacro LANG_STRING "un.${NAME}" "${VALUE}"
-!macroend
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Language
-!insertmacro MUI_LANGUAGE "English"
-!insertmacro LANG_LOAD "English"
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 Name "Flickr Uploadr ${VERSION_SHORT}"
 Caption "Flickr Uploadr ${VERSION_SHORT} Installer"
@@ -47,7 +27,7 @@ InstallDirRegKey HKCU "Software\Flickr Uploadr" ""
 
 VIProductVersion "${VERSION_DATE}"
 VIAddVersionKey "CompanyName" "Flickr"
-VIAddVersionKey "LegalCopyright" "Copyright © 2007 - Yahoo!, Inc."
+VIAddVersionKey "LegalCopyright" "Copyright © 2007 - Flickr and Contributors"
 VIAddVersionKey "FileDescription" "Flickr Uploadr ${VERSION}"
 VIAddVersionKey "FileVersion" "${VERSION_DATE}"
 
@@ -65,6 +45,8 @@ Page custom CustomPageA
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_UNPAGE_FINISH  
 
+!insertmacro MUI_LANGUAGE "English"
+
 ReserveFile "io.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
@@ -76,6 +58,7 @@ Section "Install" SecInstall
 
 	SetOverwrite on  
 
+	;File /r /x CVS /x *.psd MacUploadr.app\Contents\Resources\chrome
 	CreateDirectory "$INSTDIR\chrome"
 	CreateDirectory "$INSTDIR\chrome\icons"
 	CreateDirectory "$INSTDIR\chrome\icons\default"

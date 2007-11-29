@@ -26,13 +26,14 @@
 #include "nsCOMPtr.h"
 #include "nsIFile.h"
 #include "nsDirectoryServiceUtils.h"
+#include "nsEmbedString.h"
 
 // _NSGetExecutablePath on Macs
 #ifdef XP_MACOSX
 #include <mach-o/dyld.h>
 #endif
 
-// GetShortPathName on Windows
+// GetShortPathName on Windows will also need an nsCAutoString
 #ifdef XP_WIN
 #include <windows.h>
 #endif
@@ -41,21 +42,64 @@
 
 using namespace std;
 
-// Convert an nsAString to a std::string
-string * conv_str(const nsAString & nsa) {
-	char * s = 0;
-	s = new char[nsa.Length() + 1];
-	if (0 == s) return 0;
-	char * tmp = s;
-	const PRUnichar * start = nsa.BeginReading();
-	const PRUnichar * end = nsa.EndReading();
-	while (start != end) {
-		*tmp++ = (char)*start++;
+// Convert a UTF-8 nsAString to an ASCII std::string
+//   In Windows, this will handle all the Unicode weirdness that comes with paths
+string * conv_str(const nsAString & fake) {
+
+	// Fun with Windows paths
+#ifdef XP_WIN
+
+	// UTF-16 but really UTF-8 nsAString to really UTF-8 nsCString
+	nsCString utf8 = NS_LossyConvertUTF16toASCII(fake);
+
+	// UTF-8 nsCString to UTF-16 nsEmbedString
+	nsEmbedString & utf16 = NS_ConvertUTF8toUTF16(utf8);
+
+//	nsEmbedString ascii;
+//	ascii.Assign(utf16);
+
+	// UTF-16 nsEmbedString to wchar_t[]
+	wchar_t * w_arr = new wchar_t[utf16.Length() + 1];
+	if (0 == w_arr) return 0;
+	wchar_t * w_arr_p = w_arr;
+	PRUnichar * w_start = (PRUnichar *)utf16.BeginReading();
+	const PRUnichar * w_end = (PRUnichar *)utf16.EndReading();
+	while (w_start != w_end) {
+		*w_arr_p++ = (wchar_t)*w_start++;
 	}
-	*tmp = 0;
-	string * str = new string(s);
-	delete [] s; s = 0;
+	*w_arr_p = 0;
+
+	// GetShortPathName to get guaranteed ASCII
+	wchar_t s_arr[4096];
+	GetShortPathNameW(w_arr, s_arr, 4096);
+
+	// wchar_t[] to ASCII nsEmbedString
+	nsEmbedString ascii;
+	wchar_t * s_arr_p = s_arr;
+	while (*s_arr_p) {
+		ascii.Append((char)*s_arr_p++);
+	}
+
+	// Macs don't need any help since they understand UTF-8
+#else
+	nsEmbedString ascii;
+	ascii.Assign(fake);
+#endif
+
+	// Now convert the now-ASCII nsEmbedString into an ASCII std::string
+	char * c_arr = c_arr = new char[ascii.Length() + 1];
+	if (0 == c_arr) return 0;
+	char * c_arr_p = c_arr;
+	PRUnichar * c_start = (PRUnichar *)ascii.BeginReading();
+	const PRUnichar * c_end = (PRUnichar *)ascii.EndReading();
+	while (c_start != c_end) {
+		*c_arr_p++ = (char)*c_start++;
+	}
+	*c_arr_p = 0;
+	string * str = new string(c_arr);
+	delete [] c_arr;
 	return str;
+
 }
 
 // Find a path for the new image file
@@ -213,18 +257,11 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 	string * thumb_str = 0;
 	try {
 
+		// Get the path as a C++ string
 		path_str = conv_str(path);
 		if (0 == path_str) {
 			return NS_ERROR_INVALID_ARG;
 		}
-
-		// Fun with Windows paths
-#ifdef XP_WIN
-		char foo[4096];
-		char bar[12];
-		GetShortPathName(path_str.c_str(), 4096, foo, bar);
-		out << foo << bar << "###";
-#endif
 
 		// Orient the image properly and return the orientation
 		Magick::Image img(*path_str);
@@ -361,8 +398,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		delete thumb_str; thumb_str = 0;
 		char * o = (char *)o_str.c_str();
 		while (*o) {
-			_retval.Append(*o);
-			++o;
+			_retval.Append(*o++);
 		}
 
 		return NS_OK;
@@ -374,8 +410,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		delete thumb_str;
 		char * o = (char *)e.what();
 		while (*o) {
-			_retval.Append(*o);
-			++o; 
+			_retval.Append(*o++);
 		}
 	}
 	return NS_OK;
@@ -440,8 +475,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		_retval.Append('k');
 		char * o = (char *)rotate_str->c_str();
 		while (*o) {
-			_retval.Append(*o);
-			++o;
+			_retval.Append(*o++);
 		}
 		delete rotate_str;
 		return NS_OK;
@@ -453,8 +487,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		delete rotate_str;
 		char * o = (char *)e.what();
 		while (*o) {
-			_retval.Append(*o);
-			++o;
+			_retval.Append(*o++);
 		}
 	}
 	return NS_OK;
@@ -552,8 +585,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		delete resize_str; resize_str = 0;
 		char * o = (char *)o_str.c_str();
 		while (*o) {
-			_retval.Append(*o);
-			++o;
+			_retval.Append(*o++);
 		}
 		return NS_OK;
 	}
@@ -564,8 +596,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		delete resize_str;
 		char * o = (char *)e.what();
 		while (*o) {
-			_retval.Append(*o);
-			++o;
+			_retval.Append(*o++);
 		}
 	}
 	return NS_OK;
