@@ -79,25 +79,27 @@
 <!ENTITY meta.batch.title "Replace titles:">
 <!ENTITY meta.batch.title.tooltip "Entering a title her will overwrite the titles of selected photos.">
 <!ENTITY meta.single.description "Description:">
-<!ENTITY meta.batch.description "Add description:">
+<!ENTITY meta.batch.description "Add to existing descriptions:">
 <!ENTITY meta.batch.description.tooltip "Entering a description will append it to the descriptions of selected photos.">
 <!ENTITY meta.single.tags "Tags:">
-<!ENTITY meta.batch.tags "Add tags:">
+<!ENTITY meta.batch.tags "Add to existing tags:">
 <!ENTITY meta.tags.tooltip "Separate each tag with a space: cameraphone urban moblog. Or to join 2 words together in one tag, use double quotes: &#34;daily commute&#34;.">
 <!ENTITY meta.single.who "Who can see this photo?">
 <!ENTITY meta.batch.who "Who can see these photos?">
 <!ENTITY meta.content_type "Content type:">
 <!ENTITY meta.safety_level "Safety level:">
 <!ENTITY meta.first "All photos are selected">
-<!ENTITY meta.batch.prompt "Any changes you make here will affect all selected photos.">
-<!ENTITY meta.no.prompt "Select a photo (or many) to add titles, tags and descriptions or add your photos to sets">
-<!ENTITY meta.sets.add "Add to set:">
+<!ENTITY meta.single.sets.add "Add to sets:">
+<!ENTITY meta.batch.sets.add "Add to more sets:">
 <!ENTITY meta.sets.add.none "No sets">
 <!ENTITY meta.sets.create "Create a set...">
 <!ENTITY meta.single.sets.added "This will be added to:">
 <!ENTITY meta.batch.sets.added "These will be added to:">
 <!ENTITY meta.sets.added.none "You haven't selected any sets">
 <!ENTITY meta.hidden "Sign in to see your sets">
+
+<!ENTITY meta.no.prompt "Select a photo (or many) to add titles, tags and descriptions or add your photos to sets">
+<!ENTITY meta.batch.prompt "You can now replace all titles with a new one, add to existing descriptions, add more tags or add to more sets.">
 
 <!ENTITY dialog.set.title "Create a set">
 <!ENTITY dialog.set.name "Give your new set a name:">

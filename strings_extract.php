@@ -4,6 +4,12 @@
 	$dir = dirname(__FILE__);
 	$locale = "$dir/MacUploadr.app/Contents/Resources/chrome/locale/en-US";
 
+	# Gotta have a project name
+	if (!isset($argv[1])) {
+		die("Usage: $argv[0] <project>\n");
+	}
+	$project = $argv[1];
+
 	#
 	# find files we care about
 	#
@@ -34,7 +40,7 @@
 		foreach ($str_hash as $k => $v){
 
 			$v = implode('{TOKEN}', $v);
-			$content .= "<!ENTITY $k.joined \"<!! dev=\"uploadr3\">$v</!!>\">\n";
+			$content .= "<!ENTITY $k.joined \"<!! dev=\"$project\">$v</!!>\">\n";
 		}
 
 		$fh = fopen("$dir/ext_uploadr3_{$file}.txt", 'w');
@@ -58,7 +64,7 @@
 			}
 		}
 
-		return "ENTITY $m[1] \"<!! dev=\"uploadr3\">$m[2]</!!>\"";
+		return "ENTITY $m[1] \"<!! dev=\"$project\">$m[2]</!!>\"";
 	}
 
 	##############################################################################################
@@ -69,7 +75,7 @@
 
 		$content = implode(file("$locale/$file"));
 
-		$content = preg_replace('!^([a-z0-9._]+)=(.*)$!m', "$1=<!! dev=\"uploadr3\">$2</!!>",
+		$content = preg_replace('!^([a-z0-9._]+)=(.*)$!m', "$1=<!! dev=\"$project\">$2</!!>",
 			$content);
 
 		$fh = fopen("$dir/ext_uploadr3_{$file}.txt", 'w');

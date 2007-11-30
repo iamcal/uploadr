@@ -153,7 +153,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					><html:p>&meta.hidden;</html:p></hbox>
 					<hbox id="hide_single_sets">
 						<vbox>
-							<label value="&meta.sets.add;" />
+							<label value="&meta.single.sets.add;" />
 							<html:ul id="single_sets_add" onclick="meta.add_to_set(event);"
 							></html:ul>
 							<box><html:div id="single_sets_create" onclick="meta.create_set();"
@@ -245,7 +245,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					><html:p>&meta.hidden;</html:p></hbox>
 					<hbox id="hide_batch_sets">
 						<vbox>
-							<label value="&meta.sets.add;" />
+							<label value="&meta.batch.sets.add;" />
 							<html:ul id="batch_sets_add" onclick="meta.add_to_set(event);"
 							></html:ul>
 							<box><html:div id="batch_sets_create" onclick="meta.create_set();"
@@ -303,7 +303,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					</hbox>
 					<hbox id="no_meta_sets">
 						<vbox>
-							<label value="&meta.sets.add;" />
+							<label value="&meta.single.sets.add;" />
 							<html:ul></html:ul>
 							<box><html:div id="no_sets_create" class="disabled_button"><html:div
 							>&meta.sets.create;</html:div></html:div></box>
