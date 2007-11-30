@@ -13,6 +13,7 @@
 <!ENTITY menu.help.about "About Flickr Uploadr">
 <!ENTITY menu.help.tips "Tips and Tricks">
 <!ENTITY menu.help.faq "FAQ">
+<!ENTITY menu.help.update "Check for Updates...">
 <!ENTITY menu.help.console "Console">
 
 <!ENTITY notloggedin "You're working offline.">
