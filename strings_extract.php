@@ -32,7 +32,7 @@
 
 		$str_hash = array();
 
-		$content = preg_replace_callback('!ENTITY ([a-z0-9._]+) "([^"]+)"!', 'markup_dtd',
+		$content = preg_replace_callback('!ENTITY ([A-Za-z0-9._]+) "([^"]+)"!', 'markup_dtd',
 			$content);
 
 		$content .= "\n\n";
@@ -75,7 +75,7 @@
 
 		$content = implode(file("$locale/$file"));
 
-		$content = preg_replace('!^([a-z0-9._]+)=(.*)$!m', "$1=<!! dev=\"$project\">$2</!!>",
+		$content = preg_replace('!^([a-z0-9._]+)=(.*)$!im', "$1=<!! dev=\"$project\">$2</!!>",
 			$content);
 
 		$fh = fopen("$dir/ext_uploadr3_{$file}.txt", 'w');
