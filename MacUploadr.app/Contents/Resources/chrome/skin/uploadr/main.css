@@ -656,3 +656,7 @@ div.toolbarseparator {
 #page_help p {
 	font-size: 14px;
 }
+
+#menu_updates[loading="true"] {
+  list-style-image: url("chrome://global/skin/throbber/Throbber-small.gif");
+}
