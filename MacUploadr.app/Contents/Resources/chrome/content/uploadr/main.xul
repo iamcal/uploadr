@@ -103,13 +103,18 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 				</menupopup>
 			</menu>
 			<menu id="menu_help" label="&menu.help;">
-				<menupopup>
+				<menupopup onpopupshowing="buildHelpMenu();">
 					<menuitem id="aboutName" label="&menu.help.about;"
 					oncommand="help.about();" />
 					<menuitem id="menu_help_tips" label="&menu.help.tips;" key="key_help_fake"
 					oncommand="help.tips();" />
 					<menuitem id="menu_faq" label="&menu.help.faq;"
 					oncommand="help.faq();" />
+					<menuseparator />
+					<menuitem id="menu_updates"
+						label="&menu.help.update;"
+						class="menuitem-iconic"
+						oncommand="checkForUpdates();"/>
 					<menuseparator />
 					<menuitem id="menu_console" label="&menu.help.console;"
 					oncommand="window.open('chrome://global/content/console.xul', '_blank',
