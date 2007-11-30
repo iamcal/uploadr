@@ -7,3 +7,7 @@ pref('javascript.options.showInConsole', true);
 pref('javascript.options.strict', true);
 pref('nglayout.debug.disable_xul_cache', true);
 pref('nglayout.debug.disable_xul_fastload', true);
+
+pref("app.update.url", "http://dev.flickr.com/services/uploadr-updates.gne?product=%PRODUCT%&version=%VERSION%&build_id=%BUILD_ID%&build_target=%BUILD_TARGET%&locale=%LOCALE%&");
+
+
