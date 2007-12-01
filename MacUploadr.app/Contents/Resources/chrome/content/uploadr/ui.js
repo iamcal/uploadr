@@ -70,7 +70,7 @@ var help = {
 	_pretty: function() {
 		for each (var id in ['help_offline', 'help_drag']) {
 			var node = document.getElementById(id);
-			var pink = node.firstChild.nodeValue.match(/\{(.+)\}/);
+			var pink = node.firstChild.nodeValue.match(/\^\^(.+)\^\^/);
 			var black = node.firstChild.nodeValue.split(pink[0]);
 			node.removeChild(node.firstChild);
 			node.appendChild(document.createTextNode(black[0]));
@@ -81,7 +81,7 @@ var help = {
 			node.appendChild(document.createTextNode(black[1]));
 		}
 		var node = document.getElementById('help_faq');
-		var link = node.firstChild.nodeValue.match(/\{(.+)\}/);
+		var link = node.firstChild.nodeValue.match(/\^\^(.+)\^\^/);
 		var black = node.firstChild.nodeValue.split(link[0]);
 		node.removeChild(node.firstChild);
 		node.appendChild(document.createTextNode(black[0]));

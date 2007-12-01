@@ -1,4 +1,5 @@
 <!ENTITY title "Flickr Uploadr">
+
 <!ENTITY menu.upload "Importer">
 <!ENTITY menu.upload.add "Ajouter">
 <!ENTITY menu.upload.preferences "Préférences">
@@ -13,25 +14,34 @@
 <!ENTITY menu.help.tips "Conseils et astuces">
 <!ENTITY menu.help.faq "FAQ">
 <!ENTITY menu.help.console "Console">
+
 <!ENTITY notloggedin "Vous travaillez hors ligne.">
 <!ENTITY login "Connexion">
+<!ENTITY switch "Changer d'utilisateur ?">
+
 <!ENTITY auth.confirm "Une fois que vous avez autorisé Flickr Uploadr à se connecter à votre compte sur le site Web Flickr, cliquez sur le bouton PRÊT !.">
 <!ENTITY auth.confirm.oops "Redonner l'autorisation ?">
+
 <!ENTITY tools.add "+ Ajouter">
 <!ENTITY tools.remove "- Enlever">
+
 <!ENTITY buttons.upload "Importer des photos">
 <!ENTITY buttons.cancel "Annuler">
 <!ENTITY buttons.auth "Prêt !">
 <!ENTITY buttons.ok "OK">
-<!ENTITY bandwidth "Bande passante :">
-<!ENTITY bandwidth.go_pro "Devenir un membre Pro !">
+
+<!ENTITY bandwidth.remaining "Quitté ce mois">
+<!ENTITY bandwidth.batch "Ce lot">
+
 <!ENTITY photostream.title "Vos photos">
+
 <!ENTITY photos.sort.default "Vos photos sont classées dans l'ordre où vous les avez prises.  Glissez-déposez pour les reclasser.">
 <!ENTITY photos.sort.revert "Retrier les photos dans l'ordre où vous les avez prises.">
 <!ENTITY photos.init "Faites glisser les photos ici pour démarrer.">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.init.text.1 "Ou cliquez sur ">
+<!ENTITY photos.init.text.2 " pour rechercher des photos sur votre ordinateur.">
 <!ENTITY photos.new "Vous pouvez lancer un nouveau lot pendant le chargement de celui-ci.">
+
 <!ENTITY settings "Paramètres">
 <!ENTITY settings.notloggedin "Vous devez cous connecter pour modifier vos préférences.">
 <!ENTITY settings.users "Autorisation :">
@@ -39,7 +49,7 @@
 <!ENTITY settings.users.remove "Supprimer l'utilisateur sélectionné">
 <!ENTITY settings.users.add "Ajouter un nouvel utilisateur">
 <!ENTITY settings.privacy "Confidentialité par défaut :">
-<!ENTITY settings.privacy.who "Qui peut voir cette photo ?">
+<!ENTITY settings.privacy.who "Qui peut voir vos photos ?">
 <!ENTITY settings.privacy.private "Uniquement vous">
 <!ENTITY settings.privacy.friend "Vos amis">
 <!ENTITY settings.privacy.family "Votre famille">
@@ -61,13 +71,23 @@
 <!ENTITY settings.resize.2048 "2048  pixels (résolution idéale pour l'archivage)">
 <!ENTITY settings.note "Remarque :">
 <!ENTITY settings.note.text "Vos paramètres de politique de confidentialité, de sécurité et de type de contenu dans Uploadr sont indépendants de vos paramètres sur flickr.com.">
-<!ENTITY meta.title "Titre  :">
-<!ENTITY meta.description "Description  :">
-<!ENTITY meta.tags "Tags  :">
+
+<!ENTITY meta.single.title "Titre  :">
+<!ENTITY meta.batch.title "Remplacer les titres :">
+<!ENTITY meta.batch.title.tooltip "Si vous saisissez un titre ici les titres des photos sélectionnées seront remplacés.">
+<!ENTITY meta.single.description "Description  :">
+<!ENTITY meta.batch.description "Ajouter une description :">
+<!ENTITY meta.batch.description.tooltip "Lorsque vous saisissez une description, elle sera ajoutée aux descriptions des photos sélectionnées.">
+<!ENTITY meta.single.tags "Tags  :">
+<!ENTITY meta.batch.tags "Ajouter des tags :">
+<!ENTITY meta.tags.tooltip "Séparez les tags par un espace : téléphone photo urbain moblog. Ou pour associer deux mots dans un tag, utilisez les guillemets : &#34;commutation quotidienne&#34;.">
+<!ENTITY meta.single.who "Qui peut voir cette photo ?">
+<!ENTITY meta.batch.who "Qui peut voir ces photos ?">
 <!ENTITY meta.content_type "Type de contenu :">
 <!ENTITY meta.safety_level "Niveau de sécurité :">
 <!ENTITY meta.first "Toutes les photos ont été sélectionnées.">
 <!ENTITY meta.batch.prompt "Toute modification affectera toutes les photos sélectionnées.">
+<!ENTITY meta.no.prompt "Sélectionnez une photo (ou plusieurs) pour y ajouter des titres, tags et descriptions ou pour ajouter vos photos à un album">
 <!ENTITY meta.sets.add "Ajouter à l'album :">
 <!ENTITY meta.sets.add.none "Aucun album">
 <!ENTITY meta.sets.create "Créer un album…">
@@ -75,16 +95,17 @@
 <!ENTITY meta.batch.sets.added "Seront ajouté(e)s à :">
 <!ENTITY meta.sets.added.none "Vous n'avez sélectionné aucun album.">
 <!ENTITY meta.hidden "Connectez-vous pour pouvoir voir vos albums.">
+
 <!ENTITY dialog.about "À propos de Flickr Uploadr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Flickr et contributeurs">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner est disponible sous licence publique Mozilla.">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick est disponible sous licence publique générale GNU.">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 est sous copyright © 2004-2007 d'Andreas Huggel et est disponible sous licence publique générale GNU.">
+
 <!ENTITY help "Conseils et astuces">
 <!ENTITY help.offline "Vous avez la possibilité de travailler .">
 <!ENTITY help.offline.text.first "Uploadr a été conçu pour vous permettre d'organiser vous-même vos photos et d'ajouter des tags hors ligne.  Lorsque vous êtes prêt pour l'importation sur Flickr, connectez-vous à votre compte, et cliquez sur l'énorme bouton Importer les photos.">
 <!ENTITY help.offline.text.second "Vous pouvez rester connecté tout le temps si vous le souhaitez.  Lorsque vous êtes connecté, vous pouvez organiser vos photos en albums.">
 <!ENTITY help.drag " est votre allié.">
-<!ENTITY help.drag.text "La partie gauche de l'écran Uploadr agit comme votre galerie.  Vous pouvez faire glisser les photos dans l'ordre dans lequel vous souhaitez les afficher sur la page photos au moment de l'importation.  Le cas échéant, vous pouvez réinitialiser vos classements pour reclasser les photos dans l'ordre où elles ont été prises.">
+<!ENTITY help.drag.text "Vous pouvez faire glisser les photos dans l'ordre dans lequel vous souhaitez les afficher sur la page photos au moment de l'importation.  Le cas échéant, vous pouvez réinitialiser vos classements pour reclasser les photos dans l'ordre où elles ont été prises.">
 <!ENTITY help.faq "Si vous avez d'autres questions, n'hésitez pas à consulter nos ">
-<!ENTITY photos.init.text.joined "Ou cliquez sur  pour rechercher des photos sur votre ordinateur.">

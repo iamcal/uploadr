@@ -73,11 +73,12 @@ string * conv_path(const nsAString & fake) {
 		return 0;
 
 		// If GetShortPathName fails, try copying the file to TEMP
+		/*
 		if (0 == GetTempPath(s_arr, 4096)) {
 			delete [] w_arr;
 			return 0;
 		}
-		///
+		*/
 
 	}
 	delete [] w_arr;
@@ -112,11 +113,11 @@ string * conv_path(const nsAString & fake) {
 }
 
 // Find a path for the new image file in our profile
-string * find_path(string * path_str, const char * extra) {
-	if (0 == path_str || 0 == extra) {
+string * find_path(string * path_s, const char * extra) {
+	if (0 == path_s || 0 == extra) {
 		return 0;
 	}
-	string * dir_str = 0;
+	string * dir_s = 0;
 	try {
 		nsCOMPtr<nsIFile> dir_ptr;
 		nsresult nsr = NS_GetSpecialDirectory("ProfD", getter_AddRefs(dir_ptr));
@@ -131,30 +132,30 @@ string * find_path(string * path_str, const char * extra) {
 		}
 		nsString dir;
 		dir_ptr->GetPath(dir);
-		dir_str = conv_path(dir);
-		if (0 == dir_str) {
+		dir_s = conv_path(dir);
+		if (0 == dir_s) {
 			return 0;
 		}
 #ifdef XP_WIN
-		dir_str->append(path_str->substr(path_str->rfind('\\')));
+		dir_s->append(path_s->substr(path_s->rfind('\\')));
 #else
-		dir_str->append(path_str->substr(path_str->rfind('/')));
+		dir_s->append(path_s->substr(path_s->rfind('/')));
 #endif
-		size_t period = dir_str->rfind('.');
-		dir_str->insert(period, extra);
+		size_t period = dir_s->rfind('.');
+		dir_s->insert(period, extra);
 		ostringstream index;
-		string dir_str_save(*dir_str);
+		string dir_s_save(*dir_s);
 		int i = 0;
 		struct stat st;
-		while (0 == stat(dir_str->c_str(), &st)) {
+		while (0 == stat(dir_s->c_str(), &st)) {
 			index.str("");
 			index << ++i;
-			*dir_str = dir_str_save;
-			dir_str->insert(dir_str->rfind('.'), index.str());
+			*dir_s = dir_s_save;
+			dir_s->insert(dir_s->rfind('.'), index.str());
 		}
-		return dir_str;
+		return dir_s;
 	} catch (Magick::Exception &) {
-		delete dir_str;
+		delete dir_s;
 		return 0;
 	}
 }
@@ -276,31 +277,46 @@ void unconv_path(string & str, nsAString & _retval) {
 NS_IMPL_ISUPPORTS1(flGM, flIGM)
 
 flGM::flGM() {
+}
+
+flGM::~flGM() {
+}
+
+// Initialize our GraphicsMagick setup
+NS_IMETHODIMP flGM::Init(const nsAString & pwd) {
+
+	//Mac needs to setup GraphicsMagick
 #ifdef XP_MACOSX
 	char path[1024];
 	unsigned int size = 1024;
 	_NSGetExecutablePath(&path[0], &size);
 	Magick::InitializeMagick(&path[0]);
 #endif
-}
 
-flGM::~flGM() {
+	// Windows needs to get its working directory ready for GraphicsMagick
+#ifdef XP_WIN
+	string * pwd_s = conv_path(pwd);
+	if (0 == pwd_s) return;
+	SetCurrentDirectory(pwd_s->c_str());
+	delete pwd_s;
+#endif
+
 }
 
 // Create a thumbnail of the image, preserving aspect ratio and store it to the profile
 NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _retval) {
-	string * path_str = 0;
-	string * thumb_str = 0;
+	string * path_s = 0;
+	string * thumb_s = 0;
 	try {
 
 		// Get the path as a C++ string
-		path_str = conv_path(path);
-		if (0 == path_str) {
+		path_s = conv_path(path);
+		if (0 == path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}
 
 		// Orient the image properly and return the orientation
-		Magick::Image img(*path_str);
+		Magick::Image img(*path_s);
 		ostringstream out;
 		int orient = base_orient(img);
 		out << orient << "###";
@@ -344,7 +360,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		// Extract IPTC data that we care about
 		string title = "", description = "", tags = "";
 		try {
-			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
 			Exiv2::IptcData & iptc = meta_r->iptcData();
 			title = iptc["Iptc.Application2.ObjectName"].toString();
@@ -401,17 +417,17 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		out << title << "###" << description << "###" << tags << "###";
 
 		// Create a new path
-		thumb_str = find_path(path_str, "-thumb");
-		if (0 == thumb_str) {
+		thumb_s = find_path(path_s, "-thumb");
+		if (0 == thumb_s) {
 			return NS_ERROR_NULL_POINTER;
 		}
-		delete path_str; path_str = 0;
+		delete path_s; path_s = 0;
 
 		// If this image is a TIFF, force the thumbnail to be a JPEG
-		if (thumb_str->rfind(".tif") + 6 > thumb_str->length()) {
-			thumb_str->append(".jpg");
+		if (thumb_s->rfind(".tif") + 6 > thumb_s->length()) {
+			thumb_s->append(".jpg");
 		}
-		out << *thumb_str;
+		out << *thumb_s;
 
 		// Find the sharpen sigma as the website does
 		double sigma;
@@ -427,20 +443,20 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		img.scale(dim.str());
 		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);
-		img.write(*thumb_str);
-		delete thumb_str; thumb_str = 0;
+		img.write(*thumb_s);
+		delete thumb_s; thumb_s = 0;
 
 		// If all went well, return stuff
-		string o_str = out.str();
-		unconv_path(o_str, _retval);
+		string o_s = out.str();
+		unconv_path(o_s, _retval);
 
 		return NS_OK;
 	}
 
 	// Otherwise yell about it
 	catch (Magick::Exception & e) {
-		delete path_str;
-		delete thumb_str;
+		delete path_s;
+		delete thumb_s;
 		char * o = (char *)e.what();
 		while (*o) {
 			_retval.Append(*o++);
@@ -452,8 +468,8 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 // Rotate an image, preserving size and store it to the profile
 NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) {
-	string * path_str = 0;
-	string * rotate_str = 0;
+	string * path_s = 0;
+	string * rotate_s = 0;
 	try {
 
 		// Don't rotate 0 degrees
@@ -463,8 +479,8 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 			return NS_OK;
 		}
 
-		path_str = conv_path(path);
-		if (0 == path_str) {
+		path_s = conv_path(path);
+		if (0 == path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}
 
@@ -472,48 +488,48 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		Exiv2::ExifData exif;
 		Exiv2::IptcData iptc;
 		try {
-			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
 			exif = meta_r->exifData();
 			iptc = meta_r->iptcData();
 		} catch (Exiv2::Error &) {}
 
 		// Create a new path
-		rotate_str = find_path(path_str, "-rotate");
-		if (0 == rotate_str) {
+		rotate_s = find_path(path_s, "-rotate");
+		if (0 == rotate_s) {
 			return NS_ERROR_NULL_POINTER;
 		}
 
 		// Rotate the image
-		Magick::Image img(*path_str);
-		delete path_str; path_str = 0;
+		Magick::Image img(*path_s);
+		delete path_s; path_s = 0;
 		base_orient(img);
 		img.rotate(degrees);
 		img.compressType(Magick::NoCompression);
-		img.write(*rotate_str);
+		img.write(*rotate_s);
 
 		// Set the orientation to 1 because we're orienting the pixels manually
 		exif["Exif.Image.Orientation"] = uint32_t(1);
 
 		// Put saved metadata into the resized image
 		try {
-			Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*rotate_str);
+			Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*rotate_s);
 			meta_w->setExifData(exif);
 			meta_w->setIptcData(iptc);
 			meta_w->writeMetadata();
 		} catch (Exiv2::Error &) {}
 
 		// If all went well, return new path
-		rotate_str->insert(0, "ok");
-		unconv_path(*rotate_str, _retval);
-		delete rotate_str;
+		rotate_s->insert(0, "ok");
+		unconv_path(*rotate_s, _retval);
+		delete rotate_s;
 		return NS_OK;
 	}
 
 	// Otherwise yell about it
 	catch (Magick::Exception & e) {
-		delete path_str;
-		delete rotate_str;
+		delete path_s;
+		delete rotate_s;
 		char * o = (char *)e.what();
 		while (*o) {
 			_retval.Append(*o++);
@@ -525,11 +541,11 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 
 // Resize an image and store it to the profile
 NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _retval) {
-	string * path_str = 0;
-	string * resize_str = 0;
+	string * path_s = 0;
+	string * resize_s = 0;
 	try {
-		path_str = conv_path(path);
-		if (0 == path_str) {
+		path_s = conv_path(path);
+		if (0 == path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}
 
@@ -537,14 +553,14 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		Exiv2::ExifData exif;
 		Exiv2::IptcData iptc;
 		try {
-			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_str);
+			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
 			exif = meta_r->exifData();
 			iptc = meta_r->iptcData();
 		} catch (Exiv2::Error &) {}
 
 		// Open the image
-		Magick::Image img(*path_str);
+		Magick::Image img(*path_s);
 		int bw = img.baseColumns(), bh = img.baseRows();
 		int base = bw > bh ? bw : bh;
 
@@ -584,12 +600,12 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		string dim(out.str());
 
 		// Create a new path
-		resize_str = find_path(path_str, "-resize");
-		if (0 == resize_str) {
+		resize_s = find_path(path_s, "-resize");
+		if (0 == resize_s) {
 			return NS_ERROR_NULL_POINTER;
 		}
-		delete path_str; path_str = 0;
-		out << *resize_str;
+		delete path_s; path_s = 0;
+		out << *resize_s;
 
 		// Find the sharpen sigma as the website does
 		//   Which is easy, because for these sizes it's just 0.95
@@ -599,27 +615,27 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		img.scale(dim);
 		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);
-		img.write(*resize_str);
+		img.write(*resize_s);
 
 		// Put saved metadata into the resized image
 		try {
-			Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*resize_str);
+			Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*resize_s);
 			meta_w->setExifData(exif);
 			meta_w->setIptcData(iptc);
 			meta_w->writeMetadata();
 		} catch (Exiv2::Error &) {}
-		delete resize_str; resize_str = 0;
+		delete resize_s; resize_s = 0;
 
 		// If all went well, return stuff
-		string o_str = out.str();
-		unconv_path(o_str, _retval);
+		string o_s = out.str();
+		unconv_path(o_s, _retval);
 		return NS_OK;
 	}
 
 	// Otherwise yell about it
 	catch (Magick::Exception & e) {
-		delete path_str;
-		delete resize_str;
+		delete path_s;
+		delete resize_s;
 		char * o = (char *)e.what();
 		while (*o) {
 			_retval.Append(*o++);

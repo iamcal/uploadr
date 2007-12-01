@@ -488,6 +488,8 @@ try {
 	threads.worker = t.newThread(0);
 	threads.main = t.mainThread;
 	threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
+	threads.gm.init(Cc['@mozilla.org/file/directory_service;1'].getService(
+		Ci.nsIProperties).get('resource:app', Ci.nsIFile).path);
 } catch (err) {
 	Components.utils.reportError(err);
 }

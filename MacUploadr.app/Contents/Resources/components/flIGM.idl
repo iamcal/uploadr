@@ -12,6 +12,7 @@
 
 [scriptable, uuid(0e0d0b74-2c06-11dc-8314-0800200c9a66)]
 interface flIGM : nsISupports {
+	void init(in AString pwd);
 	AString thumb(in long square, in AString path);
 	AString rotate(in long degrees, in AString path);
 	AString resize(in long square, in AString path);
