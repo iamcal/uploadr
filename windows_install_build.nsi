@@ -90,10 +90,8 @@ Section "Install" SecInstall
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Flickr Uploadr" "NoModify" 1
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Flickr Uploadr" "NoRepair" 1
 
-	StrCmp $INI_VALUE "1" "" over
-		WriteRegStr HKCR "SystemFileAssociations\image\shell\edit.FlickrUploadr" "" "Send to Flickr..."
-		WriteRegStr HKCR "SystemFileAssociations\image\shell\edit.FlickrUploadr\command" "" '"$INSTDIR\Flickr Uploadr.exe" "%1"'
-	over:
+	WriteRegStr HKCR "SystemFileAssociations\image\shell\edit.FlickrUploadr" "" "Send to Flickr..."
+	WriteRegStr HKCR "SystemFileAssociations\image\shell\edit.FlickrUploadr\command" "" '"$INSTDIR\Flickr Uploadr.exe" "%1"'
 
 SectionEnd
 
@@ -104,7 +102,7 @@ Section "Start Menu Shortcuts"
 	!insertmacro MUI_INSTALLOPTIONS_READ $INI_VALUE "io.ini" "Field 1" "State"
 
 	StrCmp $INI_VALUE "1" "" +2    
-		CreateShortCut "$DESKTOP\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.lnk" "" "$INSTDIR\Flickr Uploadr.exe" 0
+		CreateShortCut "$DESKTOP\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.exe" "" "$INSTDIR\Flickr Uploadr.exe" 0
 
 SectionEnd
 

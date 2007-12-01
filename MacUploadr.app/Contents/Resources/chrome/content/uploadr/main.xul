@@ -19,7 +19,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml"
-onload="upgrade.check(); users.load(); photos.load(); drag.on_startup(); help._pretty();"
+onload="threads.init(); upgrade.check(); users.load(); photos.load(); drag.on_startup(); help._pretty();"
 onclose="return exit();" persist="screenX screenY width height sizemode">
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />

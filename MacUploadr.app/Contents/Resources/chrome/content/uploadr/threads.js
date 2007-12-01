@@ -15,7 +15,21 @@ var threads = {
 	main: null,
 
 	// GraphicsMagick
-	gm: null
+	gm: null,
+
+	// Create thread hooks and instantiate GraphicsMagick
+	init: function() {
+		try {
+			var t = Cc['@mozilla.org/thread-manager;1'].getService();
+			threads.worker = t.newThread(0);
+			threads.main = t.mainThread;
+			threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
+			threads.gm.init(Cc['@mozilla.org/file/directory_service;1'].getService(
+				Ci.nsIProperties).get('resource:app', Ci.nsIFile).path);
+		} catch (err) {
+			Components.utils.reportError(err);
+		}
+	}
 
 };
 
@@ -481,15 +495,3 @@ PhotoAddCallback.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
-
-// Create thread hooks and instantiate GraphicsMagick
-try {
-	var t = Cc['@mozilla.org/thread-manager;1'].getService();
-	threads.worker = t.newThread(0);
-	threads.main = t.mainThread;
-	threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
-	threads.gm.init(Cc['@mozilla.org/file/directory_service;1'].getService(
-		Ci.nsIProperties).get('resource:app', Ci.nsIFile).path);
-} catch (err) {
-	Components.utils.reportError(err);
-}

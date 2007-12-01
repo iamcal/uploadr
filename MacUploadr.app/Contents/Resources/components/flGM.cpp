@@ -296,11 +296,12 @@ NS_IMETHODIMP flGM::Init(const nsAString & pwd) {
 	// Windows needs to get its working directory ready for GraphicsMagick
 #ifdef XP_WIN
 	string * pwd_s = conv_path(pwd);
-	if (0 == pwd_s) return;
-	SetCurrentDirectory(pwd_s->c_str());
+	if (0 == pwd_s) return NS_ERROR_NULL_POINTER;
+	SetCurrentDirectoryA(pwd_s->c_str());
 	delete pwd_s;
 #endif
 
+	return NS_OK;
 }
 
 // Create a thumbnail of the image, preserving aspect ratio and store it to the profile
