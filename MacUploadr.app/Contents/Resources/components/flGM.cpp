@@ -43,51 +43,110 @@
 using namespace std;
 
 // Convert a path from a UTF-8 nsAString to an ASCII std::string
-//   In Windows, this will handle all the Unicode weirdness that comes with paths
-string * conv_path(const nsAString & fake) {
+//   In Windows, this will handle all the Unicode weirdness paths come with
+//   If is_dir is true then the returned path will transparently become an
+//   ASCII-safe TEMP path
+//   If is_dir is false then the file will be copied under a new name to
+//   an ASCII-safe TEMP path
+string * conv_path(const nsAString & fake, bool is_dir) {
 
 	// Fun with Windows paths
 #ifdef XP_WIN
 
-	// UTF-16 but really UTF-8 nsAString to really UTF-8 nsCString
-	nsCString utf8 = NS_LossyConvertUTF16toASCII(fake);
-
-	// UTF-8 nsCString to UTF-16 nsEmbedString
-	nsEmbedString & utf16 = NS_ConvertUTF8toUTF16(utf8);
-
-	// UTF-16 nsEmbedString to wchar_t[]
-	wchar_t * w_arr = new wchar_t[utf16.Length() + 1];
-	if (0 == w_arr) return 0;
-	wchar_t * w_arr_p = w_arr;
-	PRUnichar * w_start = (PRUnichar *)utf16.BeginReading();
-	const PRUnichar * w_end = (PRUnichar *)utf16.EndReading();
-	while (w_start != w_end) {
-		*w_arr_p++ = (wchar_t)*w_start++;
-	}
-	*w_arr_p = 0;
-
-	// GetShortPathName to get guaranteed ASCII
-	wchar_t s_arr[4096];
-	if (0 == GetShortPathNameW(w_arr, s_arr, 4096)) {
-		delete [] w_arr;
-		return 0;
-
-		// If GetShortPathName fails, try copying the file to TEMP
-		/*
-		if (0 == GetTempPath(s_arr, 4096)) {
-			delete [] w_arr;
-			return 0;
+	// Is this path outside of ASCII?
+	PRUnichar * fake_start = (PRUnichar *)fake.BeginReading();
+	const PRUnichar * fake_end = (PRUnichar *)fake.EndReading();
+	bool needs_unicode = false;
+	while (fake_start != fake_end) {
+		if (0x80 & (char)*fake_start++) {
+			needs_unicode = true;
+			break;
 		}
-		*/
+	}
+	if (needs_unicode) {
+
+		// UTF-16 but really UTF-8 nsAString to really UTF-8 nsCString
+		nsCString utf8 = NS_LossyConvertUTF16toASCII(fake);
+
+		// UTF-8 nsCString to UTF-16 nsEmbedString
+		nsEmbedString & utf16 = NS_ConvertUTF8toUTF16(utf8);
+
+		// UTF-16 nsEmbedString to wchar_t[]
+		wchar_t * wide_arr = new wchar_t[utf16.Length() + 1];
+		if (0 == wide_arr) return 0;
+		wchar_t * wide_arr_p = w_arr;
+		PRUnichar * wide_start = (PRUnichar *)utf16.BeginReading();
+		const PRUnichar * wide_end = (PRUnichar *)utf16.EndReading();
+		while (wide_start != wide_end) {
+			*wide_arr_p++ = (wchar_t)*wide_start++;
+		}
+		*wide_arr_p = 0;
+
+		// GetShortPathName to get guaranteed ASCII
+		wchar_t short_arr[4096];
+		char temp_arr[4096];
+		*temp_arr = 0;
+		if (0 && 0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
+
+			// Try copying the file to a TEMP directory
+			if (0 == GetTempPathA(temp_arr, 4096)) {
+				delete [] wide_arr;
+				return 0;
+			}
+
+			// If this call is for a file, we actually need to copy it
+			if (!is_dir) {
+				string base(temp_arr);
+				base += "/original";
+				string orig;
+				wide_arr_p = wide_arr;
+				while (*wide_arr_p) {
+					orig += (char)*wide_arr_p++;
+				}
+				base += orig->substr(orig->rfind('.'));
+				string * temp = find_path(base, "");
+				wchar_t * temp_wide_arr = new wchar_t[temp.size() + 1];
+				wchar_t * temp_widw_arr_p = temp_wide_arr;
+				char * temp_p = temp.c_str();
+				while (*temp_p) {
+					*temp_wide_arr_p++ = (wchar_t)*temp_p++;
+				}
+				*temp_wide_arr_p = 0;
+				if (0 == CopyFileW(wide_arr, temp_wide_arr)) {
+					delete [] wide_arr;
+					delete temp;
+					delete [] temp_wide_arr;
+					return 0;
+				}
+				delete [] wide_arr;
+				delete [] temp_wide_arr;
+				return temp;
+			}
+
+		}
+		delete [] wide_arr;
+
+		// wchar_t[] or char[] to ASCII nsEmbedString
+		//   We already have a char[] if we had to resort to copying to TEMP
+		nsEmbedString ascii;
+		if (*temp_arr) {
+			char * temp_arr_p = temp_arr;
+			while (*temp_arr_p) {
+				ascii.Append(*temp_arr_p++);
+			}
+		} else {
+			wchar_t * short_arr_p = short_arr;
+			while (*short_arr_p) {
+				ascii.Append((char)*short_arr_p++);
+			}
+		}
 
 	}
-	delete [] w_arr;
 
-	// wchar_t[] to ASCII nsEmbedString
-	nsEmbedString ascii;
-	wchar_t * s_arr_p = s_arr;
-	while (*s_arr_p) {
-		ascii.Append((char)*s_arr_p++);
+	// Not outside of ASCII, business as usual
+	else {
+		nsEmbedString ascii;
+		ascii.Assign(fake);
 	}
 
 	// Macs don't need any help since they understand UTF-8
@@ -97,18 +156,18 @@ string * conv_path(const nsAString & fake) {
 #endif
 
 	// Convert the now-ASCII nsEmbedString into an ASCII std::string
-	char * c_arr = c_arr = new char[ascii.Length() + 1];
-	if (0 == c_arr) return 0;
-	char * c_arr_p = c_arr;
-	PRUnichar * c_start = (PRUnichar *)ascii.BeginReading();
-	const PRUnichar * c_end = (PRUnichar *)ascii.EndReading();
-	while (c_start != c_end) {
-		*c_arr_p++ = (char)*c_start++;
+	char * ascii_arr = new char[ascii.Length() + 1];
+	if (0 == ascii_arr) return 0;
+	char * ascii_arr_p = ascii_arr;
+	PRUnichar * ascii_start = (PRUnichar *)ascii.BeginReading();
+	const PRUnichar * ascii_end = (PRUnichar *)ascii.EndReading();
+	while (ascii_start != ascii_end) {
+		*ascii_arr_p++ = (char)*ascii_start++;
 	}
-	*c_arr_p = 0;
-	string * str = new string(c_arr);
-	delete [] c_arr;
-	return str;
+	*ascii_arr_p = 0;
+	string * ascii_s = new string(ascii_arr);
+	delete [] ascii_arr;
+	return ascii_s;
 
 }
 
@@ -132,7 +191,7 @@ string * find_path(string * path_s, const char * extra) {
 		}
 		nsString dir;
 		dir_ptr->GetPath(dir);
-		dir_s = conv_path(dir);
+		dir_s = conv_path(dir, true);
 		if (0 == dir_s) {
 			return 0;
 		}
@@ -295,7 +354,7 @@ NS_IMETHODIMP flGM::Init(const nsAString & pwd) {
 
 	// Windows needs to get its working directory ready for GraphicsMagick
 #ifdef XP_WIN
-	string * pwd_s = conv_path(pwd);
+	string * pwd_s = conv_path(pwd, true);
 	if (0 == pwd_s) return NS_ERROR_NULL_POINTER;
 	SetCurrentDirectoryA(pwd_s->c_str());
 	delete pwd_s;
@@ -311,7 +370,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 	try {
 
 		// Get the path as a C++ string
-		path_s = conv_path(path);
+		path_s = conv_path(path, false);
 		if (0 == path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}
@@ -392,11 +451,32 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 				}
 			}
 			tags += " ";
-			tags += iptc["Iptc.Application2.City"].toString();
+			string city = iptc["Iptc.Application2.City"].toString();
+			if (string::npos == city.find(" ", 0)) {
+				tags += city;
+			} else {
+				tags += "\"";
+				tags += city;
+				tags += "\"";
+			}
 			tags += " ";
-			tags += iptc["Iptc.Application2.ProvinceState"].toString();
+			string state = iptc["Iptc.Application2.ProvinceState"].toString();
+			if (string::npos == state.find(" ", 0)) {
+				tags += state;
+			} else {
+				tags += "\"";
+				tags += state;
+				tags += "\"";
+			}
 			tags += " ";
-			tags += iptc["Iptc.Application2.CountryName"].toString();
+			string country = iptc["Iptc.Application2.CountryName"].toString();
+			if (string::npos == city.find(" ", 0)) {
+				tags += state;
+			} else {
+				tags += "\"";
+				tags += state;
+				tags += "\"";
+			}
 		} catch (Exiv2::Error &) {}
 
 		// Hide ### strings within the IPTC data
@@ -480,7 +560,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 			return NS_OK;
 		}
 
-		path_s = conv_path(path);
+		path_s = conv_path(path, false);
 		if (0 == path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}
@@ -545,7 +625,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 	string * path_s = 0;
 	string * resize_s = 0;
 	try {
-		path_s = conv_path(path);
+		path_s = conv_path(path, false);
 		if (0 == path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}

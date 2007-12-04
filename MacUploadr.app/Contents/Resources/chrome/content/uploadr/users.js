@@ -38,8 +38,8 @@ var users = {
 			flickr.auth.checkToken(users.token);
 		}
 
-		// If we don't have a token
-		else {
+		// If we don't have a token and we're not forcing a fresh token
+		else if (!fresh) {
 
 			// Try to find one
 			for each (var u in users.list) {
@@ -64,11 +64,17 @@ var users = {
 			}
 
 		}
+
+		// If we really want a fresh token, go get one
+		else {
+			flickr.auth.getFrob(fresh);
+		}
+
 	},
 	_login: function() {
-		users.update();
-		settings.load();
 		if (users.username) {
+			users.update();
+			settings.load();
 
 			// User specific API calls that must be made (and havent already been)
 			flickr.people.getInfo(users.nsid);
@@ -84,7 +90,7 @@ var users = {
 			meta.login();
 
 		} else {
-			users.logout();
+			users.logout(false);
 		}
 		if ('function' == typeof users.after_login) {
 			users.after_login();
@@ -93,8 +99,11 @@ var users = {
 	},
 
 	// Logout
-	logout: function() {
-		settings.save();
+	logout: function(save) {
+Components.utils.reportError('settings.is_public: ' + settings.is_public + ', users.username: ' + users.username);
+		if (save) {
+			settings.save();
+		}
 		users.frob = null;
 		users.username = null;
 		users.nsid = null;

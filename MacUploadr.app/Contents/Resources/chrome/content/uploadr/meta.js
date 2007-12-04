@@ -126,6 +126,7 @@ var meta = {
 				ul.appendChild(li);
 			} else {
 				for (var i = 0; i < ii; ++i) {
+Components.utils.reportError('i: ' + i + ', p.sets[i]: ' + p.sets[i]);
 					document.getElementById('single_sets_add_' + p.sets[i]).className =
 						'sets_disabled';
 					var li = document.createElementNS(NS_HTML, 'li');

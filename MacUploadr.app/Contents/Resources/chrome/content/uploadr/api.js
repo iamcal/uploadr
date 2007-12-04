@@ -109,9 +109,8 @@ var upload = {
 			if (upload.bandwidth(rsp)) {
 				return;
 			}
-			if (upload.cancel) {
-				upload.done();
-			}
+			upload.done();
+			return;
 		}
 
 		// Otherwise, spin for a ticket
@@ -340,6 +339,8 @@ var upload = {
 
 	// Start to clean up after an upload finishes
 	done: function() {
+Components.utils.reportError('upload.done');
+Components.utils.reportError('meta.created_sets: ' + meta.created_sets.toSource());
 		window.clearTimeout(upload.timeout_handle);
 		upload.timeout_handle = null;
 		window.clearInterval(upload.progress_handle);
@@ -388,15 +389,14 @@ var upload = {
 		}
 
 		// If this was a cancellation, re-add photos we didn't get to
-		if (upload.cancel) {
+//		if (upload.cancel) {
 			for each (var p in photos.uploading) {
 				if (null != p) {
-Components.utils.reportError('path: ' + p.path);
 					photos._add(p.path);
 					photos.list[photos.list.length - 1] = p;
 				}
 			}
-		}
+//		}
 		photos.normalize();
 
 		// Kick off the chain of adding photos to a set
@@ -427,6 +427,7 @@ Components.utils.reportError('path: ' + p.path);
 
 	// Finally give the user feedback on their upload
 	finalize: function() {
+Components.utils.reportError('upload.finalize()');
 
 		// Make sure the sets map is actually empty
 		var not_empty = false;
@@ -439,8 +440,10 @@ Components.utils.reportError('path: ' + p.path);
 
 		// Normalize the list of created sets
 		var i = 0;
+Components.utils.reportError('meta.created_sets: ' + meta.created_sets.toSource());
 		while (i < meta.created_sets.length) {
 			if (null == meta.created_sets[i]) {
+Components.utils.reportError('meta.created_sets.shift()');
 				meta.created_sets.shift();
 				meta.created_sets_desc.shift();
 			} else {
@@ -541,7 +544,7 @@ var flickr = {
 		},
 		_checkToken: function(rsp) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				users.logout();
+				users.logout(false);
 			} else {
 				users.token = rsp.getElementsByTagName('token')[0].firstChild.nodeValue;
 				var user = rsp.getElementsByTagName('user')[0];
@@ -562,7 +565,7 @@ var flickr = {
 		},
 		_getFrob: function(rsp, fresh) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				users.logout();
+				users.logout(false);
 			} else {
 				users.frob = rsp.getElementsByTagName('frob')[0].firstChild.nodeValue;
 				if (!confirm(locale.getString('auth.prompt.text'),
@@ -591,7 +594,7 @@ var flickr = {
 		},
 		_getToken: function(rsp) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				users.logout();
+				users.logout(false);
 			} else {
 				users.token = rsp.getElementsByTagName('token')[0].firstChild.nodeValue;
 				var user = rsp.getElementsByTagName('user')[0];
@@ -788,6 +791,28 @@ var flickr = {
 				var index = meta.created_sets.indexOf(id);
 				meta.created_sets[index] = null;
 				meta.created_sets_desc[index] = null;
+
+				// Update remaining photos in case we fail
+				var ii = photos.failed.length;
+				for (var i = 0; i < ii; ++i) {
+					var index = photos.failed[i].sets.indexOf(id);
+Components.utils.reportError('id: ' + id + ', index: ' + index);
+					if (-1 != index) {
+Components.utils.reportError('set_id: ' + set_id);
+						photos.failed[i].sets[index] = set_id;
+					}
+				}
+				var ii = photos.uploading.length;
+				for (var i = 0; i < ii; ++i) {
+					if (null != photos.uploading[i]) {
+						var index = photos.uploading[i].sets.indexOf(id);
+Components.utils.reportError('id: ' + id + ', index: ' + index);
+						if (-1 != index) {
+Components.utils.reportError('set_id: ' + set_id);
+							photos.uploading[i].sets[index] = set_id;
+						}
+					}
+				}
 
 				if (0 != meta.sets_map[set_id].length) {
 					flickr.photosets.addPhoto(set_id, meta.sets_map[set_id][0]);

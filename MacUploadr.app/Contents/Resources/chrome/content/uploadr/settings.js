@@ -27,6 +27,9 @@ var settings = {
 	safety_level: null,
 	resize: -1,
 
+	// Compare previous user to current user when changing
+//	last: null,
+
 	// Load settings from the current user, which were loaded from the users.json file and
 	// get anything not set there from the web
 	load: function() {
@@ -122,8 +125,9 @@ var settings = {
 
 		// If we're adding a new user, auth and re-open the dialog
 		if (result.add_user) {
+			settings.last = users.username;
 			users.after_login = settings.show;
-			users.logout();
+			users.logout(true);
 			users.login(true);
 		}
 
@@ -142,21 +146,24 @@ var settings = {
 			users.list = new_list;
 			if (deleted_current) {
 				users.username = null;
-				users.logout();
+				users.logout(false);
 			}
 
 			// Change users if necessary
 			if ('undefined' != typeof result.change_user &&
 				result.change_user != users.username) {
+				settings.last = users.username;	
 				if (deleted_current) {
 					users.username = null;
 				}
-				users.logout();
+				users.logout(true);
 				if ('' != result.change_user) {
 					users.token = users.list[result.change_user].token;
 					users.login();
 				}
 			}				
+
+//Components.utils.reportError(settings.last);
 
 			// Decide what's changed
 			s.is_public = parseInt(s.is_public);
@@ -172,6 +179,27 @@ var settings = {
 			var changed_content_type = settings.content_type != s.content_type;
 			var changed_hidden = settings.hidden != s.hidden;
 			var changed_safety_level = settings.safety_level != s.safety_level;
+/*
+			if (settings.last) {
+Components.utils.reportError('changed_privacy: ' + changed_privacy + ', changed_content_type: ' +
+changed_content_type + ', changed_hidden: ' + changed_hidden + ', changed_safety_level: ' +
+changed_safety_level);
+				var us = users.list[settings.last].settings;
+Components.utils.reportError('us: ' + us.toSource() + ', s: ' + s.toSource());
+				changed_privacy = changed_privacy ||
+					us.is_public != s.is_public ||
+					us.is_friend != s.is_friend ||
+					us.is_family != s.is_family;
+				changed_content_type = changed_content_type ||
+					us.content_type != s.content_type;
+				changed_hidden = changed_hidden || us.hidden != s.hidden;
+				changed_safety_level = changed_safety_level ||
+					us.safety_level != s.safety_level;
+Components.utils.reportError('changed_privacy: ' + changed_privacy + ', changed_content_type: ' +
+changed_content_type + ', changed_hidden: ' + changed_hidden + ', changed_safety_level: ' +
+changed_safety_level);
+			}
+*/
 
 			// Save back to the settings object
 			var defaults = {};
@@ -197,6 +225,7 @@ var settings = {
 			}
 			settings.resize = s.resize;
 			meta.defaults(defaults);
+//			settings.last = null;
 
 			// Get permission to overwrite any changes that were made
 			if (0 < photos.count && (changed_privacy || changed_content_type ||
