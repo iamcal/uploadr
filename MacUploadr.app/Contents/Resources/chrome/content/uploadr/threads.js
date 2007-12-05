@@ -97,7 +97,28 @@ ThumbCallback.prototype = {
 
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
-				photos.list[this.id].date_taken = thumb[3];
+				if ('' == thumb[3]) {
+					var file = Cc['@mozilla.org/file/local;1'].createInstance(
+						Ci.nsILocalFile);
+					file.initWithPath(photos.list[this.id].path);
+					var mod = new Date(file.lastModifiedTime);
+					var month = mod.getMonth();
+					if (10 > month) month = '0' + month;
+					var day = mod.getDate();
+					if (10 > day) day = '0' + day;
+					var hours = mod.getHours();
+					if (10 > hours) hours = '0' + hours;
+					var minutes = mod.getMinutes();
+					if (10 > minutes)  minutes = '0' + minutes;
+					var seconds = mod.getSeconds();
+					if (10 > seconds) seconds = '0' + seconds;
+					photos.list[this.id].date_taken = mod.getFullYear() +
+						':' + month + ':' + day + ' ' + hours + ':' +
+						minutes + ':' + seconds;
+				} else {
+					photos.list[this.id].date_taken = thumb[3];
+				}
+Components.utils.reportError(photos.list[this.id].date_taken);
 				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
@@ -150,6 +171,8 @@ ThumbCallback.prototype = {
 					this.parentNode.parentNode.removeChild(this.parentNode);
 					photos.normalize();
 				};
+				photos.batch_size -= photos.list[this.id].size;
+				free.update();
 				Components.utils.reportError(this.result);
 			}
 
