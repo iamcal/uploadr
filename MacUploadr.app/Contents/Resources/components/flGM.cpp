@@ -33,7 +33,7 @@
 #include <mach-o/dyld.h>
 #endif
 
-// GetShortPathName on Windows will also need an nsCAutoString
+// GetShortPathName, GetTempPath and CopyFile on Windows
 #ifdef XP_WIN
 #include <windows.h>
 #endif
@@ -41,6 +41,13 @@
 #define round(n) (int)(0 <= (n) ? (n) + 0.5 : (n) - 0.5)
 
 using namespace std;
+
+// Prototypes
+string * conv_path(const nsAString &, bool);
+string * find_path(string *, const char *);
+int base_orient(Magick::Image &);
+void exif_update_dim(Exiv2::ExifData &, int, int);
+void unconv_path(string &, nsAString &);
 
 // Convert a path from a UTF-8 nsAString to an ASCII std::string
 //   In Windows, this will handle all the Unicode weirdness paths come with
@@ -63,6 +70,7 @@ string * conv_path(const nsAString & fake, bool is_dir) {
 			break;
 		}
 	}
+	nsEmbedString ascii;
 	if (needs_unicode) {
 
 		// UTF-16 but really UTF-8 nsAString to really UTF-8 nsCString
@@ -74,7 +82,7 @@ string * conv_path(const nsAString & fake, bool is_dir) {
 		// UTF-16 nsEmbedString to wchar_t[]
 		wchar_t * wide_arr = new wchar_t[utf16.Length() + 1];
 		if (0 == wide_arr) return 0;
-		wchar_t * wide_arr_p = w_arr;
+		wchar_t * wide_arr_p = wide_arr;
 		PRUnichar * wide_start = (PRUnichar *)utf16.BeginReading();
 		const PRUnichar * wide_end = (PRUnichar *)utf16.EndReading();
 		while (wide_start != wide_end) {
@@ -86,10 +94,10 @@ string * conv_path(const nsAString & fake, bool is_dir) {
 		wchar_t short_arr[4096];
 		char temp_arr[4096];
 		*temp_arr = 0;
-		if (0 && 0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
+		if (0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
 
-			// Try copying the file to a TEMP directory
-			if (0 == GetTempPathA(temp_arr, 4096)) {
+			// Try to find a TEMP directory
+			if (0 == GetTempPathA(4096, temp_arr)) {
 				delete [] wide_arr;
 				return 0;
 			}
@@ -97,22 +105,22 @@ string * conv_path(const nsAString & fake, bool is_dir) {
 			// If this call is for a file, we actually need to copy it
 			if (!is_dir) {
 				string base(temp_arr);
-				base += "/original";
+				base += "original";
 				string orig;
 				wide_arr_p = wide_arr;
 				while (*wide_arr_p) {
 					orig += (char)*wide_arr_p++;
 				}
-				base += orig->substr(orig->rfind('.'));
-				string * temp = find_path(base, "");
-				wchar_t * temp_wide_arr = new wchar_t[temp.size() + 1];
-				wchar_t * temp_widw_arr_p = temp_wide_arr;
-				char * temp_p = temp.c_str();
+				base += orig.substr(orig.rfind('.'));
+				string * temp = find_path(&base, "");
+				wchar_t * temp_wide_arr = new wchar_t[temp->size() + 1];
+				wchar_t * temp_wide_arr_p = temp_wide_arr;
+				char * temp_p = (char *)temp->c_str();
 				while (*temp_p) {
 					*temp_wide_arr_p++ = (wchar_t)*temp_p++;
 				}
 				*temp_wide_arr_p = 0;
-				if (0 == CopyFileW(wide_arr, temp_wide_arr)) {
+				if (0 == CopyFileW(wide_arr, temp_wide_arr, false)) {
 					delete [] wide_arr;
 					delete temp;
 					delete [] temp_wide_arr;
@@ -126,26 +134,25 @@ string * conv_path(const nsAString & fake, bool is_dir) {
 		}
 		delete [] wide_arr;
 
-		// wchar_t[] or char[] to ASCII nsEmbedString
-		//   We already have a char[] if we had to resort to copying to TEMP
+		// wchar_t[] or char[] to ASCII string
+		//   We already have a char[] if we are doing a directory
 		nsEmbedString ascii;
 		if (*temp_arr) {
-			char * temp_arr_p = temp_arr;
-			while (*temp_arr_p) {
-				ascii.Append(*temp_arr_p++);
-			}
+			return new string(temp_arr);
 		} else {
+			string * short_s = new string();
+			if (0 == short_s) return 0;
 			wchar_t * short_arr_p = short_arr;
 			while (*short_arr_p) {
-				ascii.Append((char)*short_arr_p++);
+				*short_s += (char)*short_arr_p++;
 			}
+			return short_s;
 		}
 
 	}
 
-	// Not outside of ASCII, business as usual
+	// Within ASCII, business as usual
 	else {
-		nsEmbedString ascii;
 		ascii.Assign(fake);
 	}
 
@@ -172,12 +179,14 @@ string * conv_path(const nsAString & fake, bool is_dir) {
 }
 
 // Find a path for the new image file in our profile
+//   If extra is empty, the new path will be in the same directory,
+//   otherwise it will be in the Profile
 string * find_path(string * path_s, const char * extra) {
 	if (0 == path_s || 0 == extra) {
 		return 0;
 	}
 	string * dir_s = 0;
-	try {
+	if (*extra) {
 		nsCOMPtr<nsIFile> dir_ptr;
 		nsresult nsr = NS_GetSpecialDirectory("ProfD", getter_AddRefs(dir_ptr));
 		if (NS_FAILED(nsr)) {
@@ -189,7 +198,7 @@ string * find_path(string * path_s, const char * extra) {
 		if (!dir_exists) {
 			dir_ptr->Create(nsIFile::DIRECTORY_TYPE, 0770);
 		}
-		nsString dir;
+		nsEmbedString dir;
 		dir_ptr->GetPath(dir);
 		dir_s = conv_path(dir, true);
 		if (0 == dir_s) {
@@ -202,21 +211,20 @@ string * find_path(string * path_s, const char * extra) {
 #endif
 		size_t period = dir_s->rfind('.');
 		dir_s->insert(period, extra);
-		ostringstream index;
-		string dir_s_save(*dir_s);
-		int i = 0;
-		struct stat st;
-		while (0 == stat(dir_s->c_str(), &st)) {
-			index.str("");
-			index << ++i;
-			*dir_s = dir_s_save;
-			dir_s->insert(dir_s->rfind('.'), index.str());
-		}
-		return dir_s;
-	} catch (Magick::Exception &) {
-		delete dir_s;
-		return 0;
+	} else {
+		dir_s = new string(*path_s);
 	}
+	ostringstream index;
+	string dir_s_save(*dir_s);
+	int i = 0;
+	struct stat st;
+	while (0 == stat(dir_s->c_str(), &st)) {
+		index.str("");
+		index << ++i;
+		*dir_s = dir_s_save;
+		dir_s->insert(dir_s->rfind('.'), index.str());
+	}
+	return dir_s;
 }
 
 // Orient an image's pixels as EXIF instructs
@@ -308,8 +316,8 @@ void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 
 // Get a path/string ready to send back to JavaScript-land
 //   On Windows there is little to do, but Macs must go from UTF-8 to UTF-16
-void unconv_path(string & str, nsAString & _retval) {
-	char * o = (char *)str.c_str();
+void unconv_path(string & path_s, nsAString & _retval) {
+	char * o = (char *)path_s.c_str();
 #ifdef XP_MACOSX
 	nsCString utf8;
 #endif
