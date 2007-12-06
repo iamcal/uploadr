@@ -1,3 +1,5 @@
+<?php /* Smarty version 2.6.6, created on 2007-12-06 14:07:19
+         compiled from ext_uploadr3_main.dtd.txt */ ?>
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Fazer upload">
@@ -13,6 +15,7 @@
 <!ENTITY menu.help.about "Sobre o Flickr Uploadr">
 <!ENTITY menu.help.tips "Dicas e truques">
 <!ENTITY menu.help.faq "Perguntas freqüentes">
+<!ENTITY menu.help.update "Verificar atualizações...">
 <!ENTITY menu.help.console "Console">
 
 <!ENTITY notloggedin "Você está trabalhando off-line.">
@@ -38,8 +41,8 @@
 <!ENTITY photos.sort.default "Atualmente, suas fotos estão ordenadas pela data em que foram tiradas.  Arraste-as e solte-as para reordená-las.">
 <!ENTITY photos.sort.revert "Reclassificar fotos pela data em que foram tiradas">
 <!ENTITY photos.init "Arraste as fotos aqui para começar.">
-<!ENTITY photos.init.text.1 "Ou clique em ">
-<!ENTITY photos.init.text.2 " para procurar fotos em seu computador.">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find photos on your computer.">
 <!ENTITY photos.new "Você pode iniciar um novo lote enquanto este lote está sendo enviado.">
 
 <!ENTITY settings "Configurações">
@@ -62,7 +65,9 @@
 <!ENTITY settings.safety_level.safe "Segura">
 <!ENTITY settings.safety_level.moderate "Moderado">
 <!ENTITY settings.safety_level.restricted "Restrita">
-<!ENTITY settings.hidden "Ocultar em áreas públicas do site">
+<!ENTITY settings.hidden "Ocultar em áreas públicas do site?">
+<!ENTITY settings.hidden.no "Não ocultar">
+<!ENTITY settings.hidden.yes "Sim, ocultar">
 <!ENTITY settings.resize "Redimensionamento automático:">
 <!ENTITY settings.resize.dont "Não redimensionar minhas fotos">
 <!ENTITY settings.resize.800 "800 pixels (adequado para visualização na tela)">
@@ -76,19 +81,18 @@
 <!ENTITY meta.batch.title "Substituir títulos:">
 <!ENTITY meta.batch.title.tooltip "Digite um título aqui para substituir os títulos das fotos selecionadas.">
 <!ENTITY meta.single.description "Descrição:">
-<!ENTITY meta.batch.description "Adicionar descrição:">
+<!ENTITY meta.batch.description "Adicionar às descrições existentes:">
 <!ENTITY meta.batch.description.tooltip "Digite uma descrição aqui para anexá-la às descrições das fotos selecionadas.">
 <!ENTITY meta.single.tags "Tags:">
-<!ENTITY meta.batch.tags "Adicionar tags:">
+<!ENTITY meta.batch.tags "Adicionar às tags existentes:">
 <!ENTITY meta.tags.tooltip "Separar cada tag com um espaço: blog urbano celular. Ou use aspas para juntar duas palavras em uma tag: &#34;troca diária&#34;.">
 <!ENTITY meta.single.who "Quem pode ver esta foto?">
 <!ENTITY meta.batch.who "Quem pode ver estas fotos?">
 <!ENTITY meta.content_type "Tipo de conteúdo:">
 <!ENTITY meta.safety_level "Nível de segurança:">
 <!ENTITY meta.first "Todas as fotos estão selecionadas">
-<!ENTITY meta.batch.prompt "Qualquer alteração feita aqui afetará todas as fotos selecionadas.">
-<!ENTITY meta.no.prompt "Selecione uma (ou muitas) fotos para adicionar títulos, tags e descrições ou adicione suas fotos aos álbuns">
-<!ENTITY meta.sets.add "Adicionar ao álbum:">
+<!ENTITY meta.single.sets.add "Adicionar aos álbuns:">
+<!ENTITY meta.batch.sets.add "Adicionar a mais álbuns:">
 <!ENTITY meta.sets.add.none "Não há álbuns">
 <!ENTITY meta.sets.create "Criar um álbum...">
 <!ENTITY meta.single.sets.added "Esta será adicionada a:">
@@ -96,11 +100,19 @@
 <!ENTITY meta.sets.added.none "Você não selecionou nenhum álbum">
 <!ENTITY meta.hidden "Entre para ver seus álbuns">
 
+<!ENTITY meta.no.prompt "Selecione uma (ou muitas) fotos para adicionar títulos, tags e descrições ou adicione suas fotos aos álbuns">
+<!ENTITY meta.batch.prompt "Agora você pode substituir todos os títulos por um novo, adicionar às descrições existentes, adicionar mais tags ou a mais álbuns.">
+
+<!ENTITY dialog.set.title "Criar um álbum">
+<!ENTITY dialog.set.name "Escolha um nome para o seu novo álbum:">
+<!ENTITY dialog.set.description "E uma descrição (opcional):">
+
 <!ENTITY dialog.about "Sobre o Flickr Uploadr">
-<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Flickr e Contribuidores">
-<!ENTITY dialog.about.copyright.xulrunner "O XULRunner está disponível mediante a Mozilla Public License (Licença pública do Mozilla).">
-<!ENTITY dialog.about.copyright.graphicsmagick "O GraphicsMagick está disponível mediante a GNU General Public License (Licença ao público geral do GNU).">
-<!ENTITY dialog.about.copyright.exiv2 "O Exiv2 possui copyright © 2004-2007 Andreas Huggel e está disponível mediante a GNU General Public License (Licença ao público geral do GNU).">
+<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc. Todos os direitos reservados.  Este é um software livre que pode ser redistribuído e/ou modificado de acordo com os termos da GNU General Public License (GPL) (Licença ao público geral do GNU), versão 2 apenas.">
+<!ENTITY dialog.about.copyright.xulrunner "XULRunner possui copyright © 2007 Mozilla Foundation.  Está disponível mediante a Mozilla Public License (Licença pública do Mozilla), a GNU General Public License (Licença ao público geral do GNU) ou a GNU Lesser General Public License (Licença menos ao público geral do GNU).">
+<!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick possui copyright © 2007 GraphicsMagick Group.  Está disponível mediante a MIT/X11 License (Licença MIT/X11).">
+<!ENTITY dialog.about.copyright.exiv2 "Exiv2 possui copyright © 2004-2007 Andreas Huggel.  Está disponível mediante a GNU General Public License (Licença ao público geral do GNU).">
+<!ENTITY dialog.about.code "Código fonte disponível em http://flickr.com/tools/uploadr/.">
 
 <!ENTITY help "Dicas e truques">
 <!ENTITY help.offline "Você pode .">
@@ -109,3 +121,5 @@
 <!ENTITY help.drag " é muito útil.">
 <!ENTITY help.drag.text "Quando enviar as fotos, arraste-as na ordem em que deseja que apareçam na página de fotos.  Se for necessário, você também pode redefinir qualquer organização que tenha feito, para que as fotos voltem a ser ordenadas pela data em que foram tiradas.">
 <!ENTITY help.faq "Se houver mais alguma dúvida, por favor, visite as .">
+
+<!ENTITY photos.init.text.joined "Ou clique em  para procurar fotos em seu computador.">

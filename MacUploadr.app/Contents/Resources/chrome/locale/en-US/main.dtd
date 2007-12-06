@@ -1,3 +1,5 @@
+<?php /* Smarty version 2.6.6, created on 2007-12-06 14:07:17
+         compiled from ext_uploadr3_main.dtd.txt */ ?>
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Upload">
@@ -113,9 +115,11 @@
 <!ENTITY dialog.about.code "Source code available at http://flickr.com/tools/uploadr/.">
 
 <!ENTITY help "Tips and Tricks">
-<!ENTITY help.offline "You can ^^work offline^^.">
+<!ENTITY help.offline "You can .">
 <!ENTITY help.offline.text.first "The Uploadr is designed to let you do much of your photo organization and tagging offline.  Once you're ready to upload to Flickr, sign in to your account, and press the enormous Upload Photos button.">
 <!ENTITY help.offline.text.second "You can be signed in all the time, if you like.  When you're signed in, you can organize your photos into sets.">
-<!ENTITY help.drag "^^Drag and drop^^ is your friend.">
+<!ENTITY help.drag " is your friend.">
 <!ENTITY help.drag.text "You can drag photos into the order that you'd like them to appear on your photos page when they're uploaded.  If you need to, you can also reset any arrangement you make so the photos go back to being ordered by the date they were taken.">
-<!ENTITY help.faq "If you have more questions, please visit our ^^Uploadr FAQ^^">
+<!ENTITY help.faq "If you have more questions, please visit our ">
+
+<!ENTITY photos.init.text.joined "Or, click  to find photos on your computer.">

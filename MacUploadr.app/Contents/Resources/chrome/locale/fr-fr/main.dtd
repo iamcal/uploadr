@@ -1,3 +1,5 @@
+<?php /* Smarty version 2.6.6, created on 2007-12-06 14:07:19
+         compiled from ext_uploadr3_main.dtd.txt */ ?>
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Importer">
@@ -13,6 +15,7 @@
 <!ENTITY menu.help.about "À propos de Flickr Uploadr">
 <!ENTITY menu.help.tips "Conseils et astuces">
 <!ENTITY menu.help.faq "FAQ">
+<!ENTITY menu.help.update "Recherche de mises à jour en cours...">
 <!ENTITY menu.help.console "Console">
 
 <!ENTITY notloggedin "Vous travaillez hors ligne.">
@@ -38,8 +41,8 @@
 <!ENTITY photos.sort.default "Vos photos sont classées dans l'ordre où vous les avez prises.  Glissez-déposez pour les reclasser.">
 <!ENTITY photos.sort.revert "Retrier les photos dans l'ordre où vous les avez prises.">
 <!ENTITY photos.init "Faites glisser les photos ici pour démarrer.">
-<!ENTITY photos.init.text.1 "Ou cliquez sur ">
-<!ENTITY photos.init.text.2 " pour rechercher des photos sur votre ordinateur.">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find photos on your computer.">
 <!ENTITY photos.new "Vous pouvez lancer un nouveau lot pendant le chargement de celui-ci.">
 
 <!ENTITY settings "Paramètres">
@@ -62,7 +65,9 @@
 <!ENTITY settings.safety_level.safe "Sécurisé">
 <!ENTITY settings.safety_level.moderate "Modéré">
 <!ENTITY settings.safety_level.restricted "Restreint">
-<!ENTITY settings.hidden "Masquer aux zones publiques du site">
+<!ENTITY settings.hidden "Masquer pour les zones publiques du site ?">
+<!ENTITY settings.hidden.no "Ne pas masquer">
+<!ENTITY settings.hidden.yes "Masquer">
 <!ENTITY settings.resize "Redimensionnement automatique :">
 <!ENTITY settings.resize.dont "Ne pas redimensionner mes photos">
 <!ENTITY settings.resize.800 "800  pixels (résolution adaptée à l'affichage à l'écran)">
@@ -76,19 +81,18 @@
 <!ENTITY meta.batch.title "Remplacer les titres :">
 <!ENTITY meta.batch.title.tooltip "Si vous saisissez un titre ici les titres des photos sélectionnées seront remplacés.">
 <!ENTITY meta.single.description "Description  :">
-<!ENTITY meta.batch.description "Ajouter une description :">
+<!ENTITY meta.batch.description "Ajouter aux descriptions existantes :">
 <!ENTITY meta.batch.description.tooltip "Lorsque vous saisissez une description, elle sera ajoutée aux descriptions des photos sélectionnées.">
 <!ENTITY meta.single.tags "Tags  :">
-<!ENTITY meta.batch.tags "Ajouter des tags :">
+<!ENTITY meta.batch.tags "Ajouter aux tags existants :">
 <!ENTITY meta.tags.tooltip "Séparez les tags par un espace : téléphone photo urbain moblog. Ou pour associer deux mots dans un tag, utilisez les guillemets : &#34;commutation quotidienne&#34;.">
 <!ENTITY meta.single.who "Qui peut voir cette photo ?">
 <!ENTITY meta.batch.who "Qui peut voir ces photos ?">
 <!ENTITY meta.content_type "Type de contenu :">
 <!ENTITY meta.safety_level "Niveau de sécurité :">
 <!ENTITY meta.first "Toutes les photos ont été sélectionnées.">
-<!ENTITY meta.batch.prompt "Toute modification affectera toutes les photos sélectionnées.">
-<!ENTITY meta.no.prompt "Sélectionnez une photo (ou plusieurs) pour y ajouter des titres, tags et descriptions ou pour ajouter vos photos à un album">
-<!ENTITY meta.sets.add "Ajouter à l'album :">
+<!ENTITY meta.single.sets.add "Ajouter aux albums :">
+<!ENTITY meta.batch.sets.add "Ajouter à davantage d'albums :">
 <!ENTITY meta.sets.add.none "Aucun album">
 <!ENTITY meta.sets.create "Créer un album…">
 <!ENTITY meta.single.sets.added "Sera ajouté(e) à :">
@@ -96,11 +100,19 @@
 <!ENTITY meta.sets.added.none "Vous n'avez sélectionné aucun album.">
 <!ENTITY meta.hidden "Connectez-vous pour pouvoir voir vos albums.">
 
+<!ENTITY meta.no.prompt "Sélectionnez une photo (ou plusieurs) pour y ajouter des titres, tags et descriptions ou pour ajouter vos photos à un album">
+<!ENTITY meta.batch.prompt "Vous pouvez remplacer tous les titres par un nouveau, faire des ajouts aux descriptions existantes, ajouter des balises ou des albums.">
+
+<!ENTITY dialog.set.title "Créer un album">
+<!ENTITY dialog.set.name "Donnez un nom à votre nouvel album :">
+<!ENTITY dialog.set.description "Et une description (facultatif) :">
+
 <!ENTITY dialog.about "À propos de Flickr Uploadr">
-<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Flickr et contributeurs">
-<!ENTITY dialog.about.copyright.xulrunner "XULRunner est disponible sous licence publique Mozilla.">
-<!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick est disponible sous licence publique générale GNU.">
-<!ENTITY dialog.about.copyright.exiv2 "Exiv2 est sous copyright © 2004-2007 d'Andreas Huggel et est disponible sous licence publique générale GNU.">
+<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 — Yahoo! Inc.  Tous droits réservés.  Ce programme est gratuit. Vous pouvez le redistribuer et/ou le modifier (uniquement la version 2) selon les conditions de la licence publique générale GNU (GPL).">
+<!ENTITY dialog.about.copyright.xulrunner "XULRunner est protégé par les droits d'auteur © 2007 Mozilla Foundation.  Il est disponible sous la licence publique de Mozilla, la licence publique générale GNU (GPL) ou la licence publique générale spéciale GNU (LGPL)">
+<!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick est protégé par les droits d'auteur © 2007 GraphicsMagick Group.  Disponible sous la licence MIT/X11.">
+<!ENTITY dialog.about.copyright.exiv2 "Exiv2 est protégé par les droits d'auteur © 2004-2007 Andreas Huggel.  Disponible sous licence publique générale GNU.">
+<!ENTITY dialog.about.code "Code source disponible sous : http://flickr.com/tools/uploadr/.">
 
 <!ENTITY help "Conseils et astuces">
 <!ENTITY help.offline "Vous avez la possibilité de travailler .">
@@ -109,3 +121,5 @@
 <!ENTITY help.drag " est votre allié.">
 <!ENTITY help.drag.text "Vous pouvez faire glisser les photos dans l'ordre dans lequel vous souhaitez les afficher sur la page photos au moment de l'importation.  Le cas échéant, vous pouvez réinitialiser vos classements pour reclasser les photos dans l'ordre où elles ont été prises.">
 <!ENTITY help.faq "Si vous avez d'autres questions, n'hésitez pas à consulter nos ">
+
+<!ENTITY photos.init.text.joined "Ou cliquez sur  pour rechercher des photos sur votre ordinateur.">
