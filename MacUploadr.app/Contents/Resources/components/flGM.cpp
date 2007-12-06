@@ -45,7 +45,7 @@ using namespace std;
 // Prototypes
 string * conv_path(const nsAString &, bool);
 string * find_path(string *, const char *);
-int base_orient(Magick::Image &);
+int base_orient(Exiv2::ExifData &, Magick::Image &);
 void exif_update_dim(Exiv2::ExifData &, int, int);
 void unconv_path(string &, nsAString &);
 
@@ -228,9 +228,17 @@ string * find_path(string * path_s, const char * extra) {
 }
 
 // Orient an image's pixels as EXIF instructs
-int base_orient(Magick::Image & img) {
-	string orientation = img.attribute("EXIF:Orientation");
-	int orient = (int)*orientation.c_str() - 0x30;
+int base_orient(Exiv2::ExifData & exif, Magick::Image & img) {
+	int orient = -1;
+	try {
+		orient = exif["Exif.Image.Orientation"].toLong();
+		if (-1 == orient) {
+			orient = exif["Exif.Panasonic.Rotation"].toLong();
+		}
+		if (-1 == orient) {
+			orient = exif["Exif.MinoltaCs5D.Rotation"].toLong();
+		}
+	} catch (Exiv2::Error &) {}
 	if (1 > orient || 8 < orient) {
 		orient = 1;
 	}
@@ -318,26 +326,26 @@ void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 //   On Windows there is little to do, but Macs must go from UTF-8 to UTF-16
 void unconv_path(string & path_s, nsAString & _retval) {
 	char * o = (char *)path_s.c_str();
-#ifdef XP_MACOSX
-	nsCString utf8;
-#endif
+//#ifdef XP_MACOSX
+//	nsCString utf8;
+//#endif
 	while (*o) {
 
-		// Macs will still have UTF-8 at this point
-#ifdef XP_MACOSX
-		utf8.Append(*o++);
+//		// Macs will still have UTF-8 at this point
+//#ifdef XP_MACOSX
+//		utf8.Append(*o++);
 
-		// Windows is good to go, being ASCII and all
-#else
+//		// Windows is good to go, being ASCII and all
+//#else
 		_retval.Append(*o++);
 
-#endif
+//#endif
 	}
 
-	// Finish up the Mac transform to UTF-16
-#ifdef XP_MACOSX
-	_retval.Assign(NS_ConvertUTF8toUTF16(utf8));
-#endif
+//	// Finish up the Mac transform to UTF-16
+//#ifdef XP_MACOSX
+//	_retval.Assign(NS_ConvertUTF8toUTF16(utf8));
+//#endif
 
 }
 
@@ -383,53 +391,21 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			return NS_ERROR_INVALID_ARG;
 		}
 
-		// Orient the image properly and return the orientation
+		// Open the image
 		Magick::Image img(*path_s);
-		ostringstream out;
-		int orient = base_orient(img);
-		out << orient << "###";
 
-		// Get the original size
-		int bw, bh;
-		if (5 > orient) {
-			bw = img.baseColumns();
-			bh = img.baseRows();
-		} else {
-			bw = img.baseRows();
-			bh = img.baseColumns();
-		}
-		int base = bw > bh ? bw : bh;
-		out << bw << "###" << bh << "###";
-
-		// Get EXIF date taken
-		string date_taken = img.attribute("EXIF:DateTimeOriginal");
-		if (0 == date_taken.size()) {
-			date_taken = img.attribute("EXIF:DateTimeDigitized");
-		}
-		if (0 == date_taken.size()) {
-			date_taken = img.attribute("EXIF:DateTime");
-		}
-		out << date_taken << "###";
-
-		// Find thumbnail width and height
-		float r;
-		ostringstream dim;
-		if (bw > bh) {
-			r = (float)bh * (float)square / (float)bw;
-			out << square << "###" << round(r);
-			dim << square << "x" << round(r);
-		} else {
-			r = (float)bw * (float)square / (float)bh;
-			out << round(r) << "###" << square;
-			dim << round(r) << "x" << square;
-		}
-		out << "###";
-
-		// Extract IPTC data that we care about
+		// Extract EXIF and IPTC data that we care about
+		int orient = 1;
 		string title = "", description = "", tags = "";
 		try {
 			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
+
+			// EXIF orientation
+			Exiv2::ExifData & exif = meta_r->exifData();
+			orient = base_orient(exif, img);
+
+			// IPTC metadata
 			Exiv2::IptcData & iptc = meta_r->iptcData();
 			title = iptc["Iptc.Application2.ObjectName"].toString();
 			if (0 == title.size()) {
@@ -485,7 +461,46 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 				tags += state;
 				tags += "\"";
 			}
+
 		} catch (Exiv2::Error &) {}
+		ostringstream out;
+		out << orient << "###";
+
+		// Original size
+		int bw, bh;
+		if (5 > orient) {
+			bw = img.baseColumns();
+			bh = img.baseRows();
+		} else {
+			bw = img.baseRows();
+			bh = img.baseColumns();
+		}
+		int base = bw > bh ? bw : bh;
+		out << bw << "###" << bh << "###";
+
+		// EXIF date taken
+		string date_taken = img.attribute("EXIF:DateTimeOriginal");
+		if (0 == date_taken.size()) {
+			date_taken = img.attribute("EXIF:DateTimeDigitized");
+		}
+		if (0 == date_taken.size()) {
+			date_taken = img.attribute("EXIF:DateTime");
+		}
+		out << date_taken << "###";
+
+		// Thumbnail width and height
+		float r;
+		ostringstream dim;
+		if (bw > bh) {
+			r = (float)bh * (float)square / (float)bw;
+			out << square << "###" << round(r);
+			dim << square << "x" << round(r);
+		} else {
+			r = (float)bw * (float)square / (float)bh;
+			out << round(r) << "###" << square;
+			dim << round(r) << "x" << square;
+		}
+		out << "###";
 
 		// Hide ### strings within the IPTC data
 		size_t pos = title.find("###", 0);
@@ -592,7 +607,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		// Rotate the image
 		Magick::Image img(*path_s);
 		delete path_s; path_s = 0;
-		base_orient(img);
+		base_orient(exif, img);
 		img.rotate(degrees);
 		img.compressType(Magick::NoCompression);
 		img.write(*rotate_s);

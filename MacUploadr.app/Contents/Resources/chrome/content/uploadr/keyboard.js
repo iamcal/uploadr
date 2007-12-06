@@ -13,6 +13,20 @@ var keyboard = {
 	// Reference to the currently focused text field
 	_select_all: null,
 
+	// Toggle which select all behavior will happen
+	select_all_text: function(ref) {
+		keyboard._select_all = ref;
+		document.getElementById('menu_cut').disabled = false;
+		document.getElementById('menu_copy').disabled = false;
+		document.getElementById('menu_paste').disabled = false;
+	},
+	select_all_photos: function() {
+		keyboard._select_all = null;
+		document.getElementById('menu_cut').disabled = true;
+		document.getElementById('menu_copy').disabled = true;
+		document.getElementById('menu_paste').disabled = true;
+	},
+
 	// Select all photos or all text
 	select_all: function() {
 		if (null == keyboard._select_all) {

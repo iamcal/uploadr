@@ -88,17 +88,17 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<vbox class="column">
 							<label control="single_title" value="&meta.single.title;" />
 							<textbox id="single_title" tabindex="1"
-							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;" />
+							onfocus="keyboard.select_all_text(this);"
+							onblur="keyboard.select_all_photos();" />
 							<label control="single_description" value="&meta.single.description;" />
 							<textbox id="single_description" multiline="true" rows="3" tabindex="2"
-							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;" />
+							onfocus="keyboard.select_all_text(this);"
+							onblur="keyboard.select_all_photos();" />
 							<label control="single_tags" value="&meta.single.tags;"
 							tooltiptext="&meta.tags.tooltip;" />
 							<textbox id="single_tags" multiline="true" rows="2" tabindex="3"
-							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;"
+							onfocus="keyboard.select_all_text(this);"
+							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.tags.tooltip;" />
 						</vbox>
 						<vbox class="column">
@@ -175,20 +175,20 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<label control="batch_title" value="&meta.batch.title;"
 							tooltiptext="&meta.batch.title.tooltip;" />
 							<textbox id="batch_title" tabindex="1"
-							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;"
+							onfocus="keyboard.select_all_text(this);"
+							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.batch.title.tooltip;" />
 							<label control="batch_description" value="&meta.batch.description;"
 							tooltiptext="&meta.batch.description.tooltip;" />
 							<textbox id="batch_description" multiline="true" rows="3" tabindex="2"
-							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;"
+							onfocus="keyboard.select_all_text(this);"
+							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.batch.description.tooltip;" />
 							<label control="batch_tags" value="&meta.batch.tags;"
 							tooltiptext="&meta.tags.tooltip;" />
 							<textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
-							onfocus="keyboard._select_all = this;"
-							onblur="keyboard._select_all = null;"
+							onfocus="keyboard.select_all_text(this);"
+							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.tags.tooltip;" />
 						</vbox>
 						<vbox class="column">

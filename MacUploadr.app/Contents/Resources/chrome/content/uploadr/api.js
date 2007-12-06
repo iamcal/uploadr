@@ -54,6 +54,9 @@ var upload = {
 		latest: 0
 	},
 
+	// Track when we're "processing" for special multi-batch handling
+	processing: false,
+
 	// Upload a photo
 	start: function(id) {
 
@@ -109,6 +112,7 @@ var upload = {
 			if (upload.bandwidth(rsp)) {
 				return;
 			}
+			upload.cancel = true;
 			upload.done();
 			return;
 		}
@@ -138,6 +142,7 @@ var upload = {
 
 	// Finish a synchronous upload
 	_sync: function(rsp, id) {
+Components.utils.reportError('upload._sync');
 
 		// Stop checking progress if we're in synchronous mode
 		if ('sync' == uploadr.conf.mode && null != upload.progress_handle) {
@@ -245,6 +250,7 @@ var upload = {
 		if (100 == Math.round(100 * percent)) { // Why doesn't (1 == percent) work here?
 			document.getElementById('progress_text').value =
 				locale.getString('upload.waiting.status');
+			upload.processing = true;
 		} else {
 			document.getElementById('progress_text').value = locale.getFormattedString(
 				'upload.progress.status', [
@@ -315,12 +321,24 @@ var upload = {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
 			}
+
+			// Add back any queued batches
+			while (photos.ready.length) {
+				var r = photos.ready.shift();
+				ii = r.length;
+				for (var i  = 0; i < ii; ++i) {
+					photos._add(r[i].path);
+					photos.list[photos.list.length - 1] = r[i];
+				}
+			}
+
 			photos.uploading = [];
 			photos.uploaded = [];
 			photos.add_to_set = [];
 			photos.failed = [];
 			photos.ok = 0;
 			photos.fail = 0;
+			upload.processing = false;
 			unblock_exit();
 			if (confirm(locale.getString('dialog.bandwidth.text'),
 				locale.getString('dialog.bandwidth.title'),
@@ -340,7 +358,6 @@ var upload = {
 	// Start to clean up after an upload finishes
 	done: function() {
 Components.utils.reportError('upload.done');
-Components.utils.reportError('meta.created_sets: ' + meta.created_sets.toSource());
 		window.clearTimeout(upload.timeout_handle);
 		upload.timeout_handle = null;
 		window.clearInterval(upload.progress_handle);
@@ -389,14 +406,25 @@ Components.utils.reportError('meta.created_sets: ' + meta.created_sets.toSource(
 		}
 
 		// If this was a cancellation, re-add photos we didn't get to
-//		if (upload.cancel) {
+		if (upload.cancel) {
 			for each (var p in photos.uploading) {
 				if (null != p) {
 					photos._add(p.path);
 					photos.list[photos.list.length - 1] = p;
 				}
 			}
-//		}
+
+			// Add back any queued batches
+			while (photos.ready.length) {
+				var r = photos.ready.shift();
+				ii = r.length;
+				for (var i  = 0; i < ii; ++i) {
+					photos._add(r[i].path);
+					photos.list[photos.list.length - 1] = r[i];
+				}
+			}
+
+		}
 		photos.normalize();
 
 		// Kick off the chain of adding photos to a set
@@ -427,7 +455,8 @@ Components.utils.reportError('meta.created_sets: ' + meta.created_sets.toSource(
 
 	// Finally give the user feedback on their upload
 	finalize: function() {
-Components.utils.reportError('upload.finalize()');
+Components.utils.reportError('upload.finalize');
+		status.clear();
 
 		// Make sure the sets map is actually empty
 		var not_empty = false;
@@ -440,15 +469,38 @@ Components.utils.reportError('upload.finalize()');
 
 		// Normalize the list of created sets
 		var i = 0;
-Components.utils.reportError('meta.created_sets: ' + meta.created_sets.toSource());
 		while (i < meta.created_sets.length) {
 			if (null == meta.created_sets[i]) {
-Components.utils.reportError('meta.created_sets.shift()');
 				meta.created_sets.shift();
 				meta.created_sets_desc.shift();
 			} else {
 				++i;
 			}
+		}
+
+		// If there is a batch queued up, start that batch, preserving the
+		// timestamps so that this looks like one big batch
+		upload.processing = false;
+		if (photos.ready.length) {
+			buttons.upload.enable();
+			photos.uploading = [];
+			photos.add_to_set = [];
+			photos.failed = [];
+			photos.uploaded = [];
+			photos.ok = 0;
+			photos.fail = 0;
+			photos.sets = true;
+			photos.kb.sent = 0;
+			photos.kb.total = 0;
+			upload.progress_bar = null;
+			upload.cancel = false;
+			upload.tickets = {};
+			upload.tickets_count = 0;
+			upload.tickets_delta = 1000;
+			upload.tickets_handle = null;
+			unblock_exit();
+			photos.upload(photos.ready.shift(), photos.ready_size.shift());
+			return;
 		}
 
 		// Ask the site for an update

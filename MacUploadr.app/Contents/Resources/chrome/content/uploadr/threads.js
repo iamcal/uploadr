@@ -118,7 +118,6 @@ ThumbCallback.prototype = {
 				} else {
 					photos.list[this.id].date_taken = thumb[3];
 				}
-Components.utils.reportError(photos.list[this.id].date_taken);
 				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);

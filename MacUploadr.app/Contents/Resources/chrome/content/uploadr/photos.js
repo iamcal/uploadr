@@ -36,6 +36,10 @@ var photos = {
 		total: 0,
 	},
 
+	// Queue batches of photos
+	ready: [],
+	ready_size: [],
+
 	// Let the user select some files, thumbnail them and track them
 	add: function() {
 		buttons.upload.disable();
@@ -199,8 +203,14 @@ var photos = {
 	},
 
 	// Upload photos
-	upload: function() {
-		
+	//   The arguments will either both be null or both be set
+	//   If they're both set, this is an automated call to upload by the queue
+	upload: function(list, size) {
+		var from_user = null == list;
+		if (from_user) {
+			list = photos.list;
+		}
+
 		// Don't upload if the button is disabled
 		if ('disabled_button' == document.getElementById('button_upload').className) {
 			return;
@@ -216,78 +226,104 @@ var photos = {
 			}
 		}
 
-		// If any photos need resizing to fit in the per-photo size limits, dispatch the
-		// jobs and wait
-		var resizing = false;
-		for each (var p in photos.list) {
-			if (null != p) {
-				if (null != settings.resize && -1 != settings.resize &&
-					(p.width > settings.resize || p.width > settings.resize)) {
-					resizing = true;
-					threads.worker.dispatch(new Resize(p.id, settings.resize,
-						escape_utf8(p.path, false)), threads.worker.DISPATCH_NORMAL);
-				} else if (file.size(p.path) > users.filesize) {
-					resizing = true;
-					threads.worker.dispatch(new Resize(p.id, -1, escape_utf8(p.path, false)),
-						threads.worker.DISPATCH_NORMAL);
+		// If any photos need resizing to fit in the per-photo size limits,
+		// dispatch the jobs and wait
+		if (from_user && !upload.processing || !from_user) {
+			var resizing = false;
+			for each (var p in list) {
+				if (null != p) {
+					if (null != settings.resize && -1 != settings.resize &&
+						(p.width > settings.resize || p.width > settings.resize)) {
+						resizing = true;
+						threads.worker.dispatch(new Resize(p.id, settings.resize,
+							escape_utf8(p.path, false)), threads.worker.DISPATCH_NORMAL);
+					} else if (file.size(p.path) > users.filesize) {
+						resizing = true;
+						threads.worker.dispatch(new Resize(p.id, -1, escape_utf8(p.path, false)),
+							threads.worker.DISPATCH_NORMAL);
+					}
 				}
 			}
-		}
-		if (resizing) {
-			threads.worker.dispatch(new RetryUpload(), threads.worker.DISPATCH_NORMAL);
-			return;
+			if (resizing) {
+				threads.worker.dispatch(new RetryUpload(), threads.worker.DISPATCH_NORMAL);
+				return;
+			}
 		}
 
 		// Update the UI
-		status.set(locale.getString('status.uploading'));
-		buttons.upload.disable();
-		document.getElementById('photos_sort_default').style.display = 'none';
-		document.getElementById('photos_sort_revert').style.display = 'none';
-		document.getElementById('photos_stack').style.visibility = 'hidden';
-		document.getElementById('photos_init').style.display = 'none';
-		document.getElementById('photos_new').style.display = '-moz-box';
-		document.getElementById('no_meta_prompt').style.visibility = 'hidden';
-		meta.disable();
+		if (from_user) {
+			status.set(locale.getString('status.uploading'));
+			buttons.upload.disable();
+			document.getElementById('photos_sort_default').style.display = 'none';
+			document.getElementById('photos_sort_revert').style.display = 'none';
+			document.getElementById('photos_stack').style.visibility = 'hidden';
+			document.getElementById('photos_init').style.display = 'none';
+			document.getElementById('photos_new').style.display = '-moz-box';
+			document.getElementById('no_meta_prompt').style.visibility = 'hidden';
+			meta.disable();
+		}
 
 		// Decide if we're already in the midst of an upload
 		var not_started = 0 == photos.uploading.length;
 
 		// Take the list of photos into upload mode and reset the UI
-		for each (var p in photos.list) {
-			photos.uploading.push(p);
+		var r = [];
+		for each (var p in list) {
 
-			// Setup progress bar for this photo and show it in the queue
-			var old = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
-			var img = document.createElementNS(NS_HTML, 'img');
-			img.src = old.src;
-			img.width = old.width;
-			img.height = old.height;
-			var stack = document.createElement('stack');
-			stack.appendChild(img);
-			p.progress_bar = new ProgressBar('queue' + (photos.uploading.length - 1), img.width);
-			var bar = p.progress_bar.create();
-			bar.style.top = (img.height - 20) + 'px';
-			stack.appendChild(bar);
-			var li = document.createElementNS(NS_HTML, 'li');
-			li.appendChild(stack);
-			document.getElementById('queue_list').appendChild(li);
+			// If we have to queue this batch
+			if (from_user && upload.processing) {
+				r.push(p);
+			}
+
+			// If we can upload immediately
+			else {
+				photos.uploading.push(p);
+
+				// Setup progress bar for this photo and show it in the queue
+				var old = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
+				var img = document.createElementNS(NS_HTML, 'img');
+				img.src = old.src;
+				img.width = old.width;
+				img.height = old.height;
+				var stack = document.createElement('stack');
+				stack.appendChild(img);
+				p.progress_bar = new ProgressBar('queue' + (photos.uploading.length - 1), img.width);
+				var bar = p.progress_bar.create();
+				bar.style.top = (img.height - 20) + 'px';
+				stack.appendChild(bar);
+				var li = document.createElementNS(NS_HTML, 'li');
+				li.appendChild(stack);
+				document.getElementById('queue_list').appendChild(li);
+
+			}
 
 		}
-		photos.kb.total += photos.batch_size;
-		photos.batch_size = 0;
-		photos.list = [];
-		photos.count = 0;
-		photos.selected = [];
-		photos.last = null;
-		photos.unsaved = false;
-		var list = document.getElementById('photos_list');
-		while (list.hasChildNodes()) {
-			list.removeChild(list.firstChild);
+		if (from_user && upload.processing) {
+			photos.ready.push(r);
+			photos.ready_size.push(photos.batch_size);
+		} else {
+			if (from_user) {
+				photos.kb.total += photos.batch_size;
+		 	} else {
+				photos.kb.total += size;
+			}
 		}
-		free.update();
+		if (from_user) {
+			photos.batch_size = 0;
+			photos.list = [];
+			photos.count = 0;
+			photos.selected = [];
+			photos.last = null;
+			photos.unsaved = false;
+			var list = document.getElementById('photos_list');
+			while (list.hasChildNodes()) {
+				list.removeChild(list.firstChild);
+			}
+			free.update();
+		}
 
 		// Kick off the first batch job if we haven't started
-		if (not_started) {
+		if (not_started && !upload.processing) {
 			for (var i = 0; i < ii; ++i) {
 				if (null != photos.uploading[i]) {
 					block_exit();
@@ -421,6 +457,7 @@ var Photo = function(id, path) {
 	this.height = 0;
 	this.title = '';
 	this.description = '';
+//	this.description = decodeURI('C28E: %C2%8E, C3A9: %C3%A9');
 	this.tags = '';
 	this.is_public = settings.is_public;
 	this.is_friend = settings.is_friend;

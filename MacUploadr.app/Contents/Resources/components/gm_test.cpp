@@ -9,6 +9,8 @@
 #include "exif.hpp"
 #include "iptc.hpp"
 
+#include "nsStringAPI.h"
+
 using namespace std;
 
 // Fake gettimeofday on Windows
@@ -72,23 +74,28 @@ int main(int argc, char * * argv) {
 		try {
 
 			// Time opening an image
-/*
+			/*
 			start_timer();
 			Magick::Image img(path_s);
 			double open = stop_timer();
 			printf("%s: %f\n", path, open);
-*/
+			*/
 
-			// Check keywords in IPTC data
+			// Gimme IPTC
+			/*
 			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(path_s);
 			meta_r->readMetadata();
 			Exiv2::IptcData & iptc = meta_r->iptcData();
+			*/
+
+			// Check keywords in IPTC data
 			/*
 			string tags = iptc["Iptc.Application2.Keywords"].toString();
 			string tags2 = iptc["Iptc.Application2.Keywords"].toString();
 			printf("Keywords: %s\n", tags.c_str());
 			printf("Keywords 2: %s\n", tags2.c_str());
 			*/
+			/*
 			string key("Iptc.Application2.Keywords");
 			Exiv2::IptcKey k = Exiv2::IptcKey(key);
 			Exiv2::IptcMetadata::iterator i, ii = iptc.end();
@@ -97,6 +104,13 @@ int main(int argc, char * * argv) {
 					printf("%s\n", i->toString().c_str());
 				}
 			}
+			*/
+
+			// Test funny characters
+			//printf("%s\n", iptc["Iptc.Application2.ObjectName"].toString().c_str());
+
+			// Step through UTF8 to UTF16 with 0xC28E crap from Kathryn Yu
+			///
 
 		} catch (Magick::Exception & e) {
 			printf("[GraphicsMagick] %s: %s\n", path, e.what());
