@@ -377,13 +377,13 @@ div.toolbarseparator {
 	font-weight: normal;
 }
 #photos_init h1, #photos_new h1 {
-	margin: 150px 50px 0 50px;
+	margin: 150px 50px 5px 50px;
 }
 #photos_init h2, #photos_new h2 {
-	margin: 10px 50px;
+	margin: 10px 50px 0 50px;
 }
 #photos_init hbox {
-	margin: 5px;
+	margin: 0;
 }
 #photos_init hbox box h2 {
 	margin: 0;
@@ -504,7 +504,7 @@ div.toolbarseparator {
 }
 
 /* No meta has disabled fields and lots of grey */
-#no_meta label {
+#no_meta label, #no_meta p {
 	color: #bbb;
 }
 #no_meta_sets {
@@ -522,7 +522,10 @@ div.toolbarseparator {
 	padding: 0 5px;
 	vertical-align: top;
 }
-#meta label, #batch_meta label, #no_meta label {
+#meta label, #batch_meta label, #no_meta label,
+#meta p, #batch_meta p, #no_meta p {
+	margin: 4px 0 0 0;
+	padding: 0 0 0 4px;
 	display: block;
 }
 #meta textbox, #batch_meta textbox, #no_meta textbox {

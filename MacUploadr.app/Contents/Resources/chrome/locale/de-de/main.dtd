@@ -1,5 +1,3 @@
-<?php /* Smarty version 2.6.6, created on 2007-12-06 14:07:19
-         compiled from ext_uploadr3_main.dtd.txt */ ?>
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Hochladen">
@@ -13,7 +11,7 @@
 <!ENTITY menu.edit.select_all "Alle auswählen">
 <!ENTITY menu.help "Hilfe">
 <!ENTITY menu.help.about "Infos zu Flickr Uploadr">
-<!ENTITY menu.help.tips "Tipps & Tricks">
+<!ENTITY menu.help.tips "Tipps und Tricks">
 <!ENTITY menu.help.faq "FAQ">
 <!ENTITY menu.help.update "Auf Updates prüfen...">
 <!ENTITY menu.help.console "Konsole">
@@ -41,8 +39,8 @@
 <!ENTITY photos.sort.default "Ihre Fotos sind derzeit nach Aufnahmedatum sortiert.  Zum Neuordnen mit der Maus ziehen und ablegen.">
 <!ENTITY photos.sort.revert "Fotos wieder nach Aufnahmedatum sortieren">
 <!ENTITY photos.init "Fotos hier ziehen, um loszulegen.">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.init.text.1 "Sie können auch auf ">
+<!ENTITY photos.init.text.2 " klicken, um Fotos auf Ihrem Computer zu suchen.">
 <!ENTITY photos.new "Während diese Serie hochgeladen wird, können Sie eine neue beginnen.">
 
 <!ENTITY settings "Einstellungen">
@@ -114,12 +112,10 @@
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 unterliegt Copyright © 2004-2007 Andreas Huggel.  Es ist im Rahmen der GNU General Public License verfügbar.">
 <!ENTITY dialog.about.code "Quellcode verfügbar unter http://flickr.com/tools/uploadr/.">
 
-<!ENTITY help "Tipps & Tricks">
-<!ENTITY help.offline "Sie können .">
-<!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie bereit zum Hochladen auf Flickr sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche "Fotos hochladen".">
+<!ENTITY help "Tipps und Tricks">
+<!ENTITY help.offline "Sie können ^^offline arbeiten^^.">
+<!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie bereit zum Hochladen auf Flickr sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche &#34;Fotos hochladen&#34;.">
 <!ENTITY help.offline.text.second "Wenn Sie möchten, können Sie die ganze Zeit angemeldet bleiben.  Wenn Sie angemeldet sind, können Sie Ihre Fotos in Serien organisieren.">
-<!ENTITY help.drag " ist einfach praktisch.">
+<!ENTITY help.drag "^^Mit der Maus ziehen und ablegen^^ ist einfach praktisch.">
 <!ENTITY help.drag.text "Sie können Fotos in die Reihenfolge ziehen, in der sie nach dem Hochladen auf Ihrer Fotoseite angezeigt werden sollen.  Sie können jede Sortierung auch wieder rückgängig machen, sodass die Fotos wieder nach Aufnahmedatum sortiert werden.">
-<!ENTITY help.faq "Wenn Sie weitere Fragen haben, besuchen Sie bitte unsere ">
-
-<!ENTITY photos.init.text.joined "Sie können auch auf  klicken, um Fotos auf Ihrem Computer zu suchen.">
+<!ENTITY help.faq "Wenn Sie weitere Fragen haben, besuchen Sie bitte unsere ^^Uploadr FAQ^^">

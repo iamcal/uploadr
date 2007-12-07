@@ -1,5 +1,3 @@
-<?php /* Smarty version 2.6.6, created on 2007-12-06 14:07:19
-         compiled from ext_uploadr3_main.dtd.txt */ ?>
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Importer">
@@ -41,8 +39,8 @@
 <!ENTITY photos.sort.default "Vos photos sont classées dans l'ordre où vous les avez prises.  Glissez-déposez pour les reclasser.">
 <!ENTITY photos.sort.revert "Retrier les photos dans l'ordre où vous les avez prises.">
 <!ENTITY photos.init "Faites glisser les photos ici pour démarrer.">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.init.text.1 "Ou cliquez sur ">
+<!ENTITY photos.init.text.2 " pour rechercher des photos sur votre ordinateur.">
 <!ENTITY photos.new "Vous pouvez lancer un nouveau lot pendant le chargement de celui-ci.">
 
 <!ENTITY settings "Paramètres">
@@ -115,11 +113,9 @@
 <!ENTITY dialog.about.code "Code source disponible sous : http://flickr.com/tools/uploadr/.">
 
 <!ENTITY help "Conseils et astuces">
-<!ENTITY help.offline "Vous avez la possibilité de travailler .">
+<!ENTITY help.offline "Vous avez la possibilité de travailler ^^hors ligne^^.">
 <!ENTITY help.offline.text.first "Uploadr a été conçu pour vous permettre d'organiser vous-même vos photos et d'ajouter des tags hors ligne.  Lorsque vous êtes prêt pour l'importation sur Flickr, connectez-vous à votre compte, et cliquez sur l'énorme bouton Importer les photos.">
 <!ENTITY help.offline.text.second "Vous pouvez rester connecté tout le temps si vous le souhaitez.  Lorsque vous êtes connecté, vous pouvez organiser vos photos en albums.">
-<!ENTITY help.drag " est votre allié.">
+<!ENTITY help.drag "^^Glissez-déposez^^ est votre allié.">
 <!ENTITY help.drag.text "Vous pouvez faire glisser les photos dans l'ordre dans lequel vous souhaitez les afficher sur la page photos au moment de l'importation.  Le cas échéant, vous pouvez réinitialiser vos classements pour reclasser les photos dans l'ordre où elles ont été prises.">
-<!ENTITY help.faq "Si vous avez d'autres questions, n'hésitez pas à consulter nos ">
-
-<!ENTITY photos.init.text.joined "Ou cliquez sur  pour rechercher des photos sur votre ordinateur.">
+<!ENTITY help.faq "Si vous avez d'autres questions, n'hésitez pas à consulter nos ^^FAQ Uploadr^^">

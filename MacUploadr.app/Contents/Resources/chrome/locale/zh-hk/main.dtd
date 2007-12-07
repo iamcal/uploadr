@@ -1,5 +1,3 @@
-<?php /* Smarty version 2.6.6, created on 2007-12-06 14:07:19
-         compiled from ext_uploadr3_main.dtd.txt */ ?>
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "上載">
@@ -41,8 +39,8 @@
 <!ENTITY photos.sort.default "你的相片目前按拍攝日期排序。可透過拖放作業重新排序。">
 <!ENTITY photos.sort.revert "按拍攝日期重新排序相片">
 <!ENTITY photos.init "將相片拖曳至此處即可開始。">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.init.text.1 "或者，按一下 ">
+<!ENTITY photos.init.text.2 " 在你的電腦上尋找相片。">
 <!ENTITY photos.new "該批次正在上載，你可以開始新批次。">
 
 <!ENTITY settings "設定">
@@ -115,11 +113,9 @@
 <!ENTITY dialog.about.code "原始程式碼可以從 http://flickr.com/tools/uploadr/ 獲取。">
 
 <!ENTITY help "提示和竅門">
-<!ENTITY help.offline "你可以。">
+<!ENTITY help.offline "^^拖放^^是你的好幫手。">
 <!ENTITY help.offline.text.first "Uploadr 旨在讓你可以在離線狀態下執行大部分的相片管理和加標籤的工作。上載至 Flickr 的準備工作做好後，請登入你的帳戶，然後按很大的「上載相片」按鈕。">
 <!ENTITY help.offline.text.second "如果你愿意可以一直保持登入狀態。登入後，你可以管理相片組成相片集。">
-<!ENTITY help.drag "是你的好幫手。">
+<!ENTITY help.drag "^^拖放^^是你的好幫手。">
 <!ENTITY help.drag.text "相片上載後，你可以將其按照你想要它們在相片頁面上顯示的順序拖曳以進行排列。如果需要的話，你還可以重新設定所做的任何排列方式，以使相片恢復為按拍攝日期排序。">
-<!ENTITY help.faq "如果你還有其他問題，請訪問我們的">
-
-<!ENTITY photos.init.text.joined "或者，按一下  在你的電腦上尋找相片。">
+<!ENTITY help.faq "如果你還有其他問題，請訪問我們的^^Uploadr 常見問題^^">

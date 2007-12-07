@@ -1,5 +1,3 @@
-<?php /* Smarty version 2.6.6, created on 2007-12-06 14:07:19
-         compiled from ext_uploadr3_main.dtd.txt */ ?>
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Carica">
@@ -41,8 +39,8 @@
 <!ENTITY photos.sort.default "Le tue foto sono attualmente ordinate per data di scatto.  Trascinale per riordinarle.">
 <!ENTITY photos.sort.revert "Riordina foto per data di scatto">
 <!ENTITY photos.init "Trascina le foto qui per iniziare.">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.init.text.1 "Oppure fai clic su ">
+<!ENTITY photos.init.text.2 " per trovare foto sul tuo computer.">
 <!ENTITY photos.new "Mentre il batch viene caricato, puoi iniziarne uno nuovo.">
 
 <!ENTITY settings "Impostazioni">
@@ -115,11 +113,9 @@
 <!ENTITY dialog.about.code "Codice sorgente disponibile all’indirizzo http://flickr.com/tools/uploadr/.">
 
 <!ENTITY help "Trucchi e suggerimenti">
-<!ENTITY help.offline "Puoi .">
+<!ENTITY help.offline "Puoi ^^lavorare offline^^.">
 <!ENTITY help.offline.text.first "L’Uploadr è studiato per consentirti di effettuare la maggior parte delle operazioni di organizzazione e di inserimento dei tag offline.  Quando sei pronto per il caricamento su Flickr, accedi al tuo account e fai clic su Inserisci una foto.">
 <!ENTITY help.offline.text.second "Puoi restare connesso in permanenza, se lo desideri.  Una volta effettuato l'accesso, puoi organizzare le tue foto in set.">
-<!ENTITY help.drag "Il  è tuo amico.">
+<!ENTITY help.drag "Il ^^drag-and-drop^^ è tuo amico.">
 <!ENTITY help.drag.text "Puoi trascinare le foto nell’ordine in cui desideri che vengano visualizzate sulla pagina delle tue foto mentre le carichi.  All’occorrenza, puoi anche annullare qualsiasi impostazione applicata in modo che le foto tornino a essere ordinate per data di scatto.">
-<!ENTITY help.faq "Se hai altri dubbi, leggi le .">
-
-<!ENTITY photos.init.text.joined "Oppure fai clic su  per trovare foto sul tuo computer.">
+<!ENTITY help.faq "Se hai altri dubbi, leggi le ^^FAQ su Uploadr^^.">

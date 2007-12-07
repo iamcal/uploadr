@@ -11,7 +11,15 @@
 content uploadr file:content/uploadr/
 
 locale branding en-US file:locale/branding/
+
+locale uploadr de-de file:locale/de-de/
 locale uploadr en-US file:locale/en-US/
+locale uploadr es-US file:locale/es-us/
+locale uploadr fr-FR file:locale/fr-fr/
+locale uploadr it-IT file:locale/it-it/
+locale uploadr ko-KR file:locale/ko-kr/
+locale uploadr pt-BR file:locale/pt-br/
+locale uploadr zh-HK file:locale/zh-hk/
 
 skin uploadr default file:skin/uploadr/
 

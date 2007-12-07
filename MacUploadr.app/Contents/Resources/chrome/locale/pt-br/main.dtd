@@ -1,5 +1,3 @@
-<?php /* Smarty version 2.6.6, created on 2007-12-06 14:07:19
-         compiled from ext_uploadr3_main.dtd.txt */ ?>
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Fazer upload">
@@ -41,8 +39,8 @@
 <!ENTITY photos.sort.default "Atualmente, suas fotos estão ordenadas pela data em que foram tiradas.  Arraste-as e solte-as para reordená-las.">
 <!ENTITY photos.sort.revert "Reclassificar fotos pela data em que foram tiradas">
 <!ENTITY photos.init "Arraste as fotos aqui para começar.">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.init.text.1 "Ou clique em ">
+<!ENTITY photos.init.text.2 " para procurar fotos em seu computador.">
 <!ENTITY photos.new "Você pode iniciar um novo lote enquanto este lote está sendo enviado.">
 
 <!ENTITY settings "Configurações">
@@ -115,11 +113,9 @@
 <!ENTITY dialog.about.code "Código fonte disponível em http://flickr.com/tools/uploadr/.">
 
 <!ENTITY help "Dicas e truques">
-<!ENTITY help.offline "Você pode .">
+<!ENTITY help.offline "Você pode ^^trabalhar off-line^^.">
 <!ENTITY help.offline.text.first "O Uploadr foi criado para que você possa fazer a maior parte do trabalho de organização e adição de tags em suas fotos off-line.  Quando estiver pronto para enviá-las ao Flickr, entre em sua conta e pressione o botão enorme Fazer upload de fotos.">
 <!ENTITY help.offline.text.second "Você pode ficar conectado o tempo todo, se desejar.  Você pode organizar suas fotos em álbuns depois de entrar.">
-<!ENTITY help.drag " é muito útil.">
+<!ENTITY help.drag "^^Arrastar e soltar^^ é muito útil.">
 <!ENTITY help.drag.text "Quando enviar as fotos, arraste-as na ordem em que deseja que apareçam na página de fotos.  Se for necessário, você também pode redefinir qualquer organização que tenha feito, para que as fotos voltem a ser ordenadas pela data em que foram tiradas.">
-<!ENTITY help.faq "Se houver mais alguma dúvida, por favor, visite as .">
-
-<!ENTITY photos.init.text.joined "Ou clique em  para procurar fotos em seu computador.">
+<!ENTITY help.faq "Se houver mais alguma dúvida, por favor, visite as ^^perguntas mais freqüentes sobre o Uploadr^^.">
