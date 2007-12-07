@@ -13,9 +13,35 @@ PKG := ~/Desktop/build
 BUILD := $(PKG)/Flickr\ Uploadr.app/Contents
 GM_VER := 1.1.10
 
+INTL := $(filter de-de en-US es-us fr-fr it-it ko-kr pt-br zh-hk, $(MAKECMDGOALS))
+
 all:
 	@echo "This target doesn't do anything!  Specify one of these:"
 	@echo "  build     Copy everything of interest to ~/Desktop/build/"
+
+de-de:
+	@echo "Building German (de-de)"
+
+en-US:
+	@echo "Building English (en-US)"
+
+es-us:
+	@echo "Building Spanish (es-us)"
+
+fr-fr:
+	@echo "Building French (fr-fr)"
+
+it-it:
+	@echo "Building Italian (it-it)"
+
+ko-kr:
+	@echo "Building Korean (ko-kr)"
+
+pt-br:
+	@echo "Building Portuguese (pt-br)"
+
+zh-hk:
+	@echo "Building Chinese (zh-hk)"
 
 build:
 
@@ -46,14 +72,17 @@ build:
 	cp $(SRC)/Resources/icons.icns $(BUILD)/Resources/
 
 	# Chrome
+	mkdir $(BUILD)/Resources/chrome
 	mkdir content
 	mkdir content/uploadr
 	cp $(SRC)/Resources/chrome/content/uploadr/*.* content/uploadr/
 	mkdir locale
 	mkdir locale/branding
 	cp $(SRC)/Resources/chrome/locale/branding/*.* locale/branding/
-	mkdir locale/en-US
-	cp $(SRC)/Resources/chrome/locale/en-US/*.* locale/en-US/
+	mkdir locale/$(INTL)
+	cp $(SRC)/Resources/chrome/locale/$(INTL)/*.* locale/$(INTL)/
+	sed 's/INTL/$(INTL)/g' $(SRC)/Resources/chrome/chrome.manifest.prod > \
+		$(BUILD)/Resources/chrome/chrome.manifest
 	mkdir skin
 #	mkdir skin/hacks
 #	mkdir skin/hacks/mac
@@ -68,10 +97,7 @@ build:
 	cp $(SRC)/Resources/chrome/skin/uploadr/*.png skin/uploadr/
 	zip uploadr -r content locale skin
 	rm -rf content locale skin
-	mkdir $(BUILD)/Resources/chrome
-	mv uploadr.zip $(SRC)/Resources/chrome/uploadr.jar
-	cp $(SRC)/Resources/chrome/uploadr.jar $(BUILD)/Resources/chrome/
-	cp $(SRC)/Resources/chrome/chrome.manifest.prod $(BUILD)/Resources/chrome/chrome.manifest	
+	mv uploadr.zip $(BUILD)/Resources/chrome/uploadr.jar
 
 	# XPCOM
 	mkdir $(BUILD)/Resources/components

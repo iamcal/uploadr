@@ -9,14 +9,6 @@
 #
 
 content uploadr jar:uploadr.jar!/content/uploadr/
-locale branding en-US jar:uploadr.jar!/locale/branding/
-locale uploadr en-US jar:uploadr.jar!/locale/en-US/
-locale uploadr de-de jar:uploadr.jar!/locale/de-de/
-locale uploadr en-US jar:uploadr.jar!/locale/en-US/
-locale uploadr es-US jar:uploadr.jar!/locale/es-us/
-locale uploadr fr-FR jar:uploadr.jar!/locale/fr-fr/
-locale uploadr it-IT jar:uploadr.jar!/locale/it-it/
-locale uploadr ko-KR jar:uploadr.jar!/locale/ko-kr/
-locale uploadr pt-BR jar:uploadr.jar!/locale/pt-br/
-locale uploadr zh-HK jar:uploadr.jar!/locale/zh-hk/
+locale branding INTL jar:uploadr.jar!/locale/branding/
+locale uploadr INTL jar:uploadr.jar!/locale/INTL/
 skin uploadr default jar:uploadr.jar!/skin/uploadr/
