@@ -487,6 +487,7 @@ var PhotoAddCallback = function(path, obj) {
 };
 PhotoAddCallback.prototype = {
 	run: function() {
+Components.utils.reportError(this.path);
 		photos._add(this.path);
 		if (null != this.obj) {
 			photos.list[photos.list.length - 1] = this.obj;
