@@ -17,13 +17,14 @@ var drag = {
 
 		// Test for an existing window
 		try {
-			var singleton = nsPreferences.copyUnicharPref('toolkit.singletonWindowType');
+//			var singleton = nsPreferences.copyUnicharPref('toolkit.singletonWindowType');
 			var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(
 				Ci.nsIWindowMediator);
-			var win = windowMediator.getMostRecentWindow(singleton);
-			alert(win);
+//			var win = windowMediator.getMostRecentWindow(singleton);
+			var win = windowMediator.getMostRecentWindow('app');
+			alert('win: ' + win);
 		} catch (err) {
-			alert(err);
+			alert('err: ' + err);
 		}
 
 return;
