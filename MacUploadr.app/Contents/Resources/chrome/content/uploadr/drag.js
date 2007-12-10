@@ -14,6 +14,7 @@ var drag = {
 	//   This will hopefully be replaced by an XPCOM command line handler, but until then this
 	//   is still here to handle drags on startup
 	on_startup: function() {
+return;
 		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
 		var ii = cl.length;
 		if (0 == ii) {
@@ -111,3 +112,31 @@ try {
 } catch (err) {
 	Components.utils.reportError(err);
 }
+
+
+
+function CommandLineObserver() {
+	this.register();
+}
+CommandLineObserver.prototype = {
+	observe: function(aSubject, aTopic, aData) {
+		var cl = aSubject.QueryInterface(Components.interfaces.nsICommandLine);
+Components.utils.reportError(cl.length);
+		var ii = cl.length - 1;
+		for (var i = 0; i <= ii; ++i) {
+Components.utils.reportError(cl.getArgument(i));
+		}
+	},
+	register: function() {
+		var ob = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+		ob.addObserver(this, 'commandline-args-changed', false);
+	},
+	unregister: function() {
+		var ob = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+		ob.removeObserver(this, 'commandline-args-changed');
+	}
+};
+var observer = new CommandLineObserver();
+var observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
+observerService.notifyObservers(window.arguments[0], 'commandline-args-changed', null);
+addEventListener('unload', observer.unregister, false);
