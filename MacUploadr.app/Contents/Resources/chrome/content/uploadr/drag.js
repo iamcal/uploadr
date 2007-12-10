@@ -21,8 +21,13 @@ var drag = {
 			var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(
 				Ci.nsIWindowMediator);
 //			var win = windowMediator.getMostRecentWindow(singleton);
-			var win = windowMediator.getMostRecentWindow('app');
-			alert('win: ' + win + ', win == window: ' + (win == window));
+			var wins = windowMediator.getXULWindowEnumerator('app');
+			var i = 0;
+			while (wins.hasMoreElements()) {
+				++i;
+				wins.getNext();
+			}
+			alert('win: ' + win + ', i (wins.length): ' + i);
 		} catch (err) {
 			alert('err: ' + err);
 		}
