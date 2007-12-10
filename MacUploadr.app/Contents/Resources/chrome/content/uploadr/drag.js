@@ -27,7 +27,7 @@ var drag = {
 				++i;
 				wins.getNext();
 			}
-			alert('win: ' + win + ', i (wins.length): ' + i);
+			alert('wins: ' + wins + ', i (wins.length): ' + i);
 		} catch (err) {
 			alert('err: ' + err);
 		}
