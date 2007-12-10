@@ -22,7 +22,7 @@ var drag = {
 				Ci.nsIWindowMediator);
 //			var win = windowMediator.getMostRecentWindow(singleton);
 			var win = windowMediator.getMostRecentWindow('app');
-			alert('win: ' + win);
+			alert('win: ' + win + ', win == window: ' + (win == window));
 		} catch (err) {
 			alert('err: ' + err);
 		}
