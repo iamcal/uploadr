@@ -401,6 +401,7 @@ div.toolbarseparator {
 /* Sort indicators */
 #photos_sort_default, #photos_sort_revert {
 	display: none;
+	height: 28px;
 	margin: 0;
 	padding: 0;
 }

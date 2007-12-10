@@ -14,7 +14,7 @@ var drag = {
 	//   This will hopefully be replaced by an XPCOM command line handler, but until then this
 	//   is still here to handle drags on startup
 	on_startup: function() {
-return;
+//return;
 		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
 		var ii = cl.length;
 		if (0 == ii) {
@@ -74,15 +74,27 @@ return;
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
 			document.getElementById('no_meta_prompt').style.visibility = 'visible';
+			var process_dir = function(files) {
+				while (files.hasMoreElements()) {
+					var f = files.getNext();
+					if (f.isDirectory()) {
+						process_dir(f.directoryEntries);
+					} else {
+						var path = f.QueryInterface(Ci.nsILocalFile).path;
+						if (photos.is_photo(path)) {
+							photos._add(path);
+						}
+					}
+				}				
+			};
 			data.dataList.forEach(function(d) {
 				if (d.first.data.isDirectory()) {
-					var files = d.first.data.directoryEntries;
-					
-					while (files.hasMoreElements()) {
-						photos._add(files.getNext().QueryInterface(Ci.nsILocalFile).path);
-					}
+					process_dir(d.first.data.directoryEntries);
 				} else {
-					photos._add(d.first.data.QueryInterface(Ci.nsILocalFile).path);
+					var path = d.first.data.QueryInterface(Ci.nsILocalFile).path;
+					if (photos.is_photo(path)) {
+						photos._add(path);
+					}
 				}
 			});
 

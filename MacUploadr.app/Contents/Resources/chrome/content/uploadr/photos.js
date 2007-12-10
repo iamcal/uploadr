@@ -389,6 +389,8 @@ var photos = {
 			if (0 == cl.length) {
 				if (photos.sort) {
 					threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+					document.getElementById('photos_sort_default').style.display = 'block';
+					document.getElementById('photos_sort_revert').style.display = 'none';
 				} else {
 					threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
 					document.getElementById('photos_sort_default').style.display = 'none';
@@ -412,6 +414,11 @@ var photos = {
 	save: function() {
 		if (0 != _block_exit) {
 			return;
+		}
+		if (1 == photos.selected.length) {
+			meta.save(photos.selected[0]);
+		} else if (1 < photos.selected.length) {
+			meta.save();
 		}
 		if (0 == photos.count) {
 			meta.created_sets = [];
