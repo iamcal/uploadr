@@ -14,7 +14,19 @@ var drag = {
 	//   This will hopefully be replaced by an XPCOM command line handler, but until then this
 	//   is still here to handle drags on startup
 	on_startup: function() {
-//return;
+
+		// Test for an existing window
+		try {
+			var singleton = nsPreferences.copyUnicharPref('toolkit.singletonWindowType');
+			var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(
+				Ci.nsIWindowMediator);
+			var win = windowMediator.getMostRecentWindow(singleton);
+			alert(win);
+		} catch (err) {
+			alert(err);
+		}
+
+return;
 		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
 		var ii = cl.length;
 		if (0 == ii) {
