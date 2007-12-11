@@ -14,24 +14,6 @@ var drag = {
 	//   This will hopefully be replaced by an XPCOM command line handler, but until then this
 	//   is still here to handle drags on startup
 	on_startup: function() {
-
-		// Test for an existing window
-		try {
-//			var singleton = nsPreferences.copyUnicharPref('toolkit.singletonWindowType');
-			var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(
-				Ci.nsIWindowMediator);
-//			var win = windowMediator.getMostRecentWindow(singleton);
-			var wins = windowMediator.getXULWindowEnumerator('app');
-			var i = 0;
-			while (wins.hasMoreElements()) {
-				++i;
-				wins.getNext();
-			}
-			alert('wins: ' + wins + ', i (wins.length): ' + i);
-		} catch (err) {
-			alert('err: ' + err);
-		}
-
 return;
 		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
 		var ii = cl.length;
@@ -57,14 +39,16 @@ return;
 				photos._add(arg);
 			}
 		}
-		if (photos.sort) {
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-			document.getElementById('photos_sort_default').style.display = 'block';
-			document.getElementById('photos_sort_revert').style.display = 'none';
-		} else {
-			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-			document.getElementById('photos_sort_default').style.display = 'none';
-			document.getElementById('photos_sort_revert').style.display = 'block';
+		if (photos.count) {
+			if (photos.sort) {
+				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default').style.display = 'block';
+				document.getElementById('photos_sort_revert').style.display = 'none';
+			} else {
+				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default').style.display = 'none';
+				document.getElementById('photos_sort_revert').style.display = 'block';
+			}
 		}
 	},
 
@@ -143,18 +127,46 @@ try {
 	Components.utils.reportError(err);
 }
 
-
-
+// Observer for components/clh.js
 function CommandLineObserver() {
 	this.register();
 }
 CommandLineObserver.prototype = {
 	observe: function(aSubject, aTopic, aData) {
 		var cl = aSubject.QueryInterface(Components.interfaces.nsICommandLine);
-Components.utils.reportError(cl.length);
-		var ii = cl.length - 1;
-		for (var i = 0; i <= ii; ++i) {
-Components.utils.reportError(cl.getArgument(i));
+		var ii = cl.length;
+		var first = true;
+		for (var i = 0; i < ii; ++i) {
+			var arg = cl.getArgument(i);
+			if (photos.is_photo(arg)) {
+				if (first) {
+					buttons.upload.disable();
+					document.getElementById('photos_stack').style.visibility = 'visible';
+					document.getElementById('photos_init').style.display = 'none';
+					document.getElementById('photos_new').style.display = 'none';
+					document.getElementById('no_meta_prompt').style.visibility = 'visible';
+					first = false;
+				}
+				if (/^file:\/\//.test(arg)) {
+					arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
+						Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;
+				}
+				photos._add(arg);
+			}
+		}
+		if (photos.count) {
+			if (null == threads.gm) {
+				threads.init();
+			}
+			if (photos.sort) {
+				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default').style.display = 'block';
+				document.getElementById('photos_sort_revert').style.display = 'none';
+			} else {
+				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default').style.display = 'none';
+				document.getElementById('photos_sort_revert').style.display = 'block';
+			}
 		}
 	},
 	register: function() {
