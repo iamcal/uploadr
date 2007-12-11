@@ -47,12 +47,12 @@ var photos = {
 		// Find a good default directory for the file picker
 		var path = Cc['@mozilla.org/file/directory_service;1'].getService(
 			Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
-Components.utils.reportError(path);
 		if (path.match(/^\//)) {
 			path += '/../../../../../Pictures';
 		} else {
-			///
+			path += '\\..\\..\\..\\..\\..\\My Documents\\My Pictures';
 		}
+Components.utils.reportError(path);
 		var def = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
 		def.initWithPath(path);
 
