@@ -38,7 +38,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				</vbox>
 				<vbox flex="1">
 					<spacer flex="1" />
-					<menulist id="user" flex="1">
+					<menulist id="user" flex="1" oncommand="settings.change_user();">
 						<menupopup />
 					</menulist>
 					<spacer flex="1" />
@@ -53,7 +53,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			<caption label="&settings.resize;" />
 			<html:p id="resize_prompt"> </html:p>
 			<box>
-				<menulist id="resize">
+				<menulist id="resize" oncommand="settings.resize(this.value);">
 					<menupopup>
 						<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
 						<menuitem value="800" label="&settings.resize.800;" />
@@ -72,16 +72,18 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				oncommand="settings.is_public(this.value);">
 					<radio value="0" label="&settings.privacy.private;" />
 						<checkbox id="is_friend" label="&settings.privacy.friend;"
-						disabled="true" />
+						disabled="true" oncommand="settings.is_friend(this.checked);" />
 						<checkbox id="is_family" label="&settings.privacy.family;"
-						disabled="true" />
+						disabled="true" oncommand="settings.is_family(this.checked);" />
 					<radio value="1" label="&settings.privacy.public;" />
 				</radiogroup>
-				<checkbox id="hidden" label="&settings.hidden;" />
+				<checkbox id="hidden" label="&settings.hidden;"
+				oncommand="settings.hidden(this.checked);" />
 			</groupbox>
 			<groupbox flex="1">
 				<caption label="&settings.safety_level;" />
-				<radiogroup id="safety_level" value="1">
+				<radiogroup id="safety_level" value="1"
+				oncommand="settings.safety_level(this.value);">
 					<radio value="1" label="&settings.safety_level.safe;" />
 					<radio value="2" label="&settings.safety_level.moderate;" />
 					<radio value="3" label="&settings.safety_level.restricted;" />
@@ -89,7 +91,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			</groupbox>
 			<groupbox flex="1">
 				<caption label="&settings.content_type;" />
-				<radiogroup id="content_type" value="1">
+				<radiogroup id="content_type" value="1"
+				oncommand="settings.content_type(this.value);">
 					<radio value="1" label="&settings.content_type.photo;" />
 					<radio value="2" label="&settings.content_type.screenshot;" />
 					<radio value="3" label="&settings.content_type.other;" />

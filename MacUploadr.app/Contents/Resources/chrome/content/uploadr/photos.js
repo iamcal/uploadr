@@ -52,7 +52,6 @@ var photos = {
 		} else {
 			path += '\\..\\..\\..\\..\\..\\My Documents\\My Pictures';
 		}
-Components.utils.reportError(path);
 		var def = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
 		def.initWithPath(path);
 

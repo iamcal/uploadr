@@ -27,9 +27,6 @@ var settings = {
 	safety_level: null,
 	resize: -1,
 
-	// Compare previous user to current user when changing
-//	last: null,
-
 	// Load settings from the current user, which were loaded from the users.json file and
 	// get anything not set there from the web
 	load: function() {
@@ -90,142 +87,69 @@ var settings = {
 	},
 
 	// Show the settings dialog
-	show: function(preserve) {
-		if (null == preserve) {
-			preserve = false;
-		}
+	show: function() {
 
-		// Current settings and users to send along to the dialog
-		var s = {};
-		var u = [];
-		if (!preserve) {
-			s = {
-				is_public: settings.is_public,
-				is_friend: settings.is_friend,
-				is_family: settings.is_family,
-				content_type: settings.content_type,
-				hidden: settings.hidden,
-				safety_level: settings.safety_level,
-				resize: settings.resize
-			};
-			for (var uname in users.list) {
-				u.push({
-					username: uname,
-					current: uname == users.username
-				});
-			}
-		}
-
-		// Open the dialog
+		// Open the settings dialog, passing a copy of the users list,
+		// the current username and the maximum file size string
+		var u = eval(users.list.toSource());
+Components.utils.reportError('users.list: ' + users.list.toSource());
+Components.utils.reportError('u: ' + u.toSource());
 		var result = {};
 		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
-			'chrome,modal', null != users.username, s, u,
-			locale.getFormattedString('settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
+			'chrome,modal', users.username, u, locale.getFormattedString(
+			'settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
 			[users.filesize >> 10]), result);
+Components.utils.reportError('users.list: ' + users.list.toSource());
+Components.utils.reportError('u: ' + u.toSource());
+Components.utils.reportError('result: ' + result.toSource());
 
 		// If we're adding a new user, auth and re-open the dialog
 		if (result.add_user) {
-			settings.last = users.username;
 			users.after_login = settings.show;
 			users.logout(true);
 			users.login(true);
 		}
 
 		// Otherwise, save changes to settings and users
-		else if (result.list) {
+		else if (result.ok) {
 
-			// Remove removed users
-			var deleted_current = true;
-			var new_list = {};
-			for each (var username in result.list) {
-				if (users.list[username].current) {
-					deleted_current = false;
+			// Replace old users object with new one
+			users.list = u;
+
+			// Login as a different user if needed
+			var logged_out = true;
+			for each (var user in users.list) {
+				if (user.current) {
+					logged_out = false;
+					if (user.username != users.username) {
+						users.logout(false);
+						users.token = user.token;
+						users.login(false);
+					}
+					break;
 				}
-				new_list[username] = users.list[username];
 			}
-			users.list = new_list;
-			if (deleted_current) {
-				users.username = null;
+			if (logged_out) {
 				users.logout(false);
 			}
 
-			// Change users if necessary
-			if ('undefined' != typeof result.change_user &&
-				result.change_user != users.username) {
-				settings.last = users.username;	
-				if (deleted_current) {
-					users.username = null;
-				}
-				users.logout(true);
-				if ('' != result.change_user) {
-					users.token = users.list[result.change_user].token;
-					users.login();
-				}
-			}				
-
-//Components.utils.reportError(settings.last);
-
-			// Decide what's changed
-			s.is_public = parseInt(s.is_public);
-			s.is_friend = parseInt(s.is_friend);
-			s.is_family = parseInt(s.is_family);
-			s.content_type = parseInt(s.content_type);
-			s.hidden = parseInt(s.hidden);
-			s.safety_level = parseInt(s.safety_level);
-			var changed_privacy = 
-				settings.is_public != s.is_public ||
-				settings.is_friend != s.is_friend ||
-				settings.is_family != s.is_family;
-			var changed_content_type = settings.content_type != s.content_type;
-			var changed_hidden = settings.hidden != s.hidden;
-			var changed_safety_level = settings.safety_level != s.safety_level;
-/*
-			if (settings.last) {
-Components.utils.reportError('changed_privacy: ' + changed_privacy + ', changed_content_type: ' +
-changed_content_type + ', changed_hidden: ' + changed_hidden + ', changed_safety_level: ' +
-changed_safety_level);
-				var us = users.list[settings.last].settings;
-Components.utils.reportError('us: ' + us.toSource() + ', s: ' + s.toSource());
-				changed_privacy = changed_privacy ||
-					us.is_public != s.is_public ||
-					us.is_friend != s.is_friend ||
-					us.is_family != s.is_family;
-				changed_content_type = changed_content_type ||
-					us.content_type != s.content_type;
-				changed_hidden = changed_hidden || us.hidden != s.hidden;
-				changed_safety_level = changed_safety_level ||
-					us.safety_level != s.safety_level;
-Components.utils.reportError('changed_privacy: ' + changed_privacy + ', changed_content_type: ' +
-changed_content_type + ', changed_hidden: ' + changed_hidden + ', changed_safety_level: ' +
-changed_safety_level);
-			}
-*/
-
-			// Save back to the settings object
-			var defaults = {};
-			if (changed_privacy) {
-				settings.is_public = s.is_public;
-				settings.is_friend = s.is_friend;
-				settings.is_family = s.is_family;
-				defaults.is_public = settings.is_public;
-				defaults.is_friend = settings.is_friend;
-				defaults.is_family = settings.is_family;
-			}
-			if (changed_content_type) {
-				settings.content_type = s.content_type;
-				defaults.content_type = settings.content_type;
-			}
-			if (changed_hidden) {
-				settings.hidden = s.hidden;
-				defaults.hidden = settings.hidden;
-			}
-			if (changed_safety_level) {
-				settings.safety_level = s.safety_level;
-				defaults.safety_level = settings.safety_level;
-			}
+			// Apply new settings
+			var s = users.list[user.username].settings;
+			settings.is_public = s.is_public;
+			settings.is_friend = s.is_friend;
+			settings.is_family = s.is_family;
+			settings.content_type = s.content_type;
+			settings.hidden = s.hidden;
+			settings.safety_level = s.safety_level;
 			settings.resize = s.resize;
-			meta.defaults(defaults);
-//			settings.last = null;
+			meta.defaults({
+				is_public: s.is_public,
+				is_friend: s.is_friend,
+				is_family: s.is_family,
+				content_type: s.content_type,
+				hidden: s.hidden,
+				safety_level: s.safety_level
+			});
 
 			// Get permission to overwrite any changes that were made
 			if (0 < photos.count && (changed_privacy || changed_content_type ||
@@ -237,31 +161,24 @@ changed_safety_level);
 				return;
 			}
 
-			// Save metadata for a single photo
+			// Save metadata
 			if (1 == photos.selected.length) {
 				meta.save(photos.selected[0]);
+			} else if (1 < photos.selected.length) {
+				meta.save();
 			}
 
 			// Update all photos
 			var ii = photos.list.length;
-			var privacy_keys = ['is_public', 'is_friend', 'is_family'];
 			for (var i = 0; i < ii; ++i) {
 				var photo = photos.list[i];
 				if (null != photo) {
-					for each (var k in privacy_keys) {
-						if (changed_privacy || null == photo[k]) {
-							photo[k] = settings[k];
-						}
+					for each (var k in ['is_public', 'is_friend', 'is_family']) {
+						photo[k] = settings[k];
 					}
-					if (changed_content_type || null == photo.content_type) {
-						photo.content_type = settings.content_type;
-					}
-					if (changed_hidden || null == photo.hidden) {
-						photo.hidden = settings.hidden;
-					}
-					if (changed_safety_level || null == photo.safety_level) {
-						photo.safety_level = settings.safety_level;
-					}
+					photo.content_type = settings.content_type;
+					photo.hidden = settings.hidden;
+					photo.safety_level = settings.safety_level;
 				}
 			}
 
