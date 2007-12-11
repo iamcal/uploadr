@@ -44,11 +44,25 @@ var photos = {
 	add: function() {
 		buttons.upload.disable();
 
+		// Find a good default directory for the file picker
+		var path = Cc['@mozilla.org/file/directory_service;1'].getService(
+			Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
+Components.utils.reportError(path);
+		if (path.match(/^\//)) {
+			path += '/../../../../../Pictures';
+		} else {
+			///
+		}
+		var def = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+		def.initWithPath(path);
+
+		// Open the file picker
 		var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
 		fp.appendFilters(Ci.nsIFilePicker.filterImages);
 		fp.appendFilter('TIFF', 'tiff; TIFF; tif; TIF');
+		fp.displayDirectory = def;
 		var res = fp.show();
 		if (Ci.nsIFilePicker.returnOK == res) {
 			var files = fp.files;
