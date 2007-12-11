@@ -15,7 +15,14 @@ var drag = {
 	//   is still here to handle drags on startup
 	on_startup: function() {
 return;
-		var cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
+Components.utils.reportError(window.arguments);
+Components.utils.reportError(window.commandline);
+		var cl;
+//		if (window.commandline) {
+			cl = window.commandline.QueryInterface(Ci.nsICommandLine);
+//		} else {
+//			cl = window.arguments[0].QueryInterface(Ci.nsICommandLine);
+//		}
 		var ii = cl.length;
 		if (0 == ii) {
 			return;
@@ -127,6 +134,7 @@ try {
 	Components.utils.reportError(err);
 }
 
+/*
 // Observer for components/clh.js
 function CommandLineObserver() {
 	this.register();
@@ -182,3 +190,4 @@ var observer = new CommandLineObserver();
 var observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
 observerService.notifyObservers(window.arguments[0], 'commandline-args-changed', null);
 addEventListener('unload', observer.unregister, false);
+*/

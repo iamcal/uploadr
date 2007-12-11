@@ -263,6 +263,13 @@ var exit = function(force) {
 		return;
 	}
 
+	// Unset our started preference hack
+/*
+	var prefs = Cc['@mozilla.org/preferences-service;1'].getService(
+		Ci.nsIPrefBranch);
+	prefs.setBoolPref('uploadr.started', false)
+*/
+
 	// Save state
 	photos.save();
 	settings.save();
