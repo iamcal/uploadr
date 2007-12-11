@@ -115,3 +115,24 @@ function buildHelpMenu(){
 	}
 }
 
+function pathFromCommandLine(file){
+
+	Components.classes["@mozilla.org/consoleservice;1"]
+		.getService(Components.interfaces.nsIConsoleService)
+		.logStringMessage("Got a file " + file);
+}
+
+function checkCommandLineQueue(){
+
+	var comp = Components.classes["@mozilla.org/commandlinehandler/general-startup;1?type=flcmdline"]
+			.getService(Components.interfaces.IFlickrCommandQueue);
+
+	var queue = comp.getQueue();
+	queue = queue.split('|||||');
+
+	for (var i=0; i<queue.length; i++){
+		if (queue[i].length){
+			pathFromCommandLine(queue[i]);
+		}
+	}
+}
