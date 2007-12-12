@@ -58,9 +58,14 @@ var file = {
 
 	// File size in kilobytes
 	size: function(path) {
-		var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-		file.initWithPath(path);
-		return 1 + Math.round(file.fileSize >> 10);
+		try {
+			var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+			file.initWithPath(path);
+			return 1 + Math.round(file.fileSize >> 10);
+		} catch (err) {
+			Components.utils.reportError(err);
+			return 0;
+		}
 	}
 
 }
