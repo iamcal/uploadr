@@ -10,58 +10,55 @@
 
 var upgrade = {
 
-	// Check for available upgrades
-	//   This will break for version strings with any component having more than 2 digits
-	check: function() {
-		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if (4 == xhr.readyState && 200 == xhr.status && xhr.responseXML) {
-				var version = xhr.responseXML.documentElement;
+	check: function(){
 
-				// Decimalize version strings
-				var c = upgrade.decimalize(uploadr.conf.version);
-				var u = version.getElementsByTagName('upgrade')[0];
-				if (u) {
-					u = upgrade.decimalize(u.firstChild.nodeValue);
-				}
-				var f = version.getElementsByTagName('force')[0];
-				if (f) {
-					f = upgrade.decimalize(f.firstChild.nodeValue);
-				}
+		var um = Cc["@mozilla.org/updates/update-manager;1"].getService(
+			Ci.nsIUpdateManager);
+		var prompter = Cc["@mozilla.org/updates/update-prompt;1"].createInstance(
+			Ci.nsIUpdatePrompt);
 
-				// Force upgrade
-				if (f && f > c) {
-					launch_browser('http://flickr.com/tools/');
-					alert(locale.getString('dialog.force.text'),
-						locale.getString('dialog.force.title'),
-						locale.getString('dialog.force.ok'));
-					exit(true);
-				}
+		// If there's an update ready to be applied, show the "Update Downloaded"
+		// UI instead and let the user know they have to restart the browser for
+		// the changes to be applied. 
 
-				// Offered upgrade
-				else if (u && u > c && confirm(locale.getString('dialog.upgrade.text'),
-					locale.getString('dialog.upgrade.title'),
-					locale.getString('dialog.upgrade.ok'),
-					locale.getString('dialog.upgrade.cancel'))) {
-					launch_browser('http://flickr.com/tools/');
-					exit(true);
-				}
-
-			}
-		};
-		xhr.open('GET', 'http://flickr.com/tools/uploader_version.gne', true);
-		xhr.send(null);
+		if (um.activeUpdate && um.activeUpdate.state == "pending") {
+			prompter.showUpdateDownloaded(um.activeUpdate);
+		} else {
+			prompter.checkForUpdates();
+		}
 	},
 
-	// Decimalize a version string
-	decimalize: function(s) {
-		var a = s.split('.');
-		var ii = a.length;
-		var d = 0;
-		for (var i = 0; i < ii; ++i) {
-			d += parseInt(a[i]) / Math.pow(10, 2 * i);
+	build_menu: function(){
+		var updates = Cc["@mozilla.org/updates/update-service;1"].getService(
+			Ci.nsIApplicationUpdateService);
+		var um = Cc["@mozilla.org/updates/update-manager;1"].getService(
+			Ci.nsIUpdateManager);
+		var checkForUpdates	= document.getElementById("menu_updates");
+		var strings		= document.getElementById("locale");
+		var activeUpdate	= um.activeUpdate;
+		function getStringWithUpdateName(key) {
+			if (activeUpdate && activeUpdate.name) {
+				return strings.getFormattedString(key, [activeUpdate.name]);
+			}
+			return strings.getString(key + "Fallback");
 		}
-		return d;
+		var key = "default";
+		if (activeUpdate) {
+			switch (activeUpdate.state) {
+				case "downloading":
+					key = updates.isDownloading ? "downloading" : "resume";
+					break;
+				case "pending":
+					key = "pending";
+					break;
+			}
+		}
+		checkForUpdates.label = getStringWithUpdateName("updatesItem_" + key);
+		if (um.activeUpdate && updates.isDownloading) {
+			checkForUpdates.setAttribute("loading", "true");
+		} else {
+			checkForUpdates.removeAttribute("loading");
+		}
 	}
 
 };

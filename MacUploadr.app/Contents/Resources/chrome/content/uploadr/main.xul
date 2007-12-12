@@ -19,7 +19,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml"
-onload="threads.init(); upgrade.check(); users.load(); photos.load(); help._pretty(); checkCommandLineQueue();"
+onload="threads.init(); users.load(); photos.load(); help._pretty(); clh.check();"
 onclose="return exit();" persist="screenX screenY width height sizemode">
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
@@ -27,6 +27,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://global/content/globalOverlay.js" />
 	<script src="chrome://global/content/nsDragAndDrop.js" />
 	<script src="chrome://uploadr/content/uploadr.js" />
+	<script src="chrome://uploadr/content/clh.js" />
 	<script src="chrome://uploadr/content/upgrade.js" />
 	<script src="chrome://uploadr/content/file.js" />
 	<script src="chrome://uploadr/content/threads.js" />
@@ -103,7 +104,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 				</menupopup>
 			</menu>
 			<menu id="menu_help" label="&menu.help;">
-				<menupopup onpopupshowing="buildHelpMenu();">
+				<menupopup onpopupshowing="upgrade.build_menu();">
 					<menuitem id="aboutName" label="&menu.help.about;"
 					oncommand="help.about();" />
 					<menuitem id="menu_help_tips" label="&menu.help.tips;" key="key_help_fake"
@@ -114,7 +115,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					<menuitem id="menu_updates"
 						label="&menu.help.update;"
 						class="menuitem-iconic"
-						oncommand="checkForUpdates();"/>
+						oncommand="upgrade.check();"/>
 					<menuseparator />
 					<menuitem id="menu_console" label="&menu.help.console;"
 					oncommand="window.open('chrome://global/content/console.xul', '_blank',

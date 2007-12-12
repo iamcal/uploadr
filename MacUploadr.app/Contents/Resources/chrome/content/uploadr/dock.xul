@@ -20,7 +20,6 @@ id="dock" title="" width="0" height="0">
 			//   It prevents clobbering photos by strict ordering in the event queue, but
 			//   it enables upload too early and therefore can cause problems
 
-Components.utils.reportError('in the onload handler');
 			if (window.arguments && window.arguments[0]){
 				const Cc = Components.classes;
 				const Ci = Components.interfaces;
@@ -33,9 +32,7 @@ Components.utils.reportError('in the onload handler');
 
 				// Add this photo, converting file:// URL to a native path
 				var arg = window.arguments[0];
-Components.utils.reportError('arg: ' + arg);
 				if (win && win.photos.is_photo(arg)) {
-Components.utils.reportError('is_photo passed for ' + arg);
 					if (/^file:\/\//.test(arg)) {
 						arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
 							Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;

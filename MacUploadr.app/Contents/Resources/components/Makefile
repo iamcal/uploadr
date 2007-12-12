@@ -163,6 +163,15 @@ endif
 
 
 
+clh:
+	@echo "Building XPT file..."
+	$(GECKO_SDK).$(PLATFORM)/bin/xpidl \
+		-m typelib \
+		-I$(GECKO_SDK).$(PLATFORM)/idl \
+		flICLH.idl
+
+
+
 test:
 	g++ -w -c -O2 -o gm_test.o -I$(GM_INCLUDE) -I$(EXIV_INCLUDE) gm_test.cpp
 	g++ -O2 -o gm_test gm_test.o \

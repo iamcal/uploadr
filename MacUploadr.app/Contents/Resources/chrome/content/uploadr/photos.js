@@ -447,7 +447,7 @@ var photos = {
 
 	// Decide if a given path is a photo
 	is_photo: function(path) {
-		return /(jpe?g|tiff?|gif|png|bmp)$/i.test(path);
+		return /.+\.(jpe?g|tiff?|gif|png|bmp)$/i.test(path);
 	}
 
 };

@@ -1,7 +1,7 @@
 #include "nsISupports.idl"
 
 [scriptable, uuid(4174fdca-a839-11dc-8314-0800200c9a66)]
-interface IFlickrCommandQueue : nsISupports
+interface flICLH : nsISupports
 {
 	AString getQueue();
 };

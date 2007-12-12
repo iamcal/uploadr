@@ -81,6 +81,7 @@ try {
 	Components.utils.reportError(err);
 }
 
+/*
 // Watch for new arguments using components/clh.js
 function CommandLineObserver() {
 	this.register();
@@ -136,3 +137,4 @@ var observer = new CommandLineObserver();
 var observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
 observerService.notifyObservers(window.arguments[0], 'commandline-args-changed', null);
 addEventListener('unload', observer.unregister, false);
+*/
