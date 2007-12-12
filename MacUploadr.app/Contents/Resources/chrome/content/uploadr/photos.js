@@ -87,7 +87,6 @@ var photos = {
 			buttons.upload.enable();
 		}
 		if (photos.count) {
-			document.getElementById('photos_stack').style.visibility = 'visible';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
 			document.getElementById('no_meta_prompt').style.visibility = 'visible';
@@ -269,7 +268,6 @@ var photos = {
 			buttons.upload.disable();
 			document.getElementById('photos_sort_default').style.display = 'none';
 			document.getElementById('photos_sort_revert').style.display = 'none';
-			document.getElementById('photos_stack').style.visibility = 'hidden';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = '-moz-box';
 			document.getElementById('no_meta_prompt').style.visibility = 'hidden';
@@ -385,7 +383,6 @@ var photos = {
 		var list = obj.list;
 		var ii = list.length;
 		if (ii) {
-			document.getElementById('photos_stack').style.visibility = 'visible';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
 			document.getElementById('no_meta_prompt').style.visibility = 'visible';

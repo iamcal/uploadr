@@ -92,16 +92,11 @@ var settings = {
 		// Open the settings dialog, passing a copy of the users list,
 		// the current username and the maximum file size string
 		var u = eval(users.list.toSource());
-Components.utils.reportError('users.list: ' + users.list.toSource());
-Components.utils.reportError('u: ' + u.toSource());
 		var result = {};
 		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
 			'chrome,modal', users.username, u, locale.getFormattedString(
 			'settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
 			[users.filesize >> 10]), result);
-Components.utils.reportError('users.list: ' + users.list.toSource());
-Components.utils.reportError('u: ' + u.toSource());
-Components.utils.reportError('result: ' + result.toSource());
 
 		// If we're adding a new user, auth and re-open the dialog
 		if (result.add_user) {

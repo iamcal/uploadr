@@ -54,6 +54,13 @@ var upload = {
 		latest: 0
 	},
 
+	// Stats tracking
+	stats: {
+		photos: 0,
+		bytes: 0,
+		errors: 0
+	},
+
 	// Track when we're "processing" for special multi-batch handling
 	processing: false,
 
@@ -142,7 +149,6 @@ var upload = {
 
 	// Finish a synchronous upload
 	_sync: function(rsp, id) {
-Components.utils.reportError('upload._sync');
 
 		// Stop checking progress if we're in synchronous mode
 		if ('sync' == uploadr.conf.mode && null != upload.progress_handle) {
@@ -357,12 +363,10 @@ Components.utils.reportError('upload._sync');
 
 	// Start to clean up after an upload finishes
 	done: function() {
-Components.utils.reportError('upload.done');
 		window.clearTimeout(upload.timeout_handle);
 		upload.timeout_handle = null;
 		window.clearInterval(upload.progress_handle);
 		upload.progress_handle = null;
-		document.getElementById('photos_stack').style.visibility = 'visible';
 		if (0 == photos.count && 0 == photos.fail) {
 			document.getElementById('photos_init').style.display = '-moz-box';
 		} else {
@@ -455,7 +459,6 @@ Components.utils.reportError('upload.done');
 
 	// Finally give the user feedback on their upload
 	finalize: function() {
-Components.utils.reportError('upload.finalize');
 		status.clear();
 
 		// Make sure the sets map is actually empty
@@ -487,10 +490,13 @@ Components.utils.reportError('upload.finalize');
 			photos.add_to_set = [];
 			photos.failed = [];
 			photos.uploaded = [];
+			upload.stats.photos += photos.ok + photos.fail;
+			upload.stats.errors += photos.fail;
 			photos.ok = 0;
 			photos.fail = 0;
 			photos.sets = true;
 			photos.kb.sent = 0;
+			photos.stats.bytes += 1024 * photos.kb.total;
 			photos.kb.total = 0;
 			upload.progress_bar = null;
 			upload.cancel = false;
@@ -506,6 +512,14 @@ Components.utils.reportError('upload.finalize');
 		// Ask the site for an update
 		flickr.photosets.getList(users.nsid);
 		flickr.people.getUploadStatus();
+
+		// Send stats to the site
+		flickr.utils.logUploadStats(0 /* Source, known by API key */,
+			upload.stats.photos + photos.ok + photos.fail,
+			1000 * (upload.timestamps.latest - upload.timestamps.earliest),
+			upload.stats.bytes + 1024 * photos.kb.total,
+			upload.stats.errors + photos.fail);
+			
 
 		// Decide which message to show
 		var go_to_flickr = false;
@@ -571,6 +585,9 @@ Components.utils.reportError('upload.finalize');
 		upload.tickets_handle = null;
 		upload.timestamps.earliest = 0;
 		upload.timestamps.latest = 0;
+		upload.stats.photos = 0;
+		upload.stats.bytes = 0;
+		upload.stats.errors = 0;
 		unblock_exit();
 
 		// Try again without deleting the list of <photoid>s
@@ -848,9 +865,7 @@ var flickr = {
 				var ii = photos.failed.length;
 				for (var i = 0; i < ii; ++i) {
 					var index = photos.failed[i].sets.indexOf(id);
-Components.utils.reportError('id: ' + id + ', index: ' + index);
 					if (-1 != index) {
-Components.utils.reportError('set_id: ' + set_id);
 						photos.failed[i].sets[index] = set_id;
 					}
 				}
@@ -858,9 +873,7 @@ Components.utils.reportError('set_id: ' + set_id);
 				for (var i = 0; i < ii; ++i) {
 					if (null != photos.uploading[i]) {
 						var index = photos.uploading[i].sets.indexOf(id);
-Components.utils.reportError('id: ' + id + ', index: ' + index);
 						if (-1 != index) {
-Components.utils.reportError('set_id: ' + set_id);
 							photos.uploading[i].sets[index] = set_id;
 						}
 					}
@@ -1015,6 +1028,25 @@ Components.utils.reportError('set_id: ' + set_id);
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('safety_level'));
 				meta.defaults({safety_level: settings.safety_level});
 			}
+		}
+
+	},
+
+	utils: {
+
+		logUploadStats: function(source, num_photos, upload_time, bytes, errors) {
+			_api({
+				'method': 'flickr.utils.logUploadStats',
+				'auth_token': users.token,
+				'source': source,
+				'photos': num_photos,
+				'upload_time': upload_time,
+				'bytes': bytes,
+				'errors': errors
+			});
+		},
+		_logUploadStats: function(rsp) {
+			// Who cares!
 		}
 
 	}

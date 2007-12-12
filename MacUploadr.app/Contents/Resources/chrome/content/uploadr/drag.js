@@ -26,7 +26,6 @@ var drag = {
 
 			// Add the files
 			buttons.upload.disable();
-			document.getElementById('photos_stack').style.visibility = 'visible';
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
 			document.getElementById('no_meta_prompt').style.visibility = 'visible';
@@ -80,61 +79,3 @@ try {
 } catch (err) {
 	Components.utils.reportError(err);
 }
-
-/*
-// Watch for new arguments using components/clh.js
-function CommandLineObserver() {
-	this.register();
-}
-CommandLineObserver.prototype = {
-	observe: function(aSubject, aTopic, aData) {
-		var cl = aSubject.QueryInterface(Components.interfaces.nsICommandLine);
-		var ii = cl.length;
-		var first = true;
-		for (var i = 0; i < ii; ++i) {
-			var arg = cl.getArgument(i);
-			if (photos.is_photo(arg)) {
-				if (first) {
-					buttons.upload.disable();
-					document.getElementById('photos_stack').style.visibility = 'visible';
-					document.getElementById('photos_init').style.display = 'none';
-					document.getElementById('photos_new').style.display = 'none';
-					document.getElementById('no_meta_prompt').style.visibility = 'visible';
-					first = false;
-				}
-				if (/^file:\/\//.test(arg)) {
-					arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-						Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;
-				}
-				photos._add(arg);
-			}
-		}
-		if (photos.count) {
-			if (null == threads.gm) {
-				threads.init();
-			}
-			if (photos.sort) {
-				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-				document.getElementById('photos_sort_default').style.display = 'block';
-				document.getElementById('photos_sort_revert').style.display = 'none';
-			} else {
-				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-				document.getElementById('photos_sort_default').style.display = 'none';
-				document.getElementById('photos_sort_revert').style.display = 'block';
-			}
-		}
-	},
-	register: function() {
-		var ob = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
-		ob.addObserver(this, 'commandline-args-changed', false);
-	},
-	unregister: function() {
-		var ob = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
-		ob.removeObserver(this, 'commandline-args-changed');
-	}
-};
-var observer = new CommandLineObserver();
-var observerService = Cc['@mozilla.org/observer-service;1'].getService(Ci.nsIObserverService);
-observerService.notifyObservers(window.arguments[0], 'commandline-args-changed', null);
-addEventListener('unload', observer.unregister, false);
-*/

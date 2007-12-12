@@ -365,9 +365,6 @@ div.toolbarseparator {
 }
 
 /* Messages in the photos container */
-#photos_stack {
-	visibility: hidden;
-}
 #photos_new {
 	display: none;
 }
