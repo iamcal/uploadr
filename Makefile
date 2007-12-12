@@ -17,7 +17,7 @@ INTL := $(filter de-de en-US es-us fr-fr it-it ko-kr pt-br zh-hk, $(MAKECMDGOALS
 
 all:
 	@echo "This target doesn't do anything!  Specify one of these:"
-	@echo "  build     Copy everything of interest to ~/Desktop/build/"
+	@echo "  <INTL> build     Copy everything of interest to ~/Desktop/build/"
 
 de-de:
 	@echo "Building German (de-de)"
@@ -103,6 +103,7 @@ build:
 	mkdir $(BUILD)/Resources/components
 	cp $(SRC)/Resources/components/*.xpt $(BUILD)/Resources/components/
 	cp $(SRC)/Resources/components/*.dylib $(BUILD)/Resources/components/
+	cp $(SRC)/Resources/components/*.js $(BUILD)/Resources/components/
 
 	# XULRunner preferences
 	mkdir $(BUILD)/Resources/defaults

@@ -162,8 +162,8 @@ and then make the following changes:
     Configuration Properties > C/C++ > Code Generation to
     "Multi-threaded DLL (/MD)"
   o Comment out a few conflicting blocks of code, starting at:
-      o localtime.c:196
-      o localtime.c:965
+      o localtime.c:196 - char * block
+      o localtime.c:965 - tzset function
       o private.h:136
 
 Mac

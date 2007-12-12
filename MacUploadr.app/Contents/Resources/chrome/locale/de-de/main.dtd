@@ -38,7 +38,7 @@
 
 <!ENTITY photos.sort.default "Ihre Fotos sind derzeit nach Aufnahmedatum sortiert.  Zum Neuordnen mit der Maus ziehen und ablegen.">
 <!ENTITY photos.sort.revert "Fotos wieder nach Aufnahmedatum sortieren">
-<!ENTITY photos.init "Fotos hier ziehen, um loszulegen.">
+<!ENTITY photos.init "Fotos hier ablegen, um loszulegen.">
 <!ENTITY photos.init.text.1 "Sie können auch auf ">
 <!ENTITY photos.init.text.2 " klicken, um Fotos auf Ihrem Computer zu suchen.">
 <!ENTITY photos.new "Während diese Serie hochgeladen wird, können Sie eine neue beginnen.">
@@ -92,17 +92,17 @@
 <!ENTITY meta.single.sets.add "Zu Alben hinzufügen:">
 <!ENTITY meta.batch.sets.add "Zu weiteren Alben hinzufügen:">
 <!ENTITY meta.sets.add.none "Keine Serien">
-<!ENTITY meta.sets.create "Serie erstellen...">
+<!ENTITY meta.sets.create "Album erstellen...">
 <!ENTITY meta.single.sets.added "Dies wird hinzugefügt zu:">
 <!ENTITY meta.batch.sets.added "Diese werden hinzugefügt zu:">
-<!ENTITY meta.sets.added.none "Sie haben keine Serien ausgewählt">
+<!ENTITY meta.sets.added.none "Sie haben keine Alben ausgewählt">
 <!ENTITY meta.hidden "Melden Sie sich an, um Ihre Serien anzuzeigen">
 
 <!ENTITY meta.no.prompt "Wählen Sie ein oder mehrere Fotos aus, um Titel, Tags und Beschreibungen hinzuzufügen, oder gruppieren Sie Ihre Fotos in Alben.">
 <!ENTITY meta.batch.prompt "Sie können jetzt alle Titel durch einen neuen ersetzen, zu vorhandenen Beschreibungen hinzufügen, weitere Tags hinfügen oder zu weiteren Alben hinzufügen.">
 
 <!ENTITY dialog.set.title "Album erstellen">
-<!ENTITY dialog.set.name "Geben Sie Ihrer neuen Serie einen Namen:">
+<!ENTITY dialog.set.name "Geben Sie Ihrem neuen Album einen Namen:">
 <!ENTITY dialog.set.description "Und eine Beschreibung (optional):">
 
 <!ENTITY dialog.about "Infos zu Flickr Uploadr">

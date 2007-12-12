@@ -26,7 +26,7 @@
 <!ENTITY tools.add "+ Ajouter">
 <!ENTITY tools.remove "- Enlever">
 
-<!ENTITY buttons.upload "Importer des photos">
+<!ENTITY buttons.upload "Importer">
 <!ENTITY buttons.cancel "Annuler">
 <!ENTITY buttons.auth "Prêt !">
 <!ENTITY buttons.ok "OK">
