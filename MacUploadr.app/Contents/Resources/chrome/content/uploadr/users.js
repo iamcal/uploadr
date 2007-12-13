@@ -100,7 +100,6 @@ var users = {
 
 	// Logout
 	logout: function(save) {
-Components.utils.reportError('settings.is_public: ' + settings.is_public + ', users.username: ' + users.username);
 		if (save) {
 			settings.save();
 		}
