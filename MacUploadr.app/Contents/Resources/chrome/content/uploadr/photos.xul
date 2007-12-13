@@ -42,7 +42,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<vbox align="right">
 								<box><html:div id="login" class="small button"
 								onclick="buttons.login.click();"
-								><html:div>&login;</html:div></html:div></box>
+								><html:div id="login_inner">&login;</html:div></html:div></box>
 							</vbox>
 						</html:td>
 					</html:tr>

@@ -207,7 +207,8 @@ var mouse = {
 
 		// Clicking whitespace will start the drag-select
 		else if ('photos_sort_revert' != e.target.id &&
-			'switch' != e.target.id && 'login' != e.target.id &&
+			'switch' != e.target.id &&
+			'login' != e.target.id && 'login_inner' != e.target.id &&
 			uploadr.conf.scrollbar_width < mouse.box.width - e.clientX) {
 			mouse.anchor = {
 				x: e.clientX + pos.x.value - mouse.box.x - grid.base.x,
