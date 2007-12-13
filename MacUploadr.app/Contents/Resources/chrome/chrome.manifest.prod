@@ -9,6 +9,6 @@
 #
 
 content uploadr jar:uploadr.jar!/content/uploadr/
-locale branding INTL jar:uploadr.jar!/locale/branding/
-locale uploadr INTL jar:uploadr.jar!/locale/INTL/
+locale branding zh-hk jar:uploadr.jar!/locale/branding/
+locale uploadr zh-hk jar:uploadr.jar!/locale/zh-hk/
 skin uploadr default jar:uploadr.jar!/skin/uploadr/
