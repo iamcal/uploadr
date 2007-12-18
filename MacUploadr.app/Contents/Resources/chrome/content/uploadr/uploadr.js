@@ -38,7 +38,7 @@ var uploadr = {
 		auto_save: 60,
 
 		// What version am I?
-		version: '3.0',
+		version: '3.0.2',
 
 		// What types of API events should be written to the console?
 		console: {
