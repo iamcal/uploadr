@@ -367,18 +367,6 @@ var upload = {
 		upload.timeout_handle = null;
 		window.clearInterval(upload.progress_handle);
 		upload.progress_handle = null;
-		if (0 == photos.count && 0 == photos.fail) {
-			document.getElementById('photos_init').style.display = '-moz-box';
-		} else {
-			if (photos.sort) {
-				document.getElementById('photos_sort_default').style.display = 'block';
-				document.getElementById('photos_sort_revert').style.display = 'none';
-			} else {
-				document.getElementById('photos_sort_default').style.display = 'none';
-				document.getElementById('photos_sort_revert').style.display = 'block';
-			}
-		}
-		document.getElementById('photos_new').style.display = 'none';
 
 		// Update the UI
 		photos.batch_size = 0;
@@ -430,6 +418,20 @@ var upload = {
 
 		}
 		photos.normalize();
+
+		// Look proper
+		if (0 == photos.count && 0 == photos.fail) {
+			document.getElementById('photos_init').style.display = '-moz-box';
+		} else {
+			if (photos.sort) {
+				document.getElementById('photos_sort_default').style.display = 'block';
+				document.getElementById('photos_sort_revert').style.display = 'none';
+			} else {
+				document.getElementById('photos_sort_default').style.display = 'none';
+				document.getElementById('photos_sort_revert').style.display = 'block';
+			}
+		}
+		document.getElementById('photos_new').style.display = 'none';
 
 		// Kick off the chain of adding photos to a set
 		var not_adding_to_sets = true;
