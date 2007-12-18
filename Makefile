@@ -73,10 +73,18 @@ build:
 	cp $(SRC)/Resources/LICENSE.txt $(BUILD)/Resources/
 	cp $(SRC)/Resources/icons.icns $(BUILD)/Resources/
 
+	# XULRunner preferences
+	mkdir $(BUILD)/Resources/defaults
+	mkdir $(BUILD)/Resources/defaults/preferences
+	cp $(SRC)/Resources/defaults/preferences/*.js \
+		$(BUILD)/Resources/defaults/preferences/
+
 	# XULRunner locale
 	rm $(BUILD)/Frameworks/XUL.framework/Versions/Current/chrome/??-??.*
 	cp ./xulrunner_locales/$(INTL).* \
 		$(BUILD)/Frameworks/XUL.framework/Versions/Current/chrome/
+	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/defaults/preferences/prefs.js > \
+		$(BUILD)/Resources/defaults/preferences/prefs.js
 
 	# Chrome
 	mkdir $(BUILD)/Resources/chrome
@@ -111,11 +119,5 @@ build:
 	cp $(SRC)/Resources/components/*.xpt $(BUILD)/Resources/components/
 	cp $(SRC)/Resources/components/*.dylib $(BUILD)/Resources/components/
 	cp $(SRC)/Resources/components/*.js $(BUILD)/Resources/components/
-
-	# XULRunner preferences
-	mkdir $(BUILD)/Resources/defaults
-	mkdir $(BUILD)/Resources/defaults/preferences
-	cp $(SRC)/Resources/defaults/preferences/*.js \
-		$(BUILD)/Resources/defaults/preferences/
 
 	@echo "Build done!  Now go check it and make a disk image."
