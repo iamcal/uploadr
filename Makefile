@@ -65,11 +65,18 @@ build:
 
 	# XULRunner
 	cp -R $(SRC)/Frameworks/XUL.framework $(BUILD)/Frameworks/
-	ln -s ../Frameworks/XUL.framework/Versions/Current/xulrunner \
+#	ln -s ../Frameworks/XUL.framework/Versions/Current/xulrunner \
+#		$(BUILD)/MacOS/xulrunner
+	cp $(BUILD)/Frameworks/XUL.framework/Versions/Current/xulrunner \
 		$(BUILD)/MacOS/xulrunner
 	cp $(SRC)/Resources/application.ini $(BUILD)/Resources/
 	cp $(SRC)/Resources/LICENSE.txt $(BUILD)/Resources/
 	cp $(SRC)/Resources/icons.icns $(BUILD)/Resources/
+
+	# XULRunner locale
+	rm $(BUILD)/Frameworks/XUL.framework/Versions/Current/chrome/??-??.*
+	cp ./xulrunner_locales/$(INTL).* \
+		$(BUILD)/Frameworks/XUL.framework/Versions/Current/chrome/
 
 	# Chrome
 	mkdir $(BUILD)/Resources/chrome

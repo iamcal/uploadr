@@ -239,6 +239,10 @@ var RotateCallback = function(id, path) {
 RotateCallback.prototype = {
 	run: function() {
 		photos.list[this.id].path = this.path;
+		photos.batch_size -= photos.list[this.id].size;
+		photos.list[this.id].size = file.size(this.path);
+		photos.batch_size += photos.list[this.id].size;
+		free.update();
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

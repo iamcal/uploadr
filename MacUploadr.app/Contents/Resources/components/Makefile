@@ -19,7 +19,7 @@ PORTS_LIB := /opt/local/lib
 XULRUNNER := ../../Frameworks/XUL.framework/Versions/Current
 
 PLATFORM := $(filter mac ppc linux universal, $(MAKECMDGOALS))
-COMPONENT := $(filter gm key, $(MAKECMDGOALS))
+COMPONENT := $(filter gm key clh, $(MAKECMDGOALS))
 
 ifeq (mac, $(PLATFORM))
 DEFINE := -DXP_UNIX -DXP_MACOSX

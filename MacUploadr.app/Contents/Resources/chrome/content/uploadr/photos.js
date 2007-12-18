@@ -122,7 +122,7 @@ var photos = {
 		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, escape_utf8(path, false)),
 			threads.worker.DISPATCH_NORMAL);
 
-		// Check the size of this file if we're logged in
+		// Check the size of this file
 		photos.list[id].size = file.size(photos.list[id].path);
 		photos.batch_size += photos.list[id].size;
 		free.update();
@@ -201,7 +201,6 @@ var photos = {
 		for (var i = 0; i < ii; ++i) {
 			block_sort();
 			var p = photos.list[s[i]];
-			photos.batch_size -= file.size(p.path);
 			var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
 			img.className = 'loading';
 			img.setAttribute('width', 16);
