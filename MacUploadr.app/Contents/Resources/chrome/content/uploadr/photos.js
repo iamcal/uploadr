@@ -395,17 +395,14 @@ var photos = {
 		// Sort photos based on previous sort setting
 		if (list.length) {
 			photos.sort = obj.sort;
-			if (!window.arguments || !window.arguments[0] ||
-				0 == window.arguments[0].QueryInterface(Ci.nsICommandLine).length) {
-				if (photos.sort) {
-					threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-					document.getElementById('photos_sort_default').style.display = 'block';
-					document.getElementById('photos_sort_revert').style.display = 'none';
-				} else {
-					threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-					document.getElementById('photos_sort_default').style.display = 'none';
-					document.getElementById('photos_sort_revert').style.display = 'block';
-				}
+			if (photos.sort) {
+				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default').style.display = 'block';
+				document.getElementById('photos_sort_revert').style.display = 'none';
+			} else {
+				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default').style.display = 'none';
+				document.getElementById('photos_sort_revert').style.display = 'block';
 			}
 		}
 

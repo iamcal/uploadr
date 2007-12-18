@@ -181,13 +181,13 @@ Windows
 -------
 
 Use the Visual Studio projects in:
-  UPLOADR/MacUploadr.app/Contents/Resourcescomponents/*.vcproj
+  UPLOADR/MacUploadr.app/Contents/Resources/components/*.vcproj
 
 Mac
 ---
 
 Use the Makefile in:
-  UPLOADR/MacUploadr.app/Contents/Resourcescomponents/
+  UPLOADR/MacUploadr.app/Contents/Resources/components/
 
 After rebuilding the XPCOM extensions you must increment the BuildID
 defined in:

@@ -138,3 +138,10 @@ Rough speed tests 2007-10-31
 		Uploadr 3.0		PPC		s
 		Uploadr 2.5		Win		7s
 		Uploadr 3.0		Win		13s
+
+
+
+Files changed in my hacked up XULRunner locales
+	locale/xx-xx/global/dialog.properties
+	locale/xx-xx/global/wizard.dtd
+	locale/xx-xx/mozapps/update/*

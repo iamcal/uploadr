@@ -8,42 +8,40 @@
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
 
-var clh = {
-
-	// Handle a single path passed to Uploadr
-	handle: function(arg) {
-Components.classes["@mozilla.org/consoleservice;1"]
-.getService(Components.interfaces.nsIConsoleService)
-.logStringMessage("Got a file " + arg);
+// Check the command line queue for arguments
+var clh = function(queue) {
+	if (null == queue) {
+		var comp = Cc["@mozilla.org/commandlinehandler/general-startup;1?type=flcmdline"]
+			.getService(Ci.flICLH);
+		queue = comp.getQueue();
+	}
+	queue = queue.split('|||||');
+	var ii = queue.length;
+	var first = true;
+	for (var i = 0; i < ii; ++i) {
+		var arg = queue[i];
 		if (photos.is_photo(arg)) {
+			if (first) {
+				buttons.upload.disable();
+				document.getElementById('photos_init').style.display = 'none';
+				document.getElementById('photos_new').style.display = 'none';
+				document.getElementById('no_meta_prompt').style.visibility = 'visible';
+				first = false;
+			}
 			if (/^file:\/\//.test(arg)) {
 				arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
 					Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;
 			}
 			photos._add(arg);
 		}
-	},
-
-	// Check the command line queue for arguments
-	check: function() {
-		var comp = Cc["@mozilla.org/commandlinehandler/general-startup;1?type=flcmdline"]
-			.getService(Ci.flICLH);
-		var queue = comp.getQueue();
-		queue = queue.split('|||||');
-		var ii = queue.length;
-		var first = true;
-		for (var i = 0; i < ii; ++i) {
-			if (photos.is_photo(queue[i])) {
-				if (first) {
-					buttons.upload.disable();
-					document.getElementById('photos_init').style.display = 'none';
-					document.getElementById('photos_new').style.display = 'none';
-					document.getElementById('no_meta_prompt').style.visibility = 'visible';
-					first = false;
-				}
-				clh.handle(queue[i]);
-			}
-		}
 	}
-
+	if (photos.sort) {
+		threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+		document.getElementById('photos_sort_default').style.display = 'block';
+		document.getElementById('photos_sort_revert').style.display = 'none';
+	} else {
+		threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+		document.getElementById('photos_sort_default').style.display = 'none';
+		document.getElementById('photos_sort_revert').style.display = 'block';
+	}
 };

@@ -16,36 +16,42 @@ const myAppHandler = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	},
 
-	handle : function(cmdLine){
+	handle : function(cl){
 
-		var start_index = 0;
+		var start = 0;
 
-		if (cmdLine.state == 1){ // STATE_REMOTE_AUTO
-
+		if (1 == cl.state){ // STATE_REMOTE_AUTO
 			// calh: i needed this in my test app, since arg 0 was the application.ini file (wtf?)
 			//       don't seem to need it for uploadr though...
-			//start_index = 1;
+			//start = 1;
 		}
 
-		for (var i=start_index; i<cmdLine.length; i++){
+		var wm = Cc["@mozilla.org/appshell/window-mediator;1"]
+			.getService(Ci.nsIWindowMediator);
+		var win = wm.getMostRecentWindow('app');
 
-			var arg = cmdLine.getArgument(i);
+		var ii = cl.length;
+		var send_queue = [];
+		for (var i = start; i < ii; ++i) {
+			var arg = cl.getArgument(i);
+			if ('-' == arg.substr(0,1)) continue;
 
-			if (arg.substr(0,1) == '-') continue;
-
-			var wm = Cc["@mozilla.org/appshell/window-mediator;1"]
-				.getService(Ci.nsIWindowMediator);
-			var win = wm.getMostRecentWindow('app');
-
-			if (win){
-				win.clh.handle(arg);
-			}else{
+			// Either queue it for immediate sending or queue it for later
+			if (win) {
+				send_queue.push(arg);
+			} else {
 				this.local_queue.push(arg);
 			}
+
 		}
 
-		if (cmdLine.state == 1){ // STATE_REMOTE_AUTO
-			cmdLine.preventDefault = true;
+		// If we found a window, we need to send the queue
+		if (0 < send_queue.length) {
+			win.clh(send_queue.join('|||||'));
+		}
+
+		if (1 == cl.state) { // STATE_REMOTE_AUTO
+			cl.preventDefault = true;
 		}
 	},
 
