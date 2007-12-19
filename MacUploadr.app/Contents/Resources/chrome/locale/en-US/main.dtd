@@ -77,7 +77,7 @@
 
 <!ENTITY meta.single.title "Title:">
 <!ENTITY meta.batch.title "Replace titles:">
-<!ENTITY meta.batch.title.tooltip "Entering a title her will overwrite the titles of selected photos.">
+<!ENTITY meta.batch.title.tooltip "Entering a title here will overwrite the titles of selected photos.">
 <!ENTITY meta.single.description "Description:">
 <!ENTITY meta.batch.description "Add to existing descriptions:">
 <!ENTITY meta.batch.description.tooltip "Entering a description will append it to the descriptions of selected photos.">

@@ -8,6 +8,7 @@
 # GPL for more details (http://www.gnu.org/licenses/gpl.html)
 #
 
+VER := 3.0.2
 SRC := MacUploadr.app/Contents
 PKG := ~/Desktop/build
 BUILD := $(PKG)/Flickr\ Uploadr.app/Contents
@@ -120,4 +121,12 @@ build:
 	cp $(SRC)/Resources/components/*.dylib $(BUILD)/Resources/components/
 	cp $(SRC)/Resources/components/*.js $(BUILD)/Resources/components/
 
-	@echo "Build done!  Now go check it and make a disk image."
+	# Record this build for posterity
+	rm -rf ~/Desktop/builds/$(INTL)/*
+	cp -R $(PKG)/Flickr\ Uploadr.app ~/Desktop/builds/$(INTL)/
+
+	# Copy to DMG
+	cp -R $(BUILD)/* /Volumes/Flickr\ Uploadr\ $(VER)/
+	cp mac_installers/install-pane-$(INTL).png \
+		/Volumes/Flickr\ Uploadr\ $(VER)/.i.png
+	ln -s .i.png /Volumes/Flickr\ Uploadr\ $(VER)/i.png
