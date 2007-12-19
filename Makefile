@@ -126,7 +126,7 @@ build:
 	cp -R $(PKG)/Flickr\ Uploadr.app ~/Desktop/builds/$(INTL)/
 
 	# Copy to DMG
-	cp -R $(BUILD)/* /Volumes/Flickr\ Uploadr\ $(VER)/
-	cp mac_installers/install-pane-$(INTL).png \
+	cp -R $(PKG)/* /Volumes/Flickr\ Uploadr\ $(VER)/
+	cp mac_installer/install-pane-$(INTL).png \
 		/Volumes/Flickr\ Uploadr\ $(VER)/.i.png
 	ln -s .i.png /Volumes/Flickr\ Uploadr\ $(VER)/i.png
