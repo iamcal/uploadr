@@ -122,11 +122,6 @@ var photos = {
 		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, escape_utf8(path, false)),
 			threads.worker.DISPATCH_NORMAL);
 
-		// Check the size of this file
-		photos.list[id].size = file.size(photos.list[id].path);
-		photos.batch_size += photos.list[id].size;
-		free.update();
-
 	},
 
 	// Remove selected photos
@@ -150,8 +145,7 @@ var photos = {
 			li.parentNode.removeChild(li);
 
 			// Free the size of this file
-			var size = file.size(photos.list[id].path);
-			photos.batch_size -= size;
+			photos.batch_size -= photos.list[id].size;
 			if (users.username && !users.is_pro) {
 				if (users.bandwidth.remaining - photos.batch_size) {
 					status.clear();
@@ -201,6 +195,7 @@ var photos = {
 		for (var i = 0; i < ii; ++i) {
 			block_sort();
 			var p = photos.list[s[i]];
+			photos.batch_size -= p.size;
 			var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
 			img.className = 'loading';
 			img.setAttribute('width', 16);
@@ -244,11 +239,11 @@ var photos = {
 			for each (var p in list) {
 				if (null != p) {
 					if (null != settings.resize && -1 != settings.resize &&
-						(p.width > settings.resize || p.width > settings.resize)) {
+						(p.width > settings.resize || p.height > settings.resize)) {
 						resizing = true;
 						threads.worker.dispatch(new Resize(p.id, settings.resize,
 							escape_utf8(p.path, false)), threads.worker.DISPATCH_NORMAL);
-					} else if (file.size(p.path) > users.filesize) {
+					} else if (p.size > users.filesize) {
 						resizing = true;
 						threads.worker.dispatch(new Resize(p.id, -1, escape_utf8(p.path, false)),
 							threads.worker.DISPATCH_NORMAL);
@@ -352,10 +347,10 @@ var photos = {
 		photos.list = [];
 		photos.selected = [];
 		for (var i = list.length - 1; i >= 0; --i) {
-			var old_id = parseInt(list[i].id.replace('photo', ''));
-			var new_id = photos.list.length;
 
 			// Move the photo info
+			var old_id = parseInt(list[i].id.replace('photo', ''));
+			var new_id = photos.list.length;
 			list[i].id = 'photo' + new_id;
 			photos.list.push(old_list[old_id]);
 			photos.list[new_id].id = new_id;
@@ -446,13 +441,10 @@ var photos = {
 };
 
 // Setup auto-saving of metadata in case of crashes
+//   This is the cause of bug #4810 making metadata fields clear themselves
 window.setInterval(function() {
 	photos.save();
 }, 1000 * uploadr.conf.auto_save);
-
-// Make the photos object visible to child windows
-//   This makes drag-to-dock possible
-window._photos = photos;
 
 // Photo properties
 var Photo = function(id, path) {
@@ -470,7 +462,6 @@ var Photo = function(id, path) {
 	this.height = 0;
 	this.title = '';
 	this.description = '';
-//	this.description = decodeURI('C28E: %C2%8E, C3A9: %C3%A9');
 	this.tags = '';
 	this.is_public = settings.is_public;
 	this.is_friend = settings.is_friend;

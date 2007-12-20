@@ -35,13 +35,15 @@ var clh = function(queue) {
 			photos._add(arg);
 		}
 	}
-	if (photos.sort) {
-		threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-		document.getElementById('photos_sort_default').style.display = 'block';
-		document.getElementById('photos_sort_revert').style.display = 'none';
-	} else {
-		threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-		document.getElementById('photos_sort_default').style.display = 'none';
-		document.getElementById('photos_sort_revert').style.display = 'block';
+	if (0 < photos.count) {
+		if (photos.sort) {
+			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
+			document.getElementById('photos_sort_default').style.display = 'block';
+			document.getElementById('photos_sort_revert').style.display = 'none';
+		} else {
+			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+			document.getElementById('photos_sort_default').style.display = 'none';
+			document.getElementById('photos_sort_revert').style.display = 'block';
+		}
 	}
 };

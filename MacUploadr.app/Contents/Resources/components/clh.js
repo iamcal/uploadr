@@ -58,7 +58,9 @@ const myAppHandler = {
 	local_queue : [],
 
 	getQueue : function(){
-		return this.local_queue.join('|||||');
+		var q = this.local_queue.join('|||||');
+		this.local_queue = [];
+		return q;
 	},
 
 	helpInfo : "\n",

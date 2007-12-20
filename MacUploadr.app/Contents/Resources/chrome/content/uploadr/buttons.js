@@ -13,7 +13,6 @@ var buttons = {
 	login: {
 		click: function() {
 			if ('small button' != document.getElementById('login').className) {
-				Components.utils.reportError('foo');
 				return;
 			}
 			if (users.username) {

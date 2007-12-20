@@ -160,6 +160,7 @@ var settings = {
 				meta.save(photos.selected[0]);
 			} else if (1 < photos.selected.length) {
 				meta.save();
+				meta.load();
 			}
 
 			// Update all photos

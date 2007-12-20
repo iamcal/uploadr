@@ -34,17 +34,13 @@ var keyboard = {
 				return;
 			}
 			photos.selected = [];
-			var p = photos.list;
-			var ii = p.length;
-			for (var i = 0; i < ii; ++i) {
-				photos.selected.push(p[i].id);
-			}
 			var list = document.getElementById('photos_list').getElementsByTagName('li');
-			ii = list.length;
+			var ii = list.length;
 			for (var i = 0; i < ii; ++i) {
 				var img = list[i].getElementsByTagName('img')[0];
 				if ('error' != img.className && 'loading' != img.className) {
 					img.className = 'selected';
+					photos.selected.push(parseInt(list[i].id.replace('photo', '')));
 				}
 			}
 			meta.batch();

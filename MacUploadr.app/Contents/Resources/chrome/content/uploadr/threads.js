@@ -33,9 +33,6 @@ var threads = {
 
 };
 
-// Make this available to child windows like photos
-window._threads = threads;
-
 // Thumbnail thread wrapper
 var Thumb = function(id, thumbSize, path, auto_select) {
 	this.id = id;
@@ -157,6 +154,11 @@ ThumbCallback.prototype = {
 						img.src;
 				}
 
+				// Calculate file size
+				photos.list[this.id].size = window.file.size(photos.list[this.id].path);
+				photos.batch_size += photos.list[this.id].size;
+				free.update();
+
 			}
 
 			// If unsuccessful, replace with the error image
@@ -166,12 +168,11 @@ ThumbCallback.prototype = {
 				img.setAttribute('height', 16);
 				img.className = 'error';
 				img.parentNode.appendChild(document.createTextNode(photos.list[this.id].filename));
+				--photos.count;
 				img.onclick = function() {
 					this.parentNode.parentNode.removeChild(this.parentNode);
 					photos.normalize();
 				};
-				photos.batch_size -= photos.list[this.id].size;
-				free.update();
 				Components.utils.reportError(this.result);
 			}
 
@@ -239,10 +240,6 @@ var RotateCallback = function(id, path) {
 RotateCallback.prototype = {
 	run: function() {
 		photos.list[this.id].path = this.path;
-		photos.batch_size -= photos.list[this.id].size;
-		photos.list[this.id].size = file.size(this.path);
-		photos.batch_size += photos.list[this.id].size;
-		free.update();
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
@@ -380,14 +377,15 @@ ResizeCallback.prototype = {
 				photos.list[this.id].path = resize[3];
 
 				// Update bandwidth
-				var size = file.size(resize[3]);
 				photos.batch_size -= photos.list[this.id].size;
+				var size = file.size(resize[3]);
+				photos.list[this.id].size = size;
+				photos.batch_size += size;
 				if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
 					status.set(locale.getString('status.limit'));
 				} else {
 					status.clear();
 				}
-				photos.batch_size += size;
 				free.update();
 
 			}

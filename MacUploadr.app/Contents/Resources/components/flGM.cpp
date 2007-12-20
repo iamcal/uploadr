@@ -213,6 +213,9 @@ string * find_path(string * path_s, const char * extra) {
 		dir_s->insert(period, extra);
 	} else {
 		dir_s = new string(*path_s);
+		if (0 == dir_s) {
+			return 0;
+		}
 	}
 	ostringstream index;
 	string dir_s_save(*dir_s);
@@ -326,26 +329,26 @@ void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 //   On Windows there is little to do, but Macs must go from UTF-8 to UTF-16
 void unconv_path(string & path_s, nsAString & _retval) {
 	char * o = (char *)path_s.c_str();
-//#ifdef XP_MACOSX
-//	nsCString utf8;
-//#endif
+#ifdef XP_MACOSX
+	nsCString utf8;
+#endif
 	while (*o) {
 
-//		// Macs will still have UTF-8 at this point
-//#ifdef XP_MACOSX
-//		utf8.Append(*o++);
+		// Macs will still have UTF-8 at this point
+#ifdef XP_MACOSX
+		utf8.Append(*o++);
 
-//		// Windows is good to go, being ASCII and all
-//#else
+		// Windows is good to go, being ASCII and all
+#else
 		_retval.Append(*o++);
 
-//#endif
+#endif
 	}
 
-//	// Finish up the Mac transform to UTF-16
-//#ifdef XP_MACOSX
-//	_retval.Assign(NS_ConvertUTF8toUTF16(utf8));
-//#endif
+	// Finish up the Mac transform to UTF-16
+#ifdef XP_MACOSX
+	_retval.Assign(NS_ConvertUTF8toUTF16(utf8));
+#endif
 
 }
 

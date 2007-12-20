@@ -89,6 +89,9 @@ var users = {
 			status.set(locale.getString('status.ready'));
 			meta.login();
 
+			// Check the command line
+			clh();
+
 		} else {
 			users.logout(false);
 		}
@@ -169,9 +172,11 @@ var users = {
 			}
 		}
 
-		// Force the bandwidth meter if there's no one logged in
+		// Force the bandwidth meter and command line handler if there's
+		// no one logged in
 		if (!users.username) {
 			free.update();
+			clh();
 		}
 
 	},

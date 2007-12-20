@@ -30,7 +30,9 @@ var meta = {
 			'_sets_add').getElementsByTagName('li');
 		var ii = ul.length;
 		for (var i = 0; i < ii; ++i) {
-			ul[i].className = 'sets_plus';
+			if ('sets_none' != ul[i].className) {
+				ul[i].className = 'sets_plus';
+			}
 		}
 
 		// Load the defaults for a partial batch
@@ -94,13 +96,12 @@ var meta = {
 			}
 			document.getElementById('meta_dim').value = locale.getFormattedString('meta.dim',
 				[p.width, p.height]);
-			var size = file.size(p.path);
-			if (1024 > size) {
+			if (1024 > p.size) {
 				document.getElementById('meta_size').value = locale.getFormattedString('kb',
-					[size]);
+					[p.size]);
 			} else {
 				document.getElementById('meta_size').value = locale.getFormattedString('mb',
-					[Math.round(file.size(p.path) / 102.4) / 10]);
+					[Math.round(p.size / 102.4) / 10]);
 			}
 			document.getElementById('single_title').value = p.title;
 			document.getElementById('single_description').value = p.description;
@@ -119,7 +120,7 @@ var meta = {
 			}
 			var ii = p.sets.length;
 			if (0 == ii) {
-				var li = document.createElementNS(NS_HTML, 'li')
+				var li = document.createElementNS(NS_HTML, 'li');
 				li.className = 'sets_none';
 				li.appendChild(document.createTextNode(
 					locale.getString('meta.sets.added.none')));
@@ -187,7 +188,6 @@ var meta = {
 				}
 
 			}
-			meta.load();
 		}
 
 		// Save a single photo
@@ -271,9 +271,11 @@ var meta = {
 					locale.getString('meta.abandon.ok'),
 					locale.getString('meta.abandon.cancel'))) {
 					meta.save();
+					meta.load();
 				}
 			} else {
 				meta.save();
+				meta.load();
 			}
 		}
 	},

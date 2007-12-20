@@ -133,25 +133,6 @@ ProgressBar.prototype = {
 var free = {
 
 	update: function() {
-
-		// Calculate the batch size if it hasn't been calculated
-		if (0 == photos.batch_size && 0 != photos.count) {
-			for each (var p in photos.list) {
-				if (null != p) {
-					var size = file.size(p.path);
-					if (users.username) {
-						if (!users.is_pro &&
-							users.bandwidth.remaining - photos.batch_size < size) {
-							status.set(locale.getString('status.limit'));
-						} else {
-							status.clear();
-						}
-					}
-					photos.batch_size += size;
-				}
-			}
-		}
-
 		if (users.bandwidth && !users.is_pro) {
 			var remaining = document.getElementById('bw_remaining_mb');
 			remaining.firstChild.nodeValue =
@@ -178,7 +159,6 @@ var free = {
 				batch.className = '';
 			}
 		}
-
 	}
 
 };
