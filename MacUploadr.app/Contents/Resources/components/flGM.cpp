@@ -347,7 +347,7 @@ void unconv_path(string & path_s, nsAString & _retval) {
 
 	// Finish up the Mac transform to UTF-16
 #ifdef XP_MACOSX
-	_retval.Assign(NS_ConvertUTF8toUTF16(utf8));
+	_retval.Append(NS_ConvertUTF8toUTF16(utf8));
 #endif
 
 }
@@ -534,7 +534,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		if (thumb_s->rfind(".tif") + 6 > thumb_s->length()) {
 			thumb_s->append(".jpg");
 		}
-		out << *thumb_s;
+//		out << *thumb_s;
 
 		// Find the sharpen sigma as the website does
 		double sigma;
@@ -551,11 +551,17 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);
 		img.write(*thumb_s);
-		delete thumb_s; thumb_s = 0;
 
 		// If all went well, return stuff
 		string o_s = out.str();
-		unconv_path(o_s, _retval);
+		char * o = (char *)o_s.c_str();
+		nsCString utf8;
+		while (*o) {
+			utf8.Append(*o++);
+		}
+		_retval.Append(NS_ConvertUTF8toUTF16(utf8));
+		unconv_path(*thumb_s, _retval);
+		delete thumb_s; thumb_s = 0;
 
 		return NS_OK;
 	}
@@ -736,6 +742,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		// If all went well, return stuff
 		string o_s = out.str();
 		unconv_path(o_s, _retval);
+	
 		return NS_OK;
 	}
 
