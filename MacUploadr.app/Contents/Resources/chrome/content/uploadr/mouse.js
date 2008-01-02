@@ -28,7 +28,7 @@ var mouse = {
 		// If we clicked on an image that isn't an error and isn't loading
 		if (e.target.src && 'error' != e.target.className && 'loading' != e.target.className) {
 			var img = e.target;
-	
+
 			// Without modifier keys, start with nothing selected
 			if (!(e.shiftKey || e.ctrlKey || e.metaKey)) {
 				var imgs = document.getElementById('photos_list').getElementsByTagName('img');

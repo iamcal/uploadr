@@ -41,16 +41,21 @@ var photos = {
 	ready_size: [],
 
 	// Let the user select some files, thumbnail them and track them
+	//   Patch for saving our place in the directory structure from
+	//   Zoolcar9 at http://pastebin.mozilla.org/279359
 	add: function() {
 		buttons.upload.disable();
 
 		// Find a good default directory for the file picker
-		var path = Cc['@mozilla.org/file/directory_service;1'].getService(
-			Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
-		if (path.match(/^\//)) {
-			path += '/../../../../../Pictures';
-		} else {
-			path += '\\..\\..\\..\\..\\..\\My Documents\\My Pictures';
+		var path = nsPreferences.getLocalizedUnicharPref('flickr.add_directory', '');
+		if ('' == path) {
+			var path = Cc['@mozilla.org/file/directory_service;1'].getService(
+				Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
+			if (path.match(/^\//)) {
+				path += '/../../../../../Pictures';
+			} else {
+				path += '\\..\\..\\..\\..\\..\\My Documents\\My Pictures';
+			}
 		}
 		var def = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
 		def.initWithPath(path);
@@ -71,6 +76,14 @@ var photos = {
 					photos._add(arg);
 				}
 			}
+
+			// Save our place in the filesystem
+			if (arg.match(/^\//)) {
+				path = arg.replace(/\/[^\/]+$/, '').toString();
+			} else {
+			 	path = arg.replace(/\\[^\\]+$/, '').toString();
+			}
+			nsPreferences.setUnicharPref('flickr.add_directory', path);
 
 			// After the last file is added, sort the images by date taken if we're sorting
 			if (photos.sort) {
