@@ -116,7 +116,9 @@ var settings = {
 		settings.list[settings.username].settings.is_family = checked ? 1 : 0;
 	},
 	hidden: function(checked) {
-		settings.list[settings.username].settings.hidden = checked ? 1 : 0;
+		settings.list[settings.username].settings.hidden = checked ? 2 : 1;
+Components.utils.reportError(settings.username);
+Components.utils.reportError(settings.list[settings.username].settings.hidden);
 	},
 	safety_level: function(value) {
 		settings.list[settings.username].settings.safety_level = parseInt(value);

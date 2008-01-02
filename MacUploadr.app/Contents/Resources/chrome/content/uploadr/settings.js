@@ -36,6 +36,7 @@ var settings = {
 			users.list[users.username].fresh = false;
 			flickr.prefs.getPrivacy();
 			flickr.prefs.getContentType();
+			flickr.prefs.getHidden();
 			flickr.prefs.getSafetyLevel();
 		}
 
@@ -140,22 +141,40 @@ var settings = {
 			}
 
 			// Apply new settings
-			var s = users.list[user.username].settings;
-			settings.is_public = s.is_public;
-			settings.is_friend = s.is_friend;
-			settings.is_family = s.is_family;
-			settings.content_type = s.content_type;
-			settings.hidden = s.hidden;
-			settings.safety_level = s.safety_level;
-			settings.resize = s.resize;
-			meta.defaults({
-				is_public: s.is_public,
-				is_friend: s.is_friend,
-				is_family: s.is_family,
-				content_type: s.content_type,
-				hidden: s.hidden,
-				safety_level: s.safety_level
-			});
+			if (user && user.username) {
+				var s = users.list[user.username].settings;
+				settings.is_public = s.is_public;
+				settings.is_friend = s.is_friend;
+				settings.is_family = s.is_family;
+				settings.content_type = s.content_type;
+				settings.hidden = s.hidden;
+				settings.safety_level = s.safety_level;
+				settings.resize = s.resize;
+				meta.defaults({
+					is_public: s.is_public,
+					is_friend: s.is_friend,
+					is_family: s.is_family,
+					content_type: s.content_type,
+					hidden: s.hidden,
+					safety_level: s.safety_level
+				});
+			} else {
+				settings.is_public = 1;
+				settings.is_friend = 0;
+				settings.is_family = 0;
+				settings.content_type = 1;
+				settings.hidden = 1;
+				settings.safety_level = 1;
+				settings.resize = -1;
+				meta.defaults({
+					is_public: 1,
+					is_friend: 0,
+					is_family: 0,
+					content_type: 1,
+					hidden: 1,
+					safety_level: 1
+				});
+			}
 
 			// Get permission to overwrite any changes that were made
 			if (0 < photos.count &&
