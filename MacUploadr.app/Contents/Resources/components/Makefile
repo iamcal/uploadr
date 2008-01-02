@@ -40,6 +40,7 @@ all:
 	@echo "Components:"
 	@echo "  gm"
 	@echo "  key"
+	@echo "  clh"
 	@echo "Mix & match from the above lists to build components for platforms"
 	@echo ""
 	@echo "Usage: make <platform> <component>"

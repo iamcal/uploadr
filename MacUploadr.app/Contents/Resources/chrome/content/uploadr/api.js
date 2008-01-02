@@ -1028,6 +1028,7 @@ var flickr = {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.safety_level =
 					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('safety_level'));
+				settings.save();
 				meta.defaults({safety_level: settings.safety_level});
 			}
 		}
@@ -1179,10 +1180,13 @@ var _api = function(params, url, browser, post, id) {
 		xhr.onreadystatechange = function() {
 			if (4 == xhr.readyState && 200 == xhr.status && xhr.responseXML) {
 				try {
-					if (uploadr.conf.console.response) {
+					var rsp = xhr.responseXML.documentElement;
+					if (uploadr.conf.console.error && (
+						'object' != typeof rsp || 'ok' != rsp.getAttribute('stat'))) {
+						Components.utils.reportError('API ERROR: ' + xhr.responseText);
+					} else if (uploadr.conf.console.response) {
 						Components.utils.reportError('API RESPONSE: ' + xhr.responseText);
 					}
-					var rsp = xhr.responseXML.documentElement;
 
 					// If this is a normal method call
 					if (params.method) {

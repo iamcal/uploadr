@@ -31,40 +31,51 @@ var settings = {
 	// get anything not set there from the web
 	load: function() {
 
-		// Get prefs stored locally with the user
-		var u = users.list[users.username].settings;
-		settings.is_public = u.is_public;
-		settings.is_friend = u.is_friend;
-		settings.is_family = u.is_family;
-		settings.content_type = u.content_type;
-		settings.hidden = u.hidden;
-		settings.safety_level = u.safety_level;
-		settings.resize = u.resize;
-
-		// Show the default settings in the metadata fields
-		meta.defaults({
-			is_public: settings.is_public,
-			is_friend: settings.is_friend,
-			is_family: settings.is_family,
-			content_type: settings.content_type,
-			hidden: settings.hidden,
-			safety_level: settings.safety_level
-		});
-
-		// Fetch anything available by API that wasn't found locally
-		if (isNaN(settings.is_public) || null == settings.is_public ||
-			isNaN(settings.is_friend) || null == settings.is_friend ||
-			isNaN(settings.is_family) || null == settings.is_family) {
+		// For fresh users, go straight to the website
+		if (users.list[users.username].fresh) {
+			users.list[users.username].fresh = false;
 			flickr.prefs.getPrivacy();
-		}
-		if (isNaN(settings.content_type) || null == settings.content_type) {
 			flickr.prefs.getContentType();
-		}
-		if (isNaN(settings.hidden) || null == settings.hidden) {
-			flickr.prefs.getHidden();
-		}
-		if (isNaN(settings.safety_level) || null == settings.safety_level) {
 			flickr.prefs.getSafetyLevel();
+		}
+
+		// For everyone else, start by trying to use locally stored prefs
+		else {
+			var u = users.list[users.username].settings;
+			settings.is_public = u.is_public;
+			settings.is_friend = u.is_friend;
+			settings.is_family = u.is_family;
+			settings.content_type = u.content_type;
+			settings.hidden = u.hidden;
+			settings.safety_level = u.safety_level;
+			settings.resize = u.resize;
+
+			// Show the default settings in the metadata fields
+			meta.defaults({
+				is_public: settings.is_public,
+				is_friend: settings.is_friend,
+				is_family: settings.is_family,
+				content_type: settings.content_type,
+				hidden: settings.hidden,
+				safety_level: settings.safety_level
+			});
+
+			// Fetch anything available by API that wasn't found locally
+			if (isNaN(settings.is_public) || null == settings.is_public ||
+				isNaN(settings.is_friend) || null == settings.is_friend ||
+				isNaN(settings.is_family) || null == settings.is_family) {
+				flickr.prefs.getPrivacy();
+			}
+			if (isNaN(settings.content_type) || null == settings.content_type) {
+				flickr.prefs.getContentType();
+			}
+			if (isNaN(settings.hidden) || null == settings.hidden) {
+				flickr.prefs.getHidden();
+			}
+			if (isNaN(settings.safety_level) || null == settings.safety_level) {
+				flickr.prefs.getSafetyLevel();
+			}
+
 		}
 
 	},

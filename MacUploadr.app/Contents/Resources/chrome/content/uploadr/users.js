@@ -207,4 +207,5 @@ var User = function(username, nsid, token, is_pro, bw, filesize, sets) {
 		safety_level: 1,
 		resize: -1
 	};
+	this.fresh = true;
 };
