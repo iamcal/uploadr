@@ -132,7 +132,7 @@ var photos = {
 		list.insertBefore(li, list.firstChild);
 
 		// Create and show the thumbnail
-		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, escape_utf8(path, false)),
+		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, path),
 			threads.worker.DISPATCH_NORMAL);
 
 	},
@@ -215,7 +215,7 @@ var photos = {
 			img.setAttribute('height', 8);
 			img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
 			threads.worker.dispatch(new Rotate(p.id, degrees, uploadr.conf.thumbSize,
-				escape_utf8(p.path, false)), threads.worker.DISPATCH_NORMAL);
+				p.path), threads.worker.DISPATCH_NORMAL);
 		}
 		threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
 
@@ -255,10 +255,10 @@ var photos = {
 						(p.width > settings.resize || p.height > settings.resize)) {
 						resizing = true;
 						threads.worker.dispatch(new Resize(p.id, settings.resize,
-							escape_utf8(p.path, false)), threads.worker.DISPATCH_NORMAL);
+							p.path), threads.worker.DISPATCH_NORMAL);
 					} else if (p.size > users.filesize) {
 						resizing = true;
-						threads.worker.dispatch(new Resize(p.id, -1, escape_utf8(p.path, false)),
+						threads.worker.dispatch(new Resize(p.id, -1, p.path),
 							threads.worker.DISPATCH_NORMAL);
 					}
 				}
