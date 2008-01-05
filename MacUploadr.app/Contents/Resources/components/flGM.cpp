@@ -49,69 +49,77 @@ int base_orient(Exiv2::ExifData &, Magick::Image &);
 void exif_update_dim(Exiv2::ExifData &, int, int);
 void unconv_path(string &, nsAString &);
 
-// Convert a path from a UTF-8 nsAString to an ASCII std::string
+// Convert a path from a UTF-16 nsAString to an ASCII std::string
 //   In Windows, this will handle all the Unicode weirdness paths come with
 //   If is_dir is true then the returned path will transparently become an
-//   ASCII-safe TEMP path
-//   If is_dir is false then the file will be copied under a new name to
-//   an ASCII-safe TEMP path
-string * conv_path(const nsAString & fake, bool is_dir) {
+//   ASCII-safe path, possibly to a TEMP dir
+//   If is_dir is false then the path will be made safe or the file will be
+//   copied under a new name to an ASCII-safe TEMP dir
+string * conv_path(const nsAString & utf16, bool is_dir) {
 
 	// Fun with Windows paths
 #ifdef XP_WIN
 
 	// Is this path outside of ASCII?
-	PRUnichar * fake_start = (PRUnichar *)fake.BeginReading();
-	const PRUnichar * fake_end = (PRUnichar *)fake.EndReading();
+	PRUnichar * utf16_start = (PRUnichar *)utf16.BeginReading();
+	const PRUnichar * utf16_end = (const PRUnichar *)utf16.EndReading();
 	bool needs_unicode = false;
-	while (fake_start != fake_end) {
-		if (0x80 & (char)*fake_start++) {
+	while (utf16_start != utf16_end) {
+		if (0x7f < *utf16_start++) {
 			needs_unicode = true;
 			break;
 		}
 	}
-	nsEmbedString ascii;
+
+	// We're outside of ASCII so we need help
 	if (needs_unicode) {
 
-		// UTF-16 but really UTF-8 nsAString to really UTF-8 nsCString
-		nsCString utf8 = NS_LossyConvertUTF16toASCII(fake);
-
-		// UTF-8 nsCString to UTF-16 nsEmbedString
-		nsEmbedString & utf16 = NS_ConvertUTF8toUTF16(utf8);
-
-		// UTF-16 nsEmbedString to wchar_t[]
+		// UTF-16 nsAString to wchar_t[]
 		wchar_t * wide_arr = new wchar_t[utf16.Length() + 1];
 		if (0 == wide_arr) return 0;
 		wchar_t * wide_arr_p = wide_arr;
 		PRUnichar * wide_start = (PRUnichar *)utf16.BeginReading();
-		const PRUnichar * wide_end = (PRUnichar *)utf16.EndReading();
+		const PRUnichar * wide_end = (const PRUnichar *)utf16.EndReading();
 		while (wide_start != wide_end) {
 			*wide_arr_p++ = (wchar_t)*wide_start++;
 		}
 		*wide_arr_p = 0;
 
-		// GetShortPathName to get guaranteed ASCII
+		// Try GetShortPathNameW to get ASCII in a wchar_t *
 		wchar_t short_arr[4096];
-		char temp_arr[4096];
-		*temp_arr = 0;
-		if (0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
+		*short_arr = 0;
+		if (true || 0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
 
 			// Try to find a TEMP directory
+			char temp_arr[4096];
+			*temp_arr = 0;
 			if (0 == GetTempPathA(4096, temp_arr)) {
 				delete [] wide_arr;
 				return 0;
 			}
 
-			// If this call is for a file, we actually need to copy it
-			if (!is_dir) {
+			// Directory requests can just have the TEMP directory
+			if (is_dir) {
+				delete [] wide_arr;
+				return new string(temp_arr);
+			}
+
+			// But if this is a file we actually need to copy it
+			else {
 				string base(temp_arr);
 				base += "original";
-				string orig;
-				wide_arr_p = wide_arr;
-				while (*wide_arr_p) {
-					orig += (char)*wide_arr_p++;
+
+				// Copy the file extension of the original to our base
+				wstring wide_w(wide_arr);
+				wstring ext_w = wide_w.substr(wide_w.rfind('.'));
+				string ext_s;
+				wchar_t * ext_p = (wchar_t *)ext_w.c_str();
+				while (*ext_p) {
+					ext_s += (char)*ext_p++;
 				}
-				base += orig.substr(orig.rfind('.'));
+				base += ext_s;
+
+				// Destination path
 				string * temp = find_path(&base, "");
 				wchar_t * temp_wide_arr = new wchar_t[temp->size() + 1];
 				wchar_t * temp_wide_arr_p = temp_wide_arr;
@@ -120,6 +128,8 @@ string * conv_path(const nsAString & fake, bool is_dir) {
 					*temp_wide_arr_p++ = (wchar_t)*temp_p++;
 				}
 				*temp_wide_arr_p = 0;
+
+				// Copy the file
 				if (0 == CopyFileW(wide_arr, temp_wide_arr, false)) {
 					delete [] wide_arr;
 					delete temp;
@@ -129,52 +139,61 @@ string * conv_path(const nsAString & fake, bool is_dir) {
 				delete [] wide_arr;
 				delete [] temp_wide_arr;
 				return temp;
+
 			}
 
 		}
 		delete [] wide_arr;
 
-		// wchar_t[] or char[] to ASCII string
-		//   We already have a char[] if we are doing a directory
-		nsEmbedString ascii;
-		if (*temp_arr) {
-			return new string(temp_arr);
-		} else {
-			string * short_s = new string();
-			if (0 == short_s) return 0;
-			wchar_t * short_arr_p = short_arr;
-			while (*short_arr_p) {
-				*short_s += (char)*short_arr_p++;
-			}
-			return short_s;
+		// GetShortPathNameW was successful!
+		// wchar_t * to std::string
+		string * short_s = new string();
+		if (0 == short_s) return 0;
+		wchar_t * short_arr_p = short_arr;
+		while (*short_arr_p) {
+			*short_s += (char)*short_arr_p++;
 		}
+		return short_s;
 
 	}
 
-	// Within ASCII, business as usual
+	// Within ASCII, pack it down
 	else {
-		ascii.Assign(fake);
+		char * ascii_arr = new char[utf16.Length() + 1];
+		if (0 == ascii_arr) return 0;
+		char * ascii_arr_p = ascii_arr;
+		utf16_start = (PRUnichar *)utf16.BeginReading();
+		utf16_end = (const PRUnichar *)utf16.EndReading();
+		while (utf16_start != utf16_end) {
+			*ascii_arr_p++ = (char)*utf16_start++;
+		}
+		*ascii_arr_p = 0;
+		string * ascii_s = new string(ascii_arr);
+		delete [] ascii_arr;
+		return ascii_s;
 	}
 
-	// Macs don't need any help since they understand UTF-8
+	// Macs just need UTF-8
 #else
-	nsEmbedString ascii;
-	ascii.Assign(fake);
-#endif
 
-	// Convert the now-ASCII nsEmbedString into an ASCII std::string
-	char * ascii_arr = new char[ascii.Length() + 1];
-	if (0 == ascii_arr) return 0;
-	char * ascii_arr_p = ascii_arr;
-	PRUnichar * ascii_start = (PRUnichar *)ascii.BeginReading();
-	const PRUnichar * ascii_end = (PRUnichar *)ascii.EndReading();
-	while (ascii_start != ascii_end) {
-		*ascii_arr_p++ = (char)*ascii_start++;
+	// UTF-16 nsAString to UTF-8 nsCString
+	nsCString & utf8 = NS_ConvertUTF16toUTF8(utf16);
+
+	// UTF-8 nsCString to std::string
+	char * utf8_arr = new char[utf8.Length() + 1];
+	if (0 == utf8_arr) return 0;
+	char * utf8_arr_p = utf8_arr;
+	char * utf8_start = (char *)utf8.BeginReading();
+	const char * utf8_end = (const char *)utf8.EndReading();
+	while (utf8_start != utf8_end) {
+		*utf8_arr_p++ = *utf8_start++;
 	}
-	*ascii_arr_p = 0;
-	string * ascii_s = new string(ascii_arr);
-	delete [] ascii_arr;
-	return ascii_s;
+	*utf8_arr_p = 0;
+	string * utf8_s = new string(utf8_arr);
+	delete [] utf8_arr;
+	return utf8_s;
+
+#endif
 
 }
 
