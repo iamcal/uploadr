@@ -382,19 +382,9 @@ ResizeCallback.prototype = {
 				list[this.id].path = resize[3];
 
 				// Update bandwidth
-//				photos.batch_size -= list[this.id].size;
 				var size = file.size(resize[3]);
 				photos.ready_size[photos.ready.length - 1] += size;
 				list[this.id].size = size;
-/*
-				photos.batch_size += size;
-				if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
-					status.set(locale.getString('status.limit'));
-				} else {
-					status.clear();
-				}
-				free.update();
-*/
 
 			}
 		} catch (err) {
@@ -508,27 +498,10 @@ var PhotoAddCallback = function(path, obj) {
 };
 PhotoAddCallback.prototype = {
 	run: function() {
-		photos._add(this.path);
+		photos.add([this.path]);
 		if (null != this.obj) {
 			photos.list[photos.list.length - 1] = this.obj;
 		}
-
-		// All the normal stuff from photos.add to make it look right
-		buttons.upload.disable();
-		document.getElementById('photos_init').style.display = 'none';
-		document.getElementById('photos_new').style.display = 'none';
-		document.getElementById('no_meta_prompt').style.visibility = 'visible';
-		mouse.show_photos();
-		if (photos.sort) {
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-			document.getElementById('photos_sort_default').style.display = 'block';
-			document.getElementById('photos_sort_revert').style.display = 'none';
-		} else {
-			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-			document.getElementById('photos_sort_default').style.display = 'none';
-			document.getElementById('photos_sort_revert').style.display = 'block';
-		}
-
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

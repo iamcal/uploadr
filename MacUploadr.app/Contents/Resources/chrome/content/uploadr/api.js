@@ -766,8 +766,8 @@ var flickr = {
 				});
 			},
 			_checkTickets: function(rsp) {
+				var again = false;
 				if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
-					var again = false;
 					var tickets = rsp.getElementsByTagName('uploader')[0].getElementsByTagName(
 						'ticket');
 					var ii = tickets.length;
@@ -775,11 +775,16 @@ var flickr = {
 						var ticket_id = tickets[i].getAttribute('id');
 						var complete = parseInt(tickets[i].getAttribute('complete'));
 						if ('undefined' != typeof upload.tickets[ticket_id]) {
+
+							// Error'd photo
 							if (2 == complete) {
 								--upload.tickets_count;
 								upload._sync(false, upload.tickets[ticket_id]);
 								delete upload.tickets[ticket_id];
-							} else if (1 == complete) {
+							}
+
+							// Completed photo
+							else if (1 == complete) {
 								--upload.tickets_count;
 
 								// Check this photo against stored timestamps
@@ -796,14 +801,24 @@ var flickr = {
 								upload._sync(parseInt(tickets[i].getAttribute('photoid')),
 									upload.tickets[ticket_id]);
 								delete upload.tickets[ticket_id];
-							} else {
+							}
+
+							// Incomplete photos need to keep spinning
+							else {
 								again = true;
 							}
+
 						}
 					}
-					if (again) {
-						upload._check_tickets();
-					}
+				}
+
+				// Error'd checkTickets need to keep spinning
+				else {
+					again = true;
+				}
+
+				if (again) {
+					upload._check_tickets();
 				}
 				unblock_exit();
 			}
