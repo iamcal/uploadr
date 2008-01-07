@@ -23,11 +23,6 @@ var drag = {
 			document.getElementById('photos').className = 'no_drag';
 		},
 		onDrop: function(e, data) {
-
-			// Add the files
-			buttons.upload.disable();
-			document.getElementById('photos_init').style.display = 'none';
-			document.getElementById('photos_new').style.display = 'none';
 			var process_dir = function(files) {
 				while (files.hasMoreElements()) {
 					var f = files.getNext();
@@ -36,36 +31,23 @@ var drag = {
 					} else {
 						var path = f.QueryInterface(Ci.nsILocalFile).path;
 						if (photos.is_photo(path)) {
-							photos._add(path);
+							paths.push(path);
 						}
 					}
 				}				
 			};
+			var paths = [];
 			data.dataList.forEach(function(d) {
 				if (d.first.data.isDirectory()) {
 					process_dir(d.first.data.directoryEntries);
 				} else {
 					var path = d.first.data.QueryInterface(Ci.nsILocalFile).path;
 					if (photos.is_photo(path)) {
-						photos._add(path);
+						paths.push(path);
 					}
 				}
 			});
-
-			// After the last file is added, sort the images by date taken
-			if (photos.count) {
-				document.getElementById('no_meta_prompt').style.visibility = 'visible';
-				if (photos.sort) {
-					threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-					document.getElementById('photos_sort_default').style.display = 'block';
-					document.getElementById('photos_sort_revert').style.display = 'none';
-				} else {
-					threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-					document.getElementById('photos_sort_default').style.display = 'none';
-					document.getElementById('photos_sort_revert').style.display = 'block';
-				}
-			}
-
+			photos.add(paths);
 		},
 		getSupportedFlavours: function() {
 			return drag.flavors;

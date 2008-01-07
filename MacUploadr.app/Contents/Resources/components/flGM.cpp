@@ -177,7 +177,7 @@ string * conv_path(const nsAString & utf16, bool is_dir) {
 #else
 
 	// UTF-16 nsAString to UTF-8 nsCString
-	nsCString & utf8 = NS_ConvertUTF16toUTF8(utf16);
+	nsCString utf8 = NS_ConvertUTF16toUTF8(utf16);
 
 	// UTF-8 nsCString to std::string
 	char * utf8_arr = new char[utf8.Length() + 1];

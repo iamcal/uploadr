@@ -71,7 +71,9 @@ var upload = {
 		if (null == upload.progress_bar) {
 			document.getElementById('footer').style.display = '-moz-box';
 			upload.progress_bar = new ProgressBar('progress_bar');
-			document.getElementById('progress_text').className = 'spinning';
+			var progress_text = document.getElementById('progress_text');
+			progress_text.className = 'spinning';
+			progress_text.value = '';
 		}
 
 		// Pass the photo to the API
@@ -498,7 +500,7 @@ var upload = {
 			photos.fail = 0;
 			photos.sets = true;
 			photos.kb.sent = 0;
-			photos.stats.bytes += 1024 * photos.kb.total;
+			upload.stats.bytes += 1024 * photos.kb.total;
 			photos.kb.total = 0;
 			upload.progress_bar = null;
 			upload.cancel = false;
@@ -594,7 +596,7 @@ var upload = {
 
 		// Try again without deleting the list of <photoid>s
 		if (try_again) {
-			threads.worker.dispatch(new RetryUpload(), threads.worker.DISPATCH_NORMAL);
+			threads.worker.dispatch(new RetryUpload(false), threads.worker.DISPATCH_NORMAL);
 		}
 
 	}

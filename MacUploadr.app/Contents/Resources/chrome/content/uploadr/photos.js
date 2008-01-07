@@ -43,7 +43,7 @@ var photos = {
 	// Let the user select some files, thumbnail them and track them
 	//   Patch for saving our place in the directory structure from
 	//   Zoolcar9 at http://pastebin.mozilla.org/279359
-	add: function() {
+	add_dialog: function() {
 		buttons.upload.disable();
 
 		// Find a good default directory for the file picker
@@ -70,12 +70,14 @@ var photos = {
 		var res = fp.show();
 		if (Ci.nsIFilePicker.returnOK == res) {
 			var files = fp.files;
+			var paths = [];
 			while (files.hasMoreElements()) {
 				var arg = files.getNext().QueryInterface(Ci.nsILocalFile).path;
 				if (photos.is_photo(arg)) {
-					photos._add(arg);
+					paths.push(arg);
 				}
 			}
+			photos.add(paths);
 
 			// Save our place in the filesystem
 			if (arg.match(/^\//)) {
@@ -85,7 +87,19 @@ var photos = {
 			}
 			nsPreferences.setUnicharPref('flickr.add_directory', path);
 
-			// After the last file is added, sort the images by date taken if we're sorting
+		} else if (photos.count) {
+			buttons.upload.enable();
+		}
+	},
+
+	// Add a list of photos
+	add: function(paths) {
+		buttons.upload.disable();
+		var ii = paths.length;
+		for (var i = 0; i < ii; ++i) {
+			photos._add(paths[i]);
+		}
+		if (photos.count) {
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
 				document.getElementById('photos_sort_default').style.display = 'block';
@@ -95,11 +109,6 @@ var photos = {
 				document.getElementById('photos_sort_default').style.display = 'none';
 				document.getElementById('photos_sort_revert').style.display = 'block';
 			}
-
-		} else if (photos.count) {
-			buttons.upload.enable();
-		}
-		if (photos.count) {
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
 			document.getElementById('no_meta_prompt').style.visibility = 'visible';
@@ -231,7 +240,7 @@ var photos = {
 		}
 
 		// Don't upload if the button is disabled
-		if ('disabled_button' == document.getElementById('button_upload').className) {
+		if (from_user && 'disabled_button' == document.getElementById('button_upload').className) {
 			return;
 		}
 
@@ -245,10 +254,14 @@ var photos = {
 			}
 		}
 
+		// Decide if we're already in the midst of an upload
+		var not_started = 0 == photos.uploading.length;
+
 		// If any photos need resizing to fit in the per-photo size limits,
 		// dispatch the jobs and wait
 		if (from_user && !upload.processing || !from_user) {
 			var resizing = false;
+			var r = [];
 			for each (var p in list) {
 				if (null != p) {
 					if (null != settings.resize && -1 != settings.resize &&
@@ -261,10 +274,37 @@ var photos = {
 						threads.worker.dispatch(new Resize(p.id, -1, p.path),
 							threads.worker.DISPATCH_NORMAL);
 					}
+					r.push(p);
 				}
 			}
 			if (resizing) {
-				threads.worker.dispatch(new RetryUpload(), threads.worker.DISPATCH_NORMAL);
+
+				// Setup the batch to try again after the resizing
+				photos.ready.push(r);
+				photos.ready_size.push(0); // To be filled in later
+				photos.batch_size = 0;
+				photos.list = [];
+				photos.count = 0;
+				photos.selected = [];
+				photos.last = null;
+				photos.unsaved = false;
+				var list = document.getElementById('photos_list');
+				while (list.hasChildNodes()) {
+					list.removeChild(list.firstChild);
+				}
+				free.update();
+				threads.worker.dispatch(new RetryUpload(true), threads.worker.DISPATCH_NORMAL);
+
+				// Give some meaningful feedback
+				//   In the future, it'd be nice if this said "Resizing"
+				if (not_started) {
+					document.getElementById('footer').style.display = '-moz-box';
+					upload.progress_bar = new ProgressBar('progress_bar');
+					var progress_text = document.getElementById('progress_text');
+					progress_text.className = 'spinning';
+					progress_text.value = '';
+				}
+
 				return;
 			}
 		}
@@ -281,9 +321,6 @@ var photos = {
 			meta.disable();
 		}
 
-		// Decide if we're already in the midst of an upload
-		var not_started = 0 == photos.uploading.length;
-
 		// Take the list of photos into upload mode and reset the UI
 		var r = [];
 		for each (var p in list) {
@@ -298,11 +335,10 @@ var photos = {
 				photos.uploading.push(p);
 
 				// Setup progress bar for this photo and show it in the queue
-				var old = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
 				var img = document.createElementNS(NS_HTML, 'img');
-				img.src = old.src;
-				img.width = old.width;
-				img.height = old.height;
+				img.src = 'file://' + p.thumb;
+				img.width = p.thumb_width;
+				img.height = p.thumb_height;
 				var stack = document.createElement('stack');
 				stack.appendChild(img);
 				p.progress_bar = new ProgressBar('queue' + (photos.uploading.length - 1), img.width);
@@ -342,6 +378,7 @@ var photos = {
 
 		// Kick off the first batch job if we haven't started
 		if (not_started && !upload.processing) {
+			ii = photos.uploading.length;
 			for (var i = 0; i < ii; ++i) {
 				if (null != photos.uploading[i]) {
 					block_exit();
@@ -464,6 +501,11 @@ var Photo = function(id, path) {
 	this.id = id;
 	this.date_taken = '';
 	this.path = path;
+	this.width = 0;
+	this.height = 0;
+	this.thumb = '';
+	this.thumb_width = 0;
+	this.thumb_height = 0;
 	var filename = path.match(/([^\/\\]*)$/);
 	if (null == filename) {
 		this.filename = '';
@@ -471,8 +513,6 @@ var Photo = function(id, path) {
 		this.filename = filename[1];
 	}
 	this.size = 0; // Kilobytes
-	this.width = 0;
-	this.height = 0;
 	this.title = '';
 	this.description = '';
 	this.tags = '';

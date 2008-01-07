@@ -17,33 +17,16 @@ var clh = function(queue) {
 	}
 	queue = queue.split('|||||');
 	var ii = queue.length;
-	var first = true;
+	var paths = [];
 	for (var i = 0; i < ii; ++i) {
 		var arg = queue[i];
 		if (photos.is_photo(arg)) {
-			if (first) {
-				buttons.upload.disable();
-				document.getElementById('photos_init').style.display = 'none';
-				document.getElementById('photos_new').style.display = 'none';
-				document.getElementById('no_meta_prompt').style.visibility = 'visible';
-				first = false;
-			}
 			if (/^file:\/\//.test(arg)) {
 				arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
 					Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;
 			}
-			photos._add(arg);
+			paths.push(arg);
 		}
 	}
-	if (0 < photos.count) {
-		if (photos.sort) {
-			threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-			document.getElementById('photos_sort_default').style.display = 'block';
-			document.getElementById('photos_sort_revert').style.display = 'none';
-		} else {
-			threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-			document.getElementById('photos_sort_default').style.display = 'none';
-			document.getElementById('photos_sort_revert').style.display = 'block';
-		}
-	}
+	photos.add(paths);
 };

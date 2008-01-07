@@ -54,5 +54,8 @@ var uploadr = {
 		// Should we auto-select images as they're added? (at least until the user clicks)
 		auto_select: false,
 
+		// Should we auto-select after rotating
+		auto_select_after_rotate: false,
+
 	}
 };

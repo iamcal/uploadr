@@ -240,7 +240,7 @@ var exit = function(force) {
 		locale.getString('dialog.exit.title'),
 		locale.getString('dialog.exit.ok'),
 		locale.getString('dialog.exit.cancel'))) {
-		return;
+		return false;
 	}
 
 	// Save state

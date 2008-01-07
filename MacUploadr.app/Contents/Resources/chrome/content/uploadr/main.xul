@@ -44,7 +44,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/keyboard.js" />
 	<script src="chrome://uploadr/content/buttons.js" />
 	<keyset>
-		<key id="key_add" modifiers="accel" key="o" oncommand="photos.add();" />
+		<key id="key_add" modifiers="accel" key="o" oncommand="photos.add_dialog();" />
 		<key id="key_upload" modifiers="shift accel" key="u" oncommand="photos.upload();" />
 		<key id="key_prefs" modifiers="accel" key="," oncommand="settings.show();" />
 		<key id="key_help" modifiers="accel" key="/" oncommand="help.tips();" />
@@ -82,7 +82,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			<menu id="menu_upload" label="&menu.upload;">
 				<menupopup>
 					<menuitem id="menu_add" label="&menu.upload.add;" key="key_add"
-					oncommand="photos.add();" />
+					oncommand="photos.add_dialog();" />
 					<menuitem id="menu_upload_upload" label="&menu.upload;" key="key_upload"
 					oncommand="photos.upload();" />
 					<menuitem id="menu_preferences" label="&menu.upload.preferences;"
@@ -132,7 +132,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			<hbox id="tools">
 				<vbox>
 					<spacer flex="1" />
-					<html:div id="t_add" class="button" onclick="photos.add();"
+					<html:div id="t_add" class="button" onclick="photos.add_dialog();"
 					><html:div>&tools.add;</html:div></html:div>
 					<spacer flex="1" />
 				</vbox>

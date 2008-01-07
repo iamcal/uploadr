@@ -118,6 +118,9 @@ ThumbCallback.prototype = {
 				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
+				photos.list[this.id].thumb = thumb[9];
+				photos.list[this.id].thumb_width = parseInt(thumb[4]);
+				photos.list[this.id].thumb_height = parseInt(thumb[5]);
 				if ('' == photos.list[this.id].title) {
 					var title = thumb[6].replace(/^\s+|\s+$/,
 						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
@@ -218,7 +221,8 @@ Rotate.prototype = {
 					threads.main.DISPATCH_NORMAL);
 				result = threads.gm.thumb(this.thumbSize,
 					rotate[1]);
-				threads.main.dispatch(new ThumbCallback(this.id, result, true),
+				threads.main.dispatch(new ThumbCallback(this.id, result,
+					uploadr.conf.auto_select_after_rotate),
 					threads.main.DISPATCH_NORMAL);
 			}
 
@@ -370,16 +374,19 @@ ResizeCallback.prototype = {
 			if (null == resize) {
 				Components.utils.reportError(result);
 			} else {
+				list = photos.ready[photos.ready.length - 1];
 
 				// Update photo properties
-				photos.list[this.id].width = resize[1];
-				photos.list[this.id].height = resize[2];
-				photos.list[this.id].path = resize[3];
+				list[this.id].width = resize[1];
+				list[this.id].height = resize[2];
+				list[this.id].path = resize[3];
 
 				// Update bandwidth
-				photos.batch_size -= photos.list[this.id].size;
+//				photos.batch_size -= list[this.id].size;
 				var size = file.size(resize[3]);
-				photos.list[this.id].size = size;
+				photos.ready_size[photos.ready.length - 1] += size;
+				list[this.id].size = size;
+/*
 				photos.batch_size += size;
 				if (!users.is_pro && users.bandwidth.remaining - photos.batch_size < size) {
 					status.set(locale.getString('status.limit'));
@@ -387,6 +394,7 @@ ResizeCallback.prototype = {
 					status.clear();
 				}
 				free.update();
+*/
 
 			}
 		} catch (err) {
@@ -432,13 +440,14 @@ EnableUploadCallback.prototype = {
 
 
 // Retry an upload batch after we finish resizing
-var RetryUpload = function() {
+var RetryUpload = function(from_ready) {
+	this.from_ready = from_ready;
 };
 RetryUpload.prototype = {
 	run: function() {
 
 		// As with Sort, the background job here is just for ordering
-		threads.main.dispatch(new RetryUploadCallback(), threads.main.DISPATCH_NORMAL);
+		threads.main.dispatch(new RetryUploadCallback(this.from_ready), threads.main.DISPATCH_NORMAL);
 
 	},
 	QueryInterface: function(iid) {
@@ -448,13 +457,23 @@ RetryUpload.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
-var RetryUploadCallback = function() {
+var RetryUploadCallback = function(from_ready) {
+	this.from_ready = from_ready;
 };
 RetryUploadCallback.prototype = {
 	run: function() {
 
-		// Now that we've done the resizing and the background job has called back, upload
-		photos.upload();
+		// Take a batch from the ready queue
+		if (this.from_ready) {
+			if (0 != photos.ready.length) {
+				photos.upload(photos.ready.shift(), photos.ready_size.shift());
+			}
+		}
+
+		// Take the batch in the UI
+		else {
+			photos.upload();
+		}
 
 	},
 	QueryInterface: function(iid) {
