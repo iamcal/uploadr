@@ -76,7 +76,6 @@ ThumbCallback.prototype = {
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
-Components.utils.reportError(this.result);
 			var thumb = this.result.split('###');
 
 			// Get this photo from the DOM and remove its loading class
