@@ -82,12 +82,14 @@ var keyboard = {
 				i = photos.last + inc;
 			}
 			if (null != next) {
+				var img = document.getElementById('photo' + next.id).getElementsByTagName('img')[0];
 				mouse.click({
-					target: document.getElementById('photo' + next.id).getElementsByTagName('img')[0],
+					target: img,
 					shiftKey: e.shiftKey,
 					ctrlKey: e.ctrlKey,
 					metaKey: e.metaKey
 				});
+				img.scrollIntoView(inc > 0);
 			}
 		}
 

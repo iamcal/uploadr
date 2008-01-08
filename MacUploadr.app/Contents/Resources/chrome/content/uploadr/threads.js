@@ -95,10 +95,10 @@ ThumbCallback.prototype = {
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
 				if ('' == thumb[3]) {
-					var file = Cc['@mozilla.org/file/local;1'].createInstance(
+					var f = Cc['@mozilla.org/file/local;1'].createInstance(
 						Ci.nsILocalFile);
-					file.initWithPath(photos.list[this.id].path);
-					var mod = new Date(file.lastModifiedTime);
+					f.initWithPath(photos.list[this.id].path);
+					var mod = new Date(f.lastModifiedTime);
 					var month = mod.getMonth();
 					if (10 > month) month = '0' + month;
 					var day = mod.getDate();
@@ -133,8 +133,28 @@ ThumbCallback.prototype = {
 					}
 				}
 				if ('' == photos.list[this.id].description) {
-					photos.list[this.id].description = thumb[7].replace(/^\s+|\s+$/g,
+					var desc = thumb[7].replace(/^\s+|\s+$/g,
 						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+
+					// Copy the site's rules for bad descriptions
+					if ('DCF 1.0' == desc ||
+						'Samsung' == desc ||
+						'Nucam Tulip Project' == desc ||
+						'IslBG' == desc ||
+						'SONY DSC' == desc ||
+						'Pentax Image' == desc ||
+						/^(?:OLYMPUS|(?:KONICA )?MINOLTA|SANYO) DIGITAL CAMERA$/.test(desc) ||
+						/^\d{6}_\d{4}(?:\~\d+)?$/.test(desc) ||
+						/^Copyright \(c\) \d+ Hewlett-Packard Company$/.test(desc) ||
+						/^Autosave-File.*AgfaPhoto.*$/.test(desc)) {
+						photos.list[this.id].description = '';
+					}
+
+					// Passed the test
+					else {
+						photos.list[this.id].description = desc;
+					}
+
 				}
 				if ('' == photos.list[this.id].tags) {
 					photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/g,
@@ -158,8 +178,10 @@ ThumbCallback.prototype = {
 				}
 
 				// Calculate file size
-				photos.list[this.id].size = window.file.size(photos.list[this.id].path);
+				photos.list[this.id].size = file.size(photos.list[this.id].path);
 				photos.batch_size += photos.list[this.id].size;
+Components.utils.reportError('ThumbCallback photos.list[this.id].size: ' +
+	photos.list[this.id].size + ', photos.batch_size: ' + photos.batch_size);
 				free.update();
 
 			}

@@ -261,27 +261,39 @@ var photos = {
 		// dispatch the jobs and wait
 		if (from_user && !upload.processing || !from_user) {
 			var resizing = false;
-			var r = [];
+			var ready = [];
+			var ready_size = 0;
 			for each (var p in list) {
 				if (null != p) {
+
+					// Resize because of user settings
 					if (null != settings.resize && -1 != settings.resize &&
 						(p.width > settings.resize || p.height > settings.resize)) {
 						resizing = true;
 						threads.worker.dispatch(new Resize(p.id, settings.resize,
 							p.path), threads.worker.DISPATCH_NORMAL);
-					} else if (p.size > users.filesize) {
+					}
+
+					// Resize because of upload limits
+					else if (p.size > users.filesize) {
 						resizing = true;
 						threads.worker.dispatch(new Resize(p.id, -1, p.path),
 							threads.worker.DISPATCH_NORMAL);
 					}
-					r.push(p);
+
+					// Not resizing so record size now
+					else {
+						ready_size += p.size;
+					}
+
+					ready.push(p);
 				}
 			}
 			if (resizing) {
 
 				// Setup the batch to try again after the resizing
-				photos.ready.push(r);
-				photos.ready_size.push(0); // To be filled in later
+				photos.ready.push(ready);
+				photos.ready_size.push(ready_size);
 				photos.batch_size = 0;
 				photos.list = [];
 				photos.count = 0;
@@ -322,12 +334,12 @@ var photos = {
 		}
 
 		// Take the list of photos into upload mode and reset the UI
-		var r = [];
+		var ready = [];
 		for each (var p in list) {
 
 			// If we have to queue this batch
 			if (from_user && upload.processing) {
-				r.push(p);
+				ready.push(p);
 			}
 
 			// If we can upload immediately
@@ -353,10 +365,11 @@ var photos = {
 
 		}
 		if (from_user && upload.processing) {
-			photos.ready.push(r);
+			photos.ready.push(ready);
 			photos.ready_size.push(photos.batch_size);
 		} else {
 			if (from_user) {
+Components.utils.reportError('photos.upload photos.batch_size: ' + photos.batch_size);
 				photos.kb.total += photos.batch_size;
 		 	} else {
 				photos.kb.total += size;
@@ -382,6 +395,10 @@ var photos = {
 			for (var i = 0; i < ii; ++i) {
 				if (null != photos.uploading[i]) {
 					block_exit();
+Components.utils.reportError('photos.upload photos.kb.total: ' + photos.kb.total);
+for each (var p in photos.uploading) {
+	Components.utils.reportError('photos.upload p.size: ' + p.size);
+}
 					upload.start(i);
 					break;
 				}

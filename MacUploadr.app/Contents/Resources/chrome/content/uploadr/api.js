@@ -29,6 +29,9 @@ try {
 // The upload API
 var upload = {
 
+	// Count how many times a photo is retried
+	retry_count: 0,
+
 	// Flag set if a batch is cancelled
 	cancel: false,
 
@@ -112,17 +115,35 @@ var upload = {
 
 		// If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-			if (null != photos.uploading[id]) {
-				photos.uploading[id].progress_bar.done(false);
-				++photos.fail;
-				photos.failed.push(photos.uploading[id]);
-			}
-			photos.uploading[id] = null;
+
+			// Make sure this isn't a bandwidth error, as those are
+			// unrecoverable
 			if (upload.bandwidth(rsp)) {
 				return;
 			}
-			upload.cancel = true;
-			upload.done();
+
+			// Still have available retries
+			if (uploadr.conf.auto_retry_count > upload.retry_count) {
+				++upload.retry_count;
+				upload.start(id);
+				if (uploadr.conf.console.retry) {
+					Components.utils.reportError('UPLOAD RETRY: id = ' + id +
+						', retry = ' + upload.retry_count);
+				}
+			}
+
+			// Out of retry attempts, this time we really die
+			else {
+				if (null != photos.uploading[id]) {
+					photos.uploading[id].progress_bar.done(false);
+					++photos.fail;
+					photos.failed.push(photos.uploading[id]);
+				}
+				photos.uploading[id] = null;
+				upload.cancel = true;
+				upload.done();
+			}
+
 			return;
 		}
 
@@ -143,6 +164,7 @@ var upload = {
 		if (!upload.cancel) {
 			++id;
 			if (id < photos.uploading.length) {
+				upload.retry_count = 0;
 				upload.start(id);
 			}
 		}
@@ -216,6 +238,7 @@ var upload = {
 			var ii = photos.uploading.length;
 			for (var i = id; i < ii; ++i) {
 				if (null != photos.uploading[i]) {
+					upload.retry_count = 0;
 					upload.start(i);
 					break;
 				}
