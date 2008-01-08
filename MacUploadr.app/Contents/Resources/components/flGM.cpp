@@ -476,17 +476,17 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			}
 			tags += " ";
 			string country = iptc["Iptc.Application2.CountryName"].toString();
-			if (string::npos == city.find(" ", 0)) {
-				tags += state;
+			if (string::npos == country.find(" ", 0)) {
+				tags += country;
 			} else {
 				tags += "\"";
-				tags += state;
+				tags += country;
 				tags += "\"";
 			}
 
 		} catch (Exiv2::Error &) {}
-		ostringstream out;
-		out << orient << "###";
+		ostringstream out1;
+		out1 << orient << "###";
 
 		// Original size
 		int bw, bh;
@@ -498,7 +498,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			bh = img.baseColumns();
 		}
 		int base = bw > bh ? bw : bh;
-		out << bw << "###" << bh << "###";
+		out1 << bw << "###" << bh << "###";
 
 		// EXIF date taken
 		string date_taken = img.attribute("EXIF:DateTimeOriginal");
@@ -508,21 +508,21 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTime");
 		}
-		out << date_taken << "###";
+		out1 << date_taken << "###";
 
 		// Thumbnail width and height
 		float r;
 		ostringstream dim;
 		if (bw > bh) {
 			r = (float)bh * (float)square / (float)bw;
-			out << square << "###" << round(r);
+			out1 << square << "###" << round(r);
 			dim << square << "x" << round(r);
 		} else {
 			r = (float)bw * (float)square / (float)bh;
-			out << round(r) << "###" << square;
+			out1 << round(r) << "###" << square;
 			dim << round(r) << "x" << square;
 		}
-		out << "###";
+		out1 << "###";
 
 		// Hide ### strings within the IPTC data
 		size_t pos = title.find("###", 0);
@@ -540,7 +540,8 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			tags.replace(pos, 3, "{---THREE---POUND---DELIM---}");
 			pos = tags.find("###", pos);
 		}
-		out << title << "###" << description << "###" << tags << "###";
+		ostringstream out2;
+		out2 << "###" << title << "###" << description << "###" << tags;
 
 		// Create a new path
 		thumb_s = find_path(path_s, "-thumb");
@@ -553,7 +554,6 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		if (thumb_s->rfind(".tif") + 6 > thumb_s->length()) {
 			thumb_s->append(".jpg");
 		}
-//		out << *thumb_s;
 
 		// Find the sharpen sigma as the website does
 		double sigma;
@@ -572,8 +572,8 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		img.write(*thumb_s);
 
 		// If all went well, return stuff
-		string o_s = out.str();
-		char * o = (char *)o_s.c_str();
+		string out1_s = out1.str();
+		char * o = (char *)out1_s.c_str();
 		nsCString utf8;
 		while (*o) {
 			utf8.Append(*o++);
@@ -581,6 +581,13 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		_retval.Append(NS_ConvertUTF8toUTF16(utf8));
 		unconv_path(*thumb_s, _retval);
 		delete thumb_s; thumb_s = 0;
+		string out2_s = out2.str();
+		o = (char *)out2_s.c_str();
+		utf8.Assign(NS_LITERAL_CSTRING(""));
+		while (*o) {
+			utf8.Append(*o++);
+		}
+		_retval.Append(NS_ConvertUTF8toUTF16(utf8));
 
 		return NS_OK;
 	}

@@ -75,7 +75,8 @@ ThumbCallback.prototype = {
 			--photos.loading;
 
 			// Parse the returned string
-			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<title>###<description>###<tags>###<thumb_path>
+			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
+Components.utils.reportError(this.result);
 			var thumb = this.result.split('###');
 
 			// Get this photo from the DOM and remove its loading class
@@ -84,7 +85,7 @@ ThumbCallback.prototype = {
 			img.className = '';
 
 			// If successful, replace with the thumb and update the Photo object
-			if (10 == thumb.length) {
+			if (7 <= thumb.length) {
 
 				// Undo escaping done in XPCOM
 				var ii = thumb.length;
@@ -115,14 +116,14 @@ ThumbCallback.prototype = {
 				} else {
 					photos.list[this.id].date_taken = thumb[3];
 				}
-				img.src = 'file://' + thumb[9];
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
-				photos.list[this.id].thumb = thumb[9];
+				img.src = 'file://' + thumb[6];
 				photos.list[this.id].thumb_width = parseInt(thumb[4]);
 				photos.list[this.id].thumb_height = parseInt(thumb[5]);
-				if ('' == photos.list[this.id].title) {
-					var title = thumb[6].replace(/^\s+|\s+$/,
+				photos.list[this.id].thumb = thumb[6];
+				if ('' == photos.list[this.id].title && thumb[7]) {
+					var title = thumb[7].replace(/^\s+|\s+$/,
 						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
 					if ('' == title) {
 						title = photos.list[this.id].filename.split(
@@ -132,8 +133,8 @@ ThumbCallback.prototype = {
 						photos.list[this.id].title = title;
 					}
 				}
-				if ('' == photos.list[this.id].description) {
-					var desc = thumb[7].replace(/^\s+|\s+$/g,
+				if ('' == photos.list[this.id].description && thumb[8]) {
+					var desc = thumb[8].replace(/^\s+|\s+$/g,
 						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
 
 					// Copy the site's rules for bad descriptions
@@ -156,8 +157,8 @@ ThumbCallback.prototype = {
 					}
 
 				}
-				if ('' == photos.list[this.id].tags) {
-					photos.list[this.id].tags = thumb[8].replace(/^\s+|\s+$/g,
+				if ('' == photos.list[this.id].tags && thumb[9]) {
+					photos.list[this.id].tags = thumb[9].replace(/^\s+|\s+$/g,
 						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
 				}
 
@@ -180,8 +181,6 @@ ThumbCallback.prototype = {
 				// Calculate file size
 				photos.list[this.id].size = file.size(photos.list[this.id].path);
 				photos.batch_size += photos.list[this.id].size;
-Components.utils.reportError('ThumbCallback photos.list[this.id].size: ' +
-	photos.list[this.id].size + ', photos.batch_size: ' + photos.batch_size);
 				free.update();
 
 			}

@@ -369,7 +369,6 @@ var photos = {
 			photos.ready_size.push(photos.batch_size);
 		} else {
 			if (from_user) {
-Components.utils.reportError('photos.upload photos.batch_size: ' + photos.batch_size);
 				photos.kb.total += photos.batch_size;
 		 	} else {
 				photos.kb.total += size;
@@ -395,10 +394,6 @@ Components.utils.reportError('photos.upload photos.batch_size: ' + photos.batch_
 			for (var i = 0; i < ii; ++i) {
 				if (null != photos.uploading[i]) {
 					block_exit();
-Components.utils.reportError('photos.upload photos.kb.total: ' + photos.kb.total);
-for each (var p in photos.uploading) {
-	Components.utils.reportError('photos.upload p.size: ' + p.size);
-}
 					upload.start(i);
 					break;
 				}
