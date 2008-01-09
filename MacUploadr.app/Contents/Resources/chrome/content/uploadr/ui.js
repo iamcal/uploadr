@@ -248,13 +248,28 @@ var exit = function(force) {
 	settings.save();
 	users.save();
 
-	// Remove the images directory if there are no photos left
+	// Remove the images and TEMP directories if there are no photos left
 	if (0 == photos.count) {
 		try {
 			var profile = Cc['@mozilla.org/file/directory_service;1'].getService(
 				Ci.nsIProperties).get('ProfD', Ci.nsIFile);
 			profile.append('images');
 			profile.remove(true);
+		} catch (err) {}
+		try {
+			var temp = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+			temp.initWithPath('C:\\temp');
+			if (temp.isDirectory()) {
+				var files = temp.directoryEntries;
+				while (files.hasMoreElements()) {
+					var f = files.getNext().QueryInterface(Ci.nsILocalFile);
+					if (f.leafName.match(/^original/)) {
+						try {
+							f.remove(false);
+						} catch (err2) {}
+					}
+				}
+			}
 		} catch (err) {}
 	}
 

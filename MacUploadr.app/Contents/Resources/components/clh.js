@@ -37,6 +37,7 @@ const myAppHandler = {
 			if ('-' == arg.substr(0,1)) continue;
 
 			// Either queue it for immediate sending or queue it for later
+Components.utils.reportError('XPCOM: ' + arg);
 			if (win) {
 				send_queue.push(arg);
 			} else {

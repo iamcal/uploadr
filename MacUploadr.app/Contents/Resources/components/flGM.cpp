@@ -91,12 +91,34 @@ string * conv_path(const nsAString & utf16, bool is_dir) {
 		if (true || 0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
 
 			// Try to find a TEMP directory
+			//   This would be the easy way except that it will never work
+			//   for users with Unicode characters in their usernames
+			/*
 			char temp_arr[4096];
 			*temp_arr = 0;
 			if (0 == GetTempPathA(4096, temp_arr)) {
 				delete [] wide_arr;
 				return 0;
 			}
+			*/
+
+			// Try to find a TEMP directory
+			//   (This is the hard way but at least it will work)
+			//   Get the drive letter from the Windows directory and append
+			//   :\temp, create that directory and use it for TEMP
+			char win_arr[4096];
+			*win_arr = 0;
+			if (0 == GetWindowsDirectoryA(win_arr, 4096)) {
+				delete [] wide_arr;
+				return 0;
+			}
+			char temp_arr[9];
+			temp_arr[0] = *win_arr;
+			temp_arr[1] = ':'; temp_arr[2] = '\\';
+			temp_arr[3] = 't'; temp_arr[4] = 'e';
+			temp_arr[5] = 'm'; temp_arr[6] = 'p';
+			temp_arr[7] = '\\'; temp_arr[8] = 0;
+			CreateDirectoryA(temp_arr, 0);
 
 			// Directory requests can just have the TEMP directory
 			if (is_dir) {
