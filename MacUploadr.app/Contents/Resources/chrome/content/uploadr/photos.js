@@ -97,8 +97,14 @@ var photos = {
 		buttons.upload.disable();
 		var ii = paths.length;
 		for (var i = 0; i < ii; ++i) {
-			photos._add(paths[i]);
+			if ('object' == typeof paths[i]) {
+				photos._add(paths[i].path);
+				photos.list[photos.list.length - 1] = paths[i];
+			} else {
+				photos._add(paths[i]);
+			}
 		}
+		photos.normalize();
 		if (photos.count) {
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
@@ -308,13 +314,21 @@ var photos = {
 				threads.worker.dispatch(new RetryUpload(true), threads.worker.DISPATCH_NORMAL);
 
 				// Give some meaningful feedback
-				//   In the future, it'd be nice if this said "Resizing"
+				//   In the future, it'd be nice if this said "Resizing..."
 				if (not_started) {
 					document.getElementById('footer').style.display = '-moz-box';
 					upload.progress_bar = new ProgressBar('progress_bar');
 					var progress_text = document.getElementById('progress_text');
 					progress_text.className = 'spinning';
 					progress_text.value = '';
+					status.set(locale.getString('status.uploading'));
+					buttons.upload.disable();
+					document.getElementById('photos_sort_default').style.display = 'none';
+					document.getElementById('photos_sort_revert').style.display = 'none';
+					document.getElementById('photos_init').style.display = 'none';
+					document.getElementById('photos_new').style.display = '-moz-box';
+					document.getElementById('no_meta_prompt').style.visibility = 'hidden';
+					meta.disable();
 				}
 
 				return;

@@ -121,9 +121,9 @@ ThumbCallback.prototype = {
 				photos.list[this.id].thumb_width = parseInt(thumb[4]);
 				photos.list[this.id].thumb_height = parseInt(thumb[5]);
 				photos.list[this.id].thumb = thumb[6];
-				if ('' == photos.list[this.id].title && thumb[7]) {
-					var title = thumb[7].replace(/^\s+|\s+$/,
-						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				if ('' == photos.list[this.id].title) {
+					var title = thumb[7] ? thumb[7].replace(/^\s+|\s+$/,
+						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###') : '';
 					if ('' == title) {
 						title = photos.list[this.id].filename.split(
 							/(.+)\.[a-z0-9]{3,4}/i);
@@ -132,9 +132,9 @@ ThumbCallback.prototype = {
 						photos.list[this.id].title = title;
 					}
 				}
-				if ('' == photos.list[this.id].description && thumb[8]) {
-					var desc = thumb[8].replace(/^\s+|\s+$/g,
-						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				if ('' == photos.list[this.id].description) {
+					var desc = thumb[8] ? thumb[8].replace(/^\s+|\s+$/g,
+						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###') : '';
 
 					// Copy the site's rules for bad descriptions
 					if ('DCF 1.0' == desc ||
@@ -156,9 +156,9 @@ ThumbCallback.prototype = {
 					}
 
 				}
-				if ('' == photos.list[this.id].tags && thumb[9]) {
-					photos.list[this.id].tags = thumb[9].replace(/^\s+|\s+$/g,
-						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				if ('' == photos.list[this.id].tags) {
+					photos.list[this.id].tags = thumb[9] ? thumb[9].replace(/^\s+|\s+$/g,
+						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###') : '';
 				}
 
 				// Select newly added images if the user hasn't clicked
@@ -180,6 +180,8 @@ ThumbCallback.prototype = {
 				// Calculate file size
 				photos.list[this.id].size = file.size(photos.list[this.id].path);
 				photos.batch_size += photos.list[this.id].size;
+Components.utils.reportError('photos.batch_size: ' + photos.batch_size +
+', photos.list[this.id].size: ' + photos.list[this.id].size);
 				free.update();
 
 			}

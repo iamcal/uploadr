@@ -16,7 +16,7 @@ var uploadr = {
 	conf: {
 
 		// What version am I?
-		version: '3.0.2',
+		version: '3.0.3',
 
 		// What types of API events should be written to the console?
 		console: {

@@ -67,6 +67,9 @@ var upload = {
 	// Track when we're "processing" for special multi-batch handling
 	processing: false,
 
+	// Holding pen for photos we may try again
+	try_again: [],
+
 	// Upload a photo
 	start: function(id) {
 
@@ -141,7 +144,9 @@ var upload = {
 				}
 				photos.uploading[id] = null;
 				upload.cancel = true;
-				upload.done();
+				if (0 == upload.tickets_count) {
+					upload.done();
+				}
 			}
 
 			return;
@@ -394,8 +399,6 @@ var upload = {
 		upload.progress_handle = null;
 
 		// Update the UI
-		photos.batch_size = 0;
-		free.update();
 		upload.progress_bar.update(1);
 		var text = document.getElementById('progress_text');
 		if (0 == photos.fail) {
@@ -412,22 +415,20 @@ var upload = {
 		}
 		status.clear();
 
-		// Re-add failures to the batch
+		// Hold failed photos for trying again
 		var f = photos.failed;
 		var ii = f.length;
 		if (0 != ii) {
 			for (var i  = 0; i < ii; ++i) {
-				photos._add(f[i].path);
-				photos.list[photos.list.length - 1] = f[i];
+				upload.try_again.push(f[i]);
 			}
 		}
 
-		// If this was a cancellation, re-add photos we didn't get to
+		// Re-add photos we didn't get to
 		if (upload.cancel) {
 			for each (var p in photos.uploading) {
 				if (null != p) {
-					photos._add(p.path);
-					photos.list[photos.list.length - 1] = p;
+					upload.try_again.push(p);
 				}
 			}
 
@@ -436,27 +437,11 @@ var upload = {
 				var r = photos.ready.shift();
 				ii = r.length;
 				for (var i  = 0; i < ii; ++i) {
-					photos._add(r[i].path);
-					photos.list[photos.list.length - 1] = r[i];
+					upload.try_again.push(r[i]);
 				}
 			}
 
 		}
-		photos.normalize();
-
-		// Look proper
-		if (0 == photos.count && 0 == photos.fail) {
-			document.getElementById('photos_init').style.display = '-moz-box';
-		} else {
-			if (photos.sort) {
-				document.getElementById('photos_sort_default').style.display = 'block';
-				document.getElementById('photos_sort_revert').style.display = 'none';
-			} else {
-				document.getElementById('photos_sort_default').style.display = 'none';
-				document.getElementById('photos_sort_revert').style.display = 'block';
-			}
-		}
-		document.getElementById('photos_new').style.display = 'none';
 
 		// Kick off the chain of adding photos to a set
 		var not_adding_to_sets = true;
@@ -499,7 +484,8 @@ var upload = {
 
 		// Normalize the list of created sets
 		var i = 0;
-		while (i < meta.created_sets.length) {
+		var ii = meta.created_sets.length;
+		while (i < ii) {
 			if (null == meta.created_sets[i]) {
 				meta.created_sets.shift();
 				meta.created_sets_desc.shift();
@@ -619,8 +605,24 @@ var upload = {
 
 		// Try again without deleting the list of <photoid>s
 		if (try_again) {
-			threads.worker.dispatch(new RetryUpload(false), threads.worker.DISPATCH_NORMAL);
+
+			// Queue 'em up
+			ii = upload.try_again.length;
+			photos.ready = [[]];
+			photos.ready_size = [0];
+			for (var i = 0; i < ii; ++i) {
+				photos.ready[0].push(upload.try_again[i]);
+				photos.ready_size[0] += upload.try_again[i].size;
+			}
+
+			threads.worker.dispatch(new RetryUpload(true), threads.worker.DISPATCH_NORMAL);
 		}
+
+		// Otherwise drop the recovered photos into the current batch
+		else {
+			photos.add(upload.try_again);
+		}
+		upload.try_again = [];
 
 	}
 
