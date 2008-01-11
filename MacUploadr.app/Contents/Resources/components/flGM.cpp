@@ -33,7 +33,7 @@
 #include <mach-o/dyld.h>
 #endif
 
-// GetShortPathName, GetTempPath and CopyFile on Windows
+// GetShortPathName, GetWindowsDirectory and CopyFile on Windows
 #ifdef XP_WIN
 #include <windows.h>
 #endif
