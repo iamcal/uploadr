@@ -29,8 +29,9 @@ try {
 // The upload API
 var upload = {
 
-	// Count how many times a photo is retried
+	// Count how many times a we've retried
 	retry_count: 0,
+	tickets_retry_count: 0,
 
 	// Flag set if a batch is cancelled
 	cancel: false,
@@ -41,6 +42,7 @@ var upload = {
 	progress_id: -1,
 	progress_last: 0,
 	progress_total: -1,
+	progress_zero: 0,
 
 	// Timeout watch
 	timeout_handle: null,
@@ -84,6 +86,9 @@ var upload = {
 
 		// Pass the photo to the API
 		var photo = photos.uploading[id];
+if (2 == photo.hidden) {
+	Components.utils.reportError('HIDDEN PHOTO HIDDEN PHOTO HIDDEN PHOTO: ' + photo.toSource());
+}
 		_api({
 			'async': 'async' == uploadr.conf.mode ? 1 : 0,
 			'auth_token': users.token,
@@ -114,6 +119,7 @@ var upload = {
 		if (null != upload.progress_handle) {
 			window.clearInterval(upload.progress_handle);
 			upload.progress_handle = null;
+			upload.progress_zero = 0;
 		}
 
 		// If no ticket came back, fail this photo
@@ -126,7 +132,8 @@ var upload = {
 			}
 
 			// Still have available retries
-			if (uploadr.conf.auto_retry_count > upload.retry_count) {
+			if (!upload.cancel && uploadr.conf.auto_retry_count > upload.retry_count) {
+				++upload.stats.errors;
 				++upload.retry_count;
 				upload.start(id);
 				if (uploadr.conf.console.retry) {
@@ -180,13 +187,13 @@ var upload = {
 	_sync: function(rsp, id) {
 
 		// Stop checking progress if we're in synchronous mode
-		if ('sync' == uploadr.conf.mode && null != upload.progress_handle) {
-			window.clearInterval(upload.progress_handle);
-			upload.progress_handle = null;
+		if ('sync' == uploadr.conf.mode) {
+			if (null != upload.progress_handle) {
+				window.clearInterval(upload.progress_handle);
+				upload.progress_handle = null;
+				upload.progress_zero = 0;
+			}
 		}
-
-		// Cancel the timeout
-		window.clearTimeout(upload.timeout_handle);
 
 		// How did the upload go?
 		var photo_id;
@@ -262,15 +269,16 @@ var upload = {
 		}
 		var a = stream.available() >> 10;
 		var kb = upload.progress_last - a;
+//Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService).logStringMessage(
+//	'upload.progress id: ' + id + ', kb: ' + kb
+//);
 
-		// Have we made any progress?  If so, push the timeout event further into the future
-		//   This is set to 1 kilobyte instead of 0 because some essentially dead connections will
-		//   send off a few bytes every now and then
-		if (1 < kb) {
-			window.clearTimeout(upload.timeout_handle);
-			upload.timeout_handle = window.setTimeout(function() {
-				upload.timeout(id);
-			}, uploadr.conf.timeout);
+		// Have we made any progress?
+		if (0 == kb) {
+			++upload.progress_zero;
+		}
+		if (uploadr.conf.timeout < uploadr.conf.check * upload.progress_zero) {
+			upload.timeout(id);
 		}
 		if (0 != upload.progress_last) {
 			photos.kb.sent += kb;
@@ -793,6 +801,7 @@ var flickr = {
 			_checkTickets: function(rsp) {
 				var again = false;
 				if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
+					upload.tickets_retry = 0;
 					var tickets = rsp.getElementsByTagName('uploader')[0].getElementsByTagName(
 						'ticket');
 					var ii = tickets.length;
@@ -842,7 +851,8 @@ var flickr = {
 					again = true;
 				}
 
-				if (again) {
+				if (again && uploadr.conf.tickets_retry_count > upload.tickets_retry_count) {
+					++upload.tickets_retry_count;
 					upload._check_tickets();
 				}
 				unblock_exit();

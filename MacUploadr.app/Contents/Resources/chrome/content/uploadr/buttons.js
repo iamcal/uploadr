@@ -72,6 +72,7 @@ var buttons = {
 				locale.getString('upload.cancel.ok'),
 				locale.getString('upload.cancel.cancel'))) {
 				upload.cancel = true;
+				upload._start(upload.progress_id);
 			}
 		}
 	}

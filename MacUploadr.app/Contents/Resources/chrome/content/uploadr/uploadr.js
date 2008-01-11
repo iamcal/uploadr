@@ -55,6 +55,9 @@ var uploadr = {
 		//   This is PER PHOTO and will be reset after each successful upload
 		auto_retry_count: 3,
 
+		// How many times should checkTickets retry before giving up?
+		tickets_retry_count: 10,
+
 		//
 		// Not advised to change below here
 		//
