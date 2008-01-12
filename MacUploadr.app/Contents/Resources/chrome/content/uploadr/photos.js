@@ -119,6 +119,9 @@ var photos = {
 			document.getElementById('photos_new').style.display = 'none';
 			document.getElementById('no_meta_prompt').style.visibility = 'visible';
 			mouse.show_photos();
+		} else {
+			document.getElementById('photos_init').style.display = '-moz-box';
+			document.getElementById('photos_new').style.display = 'none';
 		}
 	},
 	_add: function(path) {

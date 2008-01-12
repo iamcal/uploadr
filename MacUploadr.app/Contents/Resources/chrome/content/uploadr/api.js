@@ -86,8 +86,8 @@ var upload = {
 
 		// Pass the photo to the API
 		var photo = photos.uploading[id];
-if (2 == photo.hidden) {
-	Components.utils.reportError('HIDDEN PHOTO HIDDEN PHOTO HIDDEN PHOTO: ' + photo.toSource());
+if (1 != photo.hidden) {
+Components.utils.reportError('HIDDEN PHOTO HIDDEN PHOTO HIDDEN PHOTO ' + photo.toSource());
 }
 		_api({
 			'async': 'async' == uploadr.conf.mode ? 1 : 0,
@@ -269,9 +269,6 @@ if (2 == photo.hidden) {
 		}
 		var a = stream.available() >> 10;
 		var kb = upload.progress_last - a;
-//Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService).logStringMessage(
-//	'upload.progress id: ' + id + ', kb: ' + kb
-//);
 
 		// Have we made any progress?
 		if (0 == kb) {
