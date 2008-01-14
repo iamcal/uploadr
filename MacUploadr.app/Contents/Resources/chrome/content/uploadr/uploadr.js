@@ -21,7 +21,7 @@ var uploadr = {
 		// What types of API events should be written to the console?
 		console: {
 			request: true,
-			response: false,
+			response: true,
 			error: true,
 			timeout: true,
 			retry: true

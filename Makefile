@@ -8,7 +8,7 @@
 # GPL for more details (http://www.gnu.org/licenses/gpl.html)
 #
 
-VER := 3.0.2
+VER := 3.0.3
 SRC := MacUploadr.app/Contents
 PKG := ~/Desktop/build
 BUILD := $(PKG)/Flickr\ Uploadr.app/Contents
@@ -66,8 +66,6 @@ build:
 
 	# XULRunner
 	cp -R $(SRC)/Frameworks/XUL.framework $(BUILD)/Frameworks/
-#	ln -s ../Frameworks/XUL.framework/Versions/Current/xulrunner \
-#		$(BUILD)/MacOS/xulrunner
 	cp $(BUILD)/Frameworks/XUL.framework/Versions/Current/xulrunner \
 		$(BUILD)/MacOS/xulrunner
 	cp $(SRC)/Resources/application.ini $(BUILD)/Resources/

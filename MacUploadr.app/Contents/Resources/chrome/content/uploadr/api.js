@@ -86,9 +86,6 @@ var upload = {
 
 		// Pass the photo to the API
 		var photo = photos.uploading[id];
-if (1 != photo.hidden) {
-Components.utils.reportError('HIDDEN PHOTO HIDDEN PHOTO HIDDEN PHOTO ' + photo.toSource());
-}
 		_api({
 			'async': 'async' == uploadr.conf.mode ? 1 : 0,
 			'auth_token': users.token,
@@ -169,6 +166,7 @@ Components.utils.reportError('HIDDEN PHOTO HIDDEN PHOTO HIDDEN PHOTO ' + photo.t
 				upload.tickets_handle = null;
 				upload.tickets_delta = 1000;
 			}
+			upload.tickets_retry_count = 0;
 			upload.check_tickets();
 		}
 
@@ -240,7 +238,7 @@ Components.utils.reportError('HIDDEN PHOTO HIDDEN PHOTO HIDDEN PHOTO ' + photo.t
 		photos.uploading[id] = null;
 
 		// For the last upload, we have some cleanup to do
-		if ((upload.cancel || photos.ok + photos.fail == photos.uploading.length) &&
+		if ((upload.cancel || photos.ok == photos.uploading.length) &&
 			0 == upload.tickets_count) {
 			upload.done();
 		}
@@ -287,7 +285,9 @@ Components.utils.reportError('HIDDEN PHOTO HIDDEN PHOTO HIDDEN PHOTO ' + photo.t
 			photos.uploading[id].progress_bar.update(1 - a / upload.progress_total);
 		}
 		var percent = Math.max(0, Math.min(1, photos.kb.sent / photos.kb.total));
-		upload.progress_bar.update(percent);
+		if (null != upload.progress_bar) {
+			upload.progress_bar.update(percent);
+		}
 		if (100 == Math.round(100 * percent)) { // Why doesn't (1 == percent) work here?
 			document.getElementById('progress_text').value =
 				locale.getString('upload.waiting.status');
@@ -848,9 +848,24 @@ var flickr = {
 					again = true;
 				}
 
-				if (again && uploadr.conf.tickets_retry_count > upload.tickets_retry_count) {
-					++upload.tickets_retry_count;
-					upload._check_tickets();
+				if (again) {
+
+					// Valid response or still have retries remaining
+					if ('object' == typeof rsp) {
+						upload._check_tickets();
+					} else if (uploadr.conf.tickets_retry_count > upload.tickets_retry_count) {
+						++upload.tickets_retry_count;
+						upload._check_tickets();
+					}
+
+					// Need to call it quits
+					else {
+						upload.cancel = true;
+						upload.tickets_count = 0;
+						upload.tickets = {};
+						upload.done();
+					}
+
 				}
 				unblock_exit();
 			}
