@@ -1,5 +1,7 @@
 NOTES
 
+
+
 Expand gm.thumb to return the date taken as well for use in sorting
 	MySQL format would be nice, as that is string-sortable
 
