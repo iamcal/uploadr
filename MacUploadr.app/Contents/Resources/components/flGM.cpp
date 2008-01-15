@@ -88,7 +88,7 @@ string * conv_path(const nsAString & utf16, bool is_dir) {
 		// Try GetShortPathNameW to get ASCII in a wchar_t *
 		wchar_t short_arr[4096];
 		*short_arr = 0;
-		if (true || 0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
+		if (0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
 
 			// Try to find a TEMP directory
 			//   This would be the easy way except that it will never work

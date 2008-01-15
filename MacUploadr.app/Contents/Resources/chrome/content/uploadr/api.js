@@ -44,9 +44,6 @@ var upload = {
 	progress_total: -1,
 	progress_zero: 0,
 
-	// Timeout watch
-	timeout_handle: null,
-
 	// Ticket tracking
 	tickets: {},
 	tickets_count: 0,
@@ -74,6 +71,7 @@ var upload = {
 
 	// Upload a photo
 	start: function(id) {
+Components.utils.reportError('upload.start(' + id + ');');
 
 		// Update the UI
 		if (null == upload.progress_bar) {
@@ -116,8 +114,8 @@ var upload = {
 		if (null != upload.progress_handle) {
 			window.clearInterval(upload.progress_handle);
 			upload.progress_handle = null;
-			upload.progress_zero = 0;
 		}
+		upload.progress_zero = 0;
 
 		// If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
@@ -189,8 +187,8 @@ var upload = {
 			if (null != upload.progress_handle) {
 				window.clearInterval(upload.progress_handle);
 				upload.progress_handle = null;
-				upload.progress_zero = 0;
 			}
+			upload.progress_zero = 0;
 		}
 
 		// How did the upload go?
@@ -273,6 +271,7 @@ var upload = {
 			++upload.progress_zero;
 		}
 		if (uploadr.conf.timeout < uploadr.conf.check * upload.progress_zero) {
+Components.utils.reportError('uploadr.conf.timeout: ' + uploadr.conf.timeout + ', uploadr.conf.check: ' + uploadr.conf.check + ', upload.progress_zero: ' + upload.progress_zero);
 			upload.timeout(id);
 		}
 		if (0 != upload.progress_last) {
@@ -398,10 +397,11 @@ var upload = {
 
 	// Start to clean up after an upload finishes
 	done: function() {
-		window.clearTimeout(upload.timeout_handle);
-		upload.timeout_handle = null;
-		window.clearInterval(upload.progress_handle);
-		upload.progress_handle = null;
+		if (null != upload.progress_handle) {
+			window.clearInterval(upload.progress_handle);
+			upload.progress_handle = null;
+		}
+		upload.progress_zero = 0;
 
 		// Update the UI
 		upload.progress_bar.update(1);
@@ -1120,8 +1120,9 @@ var flickr = {
 
 };
 
-// Hash of timeouts being used to track running API calls
+// Hashes of timeouts and XHRs being used to track running API calls
 var _timeouts = {};
+//var _xhr = {};
 
 // The guts of the API object - this actually makes the XHR calls and finds the callback
 //   Callbacks are named exactly like the API method but with an _ in front of the last
@@ -1264,6 +1265,7 @@ var _api = function(params, url, browser, post, id) {
 
 					// If this is an upload
 					else {
+//						delete _xhr[id];
 						upload._start(rsp, id);
 					}
 
@@ -1288,6 +1290,7 @@ var _api = function(params, url, browser, post, id) {
 			upload.progress_handle = window.setInterval(function() {
 				upload.progress(mstream, id);
 			}, uploadr.conf.check);
+//			_xhr[id] = xhr;
 		}
 
 		// Setup timeout guard on everything else

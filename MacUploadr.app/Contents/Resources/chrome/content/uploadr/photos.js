@@ -243,6 +243,7 @@ var photos = {
 	//   The arguments will either both be null or both be set
 	//   If they're both set, this is an automated call to upload by the queue
 	upload: function(list, size) {
+Components.utils.reportError('photos.upload(' + list + ', ' + size + ');');
 		var from_user = null == list;
 		if (from_user) {
 			list = photos.list;
