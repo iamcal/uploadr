@@ -448,6 +448,8 @@ var meta = {
 
 	// Note default values in the meta panes
 	defaults: function(map) {
+
+		// Update the UI
 		var def = ' ' + locale.getString('meta.default');
 		for (var m in map) {
 			for each (var prefix in ['single_', 'batch_']) {
@@ -477,6 +479,21 @@ var meta = {
 				}
 			}
 		}
+
+		// Go through photos and turn null/NaN into these defaults
+		//   Null/NaN shows up on photos added before a user was logged in
+		var ii = photos.list.length;
+		for (var i = 0; i < ii; ++i) {
+			var p = photos.list[i];
+			if (null != p) {
+				for (var m in map) {
+					if (isNaN(p[m]) || null == p[m]) {
+						p[m] = map[m];
+					}
+				}
+			}
+		}
+
 	},
 
 	// Only show sets to logged-in users
