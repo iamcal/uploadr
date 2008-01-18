@@ -95,7 +95,7 @@ build:
 	cp $(SRC)/Resources/chrome/locale/branding/*.* locale/branding/
 	mkdir locale/$(INTL)
 	cp $(SRC)/Resources/chrome/locale/$(INTL)/*.* locale/$(INTL)/
-	sed 's/INTL/$(INTL)/g' $(SRC)/Resources/chrome/chrome.manifest.prod > \
+	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/chrome/chrome.manifest.prod > \
 		$(BUILD)/Resources/chrome/chrome.manifest
 	mkdir skin
 #	mkdir skin/hacks
