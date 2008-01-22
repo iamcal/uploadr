@@ -8,7 +8,7 @@
 # GPL for more details (http://www.gnu.org/licenses/gpl.html)
 #
 
-VER := 3.0.4
+VER := 3.0.5
 SRC := MacUploadr.app/Contents
 PKG := ~/Desktop/build
 BUILD := $(PKG)/Flickr\ Uploadr.app/Contents
