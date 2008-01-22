@@ -486,16 +486,17 @@ var upload = {
 		}
 
 		// Normalize the list of created sets
-		var i = 0;
+		var created_sets = [];
+		var created_sets_desc = [];
 		var ii = meta.created_sets.length;
-		while (i < ii) {
-			if (null == meta.created_sets[i]) {
-				meta.created_sets.shift();
-				meta.created_sets_desc.shift();
-			} else {
-				++i;
+		for (var i = 0; i < ii; ++i) {
+			if (null != meta.created_sets[i]) {
+				created_sets.push(meta.created_sets[i]);
+				created_sets_desc.push(meta.created_sets_desc[i]);
 			}
 		}
+		meta.created_sets = created_sets;
+		meta.created_sets_desc = created_sets_desc;
 
 		// If there is a batch queued up, start that batch, preserving the
 		// timestamps so that this looks like one big batch
