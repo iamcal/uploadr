@@ -180,7 +180,18 @@ FFmpeg
 Windows
 -------
 
-?
+Do all of the msys/mingw stuff to get up and running.
+
+  http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php
+
+Once that's all up and running, time to configure/make/install.
+
+  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
+    --enable-memalign-hack --enable-static --disable-shared
+  $ make && make install
+
+The Visual Studio project is setup to expect the MinGW bits for linking
+FFmpeg into the flGM XPCOM object.
 
 Mac
 ---
