@@ -8,17 +8,63 @@
 # GPL for more details (http://www.gnu.org/licenses/gpl.html)
 #
 
+INTL := $(filter de-de en-US es-us fr-fr it-it ko-kr pt-br zh-hk, $(MAKECMDGOALS))
+ifeq (de-de, $(INTL))
+INTL_SHORT := de
+endif
+ifeq (en-US, $(INTL))
+INTL_SHORT := en
+endif
+ifeq (es-us, $(INTL))
+INTL_SHORT := es
+endif
+ifeq (fr-fr, $(INTL))
+INTL_SHORT := fr
+endif
+ifeq (it-it, $(INTL))
+INTL_SHORT := it
+endif
+ifeq (ko-kr, $(INTL))
+INTL_SHORT := kr
+endif
+ifeq (pt-br, $(INTL))
+INTL_SHORT := br
+endif
+ifeq (zh-hk, $(INTL))
+INTL_SHORT := hk
+endif
+
+# The base of this path (everything up to INTL) must exist before running make
+PKG := ~/Desktop/build/$(INTL)
+
+# Version number for Uploadr
 VER := 3.0.5
+
+# Location of Mozilla tree
+MOZILLA := ~/mozilla
+
 SRC := MacUploadr.app/Contents
-PKG := ~/Desktop/build
-BUILD := $(PKG)/Flickr\ Uploadr.app/Contents
+APP := $(PKG)/Flickr\ Uploadr.app
+BUILD := $(APP)/Contents
 GM_VER := 1.1.10
 
-INTL := $(filter de-de en-US es-us fr-fr it-it ko-kr pt-br zh-hk, $(MAKECMDGOALS))
-
 all:
-	@echo "This target doesn't do anything!  Specify one of these:"
-	@echo "  <INTL> build     Copy everything of interest to ~/Desktop/build/"
+	make de-de build
+	make en-US build
+	make es-us build
+	make fr-fr build
+	make it-it build
+	make ko-kr build
+	make pt-br build
+	make zh-hk build
+	make de-de mar
+	make en-US mar
+	make es-us mar
+	make fr-fr mar
+	make it-it mar
+	make ko-kr mar
+	make pt-br mar
+	make zh-hk mar
 
 de-de:
 	@echo "Building German (de-de)"
@@ -46,9 +92,11 @@ zh-hk:
 
 build:
 
+	# Saving the previous version
+	rm -rf $(PKG)/old
+	mv $(APP) $(PKG)/old
+
 	# Package structure
-	rm -rf $(PKG)
-	mkdir $(PKG)
 	mkdir $(PKG)/Flickr\ Uploadr.app
 	ln -s /Applications $(PKG)/Applications
 	mkdir $(BUILD)
@@ -119,12 +167,26 @@ build:
 	cp $(SRC)/Resources/components/*.dylib $(BUILD)/Resources/components/
 	cp $(SRC)/Resources/components/*.js $(BUILD)/Resources/components/
 
-	# Record this build for posterity
-	rm -rf ~/Desktop/builds/$(INTL)/*
-	cp -R $(PKG)/Flickr\ Uploadr.app ~/Desktop/builds/$(INTL)/
-
 	# Copy to DMG
 	cp -R $(PKG)/* /Volumes/Flickr\ Uploadr\ $(VER)/
 	cp mac_installer/install-pane-$(INTL).png \
 		/Volumes/Flickr\ Uploadr\ $(VER)/.i.png
 	ln -s .i.png /Volumes/Flickr\ Uploadr\ $(VER)/i.png
+
+mar:
+
+	# Making MAR files
+	ln -s Flickr\ Uploadr.app $(PKG)/new
+	PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
+		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
+		$(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar $(PKG)/new
+	PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
+		$(MOZILLA)/tools/update-packaging/make_incremental_update.sh \
+		$(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar $(PKG)/old $(PKG)/new
+	rm $(PKG)/new
+
+	# Size and hash for the XML file
+	@ls -l $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | awk '{print "Complete size: ",$$5}'
+	@md5 $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | awk '{print "Complete MD5:  ",$$4}'
+	@ls -l $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | awk '{print "Partial size: ",$$5}'
+	@md5 $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | awk '{print "Partial MD5:  ",$$4}'

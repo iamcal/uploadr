@@ -18,8 +18,13 @@
 #include "exif.hpp"
 #include "iptc.hpp"
 
+// Goofy FFmpeg requires C linkage
+extern "C" {
+#include <avcodec.h>
+#include <avformat.h>
+}
+
 #include <stdlib.h>
-#include <iostream>
 #include <sstream>
 #include <string>
 #include <sys/stat.h>
@@ -369,6 +374,11 @@ void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 // Get a path/string ready to send back to JavaScript-land
 //   On Windows there is little to do, but Macs must go from UTF-8 to UTF-16
 void unconv_path(string & path_s, nsAString & _retval) {
+	size_t pos = path_s.find("###", 0);
+	while (string::npos != pos) {
+		path_s.replace(pos, 3, "{---THREE---POUND---DELIM---}");
+		pos = path_s.find("###", pos);
+	}
 	char * o = (char *)path_s.c_str();
 #ifdef XP_MACOSX
 	nsCString utf8;
@@ -431,7 +441,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 		// Get the path as a C++ string
 		path_s = conv_path(path, false);
-		if (0 == path_s) {
+		if (!path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}
 
@@ -519,7 +529,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			bw = img.baseRows();
 			bh = img.baseColumns();
 		}
-		int base = bw > bh ? bw : bh;
+//		int base = bw > bh ? bw : bh;
 		out1 << bw << "###" << bh << "###";
 
 		// EXIF date taken
@@ -533,14 +543,13 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		out1 << date_taken << "###";
 
 		// Thumbnail width and height
-		float r;
 		ostringstream dim;
 		if (bw > bh) {
-			r = (float)bh * (float)square / (float)bw;
+			float r = (float)bh * (float)square / (float)bw;
 			out1 << square << "###" << round(r);
 			dim << square << "x" << round(r);
 		} else {
-			r = (float)bw * (float)square / (float)bh;
+			float r = (float)bw * (float)square / (float)bh;
 			out1 << round(r) << "###" << square;
 			dim << round(r) << "x" << square;
 		}
@@ -567,7 +576,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 		// Create a new path
 		thumb_s = find_path(path_s, "-thumb");
-		if (0 == thumb_s) {
+		if (!thumb_s) {
 			return NS_ERROR_NULL_POINTER;
 		}
 		delete path_s; path_s = 0;
@@ -578,18 +587,18 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		}
 
 		// Find the sharpen sigma as the website does
-		double sigma;
-		if (base <= 800) {
-			sigma = 1.9;
-		} else if (base <= 1600) {
-			sigma = 2.85;
-		} else {
-			sigma = 3.8;
-		}
+//		double sigma;
+//		if (base <= 800) {
+//			sigma = 1.9;
+//		} else if (base <= 1600) {
+//			sigma = 2.85;
+//		} else {
+//			sigma = 3.8;
+//		}
 
 		// Create the actual thumbnail
 		img.scale(dim.str());
-		img.sharpen(1, sigma);
+//		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);
 		img.write(*thumb_s);
 
@@ -641,7 +650,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		}
 
 		path_s = conv_path(path, false);
-		if (0 == path_s) {
+		if (!path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}
 
@@ -657,7 +666,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 
 		// Create a new path
 		rotate_s = find_path(path_s, "-rotate");
-		if (0 == rotate_s) {
+		if (!rotate_s) {
 			return NS_ERROR_NULL_POINTER;
 		}
 
@@ -706,7 +715,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 	string * resize_s = 0;
 	try {
 		path_s = conv_path(path, false);
-		if (0 == path_s) {
+		if (!path_s) {
 			return NS_ERROR_INVALID_ARG;
 		}
 
@@ -762,7 +771,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 
 		// Create a new path
 		resize_s = find_path(path_s, "-resize");
-		if (0 == resize_s) {
+		if (!resize_s) {
 			return NS_ERROR_NULL_POINTER;
 		}
 		delete path_s; path_s = 0;
@@ -805,4 +814,161 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 	}
 	return NS_OK;
 
+}
+
+NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) {
+	string * path_s = conv_path(path, false);
+	if (!path_s) {
+		return NS_ERROR_INVALID_ARG;
+	}
+
+	// Open the file
+	av_register_all();
+	AVFormatContext *format_ctx;
+	if (av_open_input_file(&format_ctx, path_s->c_str(), 0, 0, 0)) {
+		return NS_ERROR_NULL_POINTER;
+	}
+	if (0 > av_find_stream_info(format_ctx)) {
+		return NS_ERROR_NULL_POINTER;
+	}
+	int stream = -1;
+	for (int i = 0; i < format_ctx->nb_streams; ++i) {
+		if (CODEC_TYPE_VIDEO == format_ctx->streams[i]->codec->codec_type) {
+			stream = i;
+			break;
+		}
+	}
+	if (-1 == stream) {
+		return NS_ERROR_NULL_POINTER;
+	}
+	AVCodecContext * codec_ctx = format_ctx->streams[stream]->codec;
+	AVCodec * codec = avcodec_find_decoder(codec_ctx->codec_id);
+	if (!codec) {
+		return NS_ERROR_NULL_POINTER;
+	}
+	if(0 > avcodec_open(codec_ctx, codec)) {
+		return NS_ERROR_NULL_POINTER;
+	}
+	AVFrame * video_frame = avcodec_alloc_frame();
+	AVFrame * img_frame = avcodec_alloc_frame();
+	if (!video_frame || !img_frame) {
+		return NS_ERROR_NULL_POINTER;
+	}
+	int bytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
+		codec_ctx->height);
+	uint8_t * buffer = (uint8_t *)av_malloc(bytes * sizeof(uint8_t));
+	if (!buffer) {
+		return NS_ERROR_NULL_POINTER;
+	}
+	avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
+		codec_ctx->width, codec_ctx->height);
+
+	// Play through 15% of the video
+	int64_t seek = (int64_t)(0.15 * (double)format_ctx->duration *
+		(double)codec_ctx->time_base.num / (double)codec_ctx->time_base.den);
+	int i = 0;
+	AVPacket packet;
+	int have_frame;
+	while (0 <= av_read_frame(format_ctx, &packet)) {
+		if (packet.stream_index == stream) {
+			avcodec_decode_video(codec_ctx, video_frame, &have_frame,
+				 packet.data, packet.size);
+			if (have_frame && seek == ++i) {
+				img_convert((AVPicture *)img_frame, PIX_FMT_RGB24,
+					(AVPicture*)video_frame, codec_ctx->pix_fmt,
+					codec_ctx->width, codec_ctx->height);
+
+				// Convert the keyframe to a PPM in a byte array
+				char header[32];
+				sprintf(header, "P6\n%d %d\n255\n", codec_ctx->width,
+					codec_ctx->height);
+				int size = strlen(header) + 3 * codec_ctx->width *
+					codec_ctx->height;
+				char * bytes = (char *)malloc(size);
+				if (!bytes) {
+					return NS_ERROR_NULL_POINTER;
+				}
+				memcpy(bytes, header, strlen(header));
+				char * bytes_p = bytes + strlen(header);
+				int b = codec_ctx->width * 3;
+				int jj = codec_ctx->height;
+				for (int j = 0; j < jj; ++j) {
+					memcpy(bytes_p, img_frame->data[0] + j *
+						img_frame->linesize[0], b);
+					bytes_p += b;
+				}
+
+				// Convert the PPM array to a JPEG on disk
+				string * thumb_s = 0;
+				try {
+					Magick::Image img(Magick::Blob(bytes, size));
+
+					// Output the size of the video and the embedded timestamp
+					int bw = img.baseColumns(), bh = img.baseRows();
+					ostringstream out;
+					out << "###" << bw << "###" << bh << "###"
+						<< format_ctx->timestamp << "###";
+
+					// Resize the output as a thumbnail
+					//   This is almost certainly overkill, as I've never
+					//   seen a video in portrait mode
+					ostringstream dim;
+					if (bw > bh) {
+						float r = (float)bh * (float)square / (float)bw;
+						out << square << "###" << round(r);
+						dim << square << "x" << round(r);
+					} else {
+						float r = (float)bw * (float)square / (float)bh;
+						out << round(r) << "###" << square;
+						dim << round(r) << "x" << square;
+					}
+					out << "###";
+
+					// Resize and save the thumbnail
+					img.scale(dim.str());
+					img.compressType(Magick::NoCompression);
+					path_s->append(".jpg");
+					thumb_s = find_path(path_s, "-thumb");
+					if (!thumb_s) {
+						return NS_ERROR_NULL_POINTER;
+					}
+					delete path_s; path_s = 0;
+					img.write(*thumb_s);
+
+					// If all went well, return stuff
+					string out_s = out.str();
+					char * o = (char *)out_s.c_str();
+					nsCString utf8;
+					while (*o) {
+						utf8.Append(*o++);
+					}
+					_retval.Append(NS_ConvertUTF8toUTF16(utf8));
+					unconv_path(*thumb_s, _retval);
+					delete thumb_s; thumb_s = 0;
+
+				} catch (Magick::Exception & e) {
+					delete path_s;
+					delete thumb_s;
+					char * o = (char *)e.what();
+					while (*o) {
+						_retval.Append(*o++);
+					}
+				}
+
+				free(bytes);
+				av_free_packet(&packet);
+				break;
+			}
+		}
+		av_free_packet(&packet);
+	}
+
+	// Clean yo' mess
+	av_free(buffer);
+	av_free(img_frame);
+	av_free(video_frame);
+	avcodec_close(codec_ctx);
+	av_close_input_file(format_ctx);
+
+	return NS_OK;
 }

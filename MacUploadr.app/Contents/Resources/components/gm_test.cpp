@@ -9,7 +9,7 @@
 #include "exif.hpp"
 #include "iptc.hpp"
 
-#include "nsStringAPI.h"
+//#include "nsStringAPI.h"
 
 using namespace std;
 

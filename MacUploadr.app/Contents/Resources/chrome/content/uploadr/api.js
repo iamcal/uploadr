@@ -99,7 +99,8 @@ var upload = {
 				'filename': photo.filename,
 				'path': photo.path
 			}
-		}, 'http://api.flickr.com/services/upload/', false, true, id);
+//		}, 'http://up.flickr.com/services/upload/', false, true, id);
+		}, 'http://api.dev.flickr.com/services/upload/', false, true, id);
 
 	},
 	_start: function(rsp, id) {
@@ -578,7 +579,8 @@ var upload = {
 
 		// If requested, open the site
 		if (go_to_flickr) {
-			launch_browser('http://flickr.com/photos/upload/done/?b=' +
+//			launch_browser('http://flickr.com/photos/upload/done/?b=' +
+			launch_browser('http://dev.flickr.com/photos/upload/done/?b=' +
 				upload.timestamps.earliest + '-' + upload.timestamps.latest +
 				'-' + users.nsid);
 		}
@@ -680,7 +682,8 @@ var flickr = {
 				_api({
 					'perms': 'write',
 					'frob': users.frob,
-				}, 'http://api.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
+//				}, 'http://api.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
+				}, 'http://api.dev.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
 				pages.go('auth');
 			}
 			buttons.login.enable();
@@ -769,6 +772,7 @@ var flickr = {
 				}
 				users.filesize = parseInt(user.getElementsByTagName(
 					'filesize')[0].getAttribute('maxkb'));
+Components.utils.reportError('users.filesize: ' + users.filesize);
 				sets = user.getElementsByTagName('sets')[0].getAttribute('remaining');
 				if ('lots' == sets) {
 					users.sets = -1;
@@ -1130,7 +1134,8 @@ var _api = function(params, url, browser, post, id) {
 		Components.utils.reportError('API REQUEST: ' + params.toSource());
 	}
 	if (null == url) {
-		url = 'http://api.flickr.com/services/rest/';
+//		url = 'http://api.flickr.com/services/rest/';
+		url = 'http://api.dev.flickr.com/services/rest/';
 	}
 	if (null == browser) {
 		browser = false;

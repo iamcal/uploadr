@@ -30,7 +30,7 @@ var drag = {
 						process_dir(f.directoryEntries);
 					} else {
 						var path = f.QueryInterface(Ci.nsILocalFile).path;
-						if (photos.is_photo(path)) {
+						if (photos.can_has(path)) {
 							paths.push(path);
 						}
 					}
@@ -42,7 +42,7 @@ var drag = {
 					process_dir(d.first.data.directoryEntries);
 				} else {
 					var path = d.first.data.QueryInterface(Ci.nsILocalFile).path;
-					if (photos.is_photo(path)) {
+					if (photos.can_has(path)) {
 						paths.push(path);
 					}
 				}

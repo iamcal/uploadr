@@ -32,11 +32,7 @@ id="dock" title="" width="0" height="0">
 
 				// Add this photo, converting file:// URL to a native path
 				var arg = window.arguments[0];
-				if (win && win.photos.is_photo(arg)) {
-					if (/^file:\/\//.test(arg)) {
-						arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-							Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;
-					}
+				if (win && win.photos.can_has(arg)) {
 					win.threads.worker.dispatch(new win.PhotoAdd(arg),
 						win.threads.worker.DISPATCH_NORMAL);
 					window.close();

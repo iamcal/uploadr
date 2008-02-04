@@ -228,8 +228,17 @@ var meta = {
 	_enable: function() {
 		document.getElementById('no_meta').style.display = 'none';
 		buttons.remove.enable();
-		document.getElementById('t_rotate_l').className = 'enabled';
-		document.getElementById('t_rotate_r').className = 'enabled';
+
+		// Only allow rotation for photos or mixed selections
+		var have_photos = false;
+		for each (var i in photos.selected) {
+			have_photos = photos.is_photo(photos.list[i].path) ? true : have_photos;
+		}
+		if (have_photos) {
+			document.getElementById('t_rotate_l').className = 'enabled';
+			document.getElementById('t_rotate_r').className = 'enabled';
+		}
+
 	},
 
 	// Disable the right-side metadata column on the photos page

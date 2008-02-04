@@ -174,6 +174,74 @@ Mac
 
 
 
+FFmpeg
+------------------------------------------------------------------------
+
+Windows
+-------
+
+?
+
+Mac
+---
+
+This configure line works but uses the *.dylib files.
+
+  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
+    --disable-mmx --disable-static --enable-shared
+
+This configure line can build static ff_test but not static flGM.
+
+  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
+    --disable-mmx --enable-static --disable-shared
+
+This configure line is no change over the above.  Additionally, using
+the '-read_only_relocs suppress' option with flGM itself doesn't help.
+
+  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
+    --disable-mmx --enable-static --disable-shared \
+    --extra-ldflags='-read_only_relocs suppress'
+
+Found a way to keep even ffmpeg from building.
+
+  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
+    --disable-mmx --enable-static --disable-shared \
+    --extra-ldflags='-read_only_relocs suppress' --extra-cflags=-fno-common
+  $ cp config.mak config.mak.sav
+  $ sed 's/-mdynamic-no-pic//g' config.mak.sav > config.mak
+  $ make
+    ...
+    cabac.h: In function 'get_cabac_noinline':
+    cabac.h:529: error: PIC register '%ebx' clobbered in 'asm'
+
+The issue lies in -mdynamic-no-pic, which is used (and needed?) to build
+ffmpeg.  ff_test will build when flGM will not because -mdynamic-no-pic
+can't be used to build shared libraries.
+
+People working on Blender seem to have similar issues so I'm going to
+try removing -fPIC as they suggest.
+
+  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
+    --disable-vhook --disable-mmx --enable-static --disable-shared \
+    --extra-ldflags='-read_only_relocs suppress' --extra-cflags=-fno-common
+  $ cp config.mak config.mak.sav
+  $ sed 's/-mdynamic-no-pic//g' config.mak.sav | \
+    sed 's/-fPIC//g' > config.mak
+
+That doesn't work - I get the same %ebx error as above.
+
+After again asking the smarter people on #xulrunner, I started from
+scratch on FFmpeg.  This works:
+
+  $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
+  $ cd ffmpeg
+  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
+    --disable-vhook --disable-mmx --enable-static --disable-shared \
+    --extra-cflags=-fno-common
+  $ make && sudo make install
+
+
+
 Building XPCOM components
 ------------------------------------------------------------------------
 
@@ -198,8 +266,8 @@ defined in:
 Building Flickr Uploadr
 ------------------------------------------------------------------------
 
-Win
----
+Windows
+-------
 
 On Windows, there is very little left to be done.  The root of your
 application is actually:
@@ -214,3 +282,48 @@ Mac
 
 On Mac, the app can be launched by double-clicking on MacUploadr.app
 in Finder.
+
+
+
+Software Update Service
+------------------------------------------------------------------------
+
+Windows
+-------
+
+?
+
+Mac
+---
+
+Info on how to build MAR files is here:
+
+  http://wiki.mozilla.org/Software_Update:HowToManuallyGenerateMARFiles
+
+Start with your mozconfig file, XULRunner style:
+
+  http://developer.mozilla.org/en/docs/XULRunner:Build_Instructions
+
+Then a regular Mozilla build environment, following these:
+
+  http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prerequisites
+
+Altogether, at this point it should look like this:
+
+  ~/.mozconfig:
+  mk_add_options MOZ_CO_PROJECT=all
+  ac_add_options --with-macos-sdk=/Developer/SDKs/MacOSX10.4u.sdk
+  ac_add_options --disable-javaxpcom
+  ac_add_options --enable-application=xulrunner
+
+  $ cvs -d :pserver:anonymous:anonymous@cvs-mirror.mozilla.org:/cvsroot co \
+    mozilla/client.mk
+  $ cd mozilla
+  $ make -f client.mk checkout
+  $ make -f client.mk build
+
+There may be an easier way, something like what Songbird does:
+
+  http://publicsvn.songbirdnest.com/browser/trunk/build/mozconfig/ \
+    xulrunner.windows.debug.i686.mozconfig
+

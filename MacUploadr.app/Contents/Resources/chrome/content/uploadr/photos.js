@@ -64,8 +64,16 @@ var photos = {
 		var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
-		fp.appendFilters(Ci.nsIFilePicker.filterImages);
-		fp.appendFilter('TIFF', 'tiff; TIFF; tif; TIF');
+		var can_has_video = 'object' == typeof users.is_pro || users.is_pro;
+Components.utils.reportError('can_has_video: ' + can_has_video);
+		if (can_has_video) {
+			fp.appendFilter('Photos and Videos',
+				'jpeg; jpg; gif; png; tiff; tif; bmp; mp4; mpeg; mpg; avi; wmv; mov; dv; 3gp');
+		}
+		fp.appendFilter('Photos', 'jpeg; jpg; gif; png; tiff; tif; bmp');
+		if (can_has_video) {
+			fp.appendFilter('Videos', 'mp4; mpeg; mpg; avi; wmv; mov; dv; 3gp');
+		}
 		fp.displayDirectory = def;
 		var res = fp.show();
 		if (Ci.nsIFilePicker.returnOK == res) {
@@ -73,7 +81,7 @@ var photos = {
 			var paths = [];
 			while (files.hasMoreElements()) {
 				var arg = files.getNext().QueryInterface(Ci.nsILocalFile).path;
-				if (photos.is_photo(arg)) {
+				if (photos.can_has(arg)) {
 					paths.push(arg);
 				}
 			}
@@ -97,11 +105,19 @@ var photos = {
 		buttons.upload.disable();
 		var ii = paths.length;
 		for (var i = 0; i < ii; ++i) {
+			var p;
 			if ('object' == typeof paths[i]) {
-				photos._add(paths[i].path);
-				photos.list[photos.list.length - 1] = paths[i];
+				p = paths[i].path;
 			} else {
-				photos._add(paths[i]);
+				p = paths[i];
+			}			
+			if (/^file:\/\//.test(p)) {
+				p = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
+					Ci.nsIFileProtocolHandler).getFileFromURLSpec(p).path;
+			}
+			photos._add(p);
+			if ('object' == typeof paths[i]) {
+				photos.list[photos.list.length - 1] = paths[i];
 			}
 		}
 		photos.normalize();
@@ -150,7 +166,7 @@ var photos = {
 		list.insertBefore(li, list.firstChild);
 
 		// Create and show the thumbnail
-		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumbSize, path),
+		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumb_size, path),
 			threads.worker.DISPATCH_NORMAL);
 
 	},
@@ -224,16 +240,18 @@ var photos = {
 		// For each selected image, show the loading spinner and dispatch the rotate job
 		buttons.upload.disable();
 		for (var i = 0; i < ii; ++i) {
-			block_sort();
 			var p = photos.list[s[i]];
-			photos.batch_size -= p.size;
-			var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
-			img.className = 'loading';
-			img.setAttribute('width', 16);
-			img.setAttribute('height', 8);
-			img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
-			threads.worker.dispatch(new Rotate(p.id, degrees, uploadr.conf.thumbSize,
-				p.path), threads.worker.DISPATCH_NORMAL);
+			if (photos.is_photo(p.path)) {
+				block_sort();
+				photos.batch_size -= p.size;
+				var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
+				img.className = 'loading';
+				img.setAttribute('width', 16);
+				img.setAttribute('height', 8);
+				img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
+				threads.worker.dispatch(new Rotate(p.id, degrees, uploadr.conf.thumb_size,
+					p.path), threads.worker.DISPATCH_NORMAL);
+			}
 		}
 		threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
 
@@ -263,6 +281,11 @@ var photos = {
 			}
 		}
 
+		// Drop videos if we're a free user
+		if (!users.is_pro) {
+			
+		}
+
 		// Decide if we're already in the midst of an upload
 		var not_started = 0 == photos.uploading.length;
 
@@ -274,25 +297,33 @@ var photos = {
 			var ready_size = 0;
 			for each (var p in list) {
 				if (null != p) {
+					if (photos.is_photo(p.path)) {
 
-					// Resize because of user settings
-					if (null != settings.resize && -1 != settings.resize &&
-						(p.width > settings.resize || p.height > settings.resize)) {
-						resizing = true;
-						threads.worker.dispatch(new Resize(p.id, settings.resize,
-							p.path), threads.worker.DISPATCH_NORMAL);
+						// Resize because of user settings
+						if (null != settings.resize && -1 != settings.resize &&
+							(p.width > settings.resize || p.height > settings.resize)) {
+							resizing = true;
+							threads.worker.dispatch(new Resize(p.id, settings.resize,
+								p.path), threads.worker.DISPATCH_NORMAL);
+						}
+
+						// Resize because of upload limits
+						else if (p.size > users.filesize) {
+							resizing = true;
+							threads.worker.dispatch(new Resize(p.id, -1, p.path),
+								threads.worker.DISPATCH_NORMAL);
+						}
+
+						// Not resizing so record size now
+						else {
+							ready_size += p.size;
+						}
+
 					}
 
-					// Resize because of upload limits
-					else if (p.size > users.filesize) {
-						resizing = true;
-						threads.worker.dispatch(new Resize(p.id, -1, p.path),
-							threads.worker.DISPATCH_NORMAL);
-					}
-
-					// Not resizing so record size now
-					else {
-						ready_size += p.size;
+					// Videos have special rules
+					else if (photos.is_video(p.path)) {
+						// TODO: What do we do with a video bigger than 100MB?
 					}
 
 					ready.push(p);
@@ -514,7 +545,32 @@ var photos = {
 
 	// Decide if a given path is a photo
 	is_photo: function(path) {
-		return /.+\.(jpe?g|tiff?|gif|png|bmp)$/i.test(path);
+		return /\.(jpe?g|tiff?|gif|png|bmp)$/i.test(path);
+	},
+
+	// Similarly, is it a video
+	is_video: function(path) {
+		return /\.(mp4|mpe?g|avi|wmv|mov|dv|3gp)$/i.test(path);
+	},
+
+	// More complicated test to see if a user can add the given file
+	can_has: function(path) {
+		if (users.username) {
+			if (users.is_pro) {
+Components.utils.reportError('can_has: pro');
+				return photos.is_photo(path) || photos.is_video(path);
+			} else {
+Components.utils.reportError('can_has: not pro');
+				return photos.is_photo(path);
+			}
+		} else {
+Components.utils.reportError('can_has: offline');
+
+			// TODO: Special dialog informing them that we're going to drop
+			// videos if it turns out they're not pro
+
+			return photos.is_photo(path) || photos.is_video(path);
+		}
 	}
 
 };

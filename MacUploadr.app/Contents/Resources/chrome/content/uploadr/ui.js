@@ -59,6 +59,7 @@ var help = {
 	},
 
 	tips: function() {
+		mouse.show_photos();
 		pages.go('help');
 	},
 
@@ -103,7 +104,9 @@ var ProgressBar = function(id, width) {
 ProgressBar.prototype = {
 	update: function(percent) {
 		var bar = document.getElementById(this.id);
-		bar.width = Math.round(this.width * Math.max(0, Math.min(1, percent)));
+		if (null != bar) {
+			bar.width = Math.round(this.width * Math.max(0, Math.min(1, percent)));
+		}
 	},
 	clear: function() {
 		this.update(0);
@@ -183,11 +186,13 @@ var status = {
 var locale = document.getElementById('locale');
 
 // Now hack locale.getFormattedString to work like it should
+//   Apparently the docs were just wrong and it must be a capital S
+//   So, this function will go away eventually
 locale.getFormattedString = function(id, args) {
 	var str = locale.getString(id);
 	var ii = args.length;
 	for (var i = 0; i < ii; ++i) {
-		var regex = new RegExp('%' + (i + 1) + '\\$[ds]');
+		var regex = new RegExp('%' + (i + 1) + '\\$[dDsS]');
 		str = str.replace(regex, args[i]);
 	}
 	return str;

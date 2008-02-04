@@ -28,7 +28,7 @@ var uploadr = {
 		},
 
 		// Size of thumbnails
-		thumbSize: 100,
+		thumb_size: 100,
 
 		// Scrolling threshold for dragging (pixels);
 		scroll: 20,
@@ -61,6 +61,9 @@ var uploadr = {
 		//
 		// Not advised to change below here
 		//
+
+		// Maximum size of a video upload (megabytes)
+		video_max: 100,
 
 		// Upload mode
 		//   Must be 'sync' or 'async'

@@ -2,62 +2,9 @@ NOTES
 
 
 
-Expand gm.thumb to return the date taken as well for use in sorting
-	MySQL format would be nice, as that is string-sortable
-
 Offer a preference to not create thumbnails in the name of speed
-	Accomplish this with special case param of thumbSize = 0 to gm.thumb
+	Accomplish this with special case param of thumb_size = 0 to gm.thumb
 	This will still return the date taken but will not actually do the thumbing
-
-As of 8-21-2007
-	Thumbing 127 8 MP JPEGs
-		Uploadr 3 Mac		97 seconds
-		Uploadr 3 Win		278 seconds
-		Uploadr 2.5 Win		312 seconds
-
-
-
-9-7-2007 meeting with Gino & Stewart
-
-Make sure it's smart when network drops
-*** Partial batch tagging - tag a >1 photo selection all at once - append to individual tags
-Tooltips on toolbar buttons
-Save state of unuploaded photos on exit
-Tabs for batches (two total - the uploading batch and the editing batch)
-	When you start upload, create a new tab for the next batch
-	jUploadr/Chronic style photo progress indication
-	User must DO SOMETHING to get to the new batch once uploading starts (button to switch tabs)
-Ordering options instead of a default
-	Date taken (fallback to alpha if date taken not available)
-	Let me order them
-	Reverse the current thing
-
-Twiki page!
-
-Look into embedding Flash into the Uploadr - Picnik
-
-
-
-Drag selecting photos
-	I couldn't figure out any way other than hardcoding the offsets to make the box actually
-	track the cursor.  document.getElementById('photos').offsetTop isn't set?!
-
-
-
-9-12-2007 meeting with Gino & Stewart
-
-Partial batch metadata
-	Overwrite titles always
-	Append to description always (prefix with \n\n)
-		Could have a pref for append/overwrite for description - nah
-	Confirmation on clicking save
-	*** Make blank title or description not overwrite each photo ***
-		Do all partial batches like the changed_* checks in settings.js
-	"Leave unchanged" checkbox for privacy metadata that unchecks if they change something
-Re-adding to a batch after failure
-	Preserve order in the queue, which is the order they wanted
-Add add-to-set option for each photo and for partial batches
-Nix the per-photo resize options
 
 
 
@@ -132,18 +79,65 @@ exif["Exif.Image.Orientation"] = uint32_t(orient);
 
 
 
-Rough speed tests 2007-10-31
-	Thumbing 7 photos
-		Uploadr 2.3		Mac		3s
-		Uploadr 3.0		Mac		5s
-		Uploadr 2.3		PPC		7s
-		Uploadr 3.0		PPC		s
-		Uploadr 2.5		Win		7s
-		Uploadr 3.0		Win		13s
-
-
-
 Files changed in my hacked up XULRunner locales
 	locale/xx-xx/global/dialog.properties
 	locale/xx-xx/global/wizard.dtd
 	locale/xx-xx/mozapps/update/*
+
+
+
+Errors building FFmpeg into XPCOM:
+
+ld: common symbols not allowed with MH_DYLIB output format with the -multi_module option
+/usr/local/lib/libavcodec.a(dsputil_mmx.o) definition of common _mm_flags (size 16)
+/usr/local/lib/libavcodec.a(h261.o) definition of common _ff_h261_rl_table_store (size 400)
+/usr/local/lib/libavcodec.a(cabac.o) definition of common _ff_h264_lps_range (size 512)
+/usr/local/lib/libavcodec.a(cabac.o) definition of common _ff_h264_mlps_state (size 256)
+/usr/local/lib/libavcodec.a(mpeg12.o) definition of common _ff_mpeg12_static_rl_table_store (size 784)
+/usr/local/lib/libavcodec.a(msmpeg4data.o) definition of common _ff_msmp4_dc_chroma_vlc (size 32)
+/usr/local/lib/libavcodec.a(msmpeg4data.o) definition of common _ff_msmp4_dc_luma_vlc (size 32)
+/usr/local/lib/libavcodec.a(msmpeg4data.o) definition of common _ff_msmp4_mb_i_vlc (size 16)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_4mv_block_pattern_vlc (size 64)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_ac_coeff_table (size 128)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_bfraction_vlc (size 16)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_cbpcy_p_vlc (size 64)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_imode_vlc (size 16)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_mv_diff_vlc (size 64)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_norm2_vlc (size 16)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_norm6_vlc (size 16)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_subblkpat_vlc (size 48)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_ttblk_vlc (size 48)
+/usr/local/lib/libavcodec.a(vc1data.o) definition of common _ff_vc1_ttmb_vlc (size 48)
+/usr/local/lib/libavcodec.a(msmpeg4.o) definition of common _ff_inter_intra_vlc (size 16)
+/usr/local/lib/libavcodec.a(msmpeg4.o) definition of common _ff_mb_non_intra_vlc (size 64)
+/usr/local/lib/libavcodec.a(cabac.o) definition of common _ff_h264_lps_state (size 128)
+/usr/local/lib/libavcodec.a(cabac.o) definition of common _ff_h264_mps_state (size 128)
+/usr/bin/libtool: internal link edit command failed
+
+
+
+ld: Undefined symbols:
+__Z11img_convertP9AVPictureiPKS_iii
+__Z12avcodec_openP14AVCodecContextP7AVCodec
+__Z13av_read_frameP15AVFormatContextP8AVPacket
+__Z13avcodec_closeP14AVCodecContext
+__Z14avpicture_fillP9AVPicturePhiii
+__Z15av_register_allv
+__Z18av_open_input_filePP15AVFormatContextPKcP13AVInputFormatiP18AVFormatParameters
+__Z18avpicture_get_sizeiii
+__Z19av_close_input_fileP15AVFormatContext
+__Z19av_find_stream_infoP15AVFormatContext
+__Z19avcodec_alloc_framev
+__Z20avcodec_decode_videoP14AVCodecContextP7AVFramePiPhi
+__Z20avcodec_find_decoder7CodecID
+__Z7av_freePv
+__Z9av_mallocj
+
+
+
+Software Update
+
+Partials are broken.  Eh.
+
+
+

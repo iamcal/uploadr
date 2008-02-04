@@ -34,22 +34,27 @@ var threads = {
 };
 
 // Thumbnail thread wrapper
-var Thumb = function(id, thumbSize, path, auto_select) {
+var Thumb = function(id, thumb_size, path, auto_select) {
 	this.id = id;
-	this.thumbSize = thumbSize;
+	this.thumb_size = thumb_size;
 	this.path = path;
-	if (null == auto_select) {
-		this.auto_select = false;
-	} else {
-		this.auto_select = auto_select;
-	}
+	this.auto_select = null == auto_select ? false : auto_select;
 };
 Thumb.prototype = {
 	run: function() {
 		try {
+			var result;
 
-			// Create a thumbnail and pass the result back to the UI thread
-			var result = threads.gm.thumb(this.thumbSize, this.path);
+			// Thumbnail your photos
+			if (photos.is_photo(this.path)) {
+				result = threads.gm.thumb(this.thumb_size, this.path);
+			}
+
+			// But get a keyframe for videos
+			else if (photos.is_video(this.path)) {
+				result = threads.gm.keyframe(this.thumb_size, this.path);
+			}
+
 			threads.main.dispatch(new ThumbCallback(this.id, result, this.auto_select),
 				threads.main.DISPATCH_NORMAL);
 
@@ -76,6 +81,7 @@ ThumbCallback.prototype = {
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
+Components.utils.reportError('result: ' + this.result);
 			var thumb = this.result.split('###');
 
 			// Get this photo from the DOM and remove its loading class
@@ -94,7 +100,9 @@ ThumbCallback.prototype = {
 
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
-				if ('' == thumb[3]) {
+				if (/\d{4}:\d{2}:\d{2} \d{2}:\d{2}:\d{2}/.test(thumb[3])) {
+					photos.list[this.id].date_taken = thumb[3];
+				} else {
 					var f = Cc['@mozilla.org/file/local;1'].createInstance(
 						Ci.nsILocalFile);
 					f.initWithPath(photos.list[this.id].path);
@@ -112,8 +120,6 @@ ThumbCallback.prototype = {
 					photos.list[this.id].date_taken = mod.getFullYear() +
 						':' + month + ':' + day + ' ' + hours + ':' +
 						minutes + ':' + seconds;
-				} else {
-					photos.list[this.id].date_taken = thumb[3];
 				}
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
@@ -182,6 +188,8 @@ ThumbCallback.prototype = {
 				photos.batch_size += photos.list[this.id].size;
 				free.update();
 
+Components.utils.reportError('photos.list[this.id]: ' + photos.list[this.id].toSource());
+
 			}
 
 			// If unsuccessful, replace with the error image
@@ -217,10 +225,10 @@ ThumbCallback.prototype = {
 };
 
 // Rotate thread wrapper
-var Rotate = function(id, degrees, thumbSize, path) {
+var Rotate = function(id, degrees, thumb_size, path) {
 	this.id = id;
 	this.degrees = degrees;
-	this.thumbSize = thumbSize;
+	this.thumb_size = thumb_size;
 	this.path = path;
 };
 Rotate.prototype = {
@@ -239,7 +247,7 @@ Rotate.prototype = {
 			} else {
 				threads.main.dispatch(new RotateCallback(this.id, rotate[1]),
 					threads.main.DISPATCH_NORMAL);
-				result = threads.gm.thumb(this.thumbSize,
+				result = threads.gm.thumb(this.thumb_size,
 					rotate[1]);
 				threads.main.dispatch(new ThumbCallback(this.id, result,
 					uploadr.conf.auto_select_after_rotate),
@@ -392,7 +400,7 @@ ResizeCallback.prototype = {
 			var resize = this.result.match(/^([0-9]+)x([0-9]+)(.+)$/);
 
 			if (null == resize) {
-				Components.utils.reportError(result);
+				Components.utils.reportError(this.result);
 			} else {
 				list = photos.ready[photos.ready.length - 1];
 

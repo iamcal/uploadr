@@ -20,11 +20,7 @@ var clh = function(queue) {
 	var paths = [];
 	for (var i = 0; i < ii; ++i) {
 		var arg = queue[i];
-		if (photos.is_photo(arg)) {
-			if (/^file:\/\//.test(arg)) {
-				arg = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-					Ci.nsIFileProtocolHandler).getFileFromURLSpec(arg).path;
-			}
+		if (photos.can_has(arg)) {
 			paths.push(arg);
 		}
 	}

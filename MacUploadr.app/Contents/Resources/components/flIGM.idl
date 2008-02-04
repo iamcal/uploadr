@@ -16,4 +16,5 @@ interface flIGM : nsISupports {
 	AString thumb(in long square, in AString path);
 	AString rotate(in long degrees, in AString path);
 	AString resize(in long square, in AString path);
+	AString keyframe(in long square, in AString path);
 };
