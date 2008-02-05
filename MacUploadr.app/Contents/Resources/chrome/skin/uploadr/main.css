@@ -639,6 +639,7 @@ div.toolbarseparator {
 /*
  * Tips and tricks page
  */
+
 #page_help {
 	display: none;
 	padding: 24px;
@@ -657,6 +658,12 @@ div.toolbarseparator {
 #page_help p {
 	font-size: 14px;
 }
+
+
+
+/*
+ * Throbbing menu item during updates?  Cal?
+ */
 
 #menu_updates[loading="true"] {
   list-style-image: url("chrome://global/skin/throbber/Throbber-small.gif");

@@ -68,11 +68,11 @@ var photos = {
 Components.utils.reportError('can_has_video: ' + can_has_video);
 		if (can_has_video) {
 			fp.appendFilter('Photos and Videos',
-				'jpeg; jpg; gif; png; tiff; tif; bmp; mp4; mpeg; mpg; avi; wmv; mov; dv; 3gp');
+				'*.jpeg; *.JPEG; *.jpg; *.JPG; *.gif; *.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; *.TIF; *.bmp; *.BMP; *.mp4; *.MP4; *.mpeg; *.MPEG; *.mpg; *.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; *.dv; *.DV; *.3gp; *.3GP');
 		}
-		fp.appendFilter('Photos', 'jpeg; jpg; gif; png; tiff; tif; bmp');
+		fp.appendFilter('Photos', '*.jpeg; *.JPEG; *.jpg; *.JPG; *.gif; *.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; *.TIF; *.bmp; *.BMP');
 		if (can_has_video) {
-			fp.appendFilter('Videos', 'mp4; mpeg; mpg; avi; wmv; mov; dv; 3gp');
+			fp.appendFilter('Videos', '*.mp4; *.MP4; *.mpeg; *.MPEG; *.mpg; *.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; *.dv; *.DV; *.3gp; *.3GP');
 		}
 		fp.displayDirectory = def;
 		var res = fp.show();

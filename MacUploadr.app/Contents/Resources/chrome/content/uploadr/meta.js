@@ -68,8 +68,8 @@ var meta = {
 			li.appendChild(document.createTextNode(
 				locale.getString('meta.sets.added.none')));
 			ul.appendChild(li);
-			document.getElementById('batch_sets_create').style.visibility =
-				meta.created_sets.length == users.sets ? 'hidden' : 'visible';
+			document.getElementById('batch_sets_create').style.display =
+				meta.created_sets.length < users.sets ? 'block' : 'none';
 
 		}
 
@@ -136,8 +136,8 @@ var meta = {
 					ul.appendChild(li);
 				}
 			}
-			document.getElementById('single_sets_create').style.visibility =
-				meta.created_sets.length == users.sets ? 'hidden' : 'visible';
+			document.getElementById('single_sets_create').style.display =
+				meta.created_sets.length < users.sets ? 'block' : 'none';
 
 		}
 
@@ -507,14 +507,14 @@ var meta = {
 
 	// Only show sets to logged-in users
 	login: function() {
-		document.getElementById('hide_single_sets').style.visibility = 'visible';
-		document.getElementById('hide_batch_sets').style.visibility = 'visible';
+		document.getElementById('hide_single_sets').style.display = '-moz-box';
+		document.getElementById('hide_batch_sets').style.display = '-moz-box';
 		document.getElementById('hide_single_explain').style.display = 'none';
 		document.getElementById('hide_batch_explain').style.display = 'none';
 	},
 	logout: function() {
-		document.getElementById('hide_single_sets').style.visibility = 'hidden';
-		document.getElementById('hide_batch_sets').style.visibility = 'hidden';
+		document.getElementById('hide_single_sets').style.display = 'none';
+		document.getElementById('hide_batch_sets').style.display = 'none';
 		document.getElementById('hide_single_explain').style.display = '-moz-box';
 		document.getElementById('hide_batch_explain').style.display = '-moz-box';
 	}
