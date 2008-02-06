@@ -41,3 +41,13 @@ dialog {
 	margin: 15px 0 0 0;
 	background: url(logo_flickr.png) no-repeat;
 }
+
+
+
+/*
+ * Special video dialogs are wider
+ */
+
+#dialog_video_add_offline, #dialog_video_add_free, #dialog_video_add_restricted {
+	width: 500px;
+}

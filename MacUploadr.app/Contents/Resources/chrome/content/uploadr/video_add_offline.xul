@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+
+Flickr Uploadr
+
+Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
+software; you can redistribute it and/or modify it under the terms of the
+GNU General Public License (GPL), version 2 only.  This library is
+distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
+-->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://uploadr/skin/dialog.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
+<dialog id="dialog_video_add_offline" title=""
+xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept,cancel,extra1"
+ondialogaccept="window.arguments[4].result = true; return true;"
+ondialogcancel="window.arguments[4].result = false; return true;" onload="
+var d = document.getElementById('dialog_video_add_offline');
+
+// Title
+document.getElementById('title').firstChild.nodeValue = window.arguments[0];
+d.setAttribute('title', window.arguments[0]);
+
+
+
+window.arguments[0]
+window.arguments[1]
+window.arguments[2]
+window.arguments[3]
+window.arguments[4]
+window.arguments[5]
+window.arguments[6]
+window.arguments[7]
+
+moveToAlertPosition();
+">
+	<html:h3 id="title"> </html:h3>
+	<description id="msg"> </description>
+	
+</dialog>

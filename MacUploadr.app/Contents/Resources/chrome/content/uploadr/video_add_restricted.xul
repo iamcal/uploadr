@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+
+Flickr Uploadr
+
+Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
+software; you can redistribute it and/or modify it under the terms of the
+GNU General Public License (GPL), version 2 only.  This library is
+distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
+-->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://uploadr/skin/dialog.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
+<dialog id="dialog_video_add_restricted" title=""
+xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept,cancel,extra1"
+ondialogaccept="window.arguments[8].result = 'add'; return true;"
+ondialogcancel="window.arguments[8].result = 'dontadd'; return true;"
+ondialogextra1="window.arguments[8].result = 'forget'; window.close();">
+	<script><![CDATA[
+	window.addEventListener('load', function() {
+		var d = document.getElementById('dialog_video_add_restricted');
+
+		// Title
+		document.getElementById('title').firstChild.nodeValue = window.arguments[0];
+		d.title = window.arguments[0];
+
+		// Explanation and action
+		document.getElementById('explain').firstChild.nodeValue = window.arguments[1];
+		document.getElementById('action').firstChild.nodeValue = window.arguments[2];
+
+		// Note
+		if ('' == window.arguments[3]) {
+			document.getElementById('note').style.display = 'none';
+		} else {
+			document.getElementById('note').firstChild.nodeValue = window.arguments[3];
+		}
+
+		// Guidelines
+		document.getElementById('guidelines').firstChild.nodeValue = window.arguments[4];
+
+		// Buttons
+		d.getButton('accept').label = window.arguments[5];
+		d.getButton('cancel').label = window.arguments[6];
+		if ('' == window.arguments[7]) {
+			d.getButton('extra1').style.display = 'none';
+		} else {
+			d.getButton('extra1').label = window.arguments[7];
+		}
+		d.getButton('accept').disabled = true;
+
+		moveToAlertPosition();
+	}, false);
+	]]></script>
+	<html:h3 id="title"> </html:h3>
+	<html:p id="explain"> </html:p>
+	<html:p id="action"> </html:p>
+	<radiogroup id="safety_level" value="3"
+	oncommand="
+	window.arguments[8].safety_level = parseInt(this.value);
+	if (3 == parseInt(this.value)) {
+		document.getElementById('dialog_video_add_restricted').getButton(
+			'accept').disabled = true;
+	} else {
+		document.getElementById('dialog_video_add_restricted').getButton(
+			'accept').disabled = false;
+	}
+	">
+		<radio value="1" label="&settings.safety_level.safe;" />
+		<radio value="2" label="&settings.safety_level.moderate;" />
+		<radio value="3" label="" style="display: none;" />
+	</radiogroup>
+	<html:p id="note"> </html:p>
+	<html:p id="guidelines"> </html:p>
+	<description id="msg"> </description>
+</dialog>

@@ -14,32 +14,32 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 id="dock" title="" width="0" height="0">
 	<script src="chrome://global/content/nsUserSettings.js" />
 	<script><![CDATA[
-		window.addEventListener('load', function() {
+	window.addEventListener('load', function() {
 
-			// This is a hacked handler for drags that happen after the app was opened
-			//   It prevents clobbering photos by strict ordering in the event queue, but
-			//   it enables upload too early and therefore can cause problems
+		// This is a hacked handler for drags that happen after the app was opened
+		//   It prevents clobbering photos by strict ordering in the event queue, but
+		//   it enables upload too early and therefore can cause problems
 
-			if (window.arguments && window.arguments[0]){
-				const Cc = Components.classes;
-				const Ci = Components.interfaces;
+		if (window.arguments && window.arguments[0]){
+			const Cc = Components.classes;
+			const Ci = Components.interfaces;
 
-				// Get the main window
-				var singleton = nsPreferences.copyUnicharPref('toolkit.singletonWindowType');
-				var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(
-					Ci.nsIWindowMediator);
-				var win = windowMediator.getMostRecentWindow(singleton);
+			// Get the main window
+			var singleton = nsPreferences.copyUnicharPref('toolkit.singletonWindowType');
+			var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].getService(
+				Ci.nsIWindowMediator);
+			var win = windowMediator.getMostRecentWindow(singleton);
 
-				// Add this photo, converting file:// URL to a native path
-				var arg = window.arguments[0];
-				if (win && win.photos.can_has(arg)) {
-					win.threads.worker.dispatch(new win.PhotoAdd(arg),
-						win.threads.worker.DISPATCH_NORMAL);
-					window.close();
-					win.focus();
-				}
-
+			// Add this photo, converting file:// URL to a native path
+			var arg = window.arguments[0];
+			if (win && win.photos.can_has(arg)) {
+				win.threads.worker.dispatch(new win.PhotoAdd(arg),
+					win.threads.worker.DISPATCH_NORMAL);
+				window.close();
+				win.focus();
 			}
-		}, false);
+
+		}
+	}, false);
 	]]></script>
 </window>

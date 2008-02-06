@@ -65,14 +65,19 @@ var photos = {
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
 		var can_has_video = 'object' == typeof users.is_pro || users.is_pro;
-Components.utils.reportError('can_has_video: ' + can_has_video);
 		if (can_has_video) {
-			fp.appendFilter('Photos and Videos',
-				'*.jpeg; *.JPEG; *.jpg; *.JPG; *.gif; *.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; *.TIF; *.bmp; *.BMP; *.mp4; *.MP4; *.mpeg; *.MPEG; *.mpg; *.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; *.dv; *.DV; *.3gp; *.3GP');
+			fp.appendFilter('Photos and Videos', '*.jpeg; *.JPEG; *.jpg; ' +
+				'*.JPG; *.gif; *.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; ' +
+				'*.TIF; *.bmp; *.BMP; *.mp4; *.MP4; *.mpeg; *.MPEG; *.mpg; ' +
+				'*.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; *.dv; ' +
+				'*.DV; *.3gp; *.3GP');
 		}
-		fp.appendFilter('Photos', '*.jpeg; *.JPEG; *.jpg; *.JPG; *.gif; *.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; *.TIF; *.bmp; *.BMP');
+		fp.appendFilter('Photos', '*.jpeg; *.JPEG; *.jpg; *.JPG; *.gif; ' +
+			'*.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; *.TIF; *.bmp; *.BMP');
 		if (can_has_video) {
-			fp.appendFilter('Videos', '*.mp4; *.MP4; *.mpeg; *.MPEG; *.mpg; *.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; *.dv; *.DV; *.3gp; *.3GP');
+			fp.appendFilter('Videos', '*.mp4; *.MP4; *.mpeg; *.MPEG; ' +
+				'*.mpg; *.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; ' +
+				'*.dv; *.DV; *.3gp; *.3GP');
 		}
 		fp.displayDirectory = def;
 		var res = fp.show();
@@ -103,24 +108,137 @@ Components.utils.reportError('can_has_video: ' + can_has_video);
 	// Add a list of photos
 	add: function(paths) {
 		buttons.upload.disable();
+
+		// Figure out if we have videos and also which version of the copy
+		// we'll need
+		//   People actually authed as free users are already excluded from
+		//   video so we don't need to worry about them
+		var v_count = 0;
+		var p_count = 0;
+		if (users.is_pro) {
+			var ii = paths.length;
+			for (var i = 0; i < ii; ++i) {
+				var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
+				if (photos.is_photo(p)) {
+					++p_count;
+				} else if (photos.is_video(p)) {
+					++v_count;
+				}
+			}
+		}
+
+		// If there are videos then there may be questions to ask
+		if (v_count) {
+			var result = {};
+
+			// Decide the plurality string
+			//   Each dialog has identical strings but they're coded
+			//   as follows for varied pluralities:
+			//     XXX.sz.XXX: singular video, zero photos
+			//     XXX.sz.XXX: plural videos, zero photos
+			//     XXX.pp.XXX: singular video, plural photos
+			//     XXX.pp.XXX: plural videos, plural photos
+			//   Some strings appear in more than one place and use
+			//   'a' to indicate they're reused (not yet, but maybe)
+			var pl = (1 == v_count ? 's' : 'p') + (0 == p_count ? 'z' : 'p');
+
+			// Offline users can have video but we should warn them that
+			// we'll remove them without warning if they turn out to be
+			// a free user at upload time
+			if ('object' == typeof users.is_pro) {
+				alert('Offline ' + pl);
+			}
+
+/*
+			// Free users can't have videos
+			else if (!users.is_pro) {
+				alert('Free user ' + pl);
+			}
+*/
+
+			// Pro users can have videos but we still need to bother
+			// those that have their defaults set to restricted
+			else if (3 == settings.safety_level) {
+				window.openDialog(
+					'chrome://uploadr/content/video_add_restricted.xul',
+					'dialog_video_add_restricted', 'chrome,modal',
+					locale.getString('video.add.restricted.' + pl + '.title'),
+					locale.getString('video.add.restricted.' + pl + '.explain'),
+					locale.getString('video.add.restricted.' + pl + '.action'),
+					locale.getString('video.add.restricted.' + pl + '.note'),
+					locale.getString('video.add.restricted.' + pl + '.guidelines'),
+					locale.getString('video.add.restricted.' + pl + '.ok'),
+					locale.getString('video.add.restricted.' + pl + '.cancel'),
+					locale.getString('video.add.restricted.' + pl + '.extra1'),
+					result);
+			}
+
+			// Quit immediately if we're forgetting the whole group
+			if ('forget' == result.result) {
+				return;
+			}
+
+			// Remove videos from the path list if we're keeping photos
+			else if ('dontadd' == result.result) {
+				var new_paths = [];
+				while (paths.length) {
+					var p = paths.shift();
+					var path = 'object' == typeof p ? p.path : p;
+					if (!photos.is_video(path)) {
+						new_paths.push(p);
+					}
+				}
+				paths = new_paths;
+			}
+
+			// If we're adding videos, remember the safety level to set
+			else if ('add' == result.result && result.safety_level) {
+				var ii = paths.length;
+				for (var i = 0; i < ii; ++i) {
+					var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
+					if (photos.is_video(p)) {
+						paths[i] = 'object' == typeof paths[i] ? paths[i] : {'path': p};
+						paths[i].safety_level = result.safety_level;
+					}
+				}
+			}
+
+/*
+			// Send the user off to buy Pro
+			else if ('gopro' == result.result) {
+				launch_browser('http://flickr.com/upgrade/');
+
+				// Gotta tell them in a nicer way to restart the app
+//				exit();
+
+			}
+*/
+
+		}
+
+		// Now add whatever's left
 		var ii = paths.length;
 		for (var i = 0; i < ii; ++i) {
-			var p;
-			if ('object' == typeof paths[i]) {
-				p = paths[i].path;
-			} else {
-				p = paths[i];
-			}			
+			var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
+
+			// Resolve the path and add the photo
 			if (/^file:\/\//.test(p)) {
 				p = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
 					Ci.nsIFileProtocolHandler).getFileFromURLSpec(p).path;
 			}
 			photos._add(p);
+
+			// Photos can be passed as an object which already has metadata
 			if ('object' == typeof paths[i]) {
-				photos.list[photos.list.length - 1] = paths[i];
+				for (var k in paths[i]) {
+					photos.list[photos.list.length - 1][k] = paths[i][k];
+				}
 			}
+
 		}
 		photos.normalize();
+
+		// Update the UI
 		if (photos.count) {
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
@@ -139,6 +257,7 @@ Components.utils.reportError('can_has_video: ' + can_has_video);
 			document.getElementById('photos_init').style.display = '-moz-box';
 			document.getElementById('photos_new').style.display = 'none';
 		}
+
 	},
 	_add: function(path) {
 		block_remove();
@@ -528,8 +647,13 @@ Components.utils.reportError('can_has_video: ' + can_has_video);
 		}
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
-		} else if (1 < photos.selected.length) {
-			meta.save();
+
+		// These lines cause the bug of repeated portions of descriptions
+		//   I can't think of a way to prevent this other than removing the
+		//   auto-saving functionality
+//		} else if (1 < photos.selected.length) {
+//			meta.save();
+
 		}
 		if (0 == photos.count) {
 			meta.created_sets = [];
@@ -553,30 +677,15 @@ Components.utils.reportError('can_has_video: ' + can_has_video);
 		return /\.(mp4|mpe?g|avi|wmv|mov|dv|3gp)$/i.test(path);
 	},
 
-	// More complicated test to see if a user can add the given file
+	// is_photo || is_video
 	can_has: function(path) {
-		if (users.username) {
-			if (users.is_pro) {
-Components.utils.reportError('can_has: pro');
-				return photos.is_photo(path) || photos.is_video(path);
-			} else {
-Components.utils.reportError('can_has: not pro');
-				return photos.is_photo(path);
-			}
-		} else {
-Components.utils.reportError('can_has: offline');
-
-			// TODO: Special dialog informing them that we're going to drop
-			// videos if it turns out they're not pro
-
-			return photos.is_photo(path) || photos.is_video(path);
-		}
+		return /\.(jpe?g|tiff?|gif|png|bmp|mp4|mpe?g|avi|wmv|mov|dv|3gp)$/i.test(path);
 	}
 
 };
 
 // Setup auto-saving of metadata in case of crashes
-//   This is the cause of bug #4810 making metadata fields clear themselves
+//   See photos.save for problems related to the auto-save interval
 window.setInterval(function() {
 	photos.save();
 }, 1000 * uploadr.conf.auto_save);
