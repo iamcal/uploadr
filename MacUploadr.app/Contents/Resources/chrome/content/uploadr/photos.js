@@ -115,7 +115,7 @@ var photos = {
 		//   video so we don't need to worry about them
 		var v_count = 0;
 		var p_count = 0;
-		if (users.is_pro) {
+		if ('object' == typeof users.is_pro || users.is_pro) {
 			var ii = paths.length;
 			for (var i = 0; i < ii; ++i) {
 				var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
@@ -146,7 +146,15 @@ var photos = {
 			// we'll remove them without warning if they turn out to be
 			// a free user at upload time
 			if ('object' == typeof users.is_pro) {
-				alert('Offline ' + pl);
+				window.openDialog(
+					'chrome://uploadr/content/video_add_offline.xul',
+					'dialog_video_add_offline', 'chrome,modal',
+					locale.getString('video.add.offline.' + pl + '.title'),
+					locale.getString('video.add.offline.' + pl + '.explain'),
+					locale.getString('video.add.offline.' + pl + '.ok'),
+					locale.getString('video.add.offline.' + pl + '.cancel'),
+					locale.getString('video.add.offline.' + pl + '.extra1'),
+					result);
 			}
 
 /*

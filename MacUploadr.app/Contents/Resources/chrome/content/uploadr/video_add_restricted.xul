@@ -74,5 +74,4 @@ ondialogextra1="window.arguments[8].result = 'forget'; window.close();">
 	</radiogroup>
 	<html:p id="note"> </html:p>
 	<html:p id="guidelines"> </html:p>
-	<description id="msg"> </description>
 </dialog>

@@ -16,28 +16,32 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <dialog id="dialog_video_add_offline" title=""
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept,cancel,extra1"
-ondialogaccept="window.arguments[4].result = true; return true;"
-ondialogcancel="window.arguments[4].result = false; return true;" onload="
-var d = document.getElementById('dialog_video_add_offline');
+ondialogaccept="window.arguments[5].result = 'add'; return true;"
+ondialogcancel="window.arguments[5].result = 'dontadd'; return true;"
+ondialogextra1="window.arguments[5].result = 'forget'; window.close();">
+	<script><![CDATA[
+	window.addEventListener('load', function() {
+		var d = document.getElementById('dialog_video_add_offline');
 
-// Title
-document.getElementById('title').firstChild.nodeValue = window.arguments[0];
-d.setAttribute('title', window.arguments[0]);
+		// Title
+		document.getElementById('title').firstChild.nodeValue = window.arguments[0];
+		d.title = window.arguments[0];
 
+		// Explanation
+		document.getElementById('explain').firstChild.nodeValue = window.arguments[1];
 
+		// Buttons
+		d.getButton('accept').label = window.arguments[2];
+		d.getButton('cancel').label = window.arguments[3];
+		if ('' == window.arguments[4]) {
+			d.getButton('extra1').style.display = 'none';
+		} else {
+			d.getButton('extra1').label = window.arguments[4];
+		}
 
-window.arguments[0]
-window.arguments[1]
-window.arguments[2]
-window.arguments[3]
-window.arguments[4]
-window.arguments[5]
-window.arguments[6]
-window.arguments[7]
-
-moveToAlertPosition();
-">
+		moveToAlertPosition();
+	}, false);
+	]]></script>
 	<html:h3 id="title"> </html:h3>
-	<description id="msg"> </description>
-	
+	<html:p id="explain"> </html:p>
 </dialog>
