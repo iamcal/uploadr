@@ -13,15 +13,16 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/dialog.css" type="text/css"?>
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
-<dialog id="dialog_video_add_restricted" title=""
+<dialog id="dialog_video_restricted" title=""
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept,cancel,extra1"
-ondialogaccept="window.arguments[8].result = 'add'; return true;"
-ondialogcancel="window.arguments[8].result = 'dontadd'; return true;"
-ondialogextra1="window.arguments[8].result = 'forget'; window.close();">
+ondialogaccept="window.arguments[8].result = 'ok'; return true;"
+ondialogcancel="window.arguments[8].result = 'cancel'; return true;"
+ondialogextra1="window.arguments[8].result = 'extra1'; window.close();">
+	<script src="chrome://uploadr/content/uploadr.js" />
 	<script><![CDATA[
 	window.addEventListener('load', function() {
-		var d = document.getElementById('dialog_video_add_restricted');
+		var d = document.getElementById('dialog_video_restricted');
 
 		// Title
 		document.getElementById('title').firstChild.nodeValue = window.arguments[0];
@@ -39,7 +40,23 @@ ondialogextra1="window.arguments[8].result = 'forget'; window.close();">
 		}
 
 		// Guidelines
-		document.getElementById('guidelines').firstChild.nodeValue = window.arguments[4];
+		var parts = window.arguments[4].split('^^');
+		var guidelines = document.getElementById('guidelines');
+		guidelines.appendChild(document.createTextNode(parts[0]));
+		var span = document.createElementNS(NS_HTML, 'span');
+		span.className = 'link';
+		span.onclick = function() {
+			var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+			var uri = io.newURI('http://flickr.com/guidelines.gne', null, null);
+			var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
+				Ci.nsIExternalProtocolService);
+			var launcher = eps.getProtocolHandlerInfo('http');
+			launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
+			launcher.launchWithURI(uri, null);
+		};
+		span.appendChild(document.createTextNode(parts[1]));
+		guidelines.appendChild(span);
+		guidelines.appendChild(document.createTextNode(parts[2]));
 
 		// Buttons
 		d.getButton('accept').label = window.arguments[5];
@@ -61,10 +78,10 @@ ondialogextra1="window.arguments[8].result = 'forget'; window.close();">
 	oncommand="
 	window.arguments[8].safety_level = parseInt(this.value);
 	if (3 == parseInt(this.value)) {
-		document.getElementById('dialog_video_add_restricted').getButton(
+		document.getElementById('dialog_video_restricted').getButton(
 			'accept').disabled = true;
 	} else {
-		document.getElementById('dialog_video_add_restricted').getButton(
+		document.getElementById('dialog_video_restricted').getButton(
 			'accept').disabled = false;
 	}
 	">
@@ -73,5 +90,5 @@ ondialogextra1="window.arguments[8].result = 'forget'; window.close();">
 		<radio value="3" label="" style="display: none;" />
 	</radiogroup>
 	<html:p id="note"> </html:p>
-	<html:p id="guidelines"> </html:p>
+	<html:p id="guidelines"></html:p>
 </dialog>

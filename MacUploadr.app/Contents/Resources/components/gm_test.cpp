@@ -110,7 +110,7 @@ int main(int argc, char * * argv) {
 			//printf("%s\n", iptc["Iptc.Application2.ObjectName"].toString().c_str());
 
 			// Step through UTF8 to UTF16 with 0xC28E crap from Kathryn Yu
-			///
+			// ?
 
 		} catch (Magick::Exception & e) {
 			printf("[GraphicsMagick] %s: %s\n", path, e.what());

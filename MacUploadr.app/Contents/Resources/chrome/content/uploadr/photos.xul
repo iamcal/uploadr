@@ -128,7 +128,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<hbox>
 						<vbox class="column">
 							<html:p>&meta.safety_level;</html:p>
-							<menulist id="single_safety_level" tabindex="4">
+							<menulist id="single_safety_level" tabindex="4"
+							oncommand="meta.restricted(this.value);">
 								<menupopup>
 									<menuitem value="1" label="&settings.safety_level.safe;"
 									selected="true" />
@@ -218,7 +219,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<hbox>
 						<vbox class="column">
 							<html:p>&meta.safety_level;</html:p>
-							<menulist id="batch_safety_level" tabindex="4">
+							<menulist id="batch_safety_level" tabindex="4"
+							oncommand="meta.restricted(this.value);">
 								<menupopup>
 									<menuitem value="0" label="" selected="true" />
 									<menuitem value="1" label="&settings.safety_level.safe;" />

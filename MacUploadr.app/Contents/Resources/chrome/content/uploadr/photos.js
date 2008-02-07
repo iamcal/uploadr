@@ -15,7 +15,6 @@ var photos = {
 	count: 0,
 	selected: [],
 	last: null,
-	unsaved: false,
 	sort: true,
 	batch_size: 0,
 
@@ -147,8 +146,8 @@ var photos = {
 			// a free user at upload time
 			if ('object' == typeof users.is_pro) {
 				window.openDialog(
-					'chrome://uploadr/content/video_add_offline.xul',
-					'dialog_video_add_offline', 'chrome,modal',
+					'chrome://uploadr/content/video_offline.xul',
+					'dialog_video_offline', 'chrome,modal',
 					locale.getString('video.add.offline.' + pl + '.title'),
 					locale.getString('video.add.offline.' + pl + '.explain'),
 					locale.getString('video.add.offline.' + pl + '.ok'),
@@ -157,19 +156,12 @@ var photos = {
 					result);
 			}
 
-/*
-			// Free users can't have videos
-			else if (!users.is_pro) {
-				alert('Free user ' + pl);
-			}
-*/
-
 			// Pro users can have videos but we still need to bother
 			// those that have their defaults set to restricted
 			else if (3 == settings.safety_level) {
 				window.openDialog(
-					'chrome://uploadr/content/video_add_restricted.xul',
-					'dialog_video_add_restricted', 'chrome,modal',
+					'chrome://uploadr/content/video_restricted.xul',
+					'dialog_video_restricted', 'chrome,modal',
 					locale.getString('video.add.restricted.' + pl + '.title'),
 					locale.getString('video.add.restricted.' + pl + '.explain'),
 					locale.getString('video.add.restricted.' + pl + '.action'),
@@ -182,12 +174,12 @@ var photos = {
 			}
 
 			// Quit immediately if we're forgetting the whole group
-			if ('forget' == result.result) {
+			if ('extra1' == result.result) {
 				return;
 			}
 
 			// Remove videos from the path list if we're keeping photos
-			else if ('dontadd' == result.result) {
+			else if ('cancel' == result.result) {
 				var new_paths = [];
 				while (paths.length) {
 					var p = paths.shift();
@@ -200,7 +192,7 @@ var photos = {
 			}
 
 			// If we're adding videos, remember the safety level to set
-			else if ('add' == result.result && result.safety_level) {
+			else if ('ok' == result.result && result.safety_level) {
 				var ii = paths.length;
 				for (var i = 0; i < ii; ++i) {
 					var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
@@ -210,17 +202,6 @@ var photos = {
 					}
 				}
 			}
-
-/*
-			// Send the user off to buy Pro
-			else if ('gopro' == result.result) {
-				launch_browser('http://flickr.com/upgrade/');
-
-				// Gotta tell them in a nicer way to restart the app
-//				exit();
-
-			}
-*/
 
 		}
 
@@ -276,7 +257,6 @@ var photos = {
 		photos.list.push(new Photo(id, path));
 		++photos.count;
 		++photos.loading;
-		photos.unsaved = true;
 
 		// Create a spot for the image, leaving a spinning placeholder
 		//   Add images to the start of the list because this is our best guess for ordering
@@ -320,15 +300,13 @@ var photos = {
 
 			// Free the size of this file
 			photos.batch_size -= photos.list[id].size;
-			if (users.username && !users.is_pro) {
-				if (users.bandwidth.remaining - photos.batch_size) {
-					status.clear();
-				}
+			if (users.username && !users.is_pro &&
+				0 < users.bandwidth.remaining - photos.batch_size) {
+				status.clear();
 			}
 
 			photos.list[id] = null;
 			--photos.count;
-			photos.unsaved = true;
 		}
 		free.update();
 		photos.normalize();
@@ -342,7 +320,6 @@ var photos = {
 		if (photos.count) {
 			buttons.upload.enable();
 		} else {
-			photos.unsaved = false;
 			photos.sort = true;
 			buttons.upload.disable();
 			document.getElementById('photos_sort_default').style.display = 'none';
@@ -409,8 +386,9 @@ var photos = {
 		}
 
 		// Drop videos if we're a free user
+		//   They will have been warned that this is coming
 		if (!users.is_pro) {
-			
+			// TODO
 		}
 
 		// Decide if we're already in the midst of an upload
@@ -466,7 +444,6 @@ var photos = {
 				photos.count = 0;
 				photos.selected = [];
 				photos.last = null;
-				photos.unsaved = false;
 				var list = document.getElementById('photos_list');
 				while (list.hasChildNodes()) {
 					list.removeChild(list.firstChild);
@@ -555,7 +532,6 @@ var photos = {
 			photos.count = 0;
 			photos.selected = [];
 			photos.last = null;
-			photos.unsaved = false;
 			var list = document.getElementById('photos_list');
 			while (list.hasChildNodes()) {
 				list.removeChild(list.firstChild);
@@ -579,6 +555,9 @@ var photos = {
 
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
+var debug = [];
+for each (var id in photos.selected) debug.push(photos.list[id] ? photos.list[id].path : null);
+Components.utils.reportError(debug);
 		var list = document.getElementById('photos_list').getElementsByTagName('li');
 		var old_list = photos.list;
 		photos.list = [];
@@ -598,7 +577,9 @@ var photos = {
 			}
 
 		}
-
+debug = [];
+for each (var id in photos.selected) debug.push(photos.list[id] ? photos.list[id].path : null);
+Components.utils.reportError(debug);
 	},
 
 	// Load saved metadata

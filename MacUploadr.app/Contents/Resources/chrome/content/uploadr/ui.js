@@ -71,27 +71,25 @@ var help = {
 	_pretty: function() {
 		for each (var id in ['help_offline', 'help_drag']) {
 			var node = document.getElementById(id);
-			var pink = node.firstChild.nodeValue.match(/\^\^(.+)\^\^/);
-			var black = node.firstChild.nodeValue.split(pink[0]);
+			var parts = node.firstChild.nodeValue.split('^^');
 			node.removeChild(node.firstChild);
-			node.appendChild(document.createTextNode(black[0]));
+			node.appendChild(document.createTextNode(parts[0]));
 			var span = document.createElementNS(NS_HTML, 'span');
 			span.style.color = '#ff0084';
-			span.appendChild(document.createTextNode(pink[1]));
+			span.appendChild(document.createTextNode(parts[1]));
 			node.appendChild(span);
-			node.appendChild(document.createTextNode(black[1]));
+			node.appendChild(document.createTextNode(parts[2]));
 		}
 		var node = document.getElementById('help_faq');
-		var link = node.firstChild.nodeValue.match(/\^\^(.+)\^\^/);
-		var black = node.firstChild.nodeValue.split(link[0]);
+		var parts = node.firstChild.nodeValue.split('^^');
 		node.removeChild(node.firstChild);
-		node.appendChild(document.createTextNode(black[0]));
+		node.appendChild(document.createTextNode(parts[0]));
 		var span = document.createElementNS(NS_HTML, 'span');
 		span.className = 'link';
 		span.onclick = help.faq;
-		span.appendChild(document.createTextNode(link[1]));
+		span.appendChild(document.createTextNode(parts[1]));
 		node.appendChild(span);
-		node.appendChild(document.createTextNode(black[1]));
+		node.appendChild(document.createTextNode(parts[2]));
 	}
 
 };
@@ -202,18 +200,14 @@ locale.getFormattedString = function(id, args) {
 var _block_remove = 0;
 var block_remove = function() {
 	if (0 == _block_remove) {
-		var b = document.getElementById('t_remove');
-		b.disabled = true;
-		b.className = 'disabled_button';
+		buttons.remove.disable();
 	}
 	++_block_remove;
 };
 var unblock_remove = function() {
 	--_block_remove;
 	if (0 == _block_remove && photos.selected.length) {
-		var b = document.getElementById('t_remove');
-		b.disabled = false;
-		b.className = 'button';
+		buttons.remove.enable();
 	}
 };
 

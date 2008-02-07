@@ -105,7 +105,6 @@ var settings = {
 		// the current username and the maximum file size string
 		var u = eval(users.list.toSource());
 		var result = {};
-Components.utils.reportError('users.filesize: ' + users.filesize);
 		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
 			'chrome,modal', users.username, u, locale.getFormattedString(
 			'settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
@@ -193,6 +192,8 @@ Components.utils.reportError('users.filesize: ' + users.filesize);
 				meta.save();
 				meta.load();
 			}
+
+			// TODO: Videos can't be restricted
 
 			// Update all photos
 			var ii = photos.list.length;

@@ -532,7 +532,7 @@ div.toolbarseparator {
 
 /* Initially, and while logged-out, don't show sets */
 #hide_single_sets, #hide_batch_sets {
-	visibility: hidden;
+	display: none;
 	margin: 5px;
 }
 
@@ -603,7 +603,7 @@ div.toolbarseparator {
 
 /* Must explicitly allow the creating of sets */
 #single_sets_create, #batch_sets_create {
-	visibility: hidden;
+	display: none;
 }
 #single_sets_create, #batch_sets_create, #no_sets_create {
 	margin: 5px 0 0 0;

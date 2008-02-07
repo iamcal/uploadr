@@ -48,6 +48,14 @@ dialog {
  * Special video dialogs are wider
  */
 
-#dialog_video_add_offline, #dialog_video_add_free, #dialog_video_add_restricted {
+#dialog_video_offline, #dialog_video_restricted {
 	width: 500px;
+}
+
+
+
+.link {
+	color: #0063dc;
+	text-decoration: underline;
+	cursor: pointer;
 }

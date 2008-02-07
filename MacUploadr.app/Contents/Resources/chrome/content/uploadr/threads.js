@@ -81,7 +81,6 @@ ThumbCallback.prototype = {
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
-Components.utils.reportError('result: ' + this.result);
 			var thumb = this.result.split('###');
 
 			// Get this photo from the DOM and remove its loading class
@@ -187,8 +186,6 @@ Components.utils.reportError('result: ' + this.result);
 				photos.list[this.id].size = file.size(photos.list[this.id].path);
 				photos.batch_size += photos.list[this.id].size;
 				free.update();
-
-Components.utils.reportError('photos.list[this.id]: ' + photos.list[this.id].toSource());
 
 			}
 
@@ -324,10 +321,12 @@ SortCallback.prototype = {
 		}
 		var p = [];
 		for each (var photo in photos.list) {
-			p.push({
-				id: photo.id,
-				date_taken: photo.date_taken
-			});
+			if (null != photo) {
+				p.push({
+					id: photo.id,
+					date_taken: photo.date_taken
+				});
+			}
 		}
 		p.sort(function(a, b) {
 			if (null == a) {
@@ -530,6 +529,56 @@ PhotoAddCallback.prototype = {
 		if (null != this.obj) {
 			photos.list[photos.list.length - 1] = this.obj;
 		}
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+
+// Job to allow video removals to wait until it's safe
+var RemoveVideo = function(videos) {
+	this.videos = videos;
+};
+RemoveVideo.prototype = {
+	run: function() {
+		threads.main.dispatch(new RemoveVideoCallback(this.videos),
+			threads.main.DISPATCH_NORMAL);
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+var RemoveVideoCallback = function(videos) {
+	this.videos = videos;
+};
+RemoveVideoCallback.prototype = {
+	run: function() {
+		var ii = this.videos.length;
+		for (var i = 0; i < ii; ++i) {
+			var id = this.videos[i];
+			var li = document.getElementById('photo' + id);
+			li.parentNode.removeChild(li);
+
+			// Free the size of this file
+			photos.batch_size -= photos.list[id].size;
+			if (users.username && !users.is_pro) {
+				if (users.bandwidth.remaining - photos.batch_size) {
+					status.clear();
+				}
+			}
+
+			photos.list[id] = null;
+			--photos.count;
+		}
+		free.update();
+		photos.normalize();
+		status.clear();
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

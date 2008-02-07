@@ -69,13 +69,16 @@ var meta = {
 				locale.getString('meta.sets.added.none')));
 			ul.appendChild(li);
 			document.getElementById('batch_sets_create').style.display =
-				meta.created_sets.length < users.sets ? 'block' : 'none';
+				meta.created_sets.length == users.sets ? 'none' : 'block';
 
 		}
 
 		// Load the values from a specific photo
 		else {
 			var p = photos.list[id];
+			if (null == p) {
+				return;
+			}
 			if (!meta.first) {
 				document.getElementById('single_prompt').style.display = 'none';
 				document.getElementById('single_preview').style.display = '-moz-box';
@@ -137,7 +140,7 @@ var meta = {
 				}
 			}
 			document.getElementById('single_sets_create').style.display =
-				meta.created_sets.length < users.sets ? 'block' : 'none';
+				meta.created_sets.length == users.sets ? 'none' : 'block';
 
 		}
 
@@ -151,6 +154,9 @@ var meta = {
 			var ii = photos.selected.length;
 			for (var i = 0; i < ii; ++i) {
 				var p = photos.list[photos.selected[i]];
+				if (null == p) {
+					return;
+				}
 
 				// Overwrite title if one is given
 				var title = document.getElementById('batch_title').value;
@@ -193,6 +199,9 @@ var meta = {
 		// Save a single photo
 		else {
 			var p = photos.list[id];
+			if (null == p) {
+				return;
+			}
 			p.title = document.getElementById('single_title').value;
 			p.description = document.getElementById('single_description').value;
 			p.tags = document.getElementById('single_tags').value;
@@ -232,6 +241,9 @@ var meta = {
 		// Only allow rotation for photos or mixed selections
 		var have_photos = false;
 		for each (var i in photos.selected) {
+			if (null == photos.list[i]) {
+				continue;
+			}
 			have_photos = photos.is_photo(photos.list[i].path) ? true : have_photos;
 		}
 		if (have_photos) {
@@ -398,7 +410,7 @@ var meta = {
 		var ii = photos.selected.length;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[photos.selected[i]];
-			if (-1 == p.sets.indexOf(set_id)) {
+			if (null != p && -1 == p.sets.indexOf(set_id)) {
 				p.sets.push(set_id);
 			}
 		}
@@ -431,6 +443,9 @@ var meta = {
 		var ii = photos.selected.length;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[photos.selected[i]];
+			if (null == p) {
+				continue;
+			}
 			var new_sets = [];
 			var jj = p.sets.length;
 			for (var j = 0; j < jj; ++j) {
@@ -517,6 +532,100 @@ var meta = {
 		document.getElementById('hide_batch_sets').style.display = 'none';
 		document.getElementById('hide_single_explain').style.display = '-moz-box';
 		document.getElementById('hide_batch_explain').style.display = '-moz-box';
+	},
+
+	// Enforce the no-restricted-videos policy
+	restricted: function(value) {
+		if (3 == parseInt(value)) {
+			var v_count = 0;
+			var p_count = 0;
+			for each (var id in photos.selected) {
+				if (null == photos.list[id]) {
+					continue;
+				}
+				var p = photos.list[id].path;
+				if (photos.is_photo(p)) {
+					++p_count;
+				} else if (photos.is_video(p)) {
+					++v_count;
+				}
+			}
+
+			// If there are videos then bother them
+			if (v_count) {
+
+				// Decide the plurality string
+				//   Each dialog has identical strings but they're coded
+				//   as follows for varied pluralities:
+				//     XXX.sz.XXX: singular video, zero photos
+				//     XXX.sz.XXX: plural videos, zero photos
+				//     XXX.pp.XXX: singular video, plural photos
+				//     XXX.pp.XXX: plural videos, plural photos
+				//   Some strings appear in more than one place and use
+				//   'a' to indicate they're reused (not yet, but maybe)
+				var pl = (1 == v_count ? 's' : 'p') + (0 == p_count ? 'z' : 'p');
+
+				// Aforementioned bothering
+				var result = {};
+				window.openDialog(
+					'chrome://uploadr/content/video_restricted.xul',
+					'dialog_video_restricted', 'chrome,modal',
+					locale.getString('video.edit.restricted.' + pl + '.title'),
+					locale.getString('video.edit.restricted.' + pl + '.explain'),
+					locale.getString('video.edit.restricted.' + pl + '.action'),
+					locale.getString('video.edit.restricted.' + pl + '.note'),
+					locale.getString('video.edit.restricted.' + pl + '.guidelines'),
+					locale.getString('video.edit.restricted.' + pl + '.ok'),
+					locale.getString('video.edit.restricted.' + pl + '.cancel'),
+					'', result);
+
+				// Remove selected videos
+				if ('cancel' == result.result) {
+					var new_selected = [];
+					var videos = [];
+					for each (var id in photos.selected) {
+						if (null == photos.list[id]) {
+							continue;
+						}
+						var p = photos.list[id].path;
+						if (photos.is_photo(p)) {
+							new_selected.push(id);
+						} else if (photos.is_video(p)) {
+							var li = document.getElementById('photo' + id);
+							li.parentNode.removeChild(li);
+							photos.batch_size -= photos.list[id].size;
+							if (users.username && !users.is_pro &&
+								0 < users.bandwidth.remaining - photos.batch_size) {
+								status.clear();
+							}
+							photos.list[id] = null;
+							--photos.count;
+						}
+					}
+					free.update();
+					photos.selected = new_selected;
+
+					// If remove is blocked then we know photos.normalize
+					// will be called as it is unblocked
+					//   We're breaking the rules a bit here but the rules
+					//   are just for the UI
+					if (0 == _block_remove) {
+						photos.normalize();
+					}
+
+				}
+
+				// Set a different safety level
+				//   This will be applied when the selection changes,
+				//   just like always
+				else if ('ok' == result.result && result.safety_level) {
+					// TODO: Talk more with Dunstan to figure out how this
+					// will work
+				}
+
+			}
+
+		}
 	}
 
 };

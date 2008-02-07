@@ -772,7 +772,6 @@ var flickr = {
 				}
 				users.filesize = parseInt(user.getElementsByTagName(
 					'filesize')[0].getAttribute('maxkb'));
-Components.utils.reportError('users.filesize: ' + users.filesize);
 				sets = user.getElementsByTagName('sets')[0].getAttribute('remaining');
 				if ('lots' == sets) {
 					users.sets = -1;
