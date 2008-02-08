@@ -176,6 +176,20 @@ var settings = {
 				});
 			}
 
+			// If they've changed to a free account and have videos, warn them
+			if ('boolean' == typeof user.is_pro && !user.is_pro) {
+				var v_count = 0;
+				for each (var p in photos.list) {
+					if (null != p && photos.is_video(p.path)) {
+						++v_count;
+					}
+				}
+				if (v_count) {
+					alert(locale.getString('video.free.text'),
+						locale.getString('video.free.title'));
+				}
+			}
+
 			// Get permission to overwrite any changes that were made
 			if (0 < photos.count &&
 				!confirm(locale.getFormattedString('settings.overwrite.text', [photos.count]),
@@ -193,8 +207,6 @@ var settings = {
 				meta.load();
 			}
 
-			// TODO: Videos can't be restricted
-
 			// Update all photos
 			var ii = photos.list.length;
 			for (var i = 0; i < ii; ++i) {
@@ -207,6 +219,97 @@ var settings = {
 					photo.hidden = settings.hidden;
 					photo.safety_level = settings.safety_level;
 				}
+			}
+
+			// Videos can't be restricted so either update them or delete them
+			if (3 == settings.safety_level) {
+
+				// Tally up videos
+				var p_count = 0;
+				var v_count = 0;
+				for each (var p in photos.list) {
+					if (null == p) {
+						continue;
+					}
+					if (photos.is_photo(p.path)) {
+						++p_count;
+					} else if (photos.is_video(p.path)) {
+						++v_count;
+					}
+				}
+
+				// If there are videos, bother them
+				if (v_count) {
+					var result = {};
+
+					// Decide the plurality string
+					//   Each dialog has identical strings but they're coded
+					//   as follows for varied pluralities:
+					//     XXX.sz.XXX: singular video, zero photos
+					//     XXX.sz.XXX: plural videos, zero photos
+					//     XXX.pp.XXX: singular video, plural photos
+					//     XXX.pp.XXX: plural videos, plural photos
+					//   Some strings appear in more than one place and use
+					//   'a' to indicate they're reused (not yet, but maybe)
+					var pl = (1 == v_count ? 's' : 'p') + (0 == p_count ? 'z' : 'p');
+
+					// Aforementioned bothering
+					window.openDialog(
+						'chrome://uploadr/content/video_restricted.xul',
+						'dialog_video_restricted', 'chrome,modal',
+						locale.getString('video.edit.restricted.' + pl + '.title'),
+						locale.getString('video.edit.restricted.' + pl + '.explain'),
+						locale.getString('video.edit.restricted.' + pl + '.action'),
+						locale.getString('video.edit.restricted.' + pl + '.note'),
+						locale.getString('video.edit.restricted.' + pl + '.guidelines'),
+						locale.getString('video.edit.restricted.' + pl + '.ok'),
+						locale.getString('video.edit.restricted.' + pl + '.cancel'),
+						'', result);
+
+					// Remove selected videos
+					if ('cancel' == result.result) {
+						var ii = photos.list.length;
+						for (var i = 0; i < ii; ++i) {
+							if (null == photos.list[i]) {
+								continue;
+							}
+							if (photos.is_video(photos.list[i].path)) {
+								var li = document.getElementById('photo' + i);
+								li.parentNode.removeChild(li);
+								photos.batch_size -= photos.list[i].size;
+								if (users.username && !users.is_pro &&
+									0 < users.bandwidth.remaining - photos.batch_size) {
+									status.clear();
+								}
+								photos.list[i] = null;
+								--photos.count;
+							}
+						}
+						free.update();
+
+						// If remove is blocked then we know photos.normalize
+						// will be called as it is unblocked
+						//   We're breaking the rules a bit here but the rules
+						//   are just for the UI
+						if (0 == _block_remove) {
+							photos.normalize();
+						}
+
+					}
+
+					// Set a different safety level for videos
+					else if ('ok' == result.result && result.safety_level) {
+						var ii = photos.list.length;
+						for (var i = 0; i < ii; ++i) {
+							if (null != photos.list[i] &&
+								photos.is_video(photos.list[i].path)) {
+								photos.list[i].safety_level = result.safety_level;
+							}
+						}
+					}
+
+				}
+
 			}
 
 			// Refresh visible photo metadata if necessary

@@ -108,21 +108,14 @@ var photos = {
 	add: function(paths) {
 		buttons.upload.disable();
 
-		// Figure out if we have videos and also which version of the copy
-		// we'll need
-		//   People actually authed as free users are already excluded from
-		//   video so we don't need to worry about them
-		var v_count = 0;
+		// Tally up photos and videos
 		var p_count = 0;
-		if ('object' == typeof users.is_pro || users.is_pro) {
-			var ii = paths.length;
-			for (var i = 0; i < ii; ++i) {
-				var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
-				if (photos.is_photo(p)) {
-					++p_count;
-				} else if (photos.is_video(p)) {
-					++v_count;
-				}
+		var v_count = 0;
+		for each (var p in paths) {
+			if (photos.is_photo(p)) {
+				++p_count;
+			} else if (photos.is_video(p)) {
+				++v_count;
 			}
 		}
 
@@ -387,8 +380,20 @@ var photos = {
 
 		// Drop videos if we're a free user
 		//   They will have been warned that this is coming
-		if (!users.is_pro) {
-			// TODO
+		if (from_user && !users.is_pro) {
+			var new_list = [];
+			for each (var p in list) {
+				if (null == p) {
+					continue;
+				}
+				if (photos.is_photo(p.path)) {
+					new_list.push(p);
+				} else {
+					photos.batch_size -= p.size;
+				}
+			}
+Components.utils.reportError(photos.batch_size);
+			list = new_list;
 		}
 
 		// Decide if we're already in the midst of an upload
@@ -428,7 +433,10 @@ var photos = {
 
 					// Videos have special rules
 					else if (photos.is_video(p.path)) {
+
 						// TODO: What do we do with a video bigger than 100MB?
+
+						ready_size += p.size;
 					}
 
 					ready.push(p);
@@ -532,9 +540,9 @@ var photos = {
 			photos.count = 0;
 			photos.selected = [];
 			photos.last = null;
-			var list = document.getElementById('photos_list');
-			while (list.hasChildNodes()) {
-				list.removeChild(list.firstChild);
+			var ul = document.getElementById('photos_list');
+			while (ul.hasChildNodes()) {
+				ul.removeChild(ul.firstChild);
 			}
 			free.update();
 		}
@@ -555,9 +563,6 @@ var photos = {
 
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
-var debug = [];
-for each (var id in photos.selected) debug.push(photos.list[id] ? photos.list[id].path : null);
-Components.utils.reportError(debug);
 		var list = document.getElementById('photos_list').getElementsByTagName('li');
 		var old_list = photos.list;
 		photos.list = [];
@@ -577,9 +582,6 @@ Components.utils.reportError(debug);
 			}
 
 		}
-debug = [];
-for each (var id in photos.selected) debug.push(photos.list[id] ? photos.list[id].path : null);
-Components.utils.reportError(debug);
 	},
 
 	// Load saved metadata
@@ -669,6 +671,34 @@ Components.utils.reportError(debug);
 	// is_photo || is_video
 	can_has: function(path) {
 		return /\.(jpe?g|tiff?|gif|png|bmp|mp4|mpe?g|avi|wmv|mov|dv|3gp)$/i.test(path);
+	},
+
+	// Count photos and videos
+	//   Return is an array of [p_count, v_count, plurality]
+	video_count: function() {
+		var p_count = 0;
+		var v_count = 0;
+		for each (var id in photos.selected) {
+			if (null == photos.list[id]) {
+				continue;
+			}
+			var p = photos.list[id].path;
+			if (photos.is_photo(p)) {
+				++p_count;
+			} else if (photos.is_video(p)) {
+				++v_count;
+			}
+		}
+
+		// If there are videos then bother them
+		var plurality = null;
+		if (v_count) {
+
+
+
+		}
+
+		return [p_count, v_count, plurality];
 	}
 
 };

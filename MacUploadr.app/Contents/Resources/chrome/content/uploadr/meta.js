@@ -537,22 +537,25 @@ var meta = {
 	// Enforce the no-restricted-videos policy
 	restricted: function(value) {
 		if (3 == parseInt(value)) {
-			var v_count = 0;
+
+			// Tally up photos and videos
 			var p_count = 0;
+			var v_count = 0;
 			for each (var id in photos.selected) {
-				if (null == photos.list[id]) {
+				var p = photos.list[id];
+				if (null == p) {
 					continue;
 				}
-				var p = photos.list[id].path;
-				if (photos.is_photo(p)) {
+				if (photos.is_photo(p.path)) {
 					++p_count;
-				} else if (photos.is_video(p)) {
+				} else if (photos.is_video(p.path)) {
 					++v_count;
 				}
 			}
 
 			// If there are videos then bother them
 			if (v_count) {
+				var result = {};
 
 				// Decide the plurality string
 				//   Each dialog has identical strings but they're coded
@@ -566,7 +569,6 @@ var meta = {
 				var pl = (1 == v_count ? 's' : 'p') + (0 == p_count ? 'z' : 'p');
 
 				// Aforementioned bothering
-				var result = {};
 				window.openDialog(
 					'chrome://uploadr/content/video_restricted.xul',
 					'dialog_video_restricted', 'chrome,modal',
@@ -582,7 +584,6 @@ var meta = {
 				// Remove selected videos
 				if ('cancel' == result.result) {
 					var new_selected = [];
-					var videos = [];
 					for each (var id in photos.selected) {
 						if (null == photos.list[id]) {
 							continue;
@@ -615,7 +616,7 @@ var meta = {
 
 				}
 
-				// Set a different safety level
+				// Set a different safety level for videos
 				//   This will be applied when the selection changes,
 				//   just like always
 				else if ('ok' == result.result && result.safety_level) {
