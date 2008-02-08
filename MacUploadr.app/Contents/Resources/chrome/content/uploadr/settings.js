@@ -177,7 +177,8 @@ var settings = {
 			}
 
 			// If they've changed to a free account and have videos, warn them
-			if ('boolean' == typeof user.is_pro && !user.is_pro) {
+			if (user && 'boolean' == typeof users.list[user.username].is_pro &&
+				!users.list[user.username].is_pro) {
 				var v_count = 0;
 				for each (var p in photos.list) {
 					if (null != p && photos.is_video(p.path)) {

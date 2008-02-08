@@ -392,7 +392,6 @@ var photos = {
 					photos.batch_size -= p.size;
 				}
 			}
-Components.utils.reportError(photos.batch_size);
 			list = new_list;
 		}
 

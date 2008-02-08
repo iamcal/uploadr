@@ -139,6 +139,7 @@ var upload = {
 
 			// Out of retry attempts, this time we really die
 			else {
+				upload.retry_count = 0;
 				if (null != photos.uploading[id]) {
 					photos.uploading[id].progress_bar.done(false);
 					++photos.fail;
