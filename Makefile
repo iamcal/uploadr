@@ -97,8 +97,7 @@ build:
 	mv $(APP) $(PKG)/old
 
 	# Package structure
-	mkdir $(PKG)/Flickr\ Uploadr.app
-	ln -s /Applications $(PKG)/Applications
+	mkdir $(APP)
 	mkdir $(BUILD)
 	mkdir $(BUILD)/lib
 	mkdir $(BUILD)/Frameworks
@@ -168,7 +167,8 @@ build:
 	cp $(SRC)/Resources/components/*.js $(BUILD)/Resources/components/
 
 	# Copy to DMG
-	cp -R $(PKG)/* /Volumes/Flickr\ Uploadr\ $(VER)/
+	cp -R $(PKG)/Flickr\ Uploadr.app /Volumes/Flickr\ Uploadr\ $(VER)/
+	ln -s /Applications /Volumes/Flickr\ Uploadr\ $(VER)/Applications
 	cp mac_installer/install-pane-$(INTL).png \
 		/Volumes/Flickr\ Uploadr\ $(VER)/.i.png
 	ln -s .i.png /Volumes/Flickr\ Uploadr\ $(VER)/i.png
