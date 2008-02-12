@@ -71,7 +71,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<spacer flex="1" />
 					</hbox>
 					<vbox id="photos_init_note">
-						<html:h2>&photos.init.note;</html:h2>
+						<html:h3>&photos.init.note;</html:h3>
 						<html:ul id="photos_init_notes"></html:ul>
 					</vbox>
 				</vbox>

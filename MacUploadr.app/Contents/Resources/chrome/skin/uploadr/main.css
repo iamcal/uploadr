@@ -369,7 +369,7 @@ div.toolbarseparator {
 	display: none;
 }
 #photos_init h1, #photos_new h1, #photos_init h2, #photos_new h2,
-#photos_init li {
+#photos_init h3, #photos_init li {
 	color: #bbb;
 	text-align: center;
 	font-weight: normal;
@@ -377,7 +377,7 @@ div.toolbarseparator {
 #photos_init h1, #photos_new h1 {
 	margin: 100px 50px 5px 50px;
 }
-#photos_init h2, #photos_new h2 {
+#photos_init h2, #photos_new h2, #photos_init h3 {
 	margin: 10px 50px 0 50px;
 }
 #photos_init hbox {
@@ -390,6 +390,9 @@ div.toolbarseparator {
 #photos_init_note {
 	display: none;
 	margin: 50px 50px 0 50px;
+}
+#photos_init h3 {
+	font-weight: bold;
 }
 #photos_init ul {
 	padding-left: 0;
