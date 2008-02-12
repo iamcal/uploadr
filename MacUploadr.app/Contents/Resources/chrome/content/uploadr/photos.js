@@ -108,16 +108,26 @@ var photos = {
 	add: function(paths) {
 		buttons.upload.disable();
 
-		// Tally up photos and videos
+		// Tally up photos and videos and remove large videos
 		var p_count = 0;
 		var v_count = 0;
+		var big_videos = [];
+		var new_paths = [];
 		for each (var p in paths) {
 			if (photos.is_photo(p)) {
 				++p_count;
+				new_paths.push(p);
 			} else if (photos.is_video(p)) {
 				++v_count;
+				if (file.size(p) > uploadr.conf.video_max) {
+					var filename = p.match(/([^\/\\]*)$/);
+					big_videos.push(null == filename ? p : filename[1]);
+				} else {
+					new_paths.push(p);
+				}
 			}
 		}
+		paths = new_paths;
 
 		// If there are videos then there may be questions to ask
 		if (v_count) {
@@ -134,7 +144,17 @@ var photos = {
 			//   'a' to indicate they're reused (not yet, but maybe)
 			var pl = (1 == v_count ? 's' : 'p') + (0 == p_count ? 'z' : 'p');
 
-			// TODO: Warn if a video is larger than 100MB?  Remove them here?
+			// Warn if a video is larger than 100MB and remove offending
+			// videos from the list
+			if (big_videos.length) {
+				window.openDialog(
+					'chrome://uploadr/content/video_big.xul',
+					'dialog_video_big', 'chrome,modal',
+					locale.getString('video.add.big.' + pl + '.title'),
+					locale.getString('video.add.big.' + pl + '.explain'),
+					1 == v_count ? '' : big_videos.join(', '),
+					locale.getString('video.add.big.' + pl + '.ok'));
+			}
 
 			// Offline users can have video but we should warn them that
 			// we'll remove them without warning if they turn out to be
@@ -718,11 +738,7 @@ var Photo = function(id, path) {
 	this.thumb_width = 0;
 	this.thumb_height = 0;
 	var filename = path.match(/([^\/\\]*)$/);
-	if (null == filename) {
-		this.filename = '';
-	} else {
-		this.filename = filename[1];
-	}
+	this.filename = null == filename ? p : filename[1];
 	this.size = 0; // Kilobytes
 	this.title = '';
 	this.description = '';
