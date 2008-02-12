@@ -134,6 +134,8 @@ ProgressBar.prototype = {
 var free = {
 
 	update: function() {
+
+		// Counter for remaining bandwidth
 		if (users.bandwidth && !users.is_pro) {
 			var remaining = document.getElementById('bw_remaining_mb');
 			remaining.firstChild.nodeValue =
@@ -148,6 +150,8 @@ var free = {
 			}
 			document.getElementById('bw_remaining').style.display = '-moz-box';
 		}
+
+		// Counter for current batch size
 		var batch = document.getElementById('bw_batch_mb');
 		batch.firstChild.nodeValue =
 			locale.getFormattedString('mb', [Math.round(photos.batch_size / 102.4) / 10]);
@@ -160,6 +164,28 @@ var free = {
 				batch.className = '';
 			}
 		}
+
+		// Notes in the empty photo pane
+		var notes = document.getElementById('photos_init_notes');
+		while (notes.hasChildNodes()) {
+			notes.removeChild(notes.firstChild);
+		}
+		var li = document.createElementNS(NS_HTML, 'li');
+		li.appendChild(document.createTextNode(locale.getFormattedString(
+			'photos.init.note.photo_size', [users.filesize >> 10])));
+		notes.appendChild(li);
+		if (users.is_pro) {
+			li = document.createElementNS(NS_HTML, 'li');
+			li.appendChild(document.createTextNode(locale.getFormattedString(
+				'photos.init.note.video_size', [uploadr.conf.video_max >> 10])));
+			notes.appendChild(li);
+			li = document.createElementNS(NS_HTML, 'li');
+			li.appendChild(document.createTextNode(locale.getString(
+				'photos.init.note.video_length')));
+			notes.appendChild(li);
+		}
+		document.getElementById('photos_init_note').style.display = '-moz-box';
+
 	}
 
 };

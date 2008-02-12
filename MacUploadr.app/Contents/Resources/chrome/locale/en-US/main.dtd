@@ -41,6 +41,7 @@
 <!ENTITY photos.init "Drag photos here to get started.">
 <!ENTITY photos.init.text.1 "Or, click ">
 <!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.init.note "Please note:">
 <!ENTITY photos.new "While that batch is uploading, you can start a new one.">
 
 <!ENTITY settings "Settings">

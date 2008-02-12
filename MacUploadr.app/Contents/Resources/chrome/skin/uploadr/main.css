@@ -368,13 +368,14 @@ div.toolbarseparator {
 #photos_new {
 	display: none;
 }
-#photos_init h1, #photos_new h1, #photos_init h2, #photos_new h2 {
+#photos_init h1, #photos_new h1, #photos_init h2, #photos_new h2,
+#photos_init li {
 	color: #bbb;
 	text-align: center;
 	font-weight: normal;
 }
 #photos_init h1, #photos_new h1 {
-	margin: 150px 50px 5px 50px;
+	margin: 100px 50px 5px 50px;
 }
 #photos_init h2, #photos_new h2 {
 	margin: 10px 50px 0 50px;
@@ -385,6 +386,17 @@ div.toolbarseparator {
 #photos_init hbox box h2 {
 	margin: 0;
 	padding: 0 5px 0 0;
+}
+#photos_init_note {
+	display: none;
+	margin: 50px 50px 0 50px;
+}
+#photos_init ul {
+	padding-left: 0;
+}
+#photos_init li {
+	margin: 0 0 5px 0;
+	font-size: 13px;
 }
 
 /* Dragging photos into the container */

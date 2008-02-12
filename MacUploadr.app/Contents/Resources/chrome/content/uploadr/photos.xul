@@ -70,6 +70,10 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 						<box><html:h2>&photos.init.text.2;</html:h2></box>
 						<spacer flex="1" />
 					</hbox>
+					<vbox id="photos_init_note">
+						<html:h2>&photos.init.note;</html:h2>
+						<html:ul id="photos_init_notes"></html:ul>
+					</vbox>
 				</vbox>
 				<vbox id="photos_new">
 					<html:h1>&photos.new;</html:h1>
