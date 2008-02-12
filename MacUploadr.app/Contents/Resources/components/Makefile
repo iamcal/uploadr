@@ -119,29 +119,29 @@ ifneq (universal, $(PLATFORM))
 	@echo "Building the API key XPCOM component..."
 ifeq (mac, $(PLATFORM))
 	@echo "Building the API key XPT file..."
-	$(GECKO_SDK).$(PLATFORM)/bin/xpidl \
+	$(GECKO_SDK)/bin/xpidl \
 		-m header \
-		-I$(GECKO_SDK).$(PLATFORM)/idl \
+		-I$(GECKO_SDK)/idl \
 		flIKey.idl
-	$(GECKO_SDK).$(PLATFORM)/bin/xpidl \
+	$(GECKO_SDK)/bin/xpidl \
 		-m typelib \
-		-I$(GECKO_SDK).$(PLATFORM)/idl \
+		-I$(GECKO_SDK)/idl \
 		flIKey.idl
 endif
 	g++ -w -c -O2 \
 		-o flKey.o \
-		-I$(GECKO_SDK).$(PLATFORM)/include \
+		-I$(GECKO_SDK)/include \
 		$(DEFINE) \
 		flKey.cpp
 	g++ -w -c -O2 \
 		-o flKeyModule.o \
-		-I$(GECKO_SDK).$(PLATFORM)/include \
+		-I$(GECKO_SDK)/include \
 		$(DEFINE) \
 		flKeyModule.cpp
 	g++ -dynamiclib -O2 \
 		-o key.dylib.$(PLATFORM) \
 		flKey.o flKeyModule.o \
-		-L$(GECKO_SDK).$(PLATFORM)/lib \
+		-L$(GECKO_SDK)/lib \
 		-L$(XULRUNNER) -Wl,-executable_path,$(XULRUNNER) \
 		-lxpcomglue_s -lxpcom -lnspr4
 else
@@ -152,9 +152,9 @@ endif
 
 clh:
 	@echo "Building the CLH XPT file..."
-	$(GECKO_SDK).$(PLATFORM)/bin/xpidl \
+	$(GECKO_SDK)/bin/xpidl \
 		-m typelib \
-		-I$(GECKO_SDK).$(PLATFORM)/idl \
+		-I$(GECKO_SDK)/idl \
 		flICLH.idl
 
 

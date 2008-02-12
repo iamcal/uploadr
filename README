@@ -125,15 +125,15 @@ Download GraphicsMagick from:
 
 Configure and install GraphicsMagick like this:
   $ ./configure \
-      CFLAGS="-O3" \
-      CXXFLAGS="-O3" \
-      CPPFLAGS="-I/opt/local/include -I/usr/local/include" \
-      LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
-      --without-x --without-perl \
-      --disable-installed \
-      --without-dps --without-fpx --without-jbig --without-jp2 \
-      --without-lcms --without-trio --without-ttf --without-wmf \
-      --with-quantum-depth=16
+    CFLAGS="-O3" \
+    CXXFLAGS="-O3" \
+    CPPFLAGS="-I/opt/local/include -I/usr/local/include" \
+    LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
+    --without-x --without-perl \
+    --disable-installed \
+    --without-dps --without-fpx --without-jbig --without-jp2 \
+    --without-lcms --without-trio --without-ttf --without-wmf \
+    --with-quantum-depth=16
   $ make && sudo make install
 
 Because of dynamic/static linker weirdness, after building GraphicsMagick,
@@ -150,11 +150,11 @@ Contents/lib/GraphicsMagick-<version>/config/.
 EXIV2
 ------------------------------------------------------------------------
 
+Download Exiv2 source from:
+  http://exiv2.org/download.html
+
 Windows
 -------
-
-Download Exiv2 from:
-  http://exiv2.org/download.html
 
 Just like GraphicsMagick, let Visual Studio 8 eat the 7.1 project files
 and then make the following changes:
@@ -176,6 +176,10 @@ Mac
 
 FFmpeg
 ------------------------------------------------------------------------
+
+Checkout FFmpeg like this:
+
+  $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
 
 Windows
 -------
@@ -226,7 +230,7 @@ Found a way to keep even ffmpeg from building.
     cabac.h:529: error: PIC register '%ebx' clobbered in 'asm'
 
 The issue lies in -mdynamic-no-pic, which is used (and needed?) to build
-ffmpeg.  ff_test will build when flGM will not because -mdynamic-no-pic
+FFmpeg.  ff_test will build when flGM will not because -mdynamic-no-pic
 can't be used to build shared libraries.
 
 People working on Blender seem to have similar issues so I'm going to

@@ -34,20 +34,43 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 				<string>TIFF</string>
 				<string>tif</string>
 				<string>TIF</string>
+				<string>mp4</string>
+				<string>MP4</string>
+				<string>mpeg</string>
+				<string>MPEG</string>
+				<string>mpg</string>
+				<string>MPG</string>
+				<string>avi</string>
+				<string>AVI</string>
+				<string>wmv</string>
+				<string>WMV</string>
+				<string>mov</string>
+				<string>MOV</string>
+				<string>dv</string>
+				<string>DV</string>
+				<string>3gp</string>
+				<string>3GP</string>
 			</array>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>GIFf</string>
+				<string>GIF </string>
 				<string>JPEG</string>
-				<string>PNGf</string>
+				<string>PNG </string>
 				<string>TIFF</string>
+				<string>MPEG</string>
+				<string>MPG </string>
+				<string>AVI </string>
+				<string>WMV </string>
+				<string>MOV </string>
+				<string>DV  </string>
+				<string>3GP </string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 		</dict>
 	</array>
 	<key>CFBundleGetInfoString</key>
-	<string>Flickr Uploadr 3.0, © Yahoo!, Inc.</string>
+	<string>Flickr Uploadr 3.1, © Yahoo!, Inc.</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.flickr.uploadr</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -57,7 +80,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.0</string>
+	<string>3.1</string>
 	<key>CFBundleSignature</key>
 	<string>FLUP</string>
 	<key>CFBundleIconFile</key>
@@ -74,6 +97,6 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3.0.3</string>
+	<string>3.1</string>
 </dict>
 </plist>
