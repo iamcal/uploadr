@@ -23,7 +23,7 @@ it into:
 
 If you are on a Mac you have two more steps.  First install the Mac
 version of XULRunner, which will live in /Library/Frameworks.  Then
-run this (substituting your path to UPLOADR if necessary):
+run this (substituting your path to UPLOADR as necessary):
   $ mkdir UPLOADR/MacUplaodr.app/Contents/Frameworks
   $ sudo mv /Library/Frameworks/XUL.framework \
       UPLOADR/MacUploadr.app/Contents/Frameworks

@@ -134,6 +134,8 @@ var photos = {
 			//   'a' to indicate they're reused (not yet, but maybe)
 			var pl = (1 == v_count ? 's' : 'p') + (0 == p_count ? 'z' : 'p');
 
+			// TODO: Warn if a video is larger than 100MB?  Remove them here?
+
 			// Offline users can have video but we should warn them that
 			// we'll remove them without warning if they turn out to be
 			// a free user at upload time
@@ -378,9 +380,9 @@ var photos = {
 			}
 		}
 
-		// Drop videos if we're a free user
+		// Drop videos if we're a free user or they're over 100MB
 		//   They will have been warned that this is coming
-		if (from_user && !users.is_pro) {
+		if (from_user) {
 			var new_list = [];
 			for each (var p in list) {
 				if (null == p) {
@@ -388,7 +390,7 @@ var photos = {
 				}
 				if (photos.is_photo(p.path)) {
 					new_list.push(p);
-				} else {
+				} else if (!users.is_pro || uploadr.conf.video_max < p.size) {
 					photos.batch_size -= p.size;
 				}
 			}
@@ -430,11 +432,8 @@ var photos = {
 
 					}
 
-					// Videos have special rules
-					else if (photos.is_video(p.path)) {
-
-						// TODO: What do we do with a video bigger than 100MB?
-
+					// By this point there are no videos that break the rules
+					else {
 						ready_size += p.size;
 					}
 

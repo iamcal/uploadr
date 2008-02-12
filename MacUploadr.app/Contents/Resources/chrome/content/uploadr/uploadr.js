@@ -62,8 +62,8 @@ var uploadr = {
 		// Not advised to change below here
 		//
 
-		// Maximum size of a video upload (megabytes)
-		video_max: 100,
+		// Maximum size of a video upload (kilobytes)
+		video_max: 100 << 10,
 
 		// Upload mode
 		//   Must be 'sync' or 'async'

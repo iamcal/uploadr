@@ -56,7 +56,9 @@ var meta = {
 			is_family.disabled = true;
 			document.getElementById('batch_content_type').value = 0;
 			document.getElementById('batch_hidden').value = 0;
-			document.getElementById('batch_safety_level').value = 0;
+			var safety_level = document.getElementById('batch_safety_level');
+			safety_level.value = 0;
+			safety_level.selectedItem.label = '';
 
 			// Clear the old sets list
 			ul = document.getElementById('batch_sets_added');
@@ -620,13 +622,46 @@ var meta = {
 				//   This will be applied when the selection changes,
 				//   just like always
 				else if ('ok' == result.result && result.safety_level) {
-					// TODO: Talk more with Dunstan to figure out how this
-					// will work
+
+					// Update the safety level of only the videos
+					for each (var id in photos.selected) {
+						if (null == photos.list[id]) {
+							continue;
+						}
+						if (photos.is_video(photos.list[id].path)) {
+							photos.list[id].safety_level = result.safety_level;
+						} else {
+							photos.list[id].safety_level = 3;
+						}
+					}
+
+					// If just one video is selected adjust the safety level
+					if (1 == photos.selected.length) {
+						document.getElementById('single_safety_level').value =
+							result.safety_level;
+					}
+
+					// If multiple photos are selected, indicate the safety
+					// level inconsistency in the display
+					else {
+						var safety_level = document.getElementById('batch_safety_level');
+						safety_level.value = 0;
+						safety_level.selectedItem.label =
+							locale.getString('video.safety_level.mixed');
+					}
+
 				}
 
 			}
 
 		}
+
+		// If they select something besides restricted, clean up
+		else {
+			document.getElementById('batch_safety_level').getElementsByTagName(
+				'menupopup')[0].getElementsByTagName('menuitem')[0].label = '';
+		}
+
 	}
 
 };
