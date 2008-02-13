@@ -57,7 +57,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<html:p id="drag_follower"> </html:p>
 				</stack>
 				<vbox id="photos_init">
-					<html:h1>&photos.init;</html:h1>
+					<html:h1 id="photos_init_prompt"> </html:h1>
 					<hbox flex="1">
 						<spacer flex="1" />
 						<box><html:h2>&photos.init.text.1;</html:h2></box>
@@ -109,7 +109,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							tooltiptext="&meta.tags.tooltip;" />
 						</vbox>
 						<vbox class="column">
-							<html:p>&meta.single.who;</html:p>
+							<html:p id="single_who"> </html:p>
 							<radiogroup id="single_is_public" value="1" tabindex="5"
 							oncommand="meta.is_public(this.value);">
 								<radio value="0" label="&settings.privacy.private;" />
@@ -198,7 +198,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							tooltiptext="&meta.tags.tooltip;" />
 						</vbox>
 						<vbox class="column">
-							<html:p>&meta.batch.who;</html:p>
+							<html:p id="batch_who"> </html:p>
 							<radiogroup id="batch_is_public" value="2" tabindex="5"
 							oncommand="meta.is_public(this.value);">
 								<radio value="0" label="&settings.privacy.private;" />
@@ -279,7 +279,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<textbox multiline="true" rows="2" disabled="true" />
 						</vbox>
 						<vbox class="column">
-							<html:p>&meta.single.who;</html:p>
+							<html:p id="no_who"> </html:p>
 							<radiogroup id="no_is_public" value="2" disabled="true">
 								<radio value="0" label="&settings.privacy.private;" />
 									<checkbox label="&settings.privacy.friend;" disabled="true" />

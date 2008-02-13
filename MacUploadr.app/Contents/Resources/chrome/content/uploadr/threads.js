@@ -185,7 +185,7 @@ ThumbCallback.prototype = {
 				// Calculate file size
 				photos.list[this.id].size = file.size(photos.list[this.id].path);
 				photos.batch_size += photos.list[this.id].size;
-				free.update();
+				ui.bandwidth_updated();
 
 			}
 

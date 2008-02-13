@@ -779,7 +779,7 @@ var flickr = {
 				} else {
 					users.sets = parseInt(sets);
 				}
-				free.update();
+				ui.users_updated();
 				users.update();
 			}
 		}

@@ -286,7 +286,7 @@ var settings = {
 								--photos.count;
 							}
 						}
-						free.update();
+						ui.bandwidth_updated();
 
 						// If remove is blocked then we know photos.normalize
 						// will be called as it is unblocked

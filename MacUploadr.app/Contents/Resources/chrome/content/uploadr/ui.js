@@ -8,6 +8,124 @@
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
 
+// A bit of a catch-all, but better than it was before
+var ui = {
+
+	// Called at app startup
+	init: function() {
+
+		// Default the initial prompt to the free user case
+		document.getElementById('photos_init_prompt').firstChild.nodeValue =
+			locale.getString('photos.init.free');
+
+
+		// The meta fields with no selection should refer to a photo
+		document.getElementById('no_who').firstChild.nodeValue = 
+			locale.getString('meta.single.who.photo');
+
+		// Sneaky reformatting of help text
+		for each (var id in ['help_offline', 'help_drag']) {
+			var node = document.getElementById(id);
+			var parts = node.firstChild.nodeValue.split('^^');
+			node.removeChild(node.firstChild);
+			node.appendChild(document.createTextNode(parts[0]));
+			var span = document.createElementNS(NS_HTML, 'span');
+			span.style.color = '#ff0084';
+			span.appendChild(document.createTextNode(parts[1]));
+			node.appendChild(span);
+			node.appendChild(document.createTextNode(parts[2]));
+		}
+		var node = document.getElementById('help_faq');
+		var parts = node.firstChild.nodeValue.split('^^');
+		node.removeChild(node.firstChild);
+		node.appendChild(document.createTextNode(parts[0]));
+		var span = document.createElementNS(NS_HTML, 'span');
+		span.className = 'link';
+		span.onclick = help.faq;
+		span.appendChild(document.createTextNode(parts[1]));
+		node.appendChild(span);
+		node.appendChild(document.createTextNode(parts[2]));
+
+	},
+
+	// Called after user info is changed, for example by API calls done
+	// at login time
+	users_updated: function() {
+		ui.bandwidth_updated();
+
+		// Notes in the empty photo pane
+		var notes = document.getElementById('photos_init_notes');
+		while (notes.hasChildNodes()) {
+			notes.removeChild(notes.firstChild);
+		}
+		var li = document.createElementNS(NS_HTML, 'li');
+		li.appendChild(document.createTextNode(locale.getFormattedString(
+			'photos.init.note.photo_size', [users.filesize >> 10])));
+		notes.appendChild(li);
+		if (users.is_pro) {
+
+			// Additional notes for pro users regarding videos
+			li = document.createElementNS(NS_HTML, 'li');
+			li.appendChild(document.createTextNode(locale.getFormattedString(
+				'photos.init.note.video_size', [uploadr.conf.video_max >> 10])));
+			notes.appendChild(li);
+			li = document.createElementNS(NS_HTML, 'li');
+			li.appendChild(document.createTextNode(locale.getString(
+				'photos.init.note.video_length')));
+			notes.appendChild(li);
+
+			// Replace the top prompt for pro users to mention videos
+			document.getElementById('photos_init_prompt').firstChild.nodeValue =
+				locale.getString('photos.init.pro');
+
+		} else {
+
+			// Replace the top prompt for free users to mention only photos
+			document.getElementById('photos_init_prompt').firstChild.nodeValue =
+				locale.getString('photos.init.free');
+			
+		}
+		document.getElementById('photos_init_note').style.display = '-moz-box';
+
+	},
+
+	// Update the counters showing remaining bandwidth and batch size
+	bandwidth_updated: function() {
+
+		// Counter for remaining bandwidth
+		if (users.bandwidth && !users.is_pro) {
+			var remaining = document.getElementById('bw_remaining_mb');
+			remaining.firstChild.nodeValue =
+				locale.getFormattedString('mb', [Math.max(0,
+				Math.round(users.bandwidth.remaining / 102.4) / 10)]);
+			if (0 >= users.bandwidth.remaining) {
+				remaining.className = 'exhausted';
+			} else if (6 << 10 > users.bandwidth.remaining) {
+				remaining.className = 'almost';
+			} else {
+				remaining.className = '';
+			}
+			document.getElementById('bw_remaining').style.display = '-moz-box';
+		}
+
+		// Counter for current batch size
+		var batch = document.getElementById('bw_batch_mb');
+		batch.firstChild.nodeValue =
+			locale.getFormattedString('mb', [Math.round(photos.batch_size / 102.4) / 10]);
+		if (users.bandwidth) {
+			if (photos.batch_size > users.bandwidth.remaining) {
+				batch.className = 'exhausted';
+			} else if (photos.batch_size + (6 << 10) > users.bandwidth.remaining) {
+				batch.className = 'almost';
+			} else {
+				batch.className = '';
+			}
+		}
+
+	}
+
+};
+
 // Full-screen pages in the UI
 var pages = {
 
@@ -65,31 +183,6 @@ var help = {
 
 	faq: function() {
 		launch_browser('http://flickr.com/help/tools/');
-	},
-
-	// Sneaky reformatting of help text
-	_pretty: function() {
-		for each (var id in ['help_offline', 'help_drag']) {
-			var node = document.getElementById(id);
-			var parts = node.firstChild.nodeValue.split('^^');
-			node.removeChild(node.firstChild);
-			node.appendChild(document.createTextNode(parts[0]));
-			var span = document.createElementNS(NS_HTML, 'span');
-			span.style.color = '#ff0084';
-			span.appendChild(document.createTextNode(parts[1]));
-			node.appendChild(span);
-			node.appendChild(document.createTextNode(parts[2]));
-		}
-		var node = document.getElementById('help_faq');
-		var parts = node.firstChild.nodeValue.split('^^');
-		node.removeChild(node.firstChild);
-		node.appendChild(document.createTextNode(parts[0]));
-		var span = document.createElementNS(NS_HTML, 'span');
-		span.className = 'link';
-		span.onclick = help.faq;
-		span.appendChild(document.createTextNode(parts[1]));
-		node.appendChild(span);
-		node.appendChild(document.createTextNode(parts[2]));
 	}
 
 };
@@ -130,66 +223,6 @@ ProgressBar.prototype = {
 
 };
 
-// Free account capacity indicator
-var free = {
-
-	update: function() {
-
-		// Counter for remaining bandwidth
-		if (users.bandwidth && !users.is_pro) {
-			var remaining = document.getElementById('bw_remaining_mb');
-			remaining.firstChild.nodeValue =
-				locale.getFormattedString('mb', [Math.max(0,
-				Math.round(users.bandwidth.remaining / 102.4) / 10)]);
-			if (0 >= users.bandwidth.remaining) {
-				remaining.className = 'exhausted';
-			} else if (6 << 10 > users.bandwidth.remaining) {
-				remaining.className = 'almost';
-			} else {
-				remaining.className = '';
-			}
-			document.getElementById('bw_remaining').style.display = '-moz-box';
-		}
-
-		// Counter for current batch size
-		var batch = document.getElementById('bw_batch_mb');
-		batch.firstChild.nodeValue =
-			locale.getFormattedString('mb', [Math.round(photos.batch_size / 102.4) / 10]);
-		if (users.bandwidth) {
-			if (photos.batch_size > users.bandwidth.remaining) {
-				batch.className = 'exhausted';
-			} else if (photos.batch_size + (6 << 10) > users.bandwidth.remaining) {
-				batch.className = 'almost';
-			} else {
-				batch.className = '';
-			}
-		}
-
-		// Notes in the empty photo pane
-		var notes = document.getElementById('photos_init_notes');
-		while (notes.hasChildNodes()) {
-			notes.removeChild(notes.firstChild);
-		}
-		var li = document.createElementNS(NS_HTML, 'li');
-		li.appendChild(document.createTextNode(locale.getFormattedString(
-			'photos.init.note.photo_size', [users.filesize >> 10])));
-		notes.appendChild(li);
-		if (users.is_pro) {
-			li = document.createElementNS(NS_HTML, 'li');
-			li.appendChild(document.createTextNode(locale.getFormattedString(
-				'photos.init.note.video_size', [uploadr.conf.video_max >> 10])));
-			notes.appendChild(li);
-			li = document.createElementNS(NS_HTML, 'li');
-			li.appendChild(document.createTextNode(locale.getString(
-				'photos.init.note.video_length')));
-			notes.appendChild(li);
-		}
-		document.getElementById('photos_init_note').style.display = '-moz-box';
-
-	}
-
-};
-
 // Change the status bar text
 var status = {
 
@@ -206,12 +239,39 @@ var status = {
 
 };
 
-// Get the locale object (a StringBundle) from the DOM
-var locale = document.getElementById('locale');
+// Override the alert, confirm and prompt functions to take a title and text for OK/Cancel buttons
+var alert = function(msg, title, ok) {
+	window.openDialog('chrome://uploadr/content/alert.xul', 'dialog_alert',
+		'chrome,modal', msg, title, ok);
+};
+var confirm = function(msg, title, ok, cancel) {
+	var result = {result: false};
+	window.openDialog('chrome://uploadr/content/confirm.xul', 'dialog_confirm',
+		'chrome,modal', msg, title, ok, cancel, result);
+	return result.result;
+};
+var prompt = function(msg, title, ok, cancel) {
+	var result = {result: false};
+	window.openDialog('chrome://uploadr/content/prompt.xul', 'dialog_prompt',
+		'chrome,modal', msg, title, ok, cancel, result);
+	return result.result;
+};
+
+// Open a browser window to the given URL
+var launch_browser = function(url) {
+	var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+	var uri = io.newURI(url, null, null);
+	var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
+		Ci.nsIExternalProtocolService);
+	var launcher = eps.getProtocolHandlerInfo('http');
+	launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
+	launcher.launchWithURI(uri, null);
+};
 
 // Now hack locale.getFormattedString to work like it should
 //   Apparently the docs were just wrong and it must be a capital S
 //   So, this function will go away eventually
+var locale = document.getElementById('locale');
 locale.getFormattedString = function(id, args) {
 	var str = locale.getString(id);
 	var ii = args.length;
@@ -222,7 +282,7 @@ locale.getFormattedString = function(id, args) {
 	return str;
 };
 
-// Allow functions to block removing photos
+// Stacks to block removing photos, sorting photos and exiting Uploadr
 var _block_remove = 0;
 var block_remove = function() {
 	if (0 == _block_remove) {
@@ -236,8 +296,6 @@ var unblock_remove = function() {
 		buttons.remove.enable();
 	}
 };
-
-// Allow functions to block sorting
 var _block_sort = 0;
 var block_sort = function() {
 	++_block_sort;
@@ -245,8 +303,6 @@ var block_sort = function() {
 var unblock_sort = function() {
 	--_block_sort;
 };
-
-// Allow functions to block exiting
 var _block_exit = 0;
 var block_exit = function() {
 	++_block_exit;
@@ -255,6 +311,7 @@ var unblock_exit = function() {
 	--_block_exit;
 };
 
+// Exit Uploadr, asking for confirmation if necessary
 var exit = function(force) {
 	if (null == force) {
 		force = false;
@@ -303,33 +360,4 @@ var exit = function(force) {
 		Components.interfaces.nsIAppStartup);
 	e.quit(Ci.nsIAppStartup.eForceQuit);
 
-};
-
-// Override the alert, confirm and prompt functions to take a title and text for OK/Cancel buttons
-var alert = function(msg, title, ok) {
-	window.openDialog('chrome://uploadr/content/alert.xul', 'dialog_alert',
-		'chrome,modal', msg, title, ok);
-};
-var confirm = function(msg, title, ok, cancel) {
-	var result = {result: false};
-	window.openDialog('chrome://uploadr/content/confirm.xul', 'dialog_confirm',
-		'chrome,modal', msg, title, ok, cancel, result);
-	return result.result;
-};
-var prompt = function(msg, title, ok, cancel) {
-	var result = {result: false};
-	window.openDialog('chrome://uploadr/content/prompt.xul', 'dialog_prompt',
-		'chrome,modal', msg, title, ok, cancel, result);
-	return result.result;
-};
-
-// Open a browser window to the given URL
-var launch_browser = function(url) {
-	var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
-	var uri = io.newURI(url, null, null);
-	var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
-		Ci.nsIExternalProtocolService);
-	var launcher = eps.getProtocolHandlerInfo('http');
-	launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
-	launcher.launchWithURI(uri, null);
 };

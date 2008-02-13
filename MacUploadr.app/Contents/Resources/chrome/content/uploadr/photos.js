@@ -323,7 +323,7 @@ var photos = {
 			photos.list[id] = null;
 			--photos.count;
 		}
-		free.update();
+		ui.bandwidth_updated();
 		photos.normalize();
 		meta.disable();
 
@@ -474,7 +474,7 @@ var photos = {
 				while (list.hasChildNodes()) {
 					list.removeChild(list.firstChild);
 				}
-				free.update();
+				ui.bandwidth_updated();
 				threads.worker.dispatch(new RetryUpload(true), threads.worker.DISPATCH_NORMAL);
 
 				// Give some meaningful feedback
@@ -562,7 +562,7 @@ var photos = {
 			while (ul.hasChildNodes()) {
 				ul.removeChild(ul.firstChild);
 			}
-			free.update();
+			ui.bandwidth_updated();
 		}
 
 		// Kick off the first batch job if we haven't started

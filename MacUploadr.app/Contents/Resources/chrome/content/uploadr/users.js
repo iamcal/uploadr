@@ -175,7 +175,7 @@ var users = {
 		// Force the bandwidth meter and command line handler if there's
 		// no one logged in
 		if (!users.username) {
-			free.update();
+			ui.users_updated();
 			clh();
 		}
 

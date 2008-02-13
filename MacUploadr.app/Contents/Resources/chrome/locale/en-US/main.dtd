@@ -26,7 +26,7 @@
 <!ENTITY tools.add "+ Add">
 <!ENTITY tools.remove "− Remove">
 
-<!ENTITY buttons.upload "Upload photos">
+<!ENTITY buttons.upload "Upload">
 <!ENTITY buttons.cancel "Cancel">
 <!ENTITY buttons.auth "Ready!">
 <!ENTITY buttons.ok "OK">
@@ -34,14 +34,15 @@
 <!ENTITY bandwidth.remaining "Left this month">
 <!ENTITY bandwidth.batch "This batch">
 
-<!ENTITY photostream.title "Your photos">
+<!ENTITY photostream.title "Your photostream">
 
-<!ENTITY photos.sort.default "Your photos are currently ordered by date taken.  Drag and drop to reorder.">
-<!ENTITY photos.sort.revert "Re-sort photos by date taken">
-<!ENTITY photos.init "Drag photos here to get started.">
+<!ENTITY photos.sort.default "Your items are currently ordered by date taken.  Drag and drop to reorder.">
+<!ENTITY photos.sort.revert "Re-sort items by date taken">
+
 <!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find photos on your computer.">
+<!ENTITY photos.init.text.2 " to find files on your computer.">
 <!ENTITY photos.init.note "Please note:">
+
 <!ENTITY photos.new "While that batch is uploading, you can start a new one.">
 
 <!ENTITY settings "Settings">
@@ -51,7 +52,7 @@
 <!ENTITY settings.users.remove "Remove selected user">
 <!ENTITY settings.users.add "Add new user">
 <!ENTITY settings.privacy "Default privacy:">
-<!ENTITY settings.privacy.who "Who can see your photos?">
+<!ENTITY settings.privacy.who "Who can see your items?">
 <!ENTITY settings.privacy.private "Only you">
 <!ENTITY settings.privacy.friend "Your friends">
 <!ENTITY settings.privacy.family "Your family">
@@ -78,18 +79,16 @@
 
 <!ENTITY meta.single.title "Title:">
 <!ENTITY meta.batch.title "Replace titles:">
-<!ENTITY meta.batch.title.tooltip "Entering a title here will overwrite the titles of selected photos.">
+<!ENTITY meta.batch.title.tooltip "Entering a title here will overwrite the titles of selected items.">
 <!ENTITY meta.single.description "Description:">
 <!ENTITY meta.batch.description "Add to existing descriptions:">
-<!ENTITY meta.batch.description.tooltip "Entering a description will append it to the descriptions of selected photos.">
+<!ENTITY meta.batch.description.tooltip "Entering a description will append it to the descriptions of selected items.">
 <!ENTITY meta.single.tags "Tags:">
 <!ENTITY meta.batch.tags "Add to existing tags:">
 <!ENTITY meta.tags.tooltip "Separate each tag with a space: cameraphone urban moblog. Or to join 2 words together in one tag, use double quotes: &#34;daily commute&#34;.">
-<!ENTITY meta.single.who "Who can see this photo?">
-<!ENTITY meta.batch.who "Who can see these photos?">
 <!ENTITY meta.content_type "Content type:">
 <!ENTITY meta.safety_level "Safety level:">
-<!ENTITY meta.first "All photos are selected">
+<!ENTITY meta.first "All items are selected">
 <!ENTITY meta.single.sets.add "Add to sets:">
 <!ENTITY meta.batch.sets.add "Add to more sets:">
 <!ENTITY meta.sets.add.none "No sets">
@@ -99,7 +98,7 @@
 <!ENTITY meta.sets.added.none "You haven't selected any sets">
 <!ENTITY meta.hidden "Sign in to see your sets">
 
-<!ENTITY meta.no.prompt "Select a photo (or many) to add titles, tags and descriptions or add your photos to sets">
+<!ENTITY meta.no.prompt "Select an item (or many) to add titles, tags and descriptions or add your items to sets">
 <!ENTITY meta.batch.prompt "You can now replace all titles with a new one, add to existing descriptions, add more tags or add to more sets.">
 
 <!ENTITY dialog.set.title "Create a set">
@@ -116,7 +115,7 @@
 <!ENTITY help "Tips and Tricks">
 <!ENTITY help.offline "You can ^^work offline^^.">
 <!ENTITY help.offline.text.first "The Uploadr is designed to let you do much of your photo organization and tagging offline.  Once you're ready to upload to Flickr, sign in to your account, and press the enormous Upload Photos button.">
-<!ENTITY help.offline.text.second "You can be signed in all the time, if you like.  When you're signed in, you can organize your photos into sets.">
+<!ENTITY help.offline.text.second "You can be signed in all the time, if you like.  When you're signed in, you can organize your items into sets.">
 <!ENTITY help.drag "^^Drag and drop^^ is your friend.">
-<!ENTITY help.drag.text "You can drag photos into the order that you'd like them to appear on your photos page when they're uploaded.  If you need to, you can also reset any arrangement you make so the photos go back to being ordered by the date they were taken.">
+<!ENTITY help.drag.text "You can drag items into the order that you'd like them to appear on your photostream page when they're uploaded.  If you need to, you can also reset any arrangement you make so the items go back to being ordered by the date they were taken.">
 <!ENTITY help.faq "If you have more questions, please visit our ^^Uploadr FAQ^^">

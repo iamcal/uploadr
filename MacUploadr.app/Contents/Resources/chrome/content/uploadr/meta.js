@@ -37,6 +37,33 @@ var meta = {
 
 		// Load the defaults for a partial batch
 		if (null == id) {
+
+			// Proper diction
+			var p_count = 0;
+			var v_count = 0;
+			var ii = photos.list.length;
+			for (var i = 0; i < ii; ++i) {
+				if (null == photos.list[i]) {
+					continue;
+				}
+				if (photos.is_photo(photos.list[i].path)) {
+					++p_count;
+				} else {
+					++v_count;
+				}
+			}
+			if (p_count && v_count) {
+				document.getElementById('batch_who').firstChild.nodeValue = 
+					locale.getString('meta.batch.who.items');
+			} else if (v_count) {
+				document.getElementById('batch_who').firstChild.nodeValue = 
+					locale.getString('meta.batch.who.videos');
+			} else {
+				document.getElementById('batch_who').firstChild.nodeValue = 
+					locale.getString('meta.batch.who.photos');				
+			}
+
+			// Prompt
 			if (meta.first) {
 				document.getElementById('batch_prompt').firstChild.nodeValue =
 					locale.getString('meta.first');
@@ -44,6 +71,8 @@ var meta = {
 				document.getElementById('batch_prompt').firstChild.nodeValue =
 					locale.getFormattedString('meta.batch.prompt', [photos.selected.length]);
 			}
+
+			// Blank slate metadata
 			document.getElementById('batch_title').value = '';
 			document.getElementById('batch_description').value = '';
 			document.getElementById('batch_tags').value = '';
@@ -81,6 +110,17 @@ var meta = {
 			if (null == p) {
 				return;
 			}
+
+			// Proper diction
+			if (photos.is_video(p.path)) {
+				document.getElementById('single_who').firstChild.nodeValue = 
+					locale.getString('meta.single.who.video');
+			} else {
+				document.getElementById('single_who').firstChild.nodeValue = 
+					locale.getString('meta.single.who.photo');
+			}
+
+			// Show a preview of the image with file size and dimensions
 			if (!meta.first) {
 				document.getElementById('single_prompt').style.display = 'none';
 				document.getElementById('single_preview').style.display = '-moz-box';
@@ -108,6 +148,8 @@ var meta = {
 				document.getElementById('meta_size').value = locale.getFormattedString('mb',
 					[Math.round(p.size / 102.4) / 10]);
 			}
+
+			// Pre-populate metadata
 			document.getElementById('single_title').value = p.title;
 			document.getElementById('single_description').value = p.description;
 			document.getElementById('single_tags').value = p.tags;
@@ -605,7 +647,7 @@ var meta = {
 							--photos.count;
 						}
 					}
-					free.update();
+					ui.bandwidth_updated();
 					photos.selected = new_selected;
 
 					// If remove is blocked then we know photos.normalize
