@@ -12,66 +12,64 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 const NS_HTML = 'http://www.w3.org/1999/xhtml';
 
-var uploadr = {
-	conf: {
+var conf = {
 
-		// What version am I?
-		version: '3.1',
+	// What version am I?
+	version: '3.1',
 
-		// What types of API events should be written to the console?
-		console: {
-			request: false,
-			response: false,
-			error: true,
-			timeout: true,
-			retry: true
-		},
+	// What types of API events should be written to the console?
+	console: {
+		request: false,
+		response: false,
+		error: true,
+		timeout: true,
+		retry: true
+	},
 
-		// Size of thumbnails
-		thumb_size: 100,
+	// Size of thumbnails
+	thumb_size: 100,
 
-		// Scrolling threshold for dragging (pixels);
-		scroll: 20,
+	// Scrolling threshold for dragging (pixels);
+	scroll: 20,
 
-		// Upload timeout (milliseconds);
-		timeout: 60000,
+	// Upload timeout (milliseconds);
+	timeout: 60000,
 
-		// Upload progress-checking interval (milliseconds)
-		check: 400,
+	// Upload progress-checking interval (milliseconds)
+	check: 400,
 
-		// How often should the app auto-save metadata? (seconds)
-		auto_save: 60,
+	// How often should the app auto-save metadata? (seconds)
+	auto_save: 60,
 
-		// Should we warn users when they're about to clobber data when leaving a batch?
-		confirm_batch_save: false,
+	// Should we warn users when they're about to clobber data when leaving a batch?
+	confirm_batch_save: false,
 
-		// Should we auto-select images as they're added? (at least until the user clicks)
-		auto_select: false,
+	// Should we auto-select images as they're added? (at least until the user clicks)
+	auto_select: false,
 
-		// Should we auto-select after rotating
-		auto_select_after_rotate: false,
+	// Should we auto-select after rotating
+	auto_select_after_rotate: false,
 
-		// How many times (in a row) should we automatically retry a photo?
-		//   This is PER PHOTO and will be reset after each successful upload
-		auto_retry_count: 3,
+	// How many times (in a row) should we automatically retry a photo?
+	//   This is PER PHOTO and will be reset after each successful upload
+	auto_retry_count: 3,
 
-		// How many times should checkTickets retry before giving up?
-		tickets_retry_count: 10,
+	// How many times should checkTickets retry before giving up?
+	tickets_retry_count: 10,
 
-		//
-		// Not advised to change below here
-		//
+	//
+	// Not advised to change below here
+	//
 
-		// Maximum size of a video upload (kilobytes)
-		video_max: 100 << 10,
+	// Maximum size of a video upload (kilobytes)
+	video_max: 100 << 10,
 
-		// Upload mode
-		//   Must be 'sync' or 'async'
-		//   'sync' will not send the user to the after-upload page correctly
-		mode: 'async',
+	// Upload mode
+	//   Must be 'sync' or 'async'
+	//   'sync' will not send the user to the after-upload page correctly
+	mode: 'async',
 
-		// Scrollbar width (pixels)
-		scrollbar_width: 14,
+	// Scrollbar width (pixels)
+	scrollbar_width: 14,
 
-	}
 };
