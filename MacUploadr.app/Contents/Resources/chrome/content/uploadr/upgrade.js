@@ -12,52 +12,49 @@ var upgrade = {
 
 	check: function(){
 
-		var um = Cc["@mozilla.org/updates/update-manager;1"].getService(
+		var um = Cc['@mozilla.org/updates/update-manager;1'].getService(
 			Ci.nsIUpdateManager);
-		var prompter = Cc["@mozilla.org/updates/update-prompt;1"].createInstance(
+		var prompter = Cc['@mozilla.org/updates/update-prompt;1'].createInstance(
 			Ci.nsIUpdatePrompt);
 
-		// If there's an update ready to be applied, show the "Update Downloaded"
+		// If there's an update ready to be applied, show the 'Update Downloaded'
 		// UI instead and let the user know they have to restart the browser for
 		// the changes to be applied. 
-
-		if (um.activeUpdate && um.activeUpdate.state == "pending") {
+		if (um.activeUpdate && 'pending' == um.activeUpdate.state) {
 			prompter.showUpdateDownloaded(um.activeUpdate);
 		} else {
 			prompter.checkForUpdates();
 		}
+
 	},
 
 	build_menu: function(){
-		var updates = Cc["@mozilla.org/updates/update-service;1"].getService(
+		var updates = Cc['@mozilla.org/updates/update-service;1'].getService(
 			Ci.nsIApplicationUpdateService);
-		var um = Cc["@mozilla.org/updates/update-manager;1"].getService(
+		var um = Cc['@mozilla.org/updates/update-manager;1'].getService(
 			Ci.nsIUpdateManager);
-		var checkForUpdates	= document.getElementById("menu_updates");
-		var strings		= document.getElementById("locale");
-		var activeUpdate	= um.activeUpdate;
-		function getStringWithUpdateName(key) {
-			if (activeUpdate && activeUpdate.name) {
-				return strings.getFormattedString(key, [activeUpdate.name]);
-			}
-			return strings.getString(key + "Fallback");
-		}
-		var key = "default";
-		if (activeUpdate) {
-			switch (activeUpdate.state) {
-				case "downloading":
-					key = updates.isDownloading ? "downloading" : "resume";
-					break;
-				case "pending":
-					key = "pending";
-					break;
+		var menu = document.getElementById('menu_updates');
+		var key = 'default';
+		if (um.activeUpdate) {
+			switch (um.activeUpdate.state) {
+				case 'downloading':
+					key = updates.isDownloading ? 'downloading' : 'resume';
+				break;
+				case 'pending':
+					key = 'pending';
+				break;
 			}
 		}
-		checkForUpdates.label = getStringWithUpdateName("updatesItem_" + key);
-		if (um.activeUpdate && updates.isDownloading) {
-			checkForUpdates.setAttribute("loading", "true");
+		if (um.activeUpdate && um.activeUpdate.name) {
+			menu.label = locale.getFormattedString('updatesItem_' + key,
+				[um.activeUpdate.name]);
 		} else {
-			checkForUpdates.removeAttribute("loading");
+			menu.label = locale.getString('updatesItem_' + key + 'Fallback');
+		}
+		if (um.activeUpdate && updates.isDownloading) {
+			menu.setAttribute('loading', 'true');
+		} else {
+			menu.removeAttribute('loading');
 		}
 	}
 

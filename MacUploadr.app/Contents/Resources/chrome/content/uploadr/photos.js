@@ -119,7 +119,7 @@ var photos = {
 				new_paths.push(p);
 			} else if (photos.is_video(p)) {
 				++v_count;
-				if (file.size(p) > uploadr.conf.video_max) {
+				if (file.size(p) > conf.video_max) {
 					var filename = p.match(/([^\/\\]*)$/);
 					big_videos.push(null == filename ? p : filename[1]);
 				} else {
@@ -288,7 +288,7 @@ var photos = {
 		list.insertBefore(li, list.firstChild);
 
 		// Create and show the thumbnail
-		threads.worker.dispatch(new Thumb(id, uploadr.conf.thumb_size, path),
+		threads.worker.dispatch(new Thumb(id, conf.thumb_size, path),
 			threads.worker.DISPATCH_NORMAL);
 
 	},
@@ -368,7 +368,7 @@ var photos = {
 				img.setAttribute('width', 16);
 				img.setAttribute('height', 8);
 				img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
-				threads.worker.dispatch(new Rotate(p.id, degrees, uploadr.conf.thumb_size,
+				threads.worker.dispatch(new Rotate(p.id, degrees, conf.thumb_size,
 					p.path), threads.worker.DISPATCH_NORMAL);
 			}
 		}
@@ -410,7 +410,7 @@ var photos = {
 				}
 				if (photos.is_photo(p.path)) {
 					new_list.push(p);
-				} else if (!users.is_pro || uploadr.conf.video_max < p.size) {
+				} else if (!users.is_pro || conf.video_max < p.size) {
 					photos.batch_size -= p.size;
 				}
 			}
@@ -725,7 +725,7 @@ var photos = {
 //   See photos.save for problems related to the auto-save interval
 window.setInterval(function() {
 	photos.save();
-}, 1000 * uploadr.conf.auto_save);
+}, 1000 * conf.auto_save);
 
 // Photo properties
 var Photo = function(id, path) {

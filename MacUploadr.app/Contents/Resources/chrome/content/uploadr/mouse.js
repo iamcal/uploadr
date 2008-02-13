@@ -166,9 +166,9 @@ var mouse = {
 
 		// New width and height
 		var width;
-		if (mouse.box.width - 2 * uploadr.conf.scrollbar_width <
+		if (mouse.box.width - 2 * conf.scrollbar_width <
 			e.clientX + pos.x.value + OFFSET_X) {
-			width = mouse.box.width - 2 * uploadr.conf.scrollbar_width - mouse.anchor.x;
+			width = mouse.box.width - 2 * conf.scrollbar_width - mouse.anchor.x;
 		} else {
 			width = Math.abs(e.clientX + pos.x.value + OFFSET_X - mouse.anchor.x);
 		}
@@ -209,7 +209,7 @@ var mouse = {
 		else if ('photos_sort_revert' != e.target.id &&
 			'switch' != e.target.id &&
 			'login' != e.target.id && 'login_inner' != e.target.id &&
-			uploadr.conf.scrollbar_width < mouse.box.width - e.clientX) {
+			conf.scrollbar_width < mouse.box.width - e.clientX) {
 			mouse.anchor = {
 				x: e.clientX + pos.x.value - mouse.box.x - grid.base.x,
 				y: e.clientY + pos.y.value - mouse.box.y - grid.base.y
@@ -327,19 +327,19 @@ var mouse = {
 
 		// If we're reaching the edge of the box and can scroll, do so
 		if ((0 != mouse.dragging || null != mouse.anchor) &&
-			(uploadr.conf.scroll > e.clientY + OFFSET_Y && 0 != pos.y.value ||
-			 uploadr.conf.scroll > mouse.box.height - e.clientY - OFFSET_Y - grid.base.y)) {
+			(conf.scroll > e.clientY + OFFSET_Y && 0 != pos.y.value ||
+			 conf.scroll > mouse.box.height - e.clientY - OFFSET_Y - grid.base.y)) {
 			if (null == mouse.auto_scroll) {
 				var clientX = e.clientX;
 				var clientY = e.clientY;
 				mouse.auto_scroll = window.setInterval(function() {
 					var delta = 0;
-					if (uploadr.conf.scroll > clientY + OFFSET_Y) {
-						delta = -uploadr.conf.scroll;
+					if (conf.scroll > clientY + OFFSET_Y) {
+						delta = -conf.scroll;
 					}
-					if (uploadr.conf.scroll >
+					if (conf.scroll >
 						mouse.box.height - clientY - OFFSET_Y - grid.base.y) {
-						delta = uploadr.conf.scroll;
+						delta = conf.scroll;
 					}
 					var pos = {x: {}, y: {}};
 					mouse.box.getPosition(pos.x, pos.y);

@@ -67,7 +67,7 @@ var ui = {
 			// Additional notes for pro users regarding videos
 			li = document.createElementNS(NS_HTML, 'li');
 			li.appendChild(document.createTextNode(locale.getFormattedString(
-				'photos.init.note.video_size', [uploadr.conf.video_max >> 10])));
+				'photos.init.note.video_size', [conf.video_max >> 10])));
 			notes.appendChild(li);
 			li = document.createElementNS(NS_HTML, 'li');
 			li.appendChild(document.createTextNode(locale.getString(
@@ -173,7 +173,7 @@ var help = {
 	about: function() {
 		window.openDialog('chrome://uploadr/content/about.xul', 'dialog_about',
 			'chrome,modal', locale.getFormattedString('dialog.about.version',
-			[uploadr.conf.version]));
+			[conf.version]));
 	},
 
 	tips: function() {

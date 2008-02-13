@@ -20,7 +20,7 @@ var meta = {
 	first: true,
 
 	// Auto-select, which is cancellable by a click during thumbing
-	auto_select: uploadr.conf.auto_select,
+	auto_select: conf.auto_select,
 
 	// Load a photo's metadata from JS into the DOM
 	load: function(id) {
@@ -41,12 +41,11 @@ var meta = {
 			// Proper diction
 			var p_count = 0;
 			var v_count = 0;
-			var ii = photos.list.length;
-			for (var i = 0; i < ii; ++i) {
-				if (null == photos.list[i]) {
+			for each (var id in photos.selected) {
+				if (null == photos.list[id]) {
 					continue;
 				}
-				if (photos.is_photo(photos.list[i].path)) {
+				if (photos.is_photo(photos.list[id].path)) {
 					++p_count;
 				} else {
 					++v_count;
@@ -62,6 +61,7 @@ var meta = {
 				document.getElementById('batch_who').firstChild.nodeValue = 
 					locale.getString('meta.batch.who.photos');				
 			}
+			// TODO: Make the prompt also have correct diction
 
 			// Prompt
 			if (meta.first) {
@@ -119,6 +119,7 @@ var meta = {
 				document.getElementById('single_who').firstChild.nodeValue = 
 					locale.getString('meta.single.who.photo');
 			}
+			// TODO: Make the prompt also have correct diction
 
 			// Show a preview of the image with file size and dimensions
 			if (!meta.first) {
@@ -326,11 +327,11 @@ var meta = {
 	},
 
 	// If a user leaves a partial batch before committing, warn them
-	//   If uploadr.conf.confirm_save_batch is off, this will always save rather than abandon
+	//   If conf.confirm_save_batch is off, this will always save rather than abandon
 	abandon: function() {
 		if ('-moz-box' == document.getElementById('batch_meta').style.display &&
 			1 < photos.selected.length) {
-			if (uploadr.conf.confirm_save_batch) {
+			if (conf.confirm_save_batch) {
 				if (confirm(locale.getString('meta.abandon.text'),
 					locale.getString('meta.abandon.title'),
 					locale.getString('meta.abandon.ok'),

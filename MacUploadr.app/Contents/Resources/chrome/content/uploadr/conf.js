@@ -12,7 +12,7 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 const NS_HTML = 'http://www.w3.org/1999/xhtml';
 
-var conf = {
+const conf = {
 
 	// What version am I?
 	version: '3.1',
@@ -25,9 +25,6 @@ var conf = {
 		timeout: true,
 		retry: true
 	},
-
-	// Size of thumbnails
-	thumb_size: 100,
 
 	// Scrolling threshold for dragging (pixels);
 	scroll: 20,
@@ -60,6 +57,10 @@ var conf = {
 	//
 	// Not advised to change below here
 	//
+
+	// Size of thumbnails
+	//   Changing this will require CSS tweaks
+	thumb_size: 100,
 
 	// Maximum size of a video upload (kilobytes)
 	video_max: 100 << 10,

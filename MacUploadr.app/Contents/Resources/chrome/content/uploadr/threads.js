@@ -247,7 +247,7 @@ Rotate.prototype = {
 				result = threads.gm.thumb(this.thumb_size,
 					rotate[1]);
 				threads.main.dispatch(new ThumbCallback(this.id, result,
-					uploadr.conf.auto_select_after_rotate),
+					conf.auto_select_after_rotate),
 					threads.main.DISPATCH_NORMAL);
 			}
 

@@ -16,7 +16,7 @@
 
 // Notes about the upload API:
 //   Upload batches should be kicked off using photos.upload() in photos.js.  The setting
-//   uploadr.conf.mode in uploadr.js can select either synchronous or asynchronous uploads.
+//   conf.mode in uploadr.js can select either synchronous or asynchronous uploads.
 
 // The API key and secret are defined in flKey.cpp and included here
 var key;
@@ -84,7 +84,7 @@ var upload = {
 		// Pass the photo to the API
 		var photo = photos.uploading[id];
 		_api({
-			'async': 'async' == uploadr.conf.mode ? 1 : 0,
+			'async': 'async' == conf.mode ? 1 : 0,
 			'auth_token': users.token,
 			'title': photo.title,
 			'description': photo.description,
@@ -104,7 +104,7 @@ var upload = {
 
 	},
 	_start: function(rsp, id) {
-		upload['_' + uploadr.conf.mode](rsp, id);
+		upload['_' + conf.mode](rsp, id);
 	},
 
 	// Finish an asynchronous upload
@@ -127,11 +127,11 @@ var upload = {
 			}
 
 			// Still have available retries
-			if (!upload.cancel && uploadr.conf.auto_retry_count > upload.retry_count) {
+			if (!upload.cancel && conf.auto_retry_count > upload.retry_count) {
 				++upload.stats.errors;
 				++upload.retry_count;
 				upload.start(id);
-				if (uploadr.conf.console.retry) {
+				if (conf.console.retry) {
 					Components.utils.reportError('UPLOAD RETRY: id = ' + id +
 						', retry = ' + upload.retry_count);
 				}
@@ -184,7 +184,7 @@ var upload = {
 	_sync: function(rsp, id) {
 
 		// Stop checking progress if we're in synchronous mode
-		if ('sync' == uploadr.conf.mode) {
+		if ('sync' == conf.mode) {
 			if (null != upload.progress_handle) {
 				window.clearInterval(upload.progress_handle);
 				upload.progress_handle = null;
@@ -243,7 +243,7 @@ var upload = {
 		}
 
 		// But if this isn't last and we're doing synchronous, kick off the next upload
-		else if ('sync' == uploadr.conf.mode) {
+		else if ('sync' == conf.mode) {
 			var ii = photos.uploading.length;
 			for (var i = id; i < ii; ++i) {
 				if (null != photos.uploading[i]) {
@@ -271,7 +271,7 @@ var upload = {
 		if (0 == kb) {
 			++upload.progress_zero;
 		}
-		if (uploadr.conf.timeout < uploadr.conf.check * upload.progress_zero) {
+		if (conf.timeout < conf.check * upload.progress_zero) {
 			upload.timeout(id);
 		}
 		if (0 != upload.progress_last) {
@@ -304,7 +304,7 @@ var upload = {
 
 	// Timeout an upload after too much inactivity
 	timeout: function(id) {
-		if (uploadr.conf.console.timeout) {
+		if (conf.console.timeout) {
 			Components.utils.reportError('UPLOAD TIMEOUT: ' + id);
 		}
 		window.clearInterval(upload.progress_handle);
@@ -856,7 +856,7 @@ var flickr = {
 					// Valid response or still have retries remaining
 					if ('object' == typeof rsp) {
 						upload._check_tickets();
-					} else if (uploadr.conf.tickets_retry_count > upload.tickets_retry_count) {
+					} else if (conf.tickets_retry_count > upload.tickets_retry_count) {
 						++upload.tickets_retry_count;
 						upload._check_tickets();
 					}
@@ -1130,7 +1130,7 @@ var _timeouts = {};
 //   Callbacks are named exactly like the API method but with an _ in front of the last
 //   part of the method name (for example flickr.foo.bar calls back to flickr.foo._bar)
 var _api = function(params, url, browser, post, id) {
-	if (uploadr.conf.console.request) {
+	if (conf.console.request) {
 		Components.utils.reportError('API REQUEST: ' + params.toSource());
 	}
 	if (null == url) {
@@ -1249,10 +1249,10 @@ var _api = function(params, url, browser, post, id) {
 			if (4 == xhr.readyState && 200 == xhr.status && xhr.responseXML) {
 				try {
 					var rsp = xhr.responseXML.documentElement;
-					if (uploadr.conf.console.error && (
+					if (conf.console.error && (
 						'object' != typeof rsp || 'ok' != rsp.getAttribute('stat'))) {
 						Components.utils.reportError('API ERROR: ' + xhr.responseText);
-					} else if (uploadr.conf.console.response) {
+					} else if (conf.console.response) {
 						Components.utils.reportError('API RESPONSE: ' + xhr.responseText);
 					}
 
@@ -1291,18 +1291,18 @@ var _api = function(params, url, browser, post, id) {
 		if (post && -1 != id && !params.method) {
 			upload.progress_handle = window.setInterval(function() {
 				upload.progress(mstream, id);
-			}, uploadr.conf.check);
+			}, conf.check);
 		}
 
 		// Setup timeout guard on everything else
 		else if (params.method) {
 			_timeouts[esc_params['api_sig']] = window.setTimeout(function() {
-				if (uploadr.conf.console.timeout) {
+				if (conf.console.timeout) {
 					Components.utils.reportError('API TIMEOUT: ' + callback);
 				}
 				var rsp = false;
 				eval(callback);
-			}, uploadr.conf.timeout);
+			}, conf.timeout);
 		}
 
 	}
