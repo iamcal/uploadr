@@ -355,6 +355,7 @@ var photos = {
 			return;
 		}
 		photos.selected = [];
+		mouse.click({target: {}});
 
 		// For each selected image, show the loading spinner and dispatch the rotate job
 		buttons.upload.disable();

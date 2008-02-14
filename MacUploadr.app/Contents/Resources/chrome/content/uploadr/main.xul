@@ -33,6 +33,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/file.js" />
 	<script src="chrome://uploadr/content/threads.js" />
 	<script src="chrome://uploadr/content/api.js" />
+	<script src="chrome://uploadr/content/upload.js" />
 	<script src="chrome://uploadr/content/photos.js" />
 	<script src="chrome://uploadr/content/meta.js" />
 	<script src="chrome://uploadr/content/settings.js" />
@@ -175,6 +176,9 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			<hbox><spacer flex="1" /><html:div id="button_auth" class="button"
 			onclick="buttons.auth.click();"
 			><html:div>&buttons.auth;</html:div></html:div><spacer flex="1" /></hbox>
+			<spacer flex="1" />
+			<html:h2>&auth.alternate;</html:h2>
+			<textbox id="auth_url" onclick="this.select();" />
 			<spacer flex="1" />
 		</vbox>
 		

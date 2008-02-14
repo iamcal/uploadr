@@ -261,13 +261,16 @@ var prompt = function(msg, title, ok, cancel) {
 
 // Open a browser window to the given URL
 var launch_browser = function(url) {
-	var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
-	var uri = io.newURI(url, null, null);
-	var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
-		Ci.nsIExternalProtocolService);
-	var launcher = eps.getProtocolHandlerInfo('http');
-	launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
-	launcher.launchWithURI(uri, null);
+	try {
+		var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+		var uri = io.newURI(url, null, null);
+		var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
+			Ci.nsIExternalProtocolService);
+		var launcher = eps.getProtocolHandlerInfo('http');
+		launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
+		launcher.launchWithURI(uri, null);
+	} catch (err) {}
+	return url;
 };
 
 // Now hack locale.getFormattedString to work like it should

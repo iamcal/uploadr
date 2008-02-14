@@ -22,6 +22,7 @@
 
 <!ENTITY auth.confirm "When you've given the Flickr Uploadr permission to connect to your account on the Flickr website, click the big READY! button.">
 <!ENTITY auth.confirm.oops "Give permission again?">
+<!ENTITY auth.alternate "If your browser doesn't open automatically, you can visit this URL, then come back and click the big READY! button.">
 
 <!ENTITY tools.add "+ Add">
 <!ENTITY tools.remove "− Remove">
