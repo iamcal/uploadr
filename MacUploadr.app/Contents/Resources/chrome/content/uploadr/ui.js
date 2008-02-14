@@ -120,6 +120,8 @@ var ui = {
 			} else {
 				batch.className = '';
 			}
+		} else {
+			batch.className = '';
 		}
 
 	}

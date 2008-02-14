@@ -33,6 +33,8 @@ extern "C" {
 #include "nsDirectoryServiceUtils.h"
 #include "nsEmbedString.h"
 
+#include <stdio.h>
+
 // _NSGetExecutablePath on Macs
 #ifdef XP_MACOSX
 #include <mach-o/dyld.h>
@@ -817,9 +819,11 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 }
 
 NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) {
+
+_retval.Append('f');_retval.Append('o');_retval.Append('o');_retval.Append(' ');
+
 	string * path_s = conv_path(path, false);
 	if (!path_s) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_INVALID_ARG")));
 		return NS_ERROR_INVALID_ARG;
 	}
 
@@ -827,11 +831,9 @@ _retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_INVALID_ARG"))
 	av_register_all();
 	AVFormatContext *format_ctx;
 	if (av_open_input_file(&format_ctx, path_s->c_str(), 0, 0, 0)) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (1)")));
 		return NS_ERROR_NULL_POINTER;
 	}
 	if (0 > av_find_stream_info(format_ctx)) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (2)")));
 		return NS_ERROR_NULL_POINTER;
 	}
 	int stream = -1;
@@ -842,38 +844,40 @@ _retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (
 		}
 	}
 	if (-1 == stream) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (3)")));
 		return NS_ERROR_NULL_POINTER;
 	}
 	AVCodecContext * codec_ctx = format_ctx->streams[stream]->codec;
 	AVCodec * codec = avcodec_find_decoder(codec_ctx->codec_id);
 	if (!codec) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (4)")));
 		return NS_ERROR_NULL_POINTER;
 	}
 	if(0 > avcodec_open(codec_ctx, codec)) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (5)")));
 		return NS_ERROR_NULL_POINTER;
 	}
 	AVFrame * video_frame = avcodec_alloc_frame();
 	AVFrame * img_frame = avcodec_alloc_frame();
 	if (!video_frame || !img_frame) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (6)")));
 		return NS_ERROR_NULL_POINTER;
 	}
 	int bytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
 		codec_ctx->height);
 	uint8_t * buffer = (uint8_t *)av_malloc(bytes * sizeof(uint8_t));
 	if (!buffer) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (7)")));
 		return NS_ERROR_NULL_POINTER;
 	}
 	avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
 		codec_ctx->width, codec_ctx->height);
 
+	// Correct the frame rate if FFmpeg reports something stupid-high
+	//   Nokia N95 and N82 report 30000fps
+	double fps = (double)codec_ctx->time_base.den;
+	if (30000.0 == fps) {
+		fps /= 1000.0;
+	}
+
 	// Play through 15% of the video
-	int64_t seek = (int64_t)(0.15 * (double)format_ctx->duration *
-		(double)codec_ctx->time_base.num / (double)codec_ctx->time_base.den);
+	int64_t seek = (int64_t)(0.00015 * (double)format_ctx->duration *
+		(double)codec_ctx->time_base.num / fps);
 	int i = 0;
 	AVPacket packet;
 	int have_frame;
@@ -894,7 +898,6 @@ _retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (
 					codec_ctx->height;
 				char * bytes = (char *)malloc(size);
 				if (!bytes) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (8)")));
 					return NS_ERROR_NULL_POINTER;
 				}
 				memcpy(bytes, header, strlen(header));
@@ -939,7 +942,6 @@ _retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (
 					path_s->append(".jpg");
 					thumb_s = find_path(path_s, "-thumb");
 					if (!thumb_s) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (9)")));
 						return NS_ERROR_NULL_POINTER;
 					}
 					delete path_s; path_s = 0;
@@ -957,7 +959,6 @@ _retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("NS_ERROR_NULL_POINTER (
 					delete thumb_s; thumb_s = 0;
 
 				} catch (Magick::Exception & e) {
-_retval.Append(NS_ConvertUTF8toUTF16(NS_LITERAL_CSTRING("Magick::Exception: ")));
 					delete path_s;
 					delete thumb_s;
 					char * o = (char *)e.what();

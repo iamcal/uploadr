@@ -27,7 +27,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://global/content/globalOverlay.js" />
 	<script src="chrome://global/content/nsDragAndDrop.js" />
 	<script src="chrome://global/content/nsUserSettings.js" />
-	<script src="chrome://uploadr/content/uploadr.js" />
+	<script src="chrome://uploadr/content/conf.js" />
 	<script src="chrome://uploadr/content/clh.js" />
 	<script src="chrome://uploadr/content/upgrade.js" />
 	<script src="chrome://uploadr/content/file.js" />
