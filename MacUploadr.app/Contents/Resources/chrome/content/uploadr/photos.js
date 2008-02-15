@@ -114,14 +114,15 @@ var photos = {
 		var big_videos = [];
 		var new_paths = [];
 		for each (var p in paths) {
-			if (photos.is_photo(p)) {
+			var path = 'object' == typeof p ? p.path : p;
+			if (photos.is_photo(path)) {
 				++p_count;
 				new_paths.push(p);
-			} else if (photos.is_video(p)) {
+			} else if (photos.is_video(path)) {
 				++v_count;
-				if (file.size(p) > conf.video_max) {
-					var filename = p.match(/([^\/\\]*)$/);
-					big_videos.push(null == filename ? p : filename[1]);
+				if (file.size(path) > conf.video_max) {
+					var filename = path.match(/([^\/\\]*)$/);
+					big_videos.push(null == filename ? path : filename[1]);
 				} else {
 					new_paths.push(p);
 				}
@@ -386,7 +387,7 @@ var photos = {
 			list = photos.list;
 		}
 
-		// Don't upload if the button is disabled
+		// Don't upload if this is a user action and the button is disabled
 		if (from_user && 'disabled_button' == document.getElementById('button_upload').className) {
 			return;
 		}

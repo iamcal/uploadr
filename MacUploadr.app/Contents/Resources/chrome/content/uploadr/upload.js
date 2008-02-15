@@ -118,7 +118,7 @@ var upload = {
 			if (!upload.cancel && conf.auto_retry_count > upload.retry_count) {
 				++upload.stats.errors;
 				++upload.retry_count;
-				photos.kb.sent -= photos.list[id].size;
+				photos.kb.sent -= photos.uploading[id].size;
 				upload.start(id);
 				if (conf.console.retry) {
 					Components.utils.reportError('UPLOAD RETRY: id = ' + id +
@@ -468,12 +468,10 @@ var upload = {
 		status.clear();
 
 		// Make sure the sets map is actually empty
-		var not_empty = false;
 		for (var set_id in meta.sets_map) {
-			not_empty = 0 == meta.sets_map[set_id].length ? not_empty : true;
-		}
-		if (not_empty) {
-			return;
+			if (meta.sets_map[set_id].length) {
+				return;
+			}
 		}
 
 		// Normalize the list of created sets
