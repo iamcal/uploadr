@@ -184,10 +184,26 @@ ff_test:
 		$(PORTS_LIB) \
 		-lavformat -lavcodec -lavutil \
 		-lGraphicsMagick++ -lGraphicsMagick \
-		-lexiv2 \
+		-lexiv2 -liconv \
 		-lz -lbz2 \
 		-lxml2 \
 		-ljpeg -lpng -ltiff
 
 ff_clean:
 	rm -f ff_test ff_test.o
+
+
+
+rotate:
+	g++ -w -c -O2 -o rotate.o $(GM_INCLUDE) $(EXIV_INCLUDE) rotate.cpp
+	g++ -O2 -o rotate rotate.o \
+		$(GM_LIB) \
+		$(PORTS_LIB) \
+		-lGraphicsMagick++ -lGraphicsMagick \
+		-lexiv2 -liconv \
+		-lz -lbz2 \
+		-lxml2 \
+		-ljpeg -lpng -ltiff
+
+rotate_clean:
+	rm -f rotate rotate.o

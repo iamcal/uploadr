@@ -33,8 +33,6 @@ extern "C" {
 #include "nsDirectoryServiceUtils.h"
 #include "nsEmbedString.h"
 
-#include <stdio.h>
-
 // _NSGetExecutablePath on Macs
 #ifdef XP_MACOSX
 #include <mach-o/dyld.h>
