@@ -1,0 +1,10 @@
+654,657c654,657
+<         assert(alloc_ == entry.alloc());
+<         assert(ifdId_ == entry.ifdId());
+<         // allow duplicates
+<         entries_.push_back(entry);
+---
+>         if (alloc_ == entry.alloc() && ifdId_ == entry.ifdId()) {
+>             // allow duplicates
+>             entries_.push_back(entry);
+>         }

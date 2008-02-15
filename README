@@ -151,7 +151,10 @@ EXIV2
 ------------------------------------------------------------------------
 
 Download Exiv2 source from:
+
   http://exiv2.org/download.html
+
+Apply the patch exiv2-0.15-ifd.patch to exiv2-0.15/src/ifd.cpp.
 
 Windows
 -------
