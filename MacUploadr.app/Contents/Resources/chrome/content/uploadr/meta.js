@@ -61,15 +61,25 @@ var meta = {
 				document.getElementById('batch_who').firstChild.nodeValue = 
 					locale.getString('meta.batch.who.photos');				
 			}
-			// TODO: Make the prompt also have correct diction
 
 			// Prompt
 			if (meta.first) {
 				document.getElementById('batch_prompt').firstChild.nodeValue =
 					locale.getString('meta.first');
 			} else {
-				document.getElementById('batch_prompt').firstChild.nodeValue =
-					locale.getFormattedString('meta.batch.prompt', [photos.selected.length]);
+				if (p_count && v_count) {
+					document.getElementById('batch_prompt').firstChild.nodeValue =
+						locale.getFormattedString('meta.batch.prompt.items',
+						[photos.selected.length]);
+				} else if (v_count) {
+					document.getElementById('batch_prompt').firstChild.nodeValue =
+						locale.getFormattedString('meta.batch.prompt.videos',
+						[photos.selected.length]);
+				} else {
+					document.getElementById('batch_prompt').firstChild.nodeValue =
+						locale.getFormattedString('meta.batch.prompt.photos',
+						[photos.selected.length]);
+				}
 			}
 
 			// Blank slate metadata
@@ -119,7 +129,6 @@ var meta = {
 				document.getElementById('single_who').firstChild.nodeValue = 
 					locale.getString('meta.single.who.photo');
 			}
-			// TODO: Make the prompt also have correct diction
 
 			// Show a preview of the image with file size and dimensions
 			if (!meta.first) {

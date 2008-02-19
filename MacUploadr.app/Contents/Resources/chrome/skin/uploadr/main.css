@@ -428,6 +428,7 @@ div.toolbarseparator {
 	list-style-type: none;
 }
 #photos_list li, #queue_list li {
+/*	position: relative;*/
 	float: left;
 	clear: none;
 	width: 116px;
@@ -437,7 +438,6 @@ div.toolbarseparator {
 	border-left: 2px solid transparent;
 	border-right: 2px solid transparent;
 	text-align: center;
-	vertical-align: middle;
 }
 #photos_list li img, #queue_list li img {
 	margin: auto;
@@ -646,9 +646,6 @@ div.toolbarseparator {
 	padding: 0 200px;
 	background: white;
 	text-align: center;
-}
-
-#auth_url {
 }
 
 

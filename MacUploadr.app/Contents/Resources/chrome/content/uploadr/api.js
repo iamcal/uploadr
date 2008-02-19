@@ -57,7 +57,11 @@ var flickr = {
 		},
 		_getFrob: function(rsp, fresh) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				// TODO: Show an alert that we couldn't start the auth process
+
+				// Explain what's going on
+				alert(locale.getString('auth.error.text'),
+					locale.getString('auth.error.title'));
+
 				users.logout(false);
 			} else {
 				users.frob = rsp.getElementsByTagName('frob')[0].firstChild.nodeValue;
@@ -73,7 +77,6 @@ var flickr = {
 					'frob': users.frob,
 //				}, 'http://api.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
 				}, 'http://api.dev.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
-Components.utils.reportError('launching browser: ' + url);
 				document.getElementById('auth_url').value = url;
 				pages.go('auth');
 			}

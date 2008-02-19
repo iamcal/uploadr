@@ -120,11 +120,24 @@ ThumbCallback.prototype = {
 						':' + month + ':' + day + ' ' + hours + ':' +
 						minutes + ':' + seconds;
 				}
+				photos.list[this.id].thumb_width = parseInt(thumb[4]);
+				photos.list[this.id].thumb_height = parseInt(thumb[5]);
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
 				img.src = 'file://' + thumb[6];
-				photos.list[this.id].thumb_width = parseInt(thumb[4]);
-				photos.list[this.id].thumb_height = parseInt(thumb[5]);
+
+				// Make video icons for videos
+				//   This will look funny for a portrait-oriented video
+				if (photos.is_video(photos.list[this.id].path)) {
+					var icon = document.createElementNS(NS_HTML, 'img');
+					icon.setAttribute('width', 11);
+					icon.setAttribute('height', 11);
+					icon.src = 'chrome://uploadr/skin/icon_video.png';
+					icon.style.position = 'absolute';
+					icon.style.margin = '-20px 0 0 7px';
+					img.parentNode.appendChild(icon);
+				}
+
 				photos.list[this.id].thumb = thumb[6];
 				if ('' == photos.list[this.id].title) {
 					var title = thumb[7] ? thumb[7].replace(/^\s+|\s+$/,
