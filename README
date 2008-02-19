@@ -154,8 +154,6 @@ Download Exiv2 source from:
 
   http://exiv2.org/download.html
 
-Apply the patch exiv2-0.15-ifd.patch to exiv2-0.15/src/ifd.cpp.
-
 Windows
 -------
 
@@ -174,21 +172,6 @@ Mac
 
   $ ./configure --disable-shared
   $ make && sudo make install
-
-This patch was necessary on Intel Mac
-
-  ~/code $ diff exiv2-0.15-untainted/src/ifd.cpp exiv2-0.15/src/ifd.cpp 
-  654,657c654,657
-  <         assert(alloc_ == entry.alloc());
-  <         assert(ifdId_ == entry.ifdId());
-  <         // allow duplicates
-  <         entries_.push_back(entry);
-  ---
-  >         if (alloc_ == entry.alloc() && ifdId_ == entry.ifdId()) {
-  >             // allow duplicates
-  >             entries_.push_back(entry);
-  >         }
-  ~/code $
 
 
 
@@ -217,54 +200,6 @@ FFmpeg into the flGM XPCOM object.
 
 Mac
 ---
-
-This configure line works but uses the *.dylib files.
-
-  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --disable-mmx --disable-static --enable-shared
-
-This configure line can build static ff_test but not static flGM.
-
-  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --disable-mmx --enable-static --disable-shared
-
-This configure line is no change over the above.  Additionally, using
-the '-read_only_relocs suppress' option with flGM itself doesn't help.
-
-  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --disable-mmx --enable-static --disable-shared \
-    --extra-ldflags='-read_only_relocs suppress'
-
-Found a way to keep even ffmpeg from building.
-
-  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --disable-mmx --enable-static --disable-shared \
-    --extra-ldflags='-read_only_relocs suppress' --extra-cflags=-fno-common
-  $ cp config.mak config.mak.sav
-  $ sed 's/-mdynamic-no-pic//g' config.mak.sav > config.mak
-  $ make
-    ...
-    cabac.h: In function 'get_cabac_noinline':
-    cabac.h:529: error: PIC register '%ebx' clobbered in 'asm'
-
-The issue lies in -mdynamic-no-pic, which is used (and needed?) to build
-FFmpeg.  ff_test will build when flGM will not because -mdynamic-no-pic
-can't be used to build shared libraries.
-
-People working on Blender seem to have similar issues so I'm going to
-try removing -fPIC as they suggest.
-
-  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --disable-vhook --disable-mmx --enable-static --disable-shared \
-    --extra-ldflags='-read_only_relocs suppress' --extra-cflags=-fno-common
-  $ cp config.mak config.mak.sav
-  $ sed 's/-mdynamic-no-pic//g' config.mak.sav | \
-    sed 's/-fPIC//g' > config.mak
-
-That doesn't work - I get the same %ebx error as above.
-
-After again asking the smarter people on #xulrunner, I started from
-scratch on FFmpeg.  This works:
 
   $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
   $ cd ffmpeg

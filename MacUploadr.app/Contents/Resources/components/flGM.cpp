@@ -280,12 +280,22 @@ string * find_path(string * path_s, const char * extra) {
 int base_orient(Exiv2::ExifData & exif, Magick::Image & img) {
 	int orient = -1;
 	try {
-		orient = exif["Exif.Image.Orientation"].toLong();
-		if (-1 == orient) {
-			orient = exif["Exif.Panasonic.Rotation"].toLong();
-		}
-		if (-1 == orient) {
-			orient = exif["Exif.MinoltaCs5D.Rotation"].toLong();
+		Exiv2::ExifData::iterator it = exif.findKey(Exiv2::ExifKey(string(
+			"Exif.Image.Orientation")));
+		if (exif.end() != it) {
+			orient = it->toLong();
+		} else {
+			it = exif.findKey(Exiv2::ExifKey(string(
+				"Exif.Panasonic.Orientation")));
+			if (exif.end() != it) {
+				orient = it->toLong();
+			} else {
+				it = exif.findKey(Exiv2::ExifKey(string(
+					"Exif.MinoltaCs5D.Orientation")));
+				if (exif.end() != it) {
+					orient = it->toLong();
+				}
+			}
 		}
 	} catch (Exiv2::Error &) {}
 	if (1 > orient || 8 < orient) {
