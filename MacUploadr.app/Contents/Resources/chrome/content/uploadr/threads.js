@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -12,20 +12,28 @@ var threads = {
 
 	// Hooks to threads
 	worker: null,
+	uploadr: null,
 	main: null,
 
-	// GraphicsMagick
+	// GraphicsMagick XPCOM object
 	gm: null,
 
 	// Create thread hooks and instantiate GraphicsMagick
 	init: function() {
 		try {
+
+			// Threads themselves
 			var t = Cc['@mozilla.org/thread-manager;1'].getService();
 			threads.worker = t.newThread(0);
+			threads.uploadr = t.newThread(0);
 			threads.main = t.mainThread;
+
+			// GraphicsMagick, for use on the worker thread
 			threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
-			threads.gm.init(Cc['@mozilla.org/file/directory_service;1'].getService(
-				Ci.nsIProperties).get('resource:app', Ci.nsIFile).path);
+			threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
+				.getService(Ci.nsIProperties)
+				.get('resource:app', Ci.nsIFile).path);
+
 		} catch (err) {
 			Components.utils.reportError(err);
 		}
@@ -97,8 +105,11 @@ ThumbCallback.prototype = {
 					thumb[i] = thumb[i];
 				}
 
+				// Width and height
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
+
+				// Date taken
 				if (/\d{4}:\d{2}:\d{2} \d{2}:\d{2}:\d{2}/.test(thumb[3])) {
 					photos.list[this.id].date_taken = thumb[3];
 				} else {
@@ -120,11 +131,14 @@ ThumbCallback.prototype = {
 						':' + month + ':' + day + ' ' + hours + ':' +
 						minutes + ':' + seconds;
 				}
+
+				// Thumbnail
 				photos.list[this.id].thumb_width = parseInt(thumb[4]);
 				photos.list[this.id].thumb_height = parseInt(thumb[5]);
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
 				img.src = 'file://' + thumb[6];
+				photos.list[this.id].thumb = thumb[6];
 
 				// Make video icons for videos
 				//   This will look funny for a portrait-oriented video
@@ -138,7 +152,7 @@ ThumbCallback.prototype = {
 					img.parentNode.appendChild(icon);
 				}
 
-				photos.list[this.id].thumb = thumb[6];
+				// Title/tags/description
 				if ('' == photos.list[this.id].title) {
 					var title = thumb[7] ? thumb[7].replace(/^\s+|\s+$/,
 						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###') : '';

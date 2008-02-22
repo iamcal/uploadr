@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -33,7 +33,7 @@ const conf = {
 	timeout: 60000,
 
 	// Upload progress-checking interval (milliseconds)
-	check: 400,
+	check: 200,
 
 	// How often should the app auto-save metadata? (seconds)
 	auto_save: 60,
@@ -49,10 +49,15 @@ const conf = {
 
 	// How many times (in a row) should we automatically retry a photo?
 	//   This is PER PHOTO and will be reset after each successful upload
-	auto_retry_count: 1,//3,
+	auto_retry_count: 3,
 
 	// How many times should checkTickets retry before giving up?
 	tickets_retry_count: 10,
+
+	// Should we use the new socket uploadr?
+	socket_uploadr: true,
+
+
 
 	//
 	// Not advised to change below here

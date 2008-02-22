@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -46,21 +46,24 @@ var photos = {
 		buttons.upload.disable();
 
 		// Find a good default directory for the file picker
-		var path = nsPreferences.getLocalizedUnicharPref('flickr.add_directory', '');
+		var path = nsPreferences.getLocalizedUnicharPref(
+			'flickr.add_directory', '');
 		if ('' == path) {
-			var path = Cc['@mozilla.org/file/directory_service;1'].getService(
-				Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
+			var path = Cc['@mozilla.org/file/directory_service;1']
+				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
 			if (path.match(/^\//)) {
 				path += '/../../../../../Pictures';
 			} else {
 				path += '\\..\\..\\..\\..\\..\\My Documents\\My Pictures';
 			}
 		}
-		var def = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+		var def = Cc['@mozilla.org/file/local;1']
+			.createInstance(Ci.nsILocalFile);
 		def.initWithPath(path);
 
 		// Open the file picker
-		var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
+		var fp = Cc['@mozilla.org/filepicker;1']
+			.createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
 		var can_has_video = 'object' == typeof users.is_pro || users.is_pro;
@@ -246,17 +249,26 @@ var photos = {
 		// Update the UI
 		if (photos.count) {
 			if (photos.sort) {
-				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-				document.getElementById('photos_sort_default').style.display = 'block';
-				document.getElementById('photos_sort_revert').style.display = 'none';
+				threads.worker.dispatch(new Sort(),
+					threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default')
+					.style.display = 'block';
+				document.getElementById('photos_sort_revert')
+					.style.display = 'none';
 			} else {
-				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-				document.getElementById('photos_sort_default').style.display = 'none';
-				document.getElementById('photos_sort_revert').style.display = 'block';
+				threads.worker.dispatch(new EnableUpload(),
+					threads.worker.DISPATCH_NORMAL);
+				document.getElementById('photos_sort_default')
+					.style.display = 'none';
+				document.getElementById('photos_sort_revert')
+					.style.display = 'block';
 			}
-			document.getElementById('photos_init').style.display = 'none';
-			document.getElementById('photos_new').style.display = 'none';
-			document.getElementById('no_meta_prompt').style.visibility = 'visible';
+			document.getElementById('photos_init')
+				.style.display = 'none';
+			document.getElementById('photos_new')
+				.style.display = 'none';
+			document.getElementById('no_meta_prompt')
+				.style.visibility = 'visible';
 			mouse.show_photos();
 		} else {
 			document.getElementById('photos_init').style.display = '-moz-box';
@@ -275,8 +287,8 @@ var photos = {
 		++photos.loading;
 
 		// Create a spot for the image, leaving a spinning placeholder
-		//   Add images to the start of the list because this is our best guess for ordering
-		//   newest to oldest
+		//   Add images to the start of the list because this is our best
+		//   guess for ordering newest to oldest
 		var img = document.createElementNS(NS_HTML, 'img');
 		img.className = 'loading';
 		img.setAttribute('width', 16);
@@ -338,10 +350,14 @@ var photos = {
 		} else {
 			photos.sort = true;
 			buttons.upload.disable();
-			document.getElementById('photos_sort_default').style.display = 'none';
-			document.getElementById('photos_sort_revert').style.display = 'none';
-			document.getElementById('photos_init').style.display = '-moz-box';
-			document.getElementById('no_meta_prompt').style.visibility = 'hidden';
+			document.getElementById('photos_sort_default')
+				.style.display = 'none';
+			document.getElementById('photos_sort_revert')
+				.style.display = 'none';
+			document.getElementById('photos_init')
+				.style.display = '-moz-box';
+			document.getElementById('no_meta_prompt')
+				.style.visibility = 'hidden';
 		}
 
 	},
@@ -358,23 +374,27 @@ var photos = {
 		photos.selected = [];
 		mouse.click({target: {}});
 
-		// For each selected image, show the loading spinner and dispatch the rotate job
+		// For each selected image, show the loading spinner and dispatch
+		// the rotate job
 		buttons.upload.disable();
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[s[i]];
 			if (photos.is_photo(p.path)) {
 				block_sort();
 				photos.batch_size -= p.size;
-				var img = document.getElementById('photo' + p.id).getElementsByTagName('img')[0];
+				var img = document.getElementById('photo' + p.id)
+					.getElementsByTagName('img')[0];
 				img.className = 'loading';
 				img.setAttribute('width', 16);
 				img.setAttribute('height', 8);
 				img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
-				threads.worker.dispatch(new Rotate(p.id, degrees, conf.thumb_size,
-					p.path), threads.worker.DISPATCH_NORMAL);
+				threads.worker.dispatch(new Rotate(p.id, degrees,
+					conf.thumb_size, p.path),
+					threads.worker.DISPATCH_NORMAL);
 			}
 		}
-		threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
+		threads.worker.dispatch(new EnableUpload(),
+			threads.worker.DISPATCH_NORMAL);
 
 	},
 
@@ -388,12 +408,14 @@ var photos = {
 		}
 
 		// Don't upload if this is a user action and the button is disabled
-		if (from_user && 'disabled_button' == document.getElementById('button_upload').className) {
+		if (from_user && 'disabled_button' == document.getElementById(
+			'button_upload').className) {
 			return;
 		}
 
 		// Remove error indicators
-		var li = document.getElementById('photos_list').getElementsByTagName('li');
+		var li = document.getElementById('photos_list')
+			.getElementsByTagName('li');
 		var ii = li.length;
 		for (var i = 0; i < ii; ++i) {
 			var img = li[i].getElementsByTagName('img')[0];
@@ -433,18 +455,21 @@ var photos = {
 					if (photos.is_photo(p.path)) {
 
 						// Resize because of user settings
-						if (null != settings.resize && -1 != settings.resize &&
-							(p.width > settings.resize || p.height > settings.resize)) {
+						if (null != settings.resize &&
+							-1 != settings.resize &&
+							(p.width > settings.resize ||
+							p.height > settings.resize)) {
 							resizing = true;
-							threads.worker.dispatch(new Resize(p.id, settings.resize,
-								p.path), threads.worker.DISPATCH_NORMAL);
+							threads.worker.dispatch(new Resize(
+								p.id, settings.resize, p.path),
+								threads.worker.DISPATCH_NORMAL);
 						}
 
 						// Resize because of upload limits
 						else if (p.size > users.filesize) {
 							resizing = true;
-							threads.worker.dispatch(new Resize(p.id, -1, p.path),
-								threads.worker.DISPATCH_NORMAL);
+							threads.worker.dispatch(new Resize(p.id, -1,
+								p.path), threads.worker.DISPATCH_NORMAL);
 						}
 
 						// Not resizing so record size now
@@ -477,16 +502,16 @@ var photos = {
 					list.removeChild(list.firstChild);
 				}
 				ui.bandwidth_updated();
-				threads.worker.dispatch(new RetryUpload(true), threads.worker.DISPATCH_NORMAL);
+				threads.worker.dispatch(new RetryUpload(true),
+					threads.worker.DISPATCH_NORMAL);
 
 				// Give some meaningful feedback
-				//   In the future, it'd be nice if this said "Resizing..."
 				if (not_started) {
 					document.getElementById('footer').style.display = '-moz-box';
 					upload.progress_bar = new ProgressBar('progress_bar');
 					var progress_text = document.getElementById('progress_text');
 					progress_text.className = 'spinning';
-					progress_text.value = '';
+					progress_text.value = locale.getString('upload.resizing.status');
 					status.set(locale.getString('status.uploading'));
 					buttons.upload.disable();
 					document.getElementById('photos_sort_default').style.display = 'none';
@@ -621,12 +646,14 @@ var photos = {
 			document.getElementById('photos_new').style.display = 'none';
 			document.getElementById('no_meta_prompt').style.visibility = 'visible';
 		}
-		for (var i  = 0; i < ii; ++i) {
-			photos._add(list[i].path);
-			photos.list[photos.list.length - 1] = list[i];
-		}
+//		for (var i  = 0; i < ii; ++i) {
+//			photos._add(list[i].path);
+//			photos.list[photos.list.length - 1] = list[i];
+//		}
+		photos.add(list);
 
 		// Sort photos based on previous sort setting
+/*
 		if (list.length) {
 			photos.sort = obj.sort;
 			if (photos.sort) {
@@ -639,6 +666,7 @@ var photos = {
 				document.getElementById('photos_sort_revert').style.display = 'block';
 			}
 		}
+*/
 
 		// Bring in old sets that were created locally but not on the site
 		for each (var name in obj.sets) {

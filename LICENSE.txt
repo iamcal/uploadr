@@ -1,6 +1,8 @@
-Flickr Uploader. Copyright (c) 2007 Yahoo! Inc. All rights reserved. This
-library is free software; you can redistribute it and/or modify it under the
-terms of the GNU General Public License (GPL), version 2 ONLY.
+Flickr Uploadr
+
+Copyright (c) 2007-2008 Yahoo! Inc. All rights reserved. This library is free
+software; you can redistribute it and/or modify it under the terms of the GNU
+General Public License (GPL), version 2 ONLY.
 
 GNU GENERAL PUBLIC LICENSE Version 2, June 1991
 
@@ -242,7 +244,7 @@ Our decision will be guided by the two goals of preserving the free status of
 all derivatives of our free software and of promoting the sharing and reuse of
 software generally.
 
- NO WARRANTY
+NO WARRANTY
 
 11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR
 THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE

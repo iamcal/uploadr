@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -185,6 +185,18 @@ var help = {
 
 	faq: function() {
 		launch_browser('http://flickr.com/help/tools/');
+	},
+
+	addons: function() {
+		var wm = Cc['@mozilla.org/appshell/window-mediator;1']
+			.getService(Ci.nsIWindowMediator);
+		var em = wm.getMostRecentWindow('Extension:Manager');
+		if (em) {
+			em.focus();
+			return;
+		}
+		window.openDialog('chrome://mozapps/content/extensions/extensions.xul',
+			'', 'chrome,menubar,extra-chrome,toolbar,dialog=no,resizable');
 	}
 
 };
@@ -323,7 +335,8 @@ var exit = function(force) {
 	}
 
 	// Don't exit if exit is blocked
-	if (!force && 0 < _block_exit && !confirm(locale.getString('dialog.exit.text'),
+	if (!force && 0 < _block_exit && !confirm(
+		locale.getString('dialog.exit.text'),
 		locale.getString('dialog.exit.title'),
 		locale.getString('dialog.exit.ok'),
 		locale.getString('dialog.exit.cancel'))) {
@@ -338,13 +351,14 @@ var exit = function(force) {
 	// Remove the images and TEMP directories if there are no photos left
 	if (0 == photos.count) {
 		try {
-			var profile = Cc['@mozilla.org/file/directory_service;1'].getService(
-				Ci.nsIProperties).get('ProfD', Ci.nsIFile);
+			var profile = Cc['@mozilla.org/file/directory_service;1']
+				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile);
 			profile.append('images');
 			profile.remove(true);
 		} catch (err) {}
 		try {
-			var temp = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+			var temp = Cc['@mozilla.org/file/local;1']
+				.createInstance(Ci.nsILocalFile);
 			temp.initWithPath('C:\\temp');
 			if (temp.isDirectory()) {
 				var files = temp.directoryEntries;
@@ -360,9 +374,13 @@ var exit = function(force) {
 		} catch (err) {}
 	}
 
+	// Shutdown threads
+	threads.worker.shutdown();
+	threads.uploadr.shutdown();
+
 	// Finally exit
-	var e = Cc['@mozilla.org/toolkit/app-startup;1'].getService(
-		Components.interfaces.nsIAppStartup);
+	var e = Cc['@mozilla.org/toolkit/app-startup;1']
+		.getService(Ci.nsIAppStartup);
 	e.quit(Ci.nsIAppStartup.eForceQuit);
 
 };

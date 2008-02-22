@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -212,7 +212,7 @@ var mouse = {
 		mouse.box.getPosition(pos.x, pos.y);
 
 		// Clicking on a single photo will do drag-reordering
-		if (e.target.src) {
+		if (e.target.src && 'buddyicon' != e.target.id) {
 			if (1 < photos.count) {
 				mouse.dragging = 1;
 			}

@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -69,26 +69,56 @@ var upload = {
 			progress_text.value = '';
 		}
 
-		// Pass the photo to the API
 		var photo = photos.uploading[id];
-		_api({
-			'async': 'async' == conf.mode ? 1 : 0,
-			'auth_token': users.token,
-			'title': photo.title,
-			'description': photo.description,
-			'tags': photo.tags,
-			'is_public': photo.is_public,
-			'is_friend': photo.is_friend,
-			'is_family': photo.is_family,
-			'content_type': photo.content_type,
-			'hidden': photo.hidden,
-			'safety_level': photo.safety_level,
-			'photo': {
-				'filename': photo.filename,
-				'path': photo.path
-			}
-//		}, 'http://up.flickr.com/services/upload/', false, true, id);
-		}, 'http://api.dev.flickr.com/services/upload/', false, true, id);
+
+		// EXPERIMENTAL: Pass the photo to the socket uploadr
+		if (conf.socket_uploadr) {
+			Cc['@mozilla.org/consoleservice;1']
+				.getService(Ci.nsIConsoleService)
+				.logStringMessage('EXPERIMENTAL socket uploadr');
+
+			// Dispatch for health and non-blocking profit!
+			threads.uploadr.dispatch(new Upload({
+				'async': 'async' == conf.mode ? 1 : 0,
+				'auth_token': users.token,
+				'title': photo.title,
+				'description': photo.description,
+				'tags': photo.tags,
+				'is_public': photo.is_public,
+				'is_friend': photo.is_friend,
+				'is_family': photo.is_family,
+				'content_type': photo.content_type,
+				'hidden': photo.hidden,
+				'safety_level': photo.safety_level,
+				'photo': {
+					'filename': photo.filename,
+					'path': photo.path
+				}
+			}, id), threads.uploadr.DISPATCH_NORMAL);
+
+		}
+
+		// Pass the photo to the regular API
+		else {
+			api.start({
+				'async': 'async' == conf.mode ? 1 : 0,
+				'auth_token': users.token,
+				'title': photo.title,
+				'description': photo.description,
+				'tags': photo.tags,
+				'is_public': photo.is_public,
+				'is_friend': photo.is_friend,
+				'is_family': photo.is_family,
+				'content_type': photo.content_type,
+				'hidden': photo.hidden,
+				'safety_level': photo.safety_level,
+				'photo': {
+					'filename': photo.filename,
+					'path': photo.path
+				}
+//			}, 'http://up.flickr.com/services/upload/', false, true, id);
+			}, 'http://up.dev.flickr.com/services/upload/', false, true, id);
+		}
 
 	},
 	_start: function(rsp, id) {
@@ -115,13 +145,16 @@ var upload = {
 			}
 
 			// Still have available retries
-			if (!upload.cancel && conf.auto_retry_count > upload.retry_count) {
+			if (!upload.cancel && conf.auto_retry_count >
+				upload.retry_count) {
 				++upload.stats.errors;
 				++upload.retry_count;
 				photos.kb.sent -= photos.uploading[id].size;
 				upload.start(id);
 				if (conf.console.retry) {
-					Components.utils.reportError('UPLOAD RETRY: id = ' + id +
+					Cc['@mozilla.org/consoleservice;1']
+						.getService(Ci.nsIConsoleService)
+						.logStringMessage('UPLOAD RETRY: id = ' + id +
 						', retry = ' + upload.retry_count);
 				}
 			}
@@ -147,7 +180,8 @@ var upload = {
 		// Otherwise, spin for a ticket
 		else if (null != photos.uploading[id]) {
 			photos.uploading[id].progress_bar.done(true);
-			upload.tickets[rsp.getElementsByTagName('ticketid')[0].firstChild.nodeValue] = id;
+			upload.tickets[rsp.getElementsByTagName('ticketid')[0]
+				.firstChild.nodeValue] = id;
 			++upload.tickets_count;
 			if (null != upload.tickets_handle) {
 				window.clearTimeout(upload.tickets_handle);
@@ -198,7 +232,8 @@ var upload = {
 				++photos.ok;
 			}
 			if ('object' == typeof rsp) {
-				photo_id = parseInt(rsp.getElementsByTagName('photoid')[0].firstChild.nodeValue);
+				photo_id = parseInt(rsp.getElementsByTagName('photoid')[0]
+					.firstChild.nodeValue);
 
 				// If we were ever to use sync upload, we would need imported
 				// timestamps here
@@ -231,7 +266,8 @@ var upload = {
 			upload.done();
 		}
 
-		// But if this isn't last and we're doing synchronous, kick off the next upload
+		// But if this isn't last and we're doing synchronous, kick off
+		// the next upload
 		else if ('sync' == conf.mode) {
 			var ii = photos.uploading.length;
 			for (var i = id; i < ii; ++i) {
@@ -247,13 +283,17 @@ var upload = {
 
 	// Track progress of an upload POST
 	progress: function(stream, id) {
+		upload.progress2(stream.available(), id);
+	},
+	progress2: function(available, id) {
 
 		// Get this bit of progress
 		if (id != upload.progress_id) {
 			upload.progress_id = id;
 			upload.progress_last = upload.progress_total;
 		}
-		var a = stream.available() >> 10;
+//		var a = stream.available() >> 10;
+		var a = available >> 10;
 		var kb = upload.progress_last - a;
 
 		// Have we made any progress?
@@ -270,20 +310,22 @@ var upload = {
 
 		// Update the UI
 		if (null != photos.uploading[id]) {
-			photos.uploading[id].progress_bar.update(1 - a / upload.progress_total);
+			photos.uploading[id].progress_bar.update(1 -
+				a / upload.progress_total);
 		}
-		var percent = Math.max(0, Math.min(1, photos.kb.sent / photos.kb.total));
+		var percent = Math.max(0, Math.min(1,
+			photos.kb.sent / photos.kb.total));
 		if (null != upload.progress_bar) {
 			upload.progress_bar.update(percent);
 		}
-		if (100 == Math.round(100 * percent)) { // Why doesn't (1 == percent) work here?
+		if (100 == Math.round(100 * percent)) {
 			document.getElementById('progress_text').value =
 				locale.getString('upload.waiting.status');
 			upload.processing = true;
 		} else {
-			document.getElementById('progress_text').value = locale.getFormattedString(
-				'upload.progress.status', [
-					id + 1, // Since starting to use photos.normalize, this should be correct
+			document.getElementById('progress_text').value =
+				locale.getFormattedString('upload.progress.status', [
+					id + 1,
 					photos.uploading.length,
 					Math.round(100 * percent)
 				]);
@@ -326,7 +368,8 @@ var upload = {
 	// Check a response for out-of-bandwidth error
 	bandwidth: function(rsp) {
 		if ('object' == typeof rsp &&
-			6 == parseInt(rsp.getElementsByTagName('err')[0].getAttribute('code'))) {
+			6 == parseInt(rsp.getElementsByTagName('err')[0]
+			.getAttribute('code'))) {
 			document.getElementById('progress').style.display = 'none';
 			var f = photos.failed;
 			for each (var p in photos.uploading) {
@@ -336,14 +379,20 @@ var upload = {
 			}
 			var ii = f.length;
 			if (0 != ii) {
-				document.getElementById('photos_init').style.display = 'none';
-				document.getElementById('photos_new').style.display = 'none';
+				document.getElementById('photos_init')
+					.style.display = 'none';
+				document.getElementById('photos_new')
+					.style.display = 'none';
 				if (photos.sort) {
-					document.getElementById('photos_sort_default').style.display = 'block';
-					document.getElementById('photos_sort_revert').style.display = 'none';
+					document.getElementById('photos_sort_default')
+						.style.display = 'block';
+					document.getElementById('photos_sort_revert')
+						.style.display = 'none';
 				} else {
-					document.getElementById('photos_sort_default').style.display = 'none';
-					document.getElementById('photos_sort_revert').style.display = 'block';
+					document.getElementById('photos_sort_default')
+						.style.display = 'none';
+					document.getElementById('photos_sort_revert')
+						.style.display = 'block';
 				}
 			}
 			for (var i  = 0; i < ii; ++i) {
@@ -449,14 +498,15 @@ var upload = {
 			if (-1 == index) {
 				flickr.photosets.addPhoto(set_id, meta.sets_map[set_id][0]);
 			} else {
-				flickr.photosets.create(set_id, meta.created_sets_desc[index],
+				flickr.photosets.create(set_id,
+					meta.created_sets_desc[index],
 					meta.sets_map[set_id][0]);
 			}
 		}
 
-		// If we are adding photos to a set, the last one will call this, otherwise we
-		// have to here.  If it doesn't get called then limits and such will not be
-		// updated for the next upload.
+		// If we are adding photos to a set, the last one will call this,
+		// otherwise we have to here.  If it doesn't get called then
+		// limits and such will not be updated for the next upload.
 		if (not_adding_to_sets) {
 			upload.finalize();
 		}
@@ -536,8 +586,11 @@ var upload = {
 				locale.getString('upload.success.ok'),
 				locale.getString('upload.success.cancel'));
 		} else if (0 < photos.fail && 0 < photos.ok) {
-			var c = confirm(locale.getFormattedString('upload.error.some.text',
-				[photos.uploading.length - photos.ok, photos.uploading.length]),
+			var c = confirm(locale.getFormattedString(
+				'upload.error.some.text', [
+					photos.uploading.length - photos.ok,
+					photos.uploading.length
+				]),
 				locale.getString('upload.error.some.title'),
 				locale.getString('upload.error.some.ok'),
 				locale.getString('upload.error.some.cancel'));
@@ -547,13 +600,15 @@ var upload = {
 				go_to_flickr = true;
 			}
 		} else if (0 == photos.fail && 0 < photos.ok && !photos.sets) {
-			go_to_flickr = confirm([locale.getString('upload.error.sets.text'),
-				locale.getString('upload.error.sets.more')],
+			go_to_flickr = confirm([
+					locale.getString('upload.error.sets.text'),
+					locale.getString('upload.error.sets.more')
+				],
 				locale.getString('upload.error.sets.more'),
 				locale.getString('upload.error.sets.title'),
 				locale.getString('upload.error.sets.ok'),
 				locale.getString('upload.error.sets.cancel'));
-		} else { // if (0 < photos.fail && 0 == photos.ok) {
+		} else {
 			try_again = confirm([locale.getString('upload.error.all.text'),
 				locale.getString('upload.error.all.more')],
 				locale.getString('upload.error.all.title'),
@@ -609,7 +664,8 @@ var upload = {
 				photos.ready_size[0] += upload.try_again[i].size;
 			}
 
-			threads.worker.dispatch(new RetryUpload(true), threads.worker.DISPATCH_NORMAL);
+			threads.worker.dispatch(new RetryUpload(true),
+				threads.worker.DISPATCH_NORMAL);
 		}
 
 		// Otherwise drop the recovered photos into the current batch
@@ -620,4 +676,188 @@ var upload = {
 
 	}
 
+};
+
+var Upload = function(params, id) {
+	this.params = params;
+	this.id = id;
+}
+Upload.prototype = {
+	run: function() {
+		var esc_params = api.escape_and_sign(this.params, true);
+
+		// Upload API
+//		var host = 'up.flickr.com';
+		var host = 'up.dev.flickr.com';
+		var port = 80;
+
+		// Stream containing the entire HTTP POST payload
+		var boundary = '------deadbeef---deadbeef---' + Math.random();
+		var mstream = Cc['@mozilla.org/io/multiplex-input-stream;1']
+			.createInstance(Ci.nsIMultiplexInputStream);
+		var sstream;
+		for (var p in esc_params) {
+			sstream = Cc['@mozilla.org/io/string-input-stream;1']
+				.createInstance(Ci.nsIStringInputStream);
+			sstream.setData('--' + boundary +
+				'\r\nContent-Disposition: form-data; name="' + p + '"',
+				-1);
+			mstream.appendStream(sstream);
+			if ('object' == typeof esc_params[p] &&
+				null != esc_params[p]) {
+				sstream = Cc['@mozilla.org/io/string-input-stream;1']
+					.createInstance(Ci.nsIStringInputStream);
+				sstream.setData('; filename="' + esc_params[p].filename +
+					'"\r\nContent-Type: application/octet-stream\r\n\r\n',
+					-1);
+				mstream.appendStream(sstream);
+				var file = Cc['@mozilla.org/file/local;1']
+					.createInstance(Ci.nsILocalFile);
+				file.initWithPath(esc_params[p].path);
+				var fstream =
+					Cc['@mozilla.org/network/file-input-stream;1']
+					.createInstance(Ci.nsIFileInputStream);
+				fstream.init(file, 1, 1,
+					Ci.nsIFileInputStream.CLOSE_ON_EOF);
+				var bstream =
+					Cc['@mozilla.org/network/buffered-input-stream;1']
+					.createInstance(Ci.nsIBufferedInputStream);
+				bstream.init(fstream, 4096);
+				mstream.appendStream(bstream);
+				sstream = Cc['@mozilla.org/io/string-input-stream;1']
+					.createInstance(Ci.nsIStringInputStream);
+				sstream.setData('\r\n', -1);
+				mstream.appendStream(sstream);
+			} else {
+				sstream = Cc['@mozilla.org/io/string-input-stream;1']
+					.createInstance(Ci.nsIStringInputStream);
+				sstream.setData('\r\n\r\n' + esc_params[p] + '\r\n', -1);
+				mstream.appendStream(sstream);
+			}
+		}
+		sstream = Cc['@mozilla.org/io/string-input-stream;1']
+			.createInstance(Ci.nsIStringInputStream);
+		sstream.setData('--' + boundary + '--\r\n', -1);
+		mstream.appendStream(sstream);
+		upload.progress_total = mstream.available() >> 10;
+
+		// Headers!
+		sstream = Cc['@mozilla.org/io/string-input-stream;1']
+			.createInstance(Ci.nsIStringInputStream);
+		sstream.setData('POST /services/upload/ HTTP/1.1\r\n' +
+			'Host: ' + host + '\r\n' +
+			'User-Agent: Flickr Uploadr ' + conf.version + '\r\n' +
+			'Content-Length: ' + mstream.available() + '\r\n' +
+			'Content-Type: multipart/form-data; boundary=' + boundary +
+			'\r\n\r\n', -1);
+		mstream.insertStream(sstream, 0);
+
+		// POST over a raw socket connection
+		//   http://www.xulplanet.com/tutorials/mozsdk/sockets.php
+		try {
+			var transportService =
+				Cc['@mozilla.org/network/socket-transport-service;1']
+				.getService(Ci.nsISocketTransportService);
+			var transport = transportService.createTransport(
+				null, 0, host, port, null);
+			var ostream = transport.openOutputStream(
+				Ci.nsITransport.OPEN_BLOCKING, 0, 0);
+			while (mstream.available()) {
+				ostream.writeFrom(mstream,
+					Math.min(mstream.available(), 8192));
+					threads.main.dispatch(new UploadProgress(
+						mstream.available(), this.id),
+						threads.main.DISPATCH_NORMAL);
+			}
+			var _istream = transport.openInputStream(0,0,0);
+			var istream = Cc['@mozilla.org/scriptableinputstream;1']
+				.createInstance(Ci.nsIScriptableInputStream);
+			istream.init(_istream);
+			var pump = Cc['@mozilla.org/network/input-stream-pump;1']
+				.createInstance(Ci.nsIInputStreamPump);
+			pump.init(_istream, -1, -1, 0, 0, false);
+			pump.asyncRead({
+				id: this.id,
+				raw: [],
+				onStartRequest: function(request, context) {},
+				onStopRequest: function(request, context, status) {
+					istream.close();
+					ostream.close();
+
+Cc['@mozilla.org/consoleservice;1']
+	.getService(Ci.nsIConsoleService)
+	.logStringMessage(this.raw.join(''));
+
+					threads.main.dispatch(new UploadDone(
+						this.raw.join(''), this.id),
+						threads.main.DISPATCH_NORMAL);
+				},
+				onDataAvailable: function(request, context,
+					stream, offset, count) {
+					this.raw.push(istream.read(count));
+				},
+			}, null);
+		} catch (err) {
+			Components.utils.reportError(err);
+		}
+
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+
+var UploadProgress = function(available, id) {
+	this.available = available;
+	this.id = id;
+}
+UploadProgress.prototype = {
+	run: function() {
+		upload.progress2(this.available, this.id);
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+
+var UploadDone = function(raw, id) {
+	this.raw = raw;
+	this.id = id;
+}
+UploadDone.prototype = {
+	run: function() {
+
+		// Parse HTTP
+		var http = this.raw.split(/\r?\n/);
+		var rsp = false;
+		if (http && http[0] &&
+			http[0].match(/^HTTP\/1\.[01] 200 OK/)) {
+			while ('' != http[0]) {
+				http.shift();
+			}
+			try {
+				var parser =
+					Cc['@mozilla.org/xmlextras/domparser;1']
+					.createInstance(Ci.nsIDOMParser);
+				rsp = parser.parseFromString(http.join(''),
+					'text/xml').documentElement;
+			} catch (err) {
+				Components.utils.reportError(err);
+			}
+		}
+
+		upload._start(rsp, this.id);
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
 };

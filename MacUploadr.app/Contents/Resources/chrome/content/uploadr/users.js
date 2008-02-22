@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -160,13 +160,14 @@ var users = {
 		// Login as the current user
 		for each (var u in users.list) {
 			if (u.current) {
-				users.username = u.username;
-				users.nsid = u.nsid;
+// TODO: Does this work properly?
+//				users.username = u.username;
+//				users.nsid = u.nsid;
 				users.token = u.token;
-				users.is_pro = u.is_pro;
-				users.bandwidth = u.bandwidth;
-				users.filesize = u.filesize;
-				users.sets = u.sets;
+//				users.is_pro = u.is_pro;
+//				users.bandwidth = u.bandwidth;
+//				users.filesize = u.filesize;
+//				users.sets = u.sets;
 				users.login();
 				break;
 			}

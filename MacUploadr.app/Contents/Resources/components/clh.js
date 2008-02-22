@@ -1,10 +1,20 @@
+/*
+ * Flickr Uploadr
+ *
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
+ * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+ * GPL for more details (http://www.gnu.org/licenses/gpl.html)
+ */
+
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 
-const clh_contractID	= "@mozilla.org/commandlinehandler/general-startup;1?type=flcmdline";
-const clh_CID		= Components.ID("{3e984f42-a822-11dc-8314-0800200c9a66}");
-const clh_category	= "m-flcmdline";
-
+const clh_contractID =
+	"@mozilla.org/commandlinehandler/general-startup;1?type=flcmdline";
+const clh_CID = Components.ID("{3e984f42-a822-11dc-8314-0800200c9a66}");
+const clh_category = "m-flcmdline";
 
 const myAppHandler = {
 
@@ -21,8 +31,9 @@ const myAppHandler = {
 		var start = 0;
 
 		if (1 == cl.state){ // STATE_REMOTE_AUTO
-			// calh: i needed this in my test app, since arg 0 was the application.ini file (wtf?)
-			//       don't seem to need it for uploadr though...
+			// calh: i needed this in my test app, since arg 0 was the
+			// application.ini file (wtf?)
+			// don't seem to need it for uploadr though...
 			//start = 1;
 		}
 
@@ -78,7 +89,9 @@ const myAppHandler = {
 const myAppHandlerModule = {
 
 	QueryInterface : function(iid){
-		if (iid.equals(Ci.nsIModule) || iid.equals(Ci.nsISupports)) return this;
+		if (iid.equals(Ci.nsIModule) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	},
 

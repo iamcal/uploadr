@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -29,7 +29,7 @@ var flickr = {
 	auth: {
 
 		checkToken: function(token) {
-			_api({
+			api.start({
 				'method': 'flickr.auth.checkToken',
 				'auth_token': token
 			});
@@ -51,7 +51,7 @@ var flickr = {
 		},
 
 		getFrob: function(fresh) {
-			_api({
+			api.start({
 				'method': 'flickr.auth.getFrob'
 			}, null, null, null, fresh);
 		},
@@ -72,7 +72,7 @@ var flickr = {
 					buttons.login.enable();
 					return;
 				}
-				var url = _api({
+				var url = api.start({
 					'perms': 'write',
 					'frob': users.frob,
 //				}, 'http://api.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
@@ -85,7 +85,7 @@ var flickr = {
 
 		getToken: function(frob) {
 			if (frob) {
-				_api({
+				api.start({
 					'method': 'flickr.auth.getToken',
 					'frob': frob
 				});
@@ -113,7 +113,7 @@ var flickr = {
 
 		// Sets up the photostream header
 		getInfo: function(user_id) {
-			_api({
+			api.start({
 				'method': 'flickr.people.getInfo',
 				'auth_token': users.token,
 				'user_id': user_id
@@ -140,7 +140,7 @@ var flickr = {
 		},
 
 		getUploadStatus: function() {
-			_api({
+			api.start({
 				'method': 'flickr.people.getUploadStatus',
 				'auth_token': users.token
 			});
@@ -185,7 +185,7 @@ var flickr = {
 
 			checkTickets: function(tickets) {
 				block_exit();
-				_api({
+				api.start({
 					'method': 'flickr.photos.upload.checkTickets',
 					'auth_token': users.token,
 					'tickets': tickets.join(',')
@@ -274,7 +274,7 @@ var flickr = {
 
 		addPhoto: function(photoset_id, photo_id){
 			block_exit();
-			_api({
+			api.start({
 				'method': 'flickr.photosets.addPhoto',
 				'auth_token': users.token,
 				'photoset_id': photoset_id,
@@ -296,7 +296,7 @@ var flickr = {
 
 		create: function(title, description, primary_photo_id) {
 			block_exit();
-			_api({
+			api.start({
 				'method': 'flickr.photosets.create',
 				'auth_token': users.token,
 				'title': title,
@@ -351,7 +351,7 @@ var flickr = {
 		},
 
 		getList: function(user_id) {
-			_api({
+			api.start({
 				'method': 'flickr.photosets.getList',
 				'auth_token': users.token
 			});
@@ -427,7 +427,7 @@ var flickr = {
 	prefs: {
 
 		getContentType: function() {
-			_api({
+			api.start({
 				'method': 'flickr.prefs.getContentType',
 				'auth_token': users.token
 			});
@@ -442,7 +442,7 @@ var flickr = {
 		},
 
 		getHidden: function() {
-			_api({
+			api.start({
 				'method': 'flickr.prefs.getHidden',
 				'auth_token': users.token
 			});
@@ -457,7 +457,7 @@ var flickr = {
 		},
 
 		getPrivacy: function() {
-			_api({
+			api.start({
 				'method': 'flickr.prefs.getPrivacy',
 				'auth_token': users.token
 			});
@@ -479,7 +479,7 @@ var flickr = {
 		},
 
 		getSafetyLevel: function() {
-			_api({
+			api.start({
 				'method': 'flickr.prefs.getSafetyLevel',
 				'auth_token': users.token
 			});
@@ -498,7 +498,7 @@ var flickr = {
 	utils: {
 
 		logUploadStats: function(source, num_photos, upload_time, bytes, errors) {
-			_api({
+			api.start({
 				'method': 'flickr.utils.logUploadStats',
 				'auth_token': users.token,
 				'source': source,
@@ -516,189 +516,206 @@ var flickr = {
 
 };
 
-// Hashes of timeouts and XHRs being used to track running API calls
-var _timeouts = {};
+var api = {
 
-// The guts of the API object - this actually makes the XHR calls and finds the callback
-//   Callbacks are named exactly like the API method but with an _ in front of the last
-//   part of the method name (for example flickr.foo.bar calls back to flickr.foo._bar)
-var _api = function(params, url, browser, post, id) {
-	if (conf.console.request) {
-		Components.utils.reportError('API REQUEST: ' + params.toSource());
-	}
-	if (null == url) {
-//		url = 'http://api.flickr.com/services/rest/';
-		url = 'http://api.dev.flickr.com/services/rest/';
-	}
-	if (null == browser) {
-		browser = false;
-	}
-	if (null == post) {
-		post = false;
-	}
-	if (null == id) {
-		id = -1;
-	}
+	// Hashes of timeouts and XHRs being used to track running API calls
+	timeouts: {},
 
-	// Sign the call
-	params['api_key'] = key.key();
-	var sig = [];
-	var esc_params = {};
-	for (var p in params) {
-		if ('object' == typeof params[p]) {
-			esc_params[p] = params[p];
-		} else {
-			sig.push(p);
-			esc_params[p] = escape_utf8('' + params[p], !post);
+	// Escape and sign a set of parameters, returning the new version
+	escape_and_sign: function(params, post) {
+		params['api_key'] = key.key();
+		var sig = [];
+		var esc_params = {api_key: '', api_sig: ''};
+		for (var p in params) {
+			if ('object' == typeof params[p]) {
+				esc_params[p] = params[p];
+			} else {
+				sig.push(p);
+				esc_params[p] = escape_utf8('' + params[p], !post)
+					.replace(/(^\s+|\s+$)/g, '');
+			}
 		}
-	}
-	sig.sort();
-	var calc = [];
-	var ii = sig.length;
-	for (var i = 0; i < ii; ++i) {
-		calc.push(sig[i] + (post ? esc_params[sig[i]] : escape_utf8('' + params[sig[i]], false)));
-	}
-	esc_params['api_sig'] = key.sign(calc.join(''));
+		sig.sort();
+		var calc = [];
+		var ii = sig.length;
+		for (var i = 0; i < ii; ++i) {
+			calc.push(sig[i] + (post ? esc_params[sig[i]] : escape_utf8('' + params[sig[i]], false)));
+		}
+		esc_params['api_sig'] = key.sign(calc.join(''));
+		return esc_params;
+	},
 
-	// Build either a POST payload or a GET URL
-	//   There is an assumption here that no one will be sending a file over GET
-	var mstream = '';
-	var boundary = '--------------------------deadbeef';
-	if (post) {
-		mstream = Cc['@mozilla.org/io/multiplex-input-stream;1'].createInstance(
-			Ci.nsIMultiplexInputStream);
-		var sstream;
-		for (var p in esc_params) {
+	// The guts of the API object - this actually makes the XHR calls and finds the callback
+	//   Callbacks are named exactly like the API method but with an _ in front of the last
+	//   part of the method name (for example flickr.foo.bar calls back to flickr.foo._bar)
+	start: function(params, url, browser, post, id) {
+		if (conf.console.request) {
+			Cc['@mozilla.org/consoleservice;1']
+				.getService(Ci.nsIConsoleService)
+				.logStringMessage('API REQUEST: ' + params.toSource());
+		}
+		if (null == url) {
+//			url = 'http://api.flickr.com/services/rest/';
+			url = 'http://api.dev.flickr.com/services/rest/';
+		}
+		if (null == browser) {
+			browser = false;
+		}
+		if (null == post) {
+			post = false;
+		}
+		if (null == id) {
+			id = -1;
+		}
+
+		// Escape params and sign the call
+		params = api.escape_and_sign(params, post);
+
+		// Build either a POST payload or a GET URL
+		//   There is an assumption here that no one will be sending a file over GET
+		var mstream = '';
+		var boundary = '------deadbeef---deadbeef---' + Math.random();
+		if (post) {
+			mstream = Cc['@mozilla.org/io/multiplex-input-stream;1'].createInstance(
+				Ci.nsIMultiplexInputStream);
+			var sstream;
+			for (var p in params) {
+				sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
+					Ci.nsIStringInputStream);
+				sstream.setData('--' + boundary + '\r\nContent-Disposition: form-data; name="' +
+					p + '"', -1);
+				mstream.appendStream(sstream);
+				if ('object' == typeof params[p] && null != params[p]) {
+					sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
+						Ci.nsIStringInputStream);
+					sstream.setData('; filename="' + params[p].filename +
+						'"\r\nContent-Type: application/octet-stream\r\n\r\n', -1);
+					mstream.appendStream(sstream);
+					var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+					file.initWithPath(params[p].path);
+					var fstream = Cc['@mozilla.org/network/file-input-stream;1'].createInstance(
+						Ci.nsIFileInputStream);
+					fstream.init(file, 1, 1, Ci.nsIFileInputStream.CLOSE_ON_EOF);
+					var bstream = Cc['@mozilla.org/network/buffered-input-stream;1'].createInstance(
+						Ci.nsIBufferedInputStream);
+					bstream.init(fstream, 4096);
+					mstream.appendStream(bstream);
+					sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
+						Ci.nsIStringInputStream);
+					sstream.setData('\r\n', -1);
+					mstream.appendStream(sstream);
+				} else {
+					sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
+						Ci.nsIStringInputStream);
+					sstream.setData('\r\n\r\n' + params[p] + '\r\n', -1);
+					mstream.appendStream(sstream);
+				}
+			}
 			sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
 				Ci.nsIStringInputStream);
-			sstream.setData('--' + boundary + '\r\nContent-Disposition: form-data; name="' +
-				p + '"', -1);
+			sstream.setData('--' + boundary + '--', -1);
 			mstream.appendStream(sstream);
-			if ('object' == typeof esc_params[p] && null != esc_params[p]) {
-				sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-					Ci.nsIStringInputStream);
-				sstream.setData('; filename="' + esc_params[p].filename +
-					'"\r\nContent-Type: application/octet-stream\r\n\r\n', -1);
-				mstream.appendStream(sstream);
-				var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-				file.initWithPath(esc_params[p].path);
-				var fstream = Cc['@mozilla.org/network/file-input-stream;1'].createInstance(
-					Ci.nsIFileInputStream);
-				fstream.init(file, 1, 1, Ci.nsIFileInputStream.CLOSE_ON_EOF);
-				var bstream = Cc['@mozilla.org/network/buffered-input-stream;1'].createInstance(
-					Ci.nsIBufferedInputStream);
-				bstream.init(fstream, 4096);
-				mstream.appendStream(bstream);
-				sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-					Ci.nsIStringInputStream);
-				sstream.setData('\r\n', -1);
-				mstream.appendStream(sstream);
-			} else {
-				sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-					Ci.nsIStringInputStream);
-				sstream.setData('\r\n\r\n' + esc_params[p] + '\r\n', -1);
-				mstream.appendStream(sstream);
-			}
-		}
-		sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-			Ci.nsIStringInputStream);
-		sstream.setData('--' + boundary + '--', -1);
-		mstream.appendStream(sstream);
-		upload.progress_total = mstream.available() >> 10;
-	} else {
-		var args = [];
-		for (var p in esc_params) {
-			args.push(p + '=' + esc_params[p]);
-		}
-		url += '?' + args.join('&');
-	}
-
-	// Open a browser
-	//   Only GET requests are supported here
-	if (browser) {
-		return launch_browser(url);
-	}
-
-	// Use XHR
-	//   GET and POST are supported here
-	else {
-
-		// Build up the callback
-		//   For the method foo.bar.baz this will call foo.bar._baz with the response
-		var callback;
-		if (params.method) {
-			var index = 1 + params.method.lastIndexOf('.');
-			callback = params.method.substring(0, index) + '_' +
-				params.method.substring(index, params.method.length) + '(rsp';
-			if (-1 != id) {
-				callback += ', id';
-			}
-			callback += ');';
-		}
-
-		// Callback
-		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if (4 == xhr.readyState && 200 == xhr.status && xhr.responseXML) {
-				try {
-					var rsp = xhr.responseXML.documentElement;
-					if (conf.console.error && (
-						'object' != typeof rsp || 'ok' != rsp.getAttribute('stat'))) {
-						Components.utils.reportError('API ERROR: ' + xhr.responseText);
-					} else if (conf.console.response) {
-						Components.utils.reportError('API RESPONSE: ' + xhr.responseText);
-					}
-
-					// If this is a normal method call
-					if (params.method) {
-
-						// It returned normally, don't timeout
-						window.clearTimeout(_timeouts[esc_params['api_sig']]);
-						delete _timeouts[esc_params['api_sig']];
-
-						eval(callback);
-					}
-
-					// If this is an upload
-					else {
-						upload._start(rsp, id);
-					}
-
-				} catch (err) {
-					Components.utils.reportError(err);
-				}
-			}
-		};
-
-		// Send the request
-		xhr.open(post ? 'POST' : 'GET', url, true);
-		if (post) {
-			xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' +
-				boundary);
+			upload.progress_total = mstream.available() >> 10;
 		} else {
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		}
-		xhr.send(mstream);
-
-		// Setup upload progress indicator
-		if (post && -1 != id && !params.method) {
-			upload.progress_handle = window.setInterval(function() {
-				upload.progress(mstream, id);
-			}, conf.check);
+			var args = [];
+			for (var p in params) {
+				args.push(p + '=' + params[p]);
+			}
+			url += '?' + args.join('&');
 		}
 
-		// Setup timeout guard on everything else
-		else if (params.method) {
-			_timeouts[esc_params['api_sig']] = window.setTimeout(function() {
-				if (conf.console.timeout) {
-					Components.utils.reportError('API TIMEOUT: ' + callback);
+		// Open a browser
+		//   Only GET requests are supported here
+		if (browser) {
+			return launch_browser(url);
+		}
+
+		// Use XHR
+		//   GET and POST are supported here
+		else {
+
+			// Build up the callback
+			//   For the method foo.bar.baz this will call foo.bar._baz with the response
+			var callback;
+			if (params.method) {
+				var index = 1 + params.method.lastIndexOf('.');
+				callback = params.method.substring(0, index) + '_' +
+					params.method.substring(index, params.method.length) + '(rsp';
+				if (-1 != id) {
+					callback += ', id';
 				}
-				var rsp = false;
-				eval(callback);
-			}, conf.timeout);
+				callback += ');';
+			}
+
+			// Callback
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				if (4 == xhr.readyState && 200 == xhr.status && xhr.responseXML) {
+					try {
+						var rsp = xhr.responseXML.documentElement;
+						if (conf.console.error && (
+							'object' != typeof rsp || 'ok' != rsp.getAttribute('stat'))) {
+							Components.utils.reportError('API ERROR: ' + xhr.responseText);
+						} else if (conf.console.response) {
+							Cc['@mozilla.org/consoleservice;1']
+								.getService(Ci.nsIConsoleService)
+								.logStringMessage('API RESPONSE: ' + xhr.responseText);
+						}
+
+						// If this is a normal method call
+						if (params.method) {
+
+							// It returned normally, don't timeout
+							window.clearTimeout(api.timeouts[params['api_sig']]);
+							delete api.timeouts[params['api_sig']];
+
+							eval(callback);
+						}
+
+						// If this is an upload
+						else {
+							upload._start(rsp, id);
+						}
+
+					} catch (err) {
+						Components.utils.reportError(err);
+					}
+				}
+			};
+
+			// Send the request
+			xhr.open(post ? 'POST' : 'GET', url, true);
+			if (post) {
+				xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' +
+					boundary);
+			} else {
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			}
+			xhr.send(mstream);
+
+			// Setup upload progress indicator
+			if (post && -1 != id && !params.method) {
+				upload.progress_handle = window.setInterval(function() {
+					upload.progress(mstream, id);
+				}, conf.check);
+			}
+
+			// Setup timeout guard on everything else
+			else if (params.method) {
+				api.timeouts[params['api_sig']] = window.setTimeout(function() {
+					if (conf.console.timeout) {
+						Components.utils.reportError('API TIMEOUT: ' + callback);
+					}
+					var rsp = false;
+					eval(callback);
+				}, conf.timeout);
+			}
+
 		}
 
-	}
+	},
+
+	//
 
 };
 

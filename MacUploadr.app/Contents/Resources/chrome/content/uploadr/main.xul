@@ -3,9 +3,9 @@
 
 Flickr Uploadr
 
-Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
-software; you can redistribute it and/or modify it under the terms of the
-GNU General Public License (GPL), version 2 only.  This library is
+Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+free software; you can redistribute it and/or modify it under the terms of
+the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
@@ -114,10 +114,10 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					<menuitem id="menu_faq" label="&menu.help.faq;"
 					oncommand="help.faq();" />
 					<menuseparator />
-					<menuitem id="menu_updates"
-						label="&menu.help.update;"
-						class="menuitem-iconic"
-						oncommand="upgrade.check();"/>
+					<menuitem id="menu_addons" label="&menu.help.addons;"
+						oncommand="help.addons();" />
+					<menuitem id="menu_updates" label="&menu.help.update;"
+						class="menuitem-iconic" oncommand="upgrade.check();"/>
 					<menuseparator />
 					<menuitem id="menu_console" label="&menu.help.console;"
 					oncommand="window.open('chrome://global/content/console.xul', '_blank',
@@ -203,7 +203,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	</vbox>
 
 	<!-- Status bar for showing helpful messages -->
-	<statusbar>
+	<statusbar id="status-bar">
 		<statusbarpanel id="status" label="" flex="1" />
 	</statusbar>
 

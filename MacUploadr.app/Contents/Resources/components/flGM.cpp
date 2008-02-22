@@ -1,9 +1,9 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
- * software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License (GPL), version 2 only.  This library is
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
@@ -539,7 +539,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			bw = img.baseRows();
 			bh = img.baseColumns();
 		}
-//		int base = bw > bh ? bw : bh;
+		int base = bw > bh ? bw : bh;
 		out1 << bw << "###" << bh << "###";
 
 		// EXIF date taken
@@ -597,18 +597,18 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		}
 
 		// Find the sharpen sigma as the website does
-//		double sigma;
-//		if (base <= 800) {
-//			sigma = 1.9;
-//		} else if (base <= 1600) {
-//			sigma = 2.85;
-//		} else {
-//			sigma = 3.8;
-//		}
+		double sigma;
+		if (base <= 800) {
+			sigma = 1.9;
+		} else if (base <= 1600) {
+			sigma = 2.85;
+		} else {
+			sigma = 3.8;
+		}
 
 		// Create the actual thumbnail
 		img.scale(dim.str());
-//		img.sharpen(1, sigma);
+		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);
 		img.write(*thumb_s);
 
@@ -789,11 +789,11 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 
 		// Find the sharpen sigma as the website does
 		//   Which is easy, because for these sizes it's just 0.95
-		double sigma = 0.95;
+//		double sigma = 0.95;
 
 		// Resize the image
 		img.scale(dim);
-		img.sharpen(1, sigma);
+//		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);
 		img.write(*resize_s);
 
