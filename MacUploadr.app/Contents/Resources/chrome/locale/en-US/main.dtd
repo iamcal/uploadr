@@ -1,3 +1,15 @@
+<!--
+
+Flickr Uploadr
+
+Copyright (c) 2007 Yahoo! Inc.  All rights reserved.  This library is free
+software; you can redistribute it and/or modify it under the terms of the
+GNU General Public License (GPL), version 2 only.  This library is
+distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
+-->
+
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Upload">
@@ -13,6 +25,7 @@
 <!ENTITY menu.help.about "About Flickr Uploadr">
 <!ENTITY menu.help.tips "Tips and Tricks">
 <!ENTITY menu.help.faq "FAQ">
+<!ENTITY menu.help.addons "Add-ons">
 <!ENTITY menu.help.update "Check for Updates...">
 <!ENTITY menu.help.console "Console">
 
