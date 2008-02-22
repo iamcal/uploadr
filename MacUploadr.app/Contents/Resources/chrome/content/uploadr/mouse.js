@@ -359,7 +359,9 @@ var mouse = {
 					if (delta) {
 						mouse.box.scrollTo(pos.x.value, pos.y.value + delta);
 					}
-					mouse.drag_select({clientX: clientX, clientY: clientY}, pos);
+					if (mouse.anchor) {
+						mouse.drag_select({clientX: clientX, clientY: clientY}, pos);
+					}
 				}, 10);
 			}
 		}

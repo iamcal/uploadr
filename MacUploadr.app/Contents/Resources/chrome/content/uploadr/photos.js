@@ -108,7 +108,10 @@ var photos = {
 	},
 
 	// Add a list of photos
-	add: function(paths) {
+	add: function(paths, silent) {
+		if (null == silent) {
+			silent = false;
+		}
 		buttons.upload.disable();
 
 		// Tally up photos and videos and remove large videos
@@ -134,7 +137,7 @@ var photos = {
 		paths = new_paths;
 
 		// If there are videos then there may be questions to ask
-		if (v_count) {
+		if (!silent && v_count) {
 			var result = {};
 
 			// Decide the plurality string
@@ -640,33 +643,13 @@ var photos = {
 
 		// Add the previous batch of photos
 		var list = obj.list;
-		var ii = list.length;
-		if (ii) {
+		if (list.length) {
+			photos.sort = obj.sort;
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
 			document.getElementById('no_meta_prompt').style.visibility = 'visible';
 		}
-//		for (var i  = 0; i < ii; ++i) {
-//			photos._add(list[i].path);
-//			photos.list[photos.list.length - 1] = list[i];
-//		}
-		photos.add(list);
-
-		// Sort photos based on previous sort setting
-/*
-		if (list.length) {
-			photos.sort = obj.sort;
-			if (photos.sort) {
-				threads.worker.dispatch(new Sort(), threads.worker.DISPATCH_NORMAL);
-				document.getElementById('photos_sort_default').style.display = 'block';
-				document.getElementById('photos_sort_revert').style.display = 'none';
-			} else {
-				threads.worker.dispatch(new EnableUpload(), threads.worker.DISPATCH_NORMAL);
-				document.getElementById('photos_sort_default').style.display = 'none';
-				document.getElementById('photos_sort_revert').style.display = 'block';
-			}
-		}
-*/
+		photos.add(list, true);
 
 		// Bring in old sets that were created locally but not on the site
 		for each (var name in obj.sets) {
