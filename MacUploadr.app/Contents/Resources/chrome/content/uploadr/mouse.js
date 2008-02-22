@@ -18,25 +18,15 @@ var mouse = {
 			return;
 		}
 
+		// Resolve clicks on the video icon to the thumbnail
+		e = mouse.resolve(e);
+
 		// Save old metadata
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
 		} else if (1 < photos.selected.length) {
 			meta.abandon();
 		}
-
-		// Resolve clicks on the video icon to the thumbnail
-/*
-		if (e.target.src &&
-			'chrome://uploadr/skin/icon_video.png' == e.target.src) {
-			var new_e = {};
-			for (var key in e) {
-				new_e[key] = e[key];
-			}
-			new_e.target = e.target.parentNode.firstChild;
-			e = new_e;
-		}
-*/
 
 		// If we clicked on an image that isn't an error and isn't loading
 		if (e.target.src && 'error' != e.target.className && 'loading' != e.target.className) {
@@ -203,6 +193,9 @@ var mouse = {
 			return;
 		}
 
+		// Resolve clicks on the video icon to the thumbnail
+		e = mouse.resolve(e);
+
 		// Get the mouse position
 		if (null == mouse.box) {
 			mouse.box = document.getElementById('photos').boxObject.QueryInterface(
@@ -244,6 +237,9 @@ var mouse = {
 		if (0 == photos.count) {
 			return;
 		}
+
+		// Resolve clicks on the video icon to the thumbnail
+		e = mouse.resolve(e);
 
 		// Get the mouse position
 		if (null == mouse.box) {
@@ -384,6 +380,9 @@ var mouse = {
 			return;
 		}
 
+		// Resolve clicks on the video icon to the thumbnail
+		e = mouse.resolve(e);
+
 		// Clicks cancel the special behavior when first adding photos
 		meta.first = false;
 
@@ -394,19 +393,6 @@ var mouse = {
 
 		// Prevent conflicts with select-all behavior
 		document.getElementById('photos').focus();
-
-		// Resolve clicks on the video icon to the thumbnail
-/*
-		if (e.target.src &&
-			'chrome://uploadr/skin/icon_video.png' == e.target.src) {
-			var new_e = {};
-			for (var key in e) {
-				new_e[key] = e[key];
-			}
-			new_e.target = e.target.parentNode.firstChild;
-			e = new_e;
-		}
-*/
 
 		// Stop auto-scrolling when we stop dragging, too
 		if (null != mouse.auto_scroll) {
@@ -540,6 +526,21 @@ var mouse = {
 			mouse.show_queue();
 		} else {
 			mouse.show_photos();
+		}
+	},
+
+	// Resolve clicks on the video icon to the thumbnail
+	resolve: function(e) {
+		if (e.target.src &&
+			'chrome://uploadr/skin/icon_video.png' == e.target.src) {
+			var new_e = {};
+			for (var key in e) {
+				new_e[key] = e[key];
+			}
+			new_e.target = e.target.parentNode.firstChild;
+			return new_e;
+		} else {
+			return e;
 		}
 	}
 
