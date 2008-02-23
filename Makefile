@@ -38,7 +38,7 @@ endif
 PKG := ~/Desktop/build/$(INTL)
 
 # Version number for Uploadr
-VER := 3.1a1
+VER := 3.1a2
 
 # Location of Mozilla tree
 MOZILLA := ~/mozilla
@@ -180,13 +180,13 @@ mar:
 	PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
 		$(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar $(PKG)/new
-	PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
-		$(MOZILLA)/tools/update-packaging/make_incremental_update.sh \
-		$(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar $(PKG)/old $(PKG)/new
+#	PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
+#		$(MOZILLA)/tools/update-packaging/make_incremental_update.sh \
+#		$(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar $(PKG)/old $(PKG)/new
 	rm $(PKG)/new
 
 	# Size and hash for the XML file
 	@ls -l $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | awk '{print "Complete size: ",$$5}'
 	@md5 $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | awk '{print "Complete MD5:  ",$$4}'
-	@ls -l $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | awk '{print "Partial size: ",$$5}'
-	@md5 $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | awk '{print "Partial MD5:  ",$$4}'
+#	@ls -l $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | awk '{print "Partial size: ",$$5}'
+#	@md5 $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | awk '{print "Partial MD5:  ",$$4}'
