@@ -1,23 +1,35 @@
+// Flickr hostnames
+pref('flickr.site_host', 'dev.flickr.com');
+pref('flickr.rest_host', 'api.dev.flickr.com');
+pref('flickr.upload_host', 'up.dev.flickr.com');
+
+// Default chrome
 pref('toolkit.defaultChromeURI', 'chrome://uploadr/content/main.xul');
 pref('toolkit.singletonWindowType', 'app');
 pref('browser.chromeURL', 'chrome://uploadr/content/dock.xul');
+
+// Debugging
 pref('browser.dom.window.dump.enabled', true);
 pref('javascript.options.showInConsole', true);
 pref('javascript.options.strict', true);
 
+// Software updates
 pref('app.update.url', 'http://flickr.com/services/uploadr/updates/?product=%PRODUCT%&version=%VERSION%&build_id=%BUILD_ID%&build_target=%BUILD_TARGET%&locale=%LOCALE%&');
 pref('app.update.url.manual', 'http://www.flickr.com/tools/uploadr');
 pref('app.update.url.details', 'http://www.flickr.com/tools/uploadr');
 
+// Locale
 pref('general.useragent.locale', 'en-US');
 
 // Can't do this because XMLHttpRequest obeys it
 //pref('network.protocol-handler.external.http', true);
 //pref('network.protocol-handler.external.https', true);
 
+// Allow nicely launching their browser
 pref('network.protocol-handler.warn-external.http', false);
 pref('network.protocol-handler.warn-external.https', false);
 
+// Extension manager
 //pref('xpinstall.dialog.confirm', 'chrome://mozapps/content/xpinstall/xpinstallConfirm.xul');
 //pref('xpinstall.dialog.progress.skin', 'chrome://mozapps/content/extensions/extensions.xul?type=themes');
 //pref('xpinstall.dialog.progress.chrome', 'chrome://mozapps/content/extensions/extensions.xul?type=extensions');

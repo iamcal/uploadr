@@ -250,7 +250,8 @@ var photos = {
 		photos.normalize();
 
 		// Update the UI
-		if (photos.count) {
+		if (document.getElementById('photos_list')
+			.getElementsByTagName('li').length) {
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(),
 					threads.worker.DISPATCH_NORMAL);

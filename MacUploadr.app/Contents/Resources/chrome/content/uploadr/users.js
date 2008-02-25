@@ -123,7 +123,8 @@ var users = {
 		document.getElementById('bw_remaining').style.display = 'none';
 		status.set(locale.getString('status.disconnected'));
 		meta.logout();
-		document.getElementById('buddyicon').src = 'http://flickr.com/images/buddyicon.jpg';
+		document.getElementById('buddyicon').src =
+			'http://' + SITE_HOST + '/images/buddyicon.jpg';
 		document.getElementById('photostream_pro').style.display = 'none';
 
 	},

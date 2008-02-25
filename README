@@ -141,6 +141,7 @@ move libjpeg.dylib, libtiff.dylib and libpng.dylib out of the way like this:
   $ sudo mv /opt/local/lib/libjpeg.dylib /opt/local/lib/libjpeg.dylib.sav
   $ sudo mv /opt/local/lib/libtiff.dylib /opt/local/lib/libtiff.dylib.sav
   $ sudo mv /opt/local/lib/libpng.dylib /opt/local/lib/libpng.dylib.sav
+  $ sudo mv /opt/local/lib/libiconv.dylib /opt/local/lib/libiconv.dylib.sav
 
 For Mac, the magic.mgk, modules.mgk and delegates.mgk files must be in
 Contents/lib/GraphicsMagick-<version>/config/.

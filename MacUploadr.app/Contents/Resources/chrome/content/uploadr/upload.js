@@ -73,9 +73,9 @@ var upload = {
 
 		// EXPERIMENTAL: Pass the photo to the socket uploadr
 		if (conf.socket_uploadr) {
-			Cc['@mozilla.org/consoleservice;1']
-				.getService(Ci.nsIConsoleService)
-				.logStringMessage('EXPERIMENTAL socket uploadr');
+Cc['@mozilla.org/consoleservice;1']
+	.getService(Ci.nsIConsoleService)
+	.logStringMessage('EXPERIMENTAL socket uploadr');
 
 			// Dispatch for health and non-blocking profit!
 			threads.uploadr.dispatch(new Upload({
@@ -116,8 +116,7 @@ var upload = {
 					'filename': photo.filename,
 					'path': photo.path
 				}
-//			}, 'http://up.flickr.com/services/upload/', false, true, id);
-			}, 'http://up.dev.flickr.com/services/upload/', false, true, id);
+			}, 'http://' + UPLOAD_HOST + '/services/upload/', false, true, id);
 		}
 
 	},
@@ -292,7 +291,6 @@ var upload = {
 			upload.progress_id = id;
 			upload.progress_last = upload.progress_total;
 		}
-//		var a = stream.available() >> 10;
 		var a = available >> 10;
 		var kb = upload.progress_last - a;
 
@@ -422,7 +420,7 @@ var upload = {
 				locale.getString('dialog.bandwidth.title'),
 				locale.getString('dialog.bandwidth.ok'),
 				locale.getString('dialog.bandwidth.cancel'))) {
-				launch_browser('http://flickr.com/upgrade/');
+				launch_browser('http://' + SITE_HOST + '/upgrade/');
 			} else {
 				buttons.login.click();
 			}
@@ -622,8 +620,7 @@ var upload = {
 
 		// If requested, open the site
 		if (go_to_flickr) {
-//			launch_browser('http://flickr.com/photos/upload/done/?b=' +
-			launch_browser('http://dev.flickr.com/photos/upload/done/?b=' +
+			launch_browser('http://' + SITE_HOST + '/photos/upload/done/?b=' +
 				upload.timestamps.earliest + '-' + upload.timestamps.latest +
 				'-' + users.nsid);
 		}
@@ -686,11 +683,6 @@ Upload.prototype = {
 	run: function() {
 		var esc_params = api.escape_and_sign(this.params, true);
 
-		// Upload API
-//		var host = 'up.flickr.com';
-		var host = 'up.dev.flickr.com';
-		var port = 80;
-
 		// Stream containing the entire HTTP POST payload
 		var boundary = '------deadbeef---deadbeef---' + Math.random();
 		var mstream = Cc['@mozilla.org/io/multiplex-input-stream;1']
@@ -745,7 +737,7 @@ Upload.prototype = {
 		sstream = Cc['@mozilla.org/io/string-input-stream;1']
 			.createInstance(Ci.nsIStringInputStream);
 		sstream.setData('POST /services/upload/ HTTP/1.1\r\n' +
-			'Host: ' + host + '\r\n' +
+			'Host: ' + UPLOAD_HOST + '\r\n' +
 			'User-Agent: Flickr Uploadr ' + conf.version + '\r\n' +
 			'Content-Length: ' + mstream.available() + '\r\n' +
 			'Content-Type: multipart/form-data; boundary=' + boundary +
@@ -759,7 +751,7 @@ Upload.prototype = {
 				Cc['@mozilla.org/network/socket-transport-service;1']
 				.getService(Ci.nsISocketTransportService);
 			var transport = transportService.createTransport(
-				null, 0, host, port, null);
+				null, 0, UPLOAD_HOST, 80, null);
 			var ostream = transport.openOutputStream(
 				Ci.nsITransport.OPEN_BLOCKING, 0, 0);
 			while (mstream.available()) {

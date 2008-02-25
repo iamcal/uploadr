@@ -15,11 +15,11 @@ const NS_HTML = 'http://www.w3.org/1999/xhtml';
 const conf = {
 
 	// What version am I?
-	version: '3.1',
+	version: '3.1a3',
 
 	// What types of API events should be written to the console?
 	console: {
-		request: false,
+		request: true,
 		response: false,
 		error: true,
 		timeout: true,

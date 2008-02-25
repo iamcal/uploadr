@@ -14,10 +14,20 @@
 //   here is chained together in such a way that after users.login()'s callback returns, the
 //   users object is setup and ready for use.
 
+// Grab the API endpoint from the prefs
+//(function() {
+var prefs = Cc['@mozilla.org/preferences-service;1']
+	.getService(Ci.nsIPrefBranch);
+try { var SITE_HOST = prefs.getCharPref('flickr.site_host'); }
+catch (err) { SITE_HOST = 'www.flickr.com'; }
+try { var REST_HOST = prefs.getCharPref('flickr.rest_host'); }
+catch (err) { REST_HOST = 'api.flickr.com'; }
+try { var UPLOAD_HOST = prefs.getCharPref('flickr.upload_host'); }
+catch(err) { UPLOAD_HOST = 'up.flickr.com'; }
+
 // The API key and secret are defined in flKey.cpp and included here
-var key;
 try {
-	key = Cc['@flickr.com/key;1'].createInstance(Ci.flIKey);
+	var key = Cc['@flickr.com/key;1'].createInstance(Ci.flIKey);
 } catch (err) {
 	Components.utils.reportError(err);
 }
@@ -38,7 +48,8 @@ var flickr = {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 				users.logout(false);
 			} else {
-				users.token = rsp.getElementsByTagName('token')[0].firstChild.nodeValue;
+				users.token = rsp.getElementsByTagName('token')[0]
+					.firstChild.nodeValue;
 				var user = rsp.getElementsByTagName('user')[0];
 				users.nsid = user.getAttribute('nsid');
 				users.username = user.getAttribute('username');
@@ -75,8 +86,8 @@ var flickr = {
 				var url = api.start({
 					'perms': 'write',
 					'frob': users.frob,
-//				}, 'http://api.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
-				}, 'http://api.dev.flickr.com/services/auth/' + (fresh ? 'fresh/' : ''), true);
+				}, 'http://' + API_REST_ENDPOINT + '/services/auth/' +
+					(fresh ? 'fresh/' : ''), true);
 				document.getElementById('auth_url').value = url;
 				pages.go('auth');
 			}
@@ -125,16 +136,19 @@ var flickr = {
 				var s = p.getAttribute('iconserver');
 				if (0 != parseInt(s)) {
 					document.getElementById('buddyicon').src =
-						'http://farm' + p.getAttribute('iconfarm') + '.static.flickr.com/' +
-						s + '/buddyicons/' + id + '.jpg';
+						'http://farm' + p.getAttribute('iconfarm') +
+						'.static.flickr.com/' + s + '/buddyicons/' +
+						id + '.jpg';
 				} else {
 					document.getElementById('buddyicon').src =
-						'http://flickr.com/images/buddyicon.jpg';
+						'http://' + SITE_HOST + '/images/buddyicon.jpg';
 				}
 				if (1 == parseInt(p.getAttribute('ispro'))) {
-					document.getElementById('photostream_pro').style.display = 'inline';
+					document.getElementById('photostream_pro')
+						.style.display = 'inline';
 				} else {
-					document.getElementById('photostream_pro').style.display = 'none';
+					document.getElementById('photostream_pro')
+						.style.display = 'none';
 				}
 			}
 		},
@@ -166,7 +180,8 @@ var flickr = {
 				}
 				users.filesize = parseInt(user.getElementsByTagName(
 					'filesize')[0].getAttribute('maxkb'));
-				sets = user.getElementsByTagName('sets')[0].getAttribute('remaining');
+				sets = user.getElementsByTagName('sets')[0]
+					.getAttribute('remaining');
 				if ('lots' == sets) {
 					users.sets = -1;
 				} else {
@@ -193,14 +208,16 @@ var flickr = {
 			},
 			_checkTickets: function(rsp) {
 				var again = false;
-				if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
+				if ('object' == typeof rsp &&
+					'ok' == rsp.getAttribute('stat')) {
 					upload.tickets_retry = 0;
-					var tickets = rsp.getElementsByTagName('uploader')[0].getElementsByTagName(
-						'ticket');
+					var tickets = rsp.getElementsByTagName('uploader')[0]
+						.getElementsByTagName('ticket');
 					var ii = tickets.length;
 					for (var i = 0; i < ii; ++i) {
 						var ticket_id = tickets[i].getAttribute('id');
-						var complete = parseInt(tickets[i].getAttribute('complete'));
+						var complete = parseInt(tickets[i]
+							.getAttribute('complete'));
 						if ('undefined' != typeof upload.tickets[ticket_id]) {
 
 							// Error'd photo
@@ -215,7 +232,8 @@ var flickr = {
 								--upload.tickets_count;
 
 								// Check this photo against stored timestamps
-								var imported = parseInt(tickets[i].getAttribute('imported'));
+								var imported = parseInt(tickets[i]
+									.getAttribute('imported'));
 								if (0 == upload.timestamps.earliest ||
 									imported < upload.timestamps.earliest) {
 									upload.timestamps.earliest = imported;
@@ -225,7 +243,8 @@ var flickr = {
 									upload.timestamps.latest = imported;
 								}
 
-								upload._sync(parseInt(tickets[i].getAttribute('photoid')),
+								upload._sync(parseInt(tickets[i]
+									.getAttribute('photoid')),
 									upload.tickets[ticket_id]);
 								delete upload.tickets[ticket_id];
 							}
@@ -249,7 +268,8 @@ var flickr = {
 					// Valid response or still have retries remaining
 					if ('object' == typeof rsp) {
 						upload._check_tickets();
-					} else if (conf.tickets_retry_count > upload.tickets_retry_count) {
+					} else if (conf.tickets_retry_count >
+						upload.tickets_retry_count) {
 						++upload.tickets_retry_count;
 						upload._check_tickets();
 					}
@@ -314,7 +334,8 @@ var flickr = {
 
 				// Update the map with this new set ID
 				var list = meta.sets_map[id];
-				var set_id = rsp.getElementsByTagName('photoset')[0].getAttribute('id');
+				var set_id = rsp.getElementsByTagName('photoset')[0]
+					.getAttribute('id');
 				meta.sets_map[set_id] = list;
 				delete meta.sets_map[id];
 
@@ -342,7 +363,8 @@ var flickr = {
 				}
 
 				if (0 != meta.sets_map[set_id].length) {
-					flickr.photosets.addPhoto(set_id, meta.sets_map[set_id][0]);
+					flickr.photosets.addPhoto(set_id,
+						meta.sets_map[set_id][0]);
 				} else {
 					upload.finalize();
 				}
@@ -359,12 +381,14 @@ var flickr = {
 		_getList: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				meta.sets = {};
-				var sets = rsp.getElementsByTagName('photosets')[0].getElementsByTagName('photoset');
+				var sets = rsp.getElementsByTagName('photosets')[0]
+					.getElementsByTagName('photoset');
 				var ii = sets.length;
 				var order = [];
 				for (var i = 0; i < ii; ++i) {
 					order.push([sets[i].getAttribute('id'),
-						sets[i].getElementsByTagName('title')[0].firstChild.nodeValue]);
+						sets[i].getElementsByTagName('title')[0]
+						.firstChild.nodeValue]);
 				}
 				order.sort(function(a, b) {
 					return a[1].toLowerCase() > b[1].toLowerCase();
@@ -392,7 +416,8 @@ var flickr = {
 							var li = document.createElementNS(NS_HTML, 'li');
 							li.id = prefix + '_sets_add_' + set_id;
 							li.className = 'sets_plus';
-							li.appendChild(document.createTextNode(meta.sets[set_id]));
+							li.appendChild(document.createTextNode(
+								meta.sets[set_id]));
 							ul.appendChild(li);
 						}
 					}
@@ -411,7 +436,8 @@ var flickr = {
 							var li = document.createElementNS(NS_HTML, 'li');
 							li.id = 'single_sets_' + p.sets[i];
 							li.className = 'sets_trash';
-							li.appendChild(document.createTextNode(meta.sets[p.sets[i]]));
+							li.appendChild(document.createTextNode(
+								meta.sets[p.sets[i]]));
 							ul.appendChild(li);
 						}
 					}
@@ -435,7 +461,8 @@ var flickr = {
 		_getContentType: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.content_type =
-					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('content_type'));
+					parseInt(rsp.getElementsByTagName('person')[0]
+					.getAttribute('content_type'));
 				settings.save();
 				meta.defaults({content_type: settings.content_type});
 			}
@@ -450,7 +477,8 @@ var flickr = {
 		_getHidden: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.hidden =
-					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('hidden'));
+					parseInt(rsp.getElementsByTagName('person')[0]
+					.getAttribute('hidden'));
 				settings.save();
 				meta.defaults({hidden: settings.hidden});
 			}
@@ -465,7 +493,8 @@ var flickr = {
 		_getPrivacy: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				var privacy =
-					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('privacy'));
+					parseInt(rsp.getElementsByTagName('person')[0]
+					.getAttribute('privacy'));
 				settings.is_public = 1 == privacy ? 1 : 0;
 				settings.is_friend = 2 == privacy || 4 == privacy ? 1 : 0;
 				settings.is_family = 3 == privacy || 4 == privacy ? 1 : 0;
@@ -487,7 +516,8 @@ var flickr = {
 		_getSafetyLevel: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				settings.safety_level =
-					parseInt(rsp.getElementsByTagName('person')[0].getAttribute('safety_level'));
+					parseInt(rsp.getElementsByTagName('person')[0]
+					.getAttribute('safety_level'));
 				settings.save();
 				meta.defaults({safety_level: settings.safety_level});
 			}
@@ -497,7 +527,8 @@ var flickr = {
 
 	utils: {
 
-		logUploadStats: function(source, num_photos, upload_time, bytes, errors) {
+		logUploadStats: function(source, num_photos, upload_time,
+			bytes, errors) {
 			api.start({
 				'method': 'flickr.utils.logUploadStats',
 				'auth_token': users.token,
@@ -539,24 +570,21 @@ var api = {
 		var calc = [];
 		var ii = sig.length;
 		for (var i = 0; i < ii; ++i) {
-			calc.push(sig[i] + (post ? esc_params[sig[i]] : escape_utf8('' + params[sig[i]], false)));
+			calc.push(sig[i] + (post ? esc_params[sig[i]] : escape_utf8('' +
+				params[sig[i]], false)));
 		}
 		esc_params['api_sig'] = key.sign(calc.join(''));
 		return esc_params;
 	},
 
-	// The guts of the API object - this actually makes the XHR calls and finds the callback
-	//   Callbacks are named exactly like the API method but with an _ in front of the last
-	//   part of the method name (for example flickr.foo.bar calls back to flickr.foo._bar)
+	// The guts of the API object - this actually makes the XHR calls and
+	// finds the callback
+	//   Callbacks are named exactly like the API method but with an _ in
+	//   front of the last part of the method name (for example
+	//   flickr.foo.bar calls back to flickr.foo._bar)
 	start: function(params, url, browser, post, id) {
-		if (conf.console.request) {
-			Cc['@mozilla.org/consoleservice;1']
-				.getService(Ci.nsIConsoleService)
-				.logStringMessage('API REQUEST: ' + params.toSource());
-		}
 		if (null == url) {
-//			url = 'http://api.flickr.com/services/rest/';
-			url = 'http://api.dev.flickr.com/services/rest/';
+			url = 'http://' + REST_HOST + '/services/rest/';
 		}
 		if (null == browser) {
 			browser = false;
@@ -566,6 +594,12 @@ var api = {
 		}
 		if (null == id) {
 			id = -1;
+		}
+		if (conf.console.request) {
+			Cc['@mozilla.org/consoleservice;1']
+				.getService(Ci.nsIConsoleService)
+				.logStringMessage('API REQUEST: ' + params.toSource() +
+				', ' + url);
 		}
 
 		// Escape params and sign the call
