@@ -38,7 +38,7 @@ endif
 PKG := ~/Desktop/build/$(INTL)
 
 # Version number for Uploadr
-VER := 3.1a2
+VER := 3.1a3
 
 # Location of Mozilla tree
 MOZILLA := ~/mozilla
