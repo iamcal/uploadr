@@ -35,7 +35,9 @@ var users = {
 
 		// If we have a token already, use it
 		if (users.token) {
-			flickr.auth.checkToken(users.token);
+			var t = users.token;
+			users.token = null;
+			flickr.auth.checkToken(t);
 		}
 
 		// If we don't have a token and we're not forcing a fresh token
@@ -124,7 +126,7 @@ var users = {
 		status.set(locale.getString('status.disconnected'));
 		meta.logout();
 		document.getElementById('buddyicon').src =
-			'http://' + SITE_HOST + '/images/buddyicon.jpg';
+			'http://flickr.com/images/buddyicon.jpg';
 		document.getElementById('photostream_pro').style.display = 'none';
 
 	},
@@ -161,14 +163,7 @@ var users = {
 		// Login as the current user
 		for each (var u in users.list) {
 			if (u.current) {
-// TODO: Does this work properly?
-//				users.username = u.username;
-//				users.nsid = u.nsid;
 				users.token = u.token;
-//				users.is_pro = u.is_pro;
-//				users.bandwidth = u.bandwidth;
-//				users.filesize = u.filesize;
-//				users.sets = u.sets;
 				users.login();
 				break;
 			}

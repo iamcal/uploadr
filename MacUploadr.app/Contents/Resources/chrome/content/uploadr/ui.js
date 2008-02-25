@@ -60,7 +60,8 @@ var ui = {
 		}
 		var li = document.createElementNS(NS_HTML, 'li');
 		li.appendChild(document.createTextNode(locale.getFormattedString(
-			'photos.init.note.photo_size', [users.filesize >> 10])));
+			'photos.init.note.photo_size',
+			[Math.max(5, users.filesize >> 10)])));
 		notes.appendChild(li);
 		if (users.is_pro) {
 
@@ -75,17 +76,23 @@ var ui = {
 			notes.appendChild(li);
 
 			// Replace the top prompt for pro users to mention videos
-			document.getElementById('photos_init_prompt').firstChild.nodeValue =
-				locale.getString('photos.init.pro');
+			document.getElementById('photos_init_prompt')
+				.firstChild.nodeValue = locale.getString('photos.init.pro');
 
 		} else {
 
 			// Replace the top prompt for free users to mention only photos
-			document.getElementById('photos_init_prompt').firstChild.nodeValue =
-				locale.getString('photos.init.free');
+			document.getElementById('photos_init_prompt')
+				.firstChild.nodeValue = locale.getString('photos.init.free');
 			
 		}
-		document.getElementById('photos_init_note').style.display = '-moz-box';
+
+		// No extra notes for offline users since we have no idea what
+		// to show them
+		if (users.username) {
+			document.getElementById('photos_init_note').style.display =
+				'-moz-box';
+		}
 
 	},
 

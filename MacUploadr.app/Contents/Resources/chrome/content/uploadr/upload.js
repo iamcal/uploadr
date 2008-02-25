@@ -775,11 +775,6 @@ Upload.prototype = {
 				onStopRequest: function(request, context, status) {
 					istream.close();
 					ostream.close();
-
-Cc['@mozilla.org/consoleservice;1']
-	.getService(Ci.nsIConsoleService)
-	.logStringMessage(this.raw.join(''));
-
 					threads.main.dispatch(new UploadDone(
 						this.raw.join(''), this.id),
 						threads.main.DISPATCH_NORMAL);

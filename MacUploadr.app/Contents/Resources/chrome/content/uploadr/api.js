@@ -86,7 +86,7 @@ var flickr = {
 				var url = api.start({
 					'perms': 'write',
 					'frob': users.frob,
-				}, 'http://' + API_REST_ENDPOINT + '/services/auth/' +
+				}, 'http://' + SITE_HOST + '/services/auth/' +
 					(fresh ? 'fresh/' : ''), true);
 				document.getElementById('auth_url').value = url;
 				pages.go('auth');
@@ -141,7 +141,7 @@ var flickr = {
 						id + '.jpg';
 				} else {
 					document.getElementById('buddyicon').src =
-						'http://' + SITE_HOST + '/images/buddyicon.jpg';
+						'http://flickr.com/images/buddyicon.jpg';
 				}
 				if (1 == parseInt(p.getAttribute('ispro'))) {
 					document.getElementById('photostream_pro')

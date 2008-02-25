@@ -19,7 +19,7 @@ const conf = {
 
 	// What types of API events should be written to the console?
 	console: {
-		request: true,
+		request: false,
 		response: false,
 		error: true,
 		timeout: true,

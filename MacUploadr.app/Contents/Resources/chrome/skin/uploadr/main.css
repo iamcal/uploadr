@@ -501,7 +501,7 @@ div.toolbarseparator {
 
 /* Three states, depending on what's selected */
 #meta, #batch_meta, #no_meta, #meta_button {
-	width: 420px;
+	width: 434px;
 	padding: 5px;
 	background: #f8f8f8;
 	border-left: 1px solid #ddd;

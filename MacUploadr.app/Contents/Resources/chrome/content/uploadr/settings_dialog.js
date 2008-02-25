@@ -17,6 +17,7 @@ var settings = {
 
 		// Show a login message for non-logged-in users
 		if (null == settings.username) {
+			document.getElementById('dialog_settings').style.width = '300px';
 			document.getElementById('notloggedin').style.display = '-moz-box';
 			document.getElementById('loggedin').style.display = 'none';
 		}
@@ -46,7 +47,7 @@ var settings = {
 		moveToAlertPosition();
 	},
 
-	// Load a 
+	// Load a user's data
 	_load: function(username) {
 		var s = settings.list[username].settings;
 		document.getElementById('is_public').value = s.is_public;
