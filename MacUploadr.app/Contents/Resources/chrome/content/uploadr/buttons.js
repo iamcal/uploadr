@@ -47,7 +47,8 @@ var buttons = {
 
 	upload: {
 		enable: function() {
-			if (users.username && 0 < photos.count) {
+			if (users.username && 'boolean' == typeof users.is_pro &&
+				0 < photos.count) {
 				document.getElementById('button_upload').className = 'button';
 				document.getElementById('menu_upload_upload').disabled = false;
 			}

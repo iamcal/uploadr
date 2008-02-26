@@ -150,8 +150,9 @@ var users = {
 			u.sets = users.sets;
 			u.current = true;
 		} else {
-			users.list[users.username] = new User(users.username, users.nsid, users.token,
-				users.is_pro, users.bandwidth, users.filesize, users.sets);
+			users.list[users.username] = new User(users.username, users.nsid,
+				users.token, users.is_pro, users.bandwidth, users.filesize,
+				users.sets);
 		}
 
 	},

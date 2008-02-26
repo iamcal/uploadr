@@ -190,6 +190,7 @@ var flickr = {
 				ui.users_updated();
 				users.update();
 			}
+			buttons.upload.enable();
 		}
 
 	},

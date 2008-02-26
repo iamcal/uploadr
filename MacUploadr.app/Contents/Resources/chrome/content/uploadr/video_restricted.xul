@@ -19,7 +19,7 @@ xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept,cancel,extra1"
 ondialogaccept="window.arguments[8].result = 'ok'; return true;"
 ondialogcancel="window.arguments[8].result = 'cancel'; return true;"
 ondialogextra1="window.arguments[8].result = 'extra1'; window.close();">
-	<script src="chrome://uploadr/content/uploadr.js" />
+	<script src="chrome://uploadr/content/conf.js" />
 	<script><![CDATA[
 	window.addEventListener('load', function() {
 		var d = document.getElementById('dialog_video_restricted');

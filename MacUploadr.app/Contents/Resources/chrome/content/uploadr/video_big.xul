@@ -17,7 +17,6 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml" buttons="accept"
 ondialogaccept="return true;">
-	<script src="chrome://uploadr/content/uploadr.js" />
 	<script><![CDATA[
 	window.addEventListener('load', function() {
 		var d = document.getElementById('dialog_video_big');

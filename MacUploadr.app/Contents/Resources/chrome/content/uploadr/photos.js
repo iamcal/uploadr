@@ -332,7 +332,7 @@ var photos = {
 
 			// Free the size of this file
 			photos.batch_size -= photos.list[id].size;
-			if (users.username && !users.is_pro &&
+			if (users.username && !users.is_pro && users.bandwidth &&
 				0 < users.bandwidth.remaining - photos.batch_size) {
 				status.clear();
 			}
@@ -404,7 +404,8 @@ var photos = {
 
 	// Upload photos
 	//   The arguments will either both be null or both be set
-	//   If they're both set, this is an automated call to upload by the queue
+	//   If they're both set, this is an automated call to upload by the
+	//   queue
 	upload: function(list, size) {
 		var from_user = null == list;
 		if (from_user) {
@@ -428,6 +429,9 @@ var photos = {
 			}
 		}
 
+		// Decide if we're already in the midst of an upload
+		var not_started = 0 == photos.uploading.length;
+
 		// Drop videos if we're a free user or they're over 100MB
 		//   They will have been warned that this is coming
 		if (from_user) {
@@ -444,9 +448,6 @@ var photos = {
 			}
 			list = new_list;
 		}
-
-		// Decide if we're already in the midst of an upload
-		var not_started = 0 == photos.uploading.length;
 
 		// If any photos need resizing to fit in the per-photo size limits,
 		// dispatch the jobs and wait
@@ -511,18 +512,26 @@ var photos = {
 
 				// Give some meaningful feedback
 				if (not_started) {
-					document.getElementById('footer').style.display = '-moz-box';
+					document.getElementById('footer').style.display =
+						'-moz-box';
 					upload.progress_bar = new ProgressBar('progress_bar');
-					var progress_text = document.getElementById('progress_text');
+					var progress_text = document.getElementById(
+						'progress_text');
 					progress_text.className = 'spinning';
-					progress_text.value = locale.getString('upload.resizing.status');
+					progress_text.value = locale.getString(
+						'upload.resizing.status');
 					status.set(locale.getString('status.uploading'));
 					buttons.upload.disable();
-					document.getElementById('photos_sort_default').style.display = 'none';
-					document.getElementById('photos_sort_revert').style.display = 'none';
-					document.getElementById('photos_init').style.display = 'none';
-					document.getElementById('photos_new').style.display = '-moz-box';
-					document.getElementById('no_meta_prompt').style.visibility = 'hidden';
+					document.getElementById('photos_sort_default')
+						.style.display = 'none';
+					document.getElementById('photos_sort_revert')
+						.style.display = 'none';
+					document.getElementById('photos_init')
+						.style.display = 'none';
+					document.getElementById('photos_new')
+						.style.display = '-moz-box';
+					document.getElementById('no_meta_prompt')
+						.style.visibility = 'hidden';
 					meta.disable();
 				}
 
