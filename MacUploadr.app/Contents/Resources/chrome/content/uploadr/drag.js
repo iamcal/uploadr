@@ -23,28 +23,23 @@ var drag = {
 			document.getElementById('photos').className = 'no_drag';
 		},
 		onDrop: function(e, data) {
+			var paths = [];
 			var process_dir = function(files) {
 				while (files.hasMoreElements()) {
 					var f = files.getNext();
 					if (f.isDirectory()) {
 						process_dir(f.directoryEntries);
 					} else {
-						var path = f.QueryInterface(Ci.nsILocalFile).path;
-						if (photos.can_has(path)) {
-							paths.push(path);
-						}
+						paths.push(f.QueryInterface(Ci.nsILocalFile).path);
 					}
-				}				
+				}
 			};
-			var paths = [];
 			data.dataList.forEach(function(d) {
 				if (d.first.data.isDirectory()) {
 					process_dir(d.first.data.directoryEntries);
 				} else {
-					var path = d.first.data.QueryInterface(Ci.nsILocalFile).path;
-					if (photos.can_has(path)) {
-						paths.push(path);
-					}
+					paths.push(d.first.data.QueryInterface(
+						Ci.nsILocalFile).path);
 				}
 			});
 			photos.add(paths);

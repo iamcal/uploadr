@@ -41,7 +41,7 @@ var ui = {
 		node.appendChild(document.createTextNode(parts[0]));
 		var span = document.createElementNS(NS_HTML, 'span');
 		span.className = 'link';
-		span.onclick = help.faq;
+		span.onclick = menus.help.faq;
 		span.appendChild(document.createTextNode(parts[1]));
 		node.appendChild(span);
 		node.appendChild(document.createTextNode(parts[2]));
@@ -176,34 +176,47 @@ var pages = {
 
 };
 
-// The help menu
-var help = {
+// The menus
+var menus = {
 
-	about: function() {
-		window.openDialog('chrome://uploadr/content/about.xul', 'dialog_about',
-			'chrome,modal', locale.getFormattedString('dialog.about.version',
-			[conf.version]));
-	},
+	tools: {
 
-	tips: function() {
-		mouse.show_photos();
-		pages.go('help');
-	},
+		addons: function() {
+			var wm = Cc['@mozilla.org/appshell/window-mediator;1']
+				.getService(Ci.nsIWindowMediator);
+			var em = wm.getMostRecentWindow('Extension:Manager');
+			if (em) {
+				em.focus();
+				return;
+			}
+			window.openDialog('chrome://mozapps/content/extensions/extensions.xul',
+				'', 'chrome,menubar,extra-chrome,toolbar,dialog=no,resizable');
+		},
 
-	faq: function() {
-		launch_browser('http://flickr.com/help/tools/');
-	},
-
-	addons: function() {
-		var wm = Cc['@mozilla.org/appshell/window-mediator;1']
-			.getService(Ci.nsIWindowMediator);
-		var em = wm.getMostRecentWindow('Extension:Manager');
-		if (em) {
-			em.focus();
-			return;
+		console: function() {
+			window.open('chrome://global/content/console.xul', '_blank',
+				'chrome,extrachrome,menubar,resizable,scrollbars,status,toolbar');
 		}
-		window.openDialog('chrome://mozapps/content/extensions/extensions.xul',
-			'', 'chrome,menubar,extra-chrome,toolbar,dialog=no,resizable');
+
+	},
+
+	help: {
+
+		about: function() {
+			window.openDialog('chrome://uploadr/content/about.xul', 'dialog_about',
+				'chrome,modal', locale.getFormattedString('dialog.about.version',
+				[conf.version]));
+		},
+
+		tips: function() {
+			mouse.show_photos();
+			pages.go('help');
+		},
+
+		faq: function() {
+			launch_browser('http://flickr.com/help/tools/');
+		}
+
 	}
 
 };

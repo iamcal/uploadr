@@ -48,8 +48,8 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<key id="key_add" modifiers="accel" key="o" oncommand="photos.add_dialog();" />
 		<key id="key_upload" modifiers="shift accel" key="u" oncommand="photos.upload();" />
 		<key id="key_prefs" modifiers="accel" key="," oncommand="settings.show();" />
-		<key id="key_help" modifiers="accel" key="/" oncommand="help.tips();" />
-		<key id="key_help_fake" modifiers="accel" key="?" oncommand="help.tips();" />
+		<key id="key_help" modifiers="accel" key="/" oncommand="menu.help.tips();" />
+		<key id="key_help_fake" modifiers="accel" key="?" oncommand="menu.help.tips();" />
 		<key id="key_quit" modifiers="accel" key="q" oncommand="exit();" />
 		<key id="key_back" keycode="VK_BACK" oncommand="photos.remove();" />
 		<key id="key_delete" keycode="VK_DELETE" oncommand="photos.remove();" />
@@ -105,23 +105,25 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					oncommand="keyboard.select_all();" />
 				</menupopup>
 			</menu>
+			<menu id="menu_tools" label="&menu.tools;">
+				<menupopup>
+					<menuitem id="menu_tools_addons" label="&menu.tools.addons;"
+					oncommand="menus.tools.addons();" />
+					<menuitem id="menu_tools_console" label="&menu.tools.console;"
+					oncommand="menus.tools.console();" />
+				</menupopup>
+			</menu>
 			<menu id="menu_help" label="&menu.help;">
 				<menupopup onpopupshowing="upgrade.build_menu();">
 					<menuitem id="aboutName" label="&menu.help.about;"
-					oncommand="help.about();" />
+					oncommand="menus.help.about();" />
 					<menuitem id="menu_help_tips" label="&menu.help.tips;" key="key_help_fake"
-					oncommand="help.tips();" />
+					oncommand="menus.help.tips();" />
 					<menuitem id="menu_faq" label="&menu.help.faq;"
-					oncommand="help.faq();" />
+					oncommand="menus.help.faq();" />
 					<menuseparator />
-					<menuitem id="menu_addons" label="&menu.help.addons;"
-						oncommand="help.addons();" />
 					<menuitem id="menu_updates" label="&menu.help.update;"
-						class="menuitem-iconic" oncommand="upgrade.check();"/>
-					<menuseparator />
-					<menuitem id="menu_console" label="&menu.help.console;"
-					oncommand="window.open('chrome://global/content/console.xul', '_blank',
-						'chrome,extrachrome,menubar,resizable,scrollbars,status,toolbar');" />
+					class="menuitem-iconic" oncommand="upgrade.check();"/>
 				</menupopup>
 			</menu>
 		</menubar>

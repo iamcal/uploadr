@@ -225,11 +225,12 @@ ThumbCallback.prototype = {
 				img.parentNode.appendChild(document.createTextNode(
 					photos.list[this.id].filename));
 				--photos.count;
+				++photos.errors;
 				img.onclick = function() {
 					this.parentNode.parentNode.removeChild(this.parentNode);
 					photos.normalize();
-					if (!document.getElementById('photos_list')
-						.getElementsByTagName('li').length) {
+					--photos.errors;
+					if (0 == photos.count + photos.errors) {
 						document.getElementById('photos_init')
 							.style.display = '-moz-box';
 					}

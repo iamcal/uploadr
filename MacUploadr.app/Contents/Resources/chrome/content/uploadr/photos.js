@@ -13,6 +13,7 @@ var photos = {
 	// Storage
 	list: [],
 	count: 0,
+	errors: 0,
 	selected: [],
 	last: null,
 	sort: true,
@@ -88,9 +89,7 @@ var photos = {
 			var paths = [];
 			while (files.hasMoreElements()) {
 				var arg = files.getNext().QueryInterface(Ci.nsILocalFile).path;
-				if (photos.can_has(arg)) {
-					paths.push(arg);
-				}
+				paths.push(arg);
 			}
 			photos.add(paths);
 
@@ -119,12 +118,18 @@ var photos = {
 		var v_count = 0;
 		var big_videos = [];
 		var new_paths = [];
+		var bad = [];
 		for each (var p in paths) {
 			var path = 'object' == typeof p ? p.path : p;
+
+			// Photos are always allowed
 			if (photos.is_photo(path)) {
 				++p_count;
 				new_paths.push(p);
-			} else if (photos.is_video(path)) {
+			}
+
+			// Videos are allowed for now as long as they aren't too big
+			else if (photos.is_video(path)) {
 				++v_count;
 				if (file.size(path) > conf.video_max) {
 					var filename = path.match(/([^\/\\]*)$/);
@@ -133,27 +138,51 @@ var photos = {
 					new_paths.push(p);
 				}
 			}
+
+			// Warn about files that are being dropped
+			else if (path.length) {
+				var filename = path.match(/([^\/\\]*)$/);
+				bad.push(null == filename ? path : filename[1]);
+			}
+
 		}
 		paths = new_paths;
 
-		// If there are videos then there may be questions to ask
-		if (!silent && v_count) {
-			var result = {};
+		// Yell about anything added that wasn't an image
+		if (bad.length) {
+			var pl = (1 == bad.length ? 's' : 'p') +
+				(0 == paths.length ? 'z' : 'p');
+			var text;
+			if (1 == bad.length) {
+				text = locale.getFormattedString('bad.' + pl + '.text',
+					[bad[0]]);
+			} else {
+				text = [locale.getFormattedString('bad.' + pl + '.text',
+					[bad.length]), bad.join(', ')];
+			}
+			alert(text, locale.getString('bad.' + pl + '.title'),
+				locale.getString('bad.' + pl + '.ok'));
+		}
 
-			// Decide the plurality string
+		// If we're allowed to bother the user
+		if (!silent) {
+
+			// Plurality strings are decided as follows
 			//   Each dialog has identical strings but they're coded
 			//   as follows for varied pluralities:
 			//     XXX.sz.XXX: singular video, zero photos
 			//     XXX.sz.XXX: plural videos, zero photos
 			//     XXX.pp.XXX: singular video, plural photos
 			//     XXX.pp.XXX: plural videos, plural photos
-			//   Some strings appear in more than one place and use
-			//   'a' to indicate they're reused (not yet, but maybe)
-			var pl = (1 == v_count ? 's' : 'p') + (0 == p_count ? 'z' : 'p');
 
 			// Warn if a video is larger than 100MB and remove offending
 			// videos from the list
 			if (big_videos.length) {
+
+				// Plurality, see above
+				var pl = (1 == v_count ? 's' : 'p') +
+					(0 == p_count ? 'z' : 'p');
+
 				window.openDialog(
 					'chrome://uploadr/content/video_big.xul',
 					'dialog_video_big', 'chrome,modal',
@@ -161,68 +190,81 @@ var photos = {
 					locale.getString('video.add.big.' + pl + '.explain'),
 					1 == v_count ? '' : big_videos.join(', '),
 					locale.getString('video.add.big.' + pl + '.ok'));
+				v_count -= big_videos.length;
 			}
 
-			// Offline users can have video but we should warn them that
-			// we'll remove them without warning if they turn out to be
-			// a free user at upload time
-			if ('object' == typeof users.is_pro) {
-				window.openDialog(
-					'chrome://uploadr/content/video_offline.xul',
-					'dialog_video_offline', 'chrome,modal',
-					locale.getString('video.add.offline.' + pl + '.title'),
-					locale.getString('video.add.offline.' + pl + '.explain'),
-					locale.getString('video.add.offline.' + pl + '.ok'),
-					locale.getString('video.add.offline.' + pl + '.cancel'),
-					locale.getString('video.add.offline.' + pl + '.extra1'),
-					result);
-			}
+			// If there are videos then there may be questions to ask
+			if (v_count) {
+				var result = {};
 
-			// Pro users can have videos but we still need to bother
-			// those that have their defaults set to restricted
-			else if (3 == settings.safety_level) {
-				window.openDialog(
-					'chrome://uploadr/content/video_restricted.xul',
-					'dialog_video_restricted', 'chrome,modal',
-					locale.getString('video.add.restricted.' + pl + '.title'),
-					locale.getString('video.add.restricted.' + pl + '.explain'),
-					locale.getString('video.add.restricted.' + pl + '.action'),
-					locale.getString('video.add.restricted.' + pl + '.note'),
-					locale.getString('video.add.restricted.' + pl + '.guidelines'),
-					locale.getString('video.add.restricted.' + pl + '.ok'),
-					locale.getString('video.add.restricted.' + pl + '.cancel'),
-					locale.getString('video.add.restricted.' + pl + '.extra1'),
-					result);
-			}
+				// Redo plurality, see above
+				var pl = (1 == v_count ? 's' : 'p') +
+					(0 == p_count ? 'z' : 'p');
 
-			// Quit immediately if we're forgetting the whole group
-			if ('extra1' == result.result) {
-				return;
-			}
+				// Offline users can have video but we should warn them that
+				// we'll remove them without warning if they turn out to be
+				// a free user at upload time
+				if ('object' == typeof users.is_pro) {
+					window.openDialog(
+						'chrome://uploadr/content/video_offline.xul',
+						'dialog_video_offline', 'chrome,modal',
+						locale.getString('video.add.offline.' + pl + '.title'),
+						locale.getString('video.add.offline.' + pl + '.explain'),
+						locale.getString('video.add.offline.' + pl + '.ok'),
+						locale.getString('video.add.offline.' + pl + '.cancel'),
+						locale.getString('video.add.offline.' + pl + '.extra1'),
+						result);
+				}
 
-			// Remove videos from the path list if we're keeping photos
-			else if ('cancel' == result.result) {
-				var new_paths = [];
-				while (paths.length) {
-					var p = paths.shift();
-					var path = 'object' == typeof p ? p.path : p;
-					if (!photos.is_video(path)) {
-						new_paths.push(p);
+				// Pro users can have videos but we still need to bother
+				// those that have their defaults set to restricted
+				else if (3 == settings.safety_level) {
+					window.openDialog(
+						'chrome://uploadr/content/video_restricted.xul',
+						'dialog_video_restricted', 'chrome,modal',
+						locale.getString('video.add.restricted.' + pl + '.title'),
+						locale.getString('video.add.restricted.' + pl + '.explain'),
+						locale.getString('video.add.restricted.' + pl + '.action'),
+						locale.getString('video.add.restricted.' + pl + '.note'),
+						locale.getString('video.add.restricted.' + pl + '.guidelines'),
+						locale.getString('video.add.restricted.' + pl + '.ok'),
+						locale.getString('video.add.restricted.' + pl + '.cancel'),
+						locale.getString('video.add.restricted.' + pl + '.extra1'),
+						result);
+				}
+
+				// Quit immediately if we're forgetting the whole group
+				if ('extra1' == result.result) {
+					return;
+				}
+
+				// Remove videos from the path list if we're keeping photos
+				else if ('cancel' == result.result) {
+					var new_paths = [];
+					while (paths.length) {
+						var p = paths.shift();
+						var path = 'object' == typeof p ? p.path : p;
+						if (!photos.is_video(path)) {
+							new_paths.push(p);
+						}
+					}
+					paths = new_paths;
+				}
+
+				// If we're adding videos, remember the safety level to set
+				else if ('ok' == result.result && result.safety_level) {
+					var ii = paths.length;
+					for (var i = 0; i < ii; ++i) {
+						var p = 'object' == typeof paths[i] ?
+							paths[i].path : paths[i];
+						if (photos.is_video(p)) {
+							paths[i] = 'object' == typeof paths[i] ?
+								paths[i] : {'path': p};
+							paths[i].safety_level = result.safety_level;
+						}
 					}
 				}
-				paths = new_paths;
-			}
 
-			// If we're adding videos, remember the safety level to set
-			else if ('ok' == result.result && result.safety_level) {
-				var ii = paths.length;
-				for (var i = 0; i < ii; ++i) {
-					var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
-					if (photos.is_video(p)) {
-						paths[i] = 'object' == typeof paths[i] ? paths[i] : {'path': p};
-						paths[i].safety_level = result.safety_level;
-					}
-				}
 			}
 
 		}
@@ -234,8 +276,9 @@ var photos = {
 
 			// Resolve the path and add the photo
 			if (/^file:\/\//.test(p)) {
-				p = Cc['@mozilla.org/network/protocol;1?name=file'].getService(
-					Ci.nsIFileProtocolHandler).getFileFromURLSpec(p).path;
+				p = Cc['@mozilla.org/network/protocol;1?name=file']
+					.getService(Ci.nsIFileProtocolHandler)
+					.getFileFromURLSpec(p).path;
 			}
 			photos._add(p);
 
@@ -250,8 +293,7 @@ var photos = {
 		photos.normalize();
 
 		// Update the UI
-		if (document.getElementById('photos_list')
-			.getElementsByTagName('li').length) {
+		if (photos.count + photos.errors) {
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(),
 					threads.worker.DISPATCH_NORMAL);
@@ -543,11 +585,16 @@ var photos = {
 		if (from_user) {
 			status.set(locale.getString('status.uploading'));
 			buttons.upload.disable();
-			document.getElementById('photos_sort_default').style.display = 'none';
-			document.getElementById('photos_sort_revert').style.display = 'none';
-			document.getElementById('photos_init').style.display = 'none';
-			document.getElementById('photos_new').style.display = '-moz-box';
-			document.getElementById('no_meta_prompt').style.visibility = 'hidden';
+			document.getElementById('photos_sort_default')
+				.style.display = 'none';
+			document.getElementById('photos_sort_revert')
+				.style.display = 'none';
+			document.getElementById('photos_init')
+				.style.display = 'none';
+			document.getElementById('photos_new')
+				.style.display = '-moz-box';
+			document.getElementById('no_meta_prompt')
+				.style.visibility = 'hidden';
 			meta.disable();
 		}
 
@@ -571,7 +618,8 @@ var photos = {
 				img.height = p.thumb_height;
 				var stack = document.createElement('stack');
 				stack.appendChild(img);
-				p.progress_bar = new ProgressBar('queue' + (photos.uploading.length - 1), img.width);
+				p.progress_bar = new ProgressBar('queue' +
+					(photos.uploading.length - 1), img.width);
 				var bar = p.progress_bar.create();
 				bar.style.top = (img.height - 20) + 'px';
 				stack.appendChild(bar);
@@ -621,7 +669,8 @@ var photos = {
 
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
-		var list = document.getElementById('photos_list').getElementsByTagName('li');
+		var list = document.getElementById('photos_list')
+			.getElementsByTagName('li');
 		var old_list = photos.list;
 		photos.list = [];
 		photos.selected = [];
@@ -635,7 +684,8 @@ var photos = {
 			photos.list[new_id].id = new_id;
 
 			// Update selection
-			if ('selected' == list[i].getElementsByTagName('img')[0].className) {
+			if ('selected' == list[i].getElementsByTagName('img')[0]
+				.className) {
 				photos.selected.push(new_id);
 			}
 
@@ -657,7 +707,8 @@ var photos = {
 			photos.sort = obj.sort;
 			document.getElementById('photos_init').style.display = 'none';
 			document.getElementById('photos_new').style.display = 'none';
-			document.getElementById('no_meta_prompt').style.visibility = 'visible';
+			document.getElementById('no_meta_prompt')
+				.style.visibility = 'visible';
 		}
 		photos.add(list, true);
 
@@ -679,13 +730,6 @@ var photos = {
 		}
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
-
-		// These lines cause the bug of repeated portions of descriptions
-		//   I can't think of a way to prevent this other than removing the
-		//   auto-saving functionality
-//		} else if (1 < photos.selected.length) {
-//			meta.save();
-
 		}
 		if (0 == photos.count) {
 			meta.created_sets = [];
@@ -707,39 +751,6 @@ var photos = {
 	// Similarly, is it a video
 	is_video: function(path) {
 		return /\.(mp4|mpe?g|avi|wmv|mov|dv|3gp)$/i.test(path);
-	},
-
-	// is_photo || is_video
-	can_has: function(path) {
-		return /\.(jpe?g|tiff?|gif|png|bmp|mp4|mpe?g|avi|wmv|mov|dv|3gp)$/i.test(path);
-	},
-
-	// Count photos and videos
-	//   Return is an array of [p_count, v_count, plurality]
-	video_count: function() {
-		var p_count = 0;
-		var v_count = 0;
-		for each (var id in photos.selected) {
-			if (null == photos.list[id]) {
-				continue;
-			}
-			var p = photos.list[id].path;
-			if (photos.is_photo(p)) {
-				++p_count;
-			} else if (photos.is_video(p)) {
-				++v_count;
-			}
-		}
-
-		// If there are videos then bother them
-		var plurality = null;
-		if (v_count) {
-
-
-
-		}
-
-		return [p_count, v_count, plurality];
 	}
 
 };

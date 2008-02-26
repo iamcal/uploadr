@@ -15,14 +15,5 @@ var clh = function(queue) {
 			.getService(Ci.flICLH);
 		queue = comp.getQueue();
 	}
-	queue = queue.split('|||||');
-	var ii = queue.length;
-	var paths = [];
-	for (var i = 0; i < ii; ++i) {
-		var arg = queue[i];
-		if (photos.can_has(arg)) {
-			paths.push(arg);
-		}
-	}
-	photos.add(paths);
+	photos.add(queue.split('|||||'));
 };

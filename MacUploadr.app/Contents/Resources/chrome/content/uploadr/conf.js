@@ -20,7 +20,7 @@ const conf = {
 	// What types of API events should be written to the console?
 	console: {
 		request: false,
-		response: true,
+		response: false,
 		error: true,
 		timeout: true,
 		retry: true
@@ -68,7 +68,7 @@ const conf = {
 	thumb_size: 100,
 
 	// Maximum size of a video upload (kilobytes)
-	video_max: 300 << 10,
+	video_max: 100 << 10,
 
 	// Upload mode
 	//   Must be 'sync' or 'async'

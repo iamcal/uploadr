@@ -21,13 +21,14 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.edit.copy "Copy">
 <!ENTITY menu.edit.paste "Paste">
 <!ENTITY menu.edit.select_all "Select all">
+<!ENTITY menu.tools "Tools">
+<!ENTITY menu.tools.addons "Add-ons">
+<!ENTITY menu.tools.console "Console">
 <!ENTITY menu.help "Help">
 <!ENTITY menu.help.about "About Flickr Uploadr">
 <!ENTITY menu.help.tips "Tips and Tricks">
 <!ENTITY menu.help.faq "FAQ">
-<!ENTITY menu.help.addons "Add-ons">
 <!ENTITY menu.help.update "Check for Updates...">
-<!ENTITY menu.help.console "Console">
 
 <!ENTITY notloggedin "You're working offline.">
 <!ENTITY login "Sign in">
