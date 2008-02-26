@@ -227,6 +227,11 @@ ThumbCallback.prototype = {
 				img.onclick = function() {
 					this.parentNode.parentNode.removeChild(this.parentNode);
 					photos.normalize();
+					if (!document.getElementById('photos_list')
+						.getElementsByTagName('li').length) {
+						document.getElementById('photos_init')
+							.style.display = '-moz-box';
+					}
 				};
 				Components.utils.reportError(this.result);
 			}
