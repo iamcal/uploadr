@@ -501,7 +501,7 @@ div.toolbarseparator {
 
 /* Three states, depending on what's selected */
 #meta, #batch_meta, #no_meta, #meta_button {
-	width: 434px;
+	width: 420px;
 	padding: 5px;
 	background: #f8f8f8;
 	border-left: 1px solid #ddd;
@@ -510,7 +510,8 @@ div.toolbarseparator {
 	display: none;
 }
 #meta, #batch_meta, #no_meta {
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 #no_meta_prompt {
 	visibility: hidden;

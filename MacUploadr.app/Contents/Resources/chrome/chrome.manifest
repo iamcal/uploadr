@@ -23,8 +23,7 @@ locale uploadr zh-HK file:locale/zh-hk/
 
 skin uploadr default file:skin/uploadr/
 
-# The hacks package is available for OS-specific tweaks
-#content hacks file:content/hacks/ platform
+# Uncomment this line to enable platform-specific CSS
 #skin hacks default file:skin/hacks/
 
 # Don't forget to update chrome.manifest.prod if you change things here
