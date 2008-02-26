@@ -222,7 +222,8 @@ ThumbCallback.prototype = {
 				img.setAttribute('width', 16);
 				img.setAttribute('height', 16);
 				img.className = 'error';
-				img.parentNode.appendChild(document.createTextNode(photos.list[this.id].filename));
+				img.parentNode.appendChild(document.createTextNode(
+					photos.list[this.id].filename));
 				--photos.count;
 				img.onclick = function() {
 					this.parentNode.parentNode.removeChild(this.parentNode);
