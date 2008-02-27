@@ -9,6 +9,7 @@
 #
 
 content uploadr file:content/uploadr/
+content hacks file:content/hacks/ platform
 
 locale branding en-US file:locale/branding/
 
@@ -24,7 +25,6 @@ locale uploadr zh-HK file:locale/zh-hk/
 skin uploadr default file:skin/uploadr/
 
 # Uncomment this line to enable platform-specific CSS
-#content hacks file:content/hacks/ platform
 #skin hacks default file:skin/hacks/
 
 # Don't forget to update chrome.manifest.prod if you change things here

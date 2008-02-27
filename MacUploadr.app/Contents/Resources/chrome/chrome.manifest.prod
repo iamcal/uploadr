@@ -9,6 +9,7 @@
 #
 
 content uploadr jar:uploadr.jar!/content/uploadr/
+content hacks jar:uploadr.jar!/content/hacks/ platform
 locale branding en-US jar:uploadr.jar!/locale/branding/
 locale uploadr en-US jar:uploadr.jar!/locale/en-US/
 skin uploadr default jar:uploadr.jar!/skin/uploadr/

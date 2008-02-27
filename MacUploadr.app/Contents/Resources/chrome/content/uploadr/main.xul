@@ -15,6 +15,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!--<?xml-stylesheet href="chrome://hacks/skin/hacks.css" type="text/css"?>-->
 <?xul-overlay href="chrome://uploadr/content/photos.xul"?>
 <?xul-overlay href="chrome://uploadr/content/help.xul"?>
+<?xul-overlay href="chrome://hacks/content/keyboard.xul"?>
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -44,13 +45,9 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/mouse.js" />
 	<script src="chrome://uploadr/content/keyboard.js" />
 	<script src="chrome://uploadr/content/buttons.js" />
-	<keyset>
+	<keyset id="key">
 		<key id="key_add" modifiers="accel" key="o" oncommand="photos.add_dialog();" />
 		<key id="key_upload" modifiers="shift accel" key="u" oncommand="photos.upload();" />
-		<key id="key_prefs" modifiers="accel" key="," oncommand="settings.show();" />
-		<key id="key_help" modifiers="accel" key="/" oncommand="menu.help.tips();" />
-		<key id="key_help_fake" modifiers="accel" key="?" oncommand="menu.help.tips();" />
-		<key id="key_quit" modifiers="accel" key="q" oncommand="exit();" />
 		<key id="key_back" keycode="VK_BACK" oncommand="photos.remove();" />
 		<key id="key_delete" keycode="VK_DELETE" oncommand="photos.remove();" />
 		<key id="key_cut" modifiers="accel" key="x" oncommand="goDoCommand('cmd_cut');" />
@@ -61,22 +58,14 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<key id="key_right" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
 		<key id="key_down" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
 		<key id="key_left" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
-		<key id="key_up" modifiers="shift" keycode="VK_UP"
-		oncommand="keyboard.arrows.up(event);" />
-		<key id="key_right" modifiers="shift" keycode="VK_RIGHT"
-		oncommand="keyboard.arrows.right(event);" />
-		<key id="key_down" modifiers="shift" keycode="VK_DOWN"
-		oncommand="keyboard.arrows.down(event);" />
-		<key id="key_left" modifiers="shift" keycode="VK_LEFT"
-		oncommand="keyboard.arrows.left(event);" />
-		<key id="key_up" modifiers="accel" keycode="VK_UP"
-		oncommand="keyboard.arrows.up(event);" />
-		<key id="key_right" modifiers="accel" keycode="VK_RIGHT"
-		oncommand="keyboard.arrows.right(event);" />
-		<key id="key_down" modifiers="accel" keycode="VK_DOWN"
-		oncommand="keyboard.arrows.down(event);" />
-		<key id="key_left" modifiers="accel" keycode="VK_LEFT"
-		oncommand="keyboard.arrows.left(event);" />
+		<key id="key_up" modifiers="shift" keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right" modifiers="shift" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down" modifiers="shift" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left" modifiers="shift" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
+		<key id="key_up" modifiers="accel" keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right" modifiers="accel" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down" modifiers="accel" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left" modifiers="accel" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
 	</keyset>
 	<toolbox id="menu">
 		<menubar>
