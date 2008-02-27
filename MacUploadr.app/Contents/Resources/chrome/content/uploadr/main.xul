@@ -101,7 +101,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 						accesskey="x" oncommand="exit();" />
 				</menupopup>
 			</menu>
-			<menu label="&menu.edit;">
+			<menu label="&menu.edit;" accesskey="E">
 				<menupopup>
 					<menuitem id="menu_cut" label="&menu.edit.cut;"
 						key="key_cut" accesskey="t"
@@ -117,7 +117,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 						accesskey="A" oncommand="keyboard.select_all();" />
 				</menupopup>
 			</menu>
-			<menu label="&menu.tools;">
+			<menu label="&menu.tools;" accesskey="T">
 				<menupopup>
 					<menuitem label="&menu.tools.addons;" accesskey="A"
 						oncommand="menus.tools.addons();" />
@@ -129,7 +129,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 						oncommand="settings.show();" />
 				</menupopup>
 			</menu>
-			<menu label="&menu.help;">
+			<menu label="&menu.help;" accesskey="H">
 				<menupopup onpopupshowing="upgrade.build_menu();">
 					<menuitem id="aboutName" label="&menu.help.about;"
 						accesskey="A" oncommand="menus.help.about();" />
