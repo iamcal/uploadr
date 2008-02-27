@@ -75,8 +75,6 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					oncommand="photos.add_dialog();" />
 					<menuitem id="menu_upload_upload" label="&menu.upload;" key="key_upload"
 					oncommand="photos.upload();" />
-					<menuitem id="menu_preferences" label="&menu.upload.preferences;"
-					key="key_prefs" oncommand="settings.show();" />
 					<menuitem id="menu_FileQuitItem" label="&menu.upload.exit;"
 					key="key_quit" oncommand="exit();" />
 				</menupopup>
@@ -100,6 +98,9 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					oncommand="menus.tools.addons();" />
 					<menuitem id="menu_tools_console" label="&menu.tools.console;"
 					oncommand="menus.tools.console();" />
+					<menuseparator />
+					<menuitem id="menu_preferences" label="&menu.upload.preferences;"
+					key="key_prefs" oncommand="settings.show();" />
 				</menupopup>
 			</menu>
 			<menu id="menu_help" label="&menu.help;">

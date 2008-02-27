@@ -3,9 +3,8 @@
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml">
 	<keyset id="key">
-		<key id="key_prefs" modifiers="accel" key="," oncommand="settings.show();" />
-		<key id="key_help" modifiers="accel" key="/" oncommand="menu.help.tips();" />
-		<key id="key_help_fake" modifiers="accel" key="?" oncommand="menu.help.tips();" />
-		<key id="key_quit" modifiers="accel" key="q" oncommand="exit();" />
+		<!--<key id="key_prefs" modifiers="accel" key="," oncommand="settings.show();" />-->
+		<key id="key_help" keycode="VK_F1" oncommand="menu.help.tips();" />
+		<key id="key_quit" modifiers="alt" keycode="VK_F4" oncommand="exit();" />
 	</keyset>
 </overlay>
