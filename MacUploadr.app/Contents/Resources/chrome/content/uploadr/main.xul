@@ -46,74 +46,101 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/keyboard.js" />
 	<script src="chrome://uploadr/content/buttons.js" />
 	<keyset id="key">
-		<key id="key_add" modifiers="accel" key="o" oncommand="photos.add_dialog();" />
-		<key id="key_upload" modifiers="shift accel" key="u" oncommand="photos.upload();" />
-		<key id="key_back" keycode="VK_BACK" oncommand="photos.remove();" />
-		<key id="key_delete" keycode="VK_DELETE" oncommand="photos.remove();" />
-		<key id="key_cut" modifiers="accel" key="x" oncommand="goDoCommand('cmd_cut');" />
-		<key id="key_copy" modifiers="accel" key="c" oncommand="goDoCommand('cmd_copy');" />
-		<key id="key_paste" modifiers="accel" key="v" oncommand="goDoCommand('cmd_paste');" />
-		<key id="key_all" modifiers="accel" key="a" oncommand="keyboard.select_all();" />
-		<key id="key_up" keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
-		<key id="key_right" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
-		<key id="key_down" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
-		<key id="key_left" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
-		<key id="key_up" modifiers="shift" keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
-		<key id="key_right" modifiers="shift" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
-		<key id="key_down" modifiers="shift" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
-		<key id="key_left" modifiers="shift" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
-		<key id="key_up" modifiers="accel" keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
-		<key id="key_right" modifiers="accel" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
-		<key id="key_down" modifiers="accel" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
-		<key id="key_left" modifiers="accel" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
+		<key id="key_add" modifiers="accel" key="o"
+			oncommand="photos.add_dialog();" />
+		<key id="key_upload" modifiers="shift accel" key="u"
+			oncommand="photos.upload();" />
+		<key id="key_back" keycode="VK_BACK"
+			oncommand="photos.remove();" />
+		<key id="key_delete" keycode="VK_DELETE"
+			oncommand="photos.remove();" />
+		<key id="key_cut" modifiers="accel" key="x"
+			oncommand="goDoCommand('cmd_cut');" />
+		<key id="key_copy" modifiers="accel" key="c"
+			oncommand="goDoCommand('cmd_copy');" />
+		<key id="key_paste" modifiers="accel" key="v"
+			oncommand="goDoCommand('cmd_paste');" />
+		<key id="key_all" modifiers="accel" key="a"
+			oncommand="keyboard.select_all();" />
+		<key id="key_up" keycode="VK_UP"
+			oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right" keycode="VK_RIGHT"
+			oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down" keycode="VK_DOWN"
+			oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left" keycode="VK_LEFT"
+			oncommand="keyboard.arrows.left(event);" />
+		<key id="key_up" modifiers="shift" keycode="VK_UP"
+			oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right" modifiers="shift" keycode="VK_RIGHT"
+			oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down" modifiers="shift" keycode="VK_DOWN"
+			oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left" modifiers="shift" keycode="VK_LEFT"
+			oncommand="keyboard.arrows.left(event);" />
+		<key id="key_up" modifiers="accel" keycode="VK_UP"
+			oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right" modifiers="accel" keycode="VK_RIGHT"
+			oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down" modifiers="accel" keycode="VK_DOWN"
+			oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left" modifiers="accel" keycode="VK_LEFT"
+			oncommand="keyboard.arrows.left(event);" />
 	</keyset>
 	<toolbox id="menu">
 		<menubar>
-			<menu id="menu_upload" label="&menu.upload;">
+			<menu label="&menu.upload;" accesskey="U">
 				<menupopup>
-					<menuitem id="menu_add" label="&menu.upload.add;" key="key_add"
-					oncommand="photos.add_dialog();" />
-					<menuitem id="menu_upload_upload" label="&menu.upload;" key="key_upload"
-					oncommand="photos.upload();" />
-					<menuitem id="menu_FileQuitItem" label="&menu.upload.exit;"
-					key="key_quit" oncommand="exit();" />
+					<menuitem label="&menu.upload.add;" key="key_add"
+						accesskey="O" oncommand="photos.add_dialog();" />
+					<menuitem id="menu_upload" label="&menu.upload;"
+						key="key_upload" accesskey="U"
+						oncommand="photos.upload();" />
+					<menuitem id="menu_FileQuitItem"
+						label="&menu.upload.exit;" key="key_quit"
+						accesskey="x" oncommand="exit();" />
 				</menupopup>
 			</menu>
-			<menu id="menu_edit" label="&menu.edit;">
+			<menu label="&menu.edit;">
 				<menupopup>
-					<menuitem id="menu_cut" label="&menu.edit.cut;" key="key_cut"
-					oncommand="goDoCommand('cmd_cut');" />
-					<menuitem id="menu_copy" label="&menu.edit.copy;" key="key_copy"
-					oncommand="goDoCommand('cmd_copy');" />
-					<menuitem id="menu_paste" label="&menu.edit.paste;" key="key_paste"
-					oncommand="goDoCommand('cmd_paste');" />
+					<menuitem id="menu_cut" label="&menu.edit.cut;"
+						key="key_cut" accesskey="t"
+						oncommand="goDoCommand('cmd_cut');" />
+					<menuitem id="menu_copy" label="&menu.edit.copy;"
+						key="key_copy" accesskey="C"
+						oncommand="goDoCommand('cmd_copy');" />
+					<menuitem id="menu_paste" label="&menu.edit.paste;"
+						key="key_paste" accesskey="P"
+						oncommand="goDoCommand('cmd_paste');" />
 					<menuseparator />
-					<menuitem id="menu_all" label="&menu.edit.select_all;" key="key_all"
-					oncommand="keyboard.select_all();" />
+					<menuitem label="&menu.edit.select_all;" key="key_all"
+						accesskey="A" oncommand="keyboard.select_all();" />
 				</menupopup>
 			</menu>
-			<menu id="menu_tools" label="&menu.tools;">
+			<menu label="&menu.tools;">
 				<menupopup>
-					<menuitem id="menu_tools_addons" label="&menu.tools.addons;"
-					oncommand="menus.tools.addons();" />
-					<menuitem id="menu_tools_console" label="&menu.tools.console;"
-					oncommand="menus.tools.console();" />
+					<menuitem label="&menu.tools.addons;" accesskey="A"
+						oncommand="menus.tools.addons();" />
+					<menuitem label="&menu.tools.console;" accesskey="C"
+						oncommand="menus.tools.console();" />
 					<menuseparator />
-					<menuitem id="menu_preferences" label="&menu.upload.preferences;"
-					key="key_prefs" oncommand="settings.show();" />
+					<menuitem label="&menu.upload.preferences;"
+						key="key_prefs" accesskey="P"
+						oncommand="settings.show();" />
 				</menupopup>
 			</menu>
-			<menu id="menu_help" label="&menu.help;">
+			<menu label="&menu.help;">
 				<menupopup onpopupshowing="upgrade.build_menu();">
 					<menuitem id="aboutName" label="&menu.help.about;"
-					oncommand="menus.help.about();" />
-					<menuitem id="menu_help_tips" label="&menu.help.tips;" key="key_help_fake"
-					oncommand="menus.help.tips();" />
-					<menuitem id="menu_faq" label="&menu.help.faq;"
-					oncommand="menus.help.faq();" />
+						accesskey="A" oncommand="menus.help.about();" />
+					<menuitem label="&menu.help.tips;" key="key_help"
+						accesskey="T" oncommand="menus.help.tips();" />
+					<menuitem label="&menu.help.faq;" accesskey="F"
+						oncommand="menus.help.faq();" />
 					<menuseparator />
 					<menuitem id="menu_updates" label="&menu.help.update;"
-					class="menuitem-iconic" oncommand="upgrade.check();"/>
+						class="menuitem-iconic" accesskey="U"
+						oncommand="upgrade.check();"/>
 				</menupopup>
 			</menu>
 		</menubar>

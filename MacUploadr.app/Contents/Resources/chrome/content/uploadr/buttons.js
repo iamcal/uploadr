@@ -50,12 +50,12 @@ var buttons = {
 			if (users.username && 'boolean' == typeof users.is_pro &&
 				0 < photos.count) {
 				document.getElementById('button_upload').className = 'button';
-				document.getElementById('menu_upload_upload').disabled = false;
+				document.getElementById('menu_upload').disabled = false;
 			}
 		},
 		disable: function() {
 			document.getElementById('button_upload').className = 'disabled_button';
-			document.getElementById('menu_upload_upload').disabled = true;
+			document.getElementById('menu_upload').disabled = true;
 		},
 		click: function() {
 
