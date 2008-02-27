@@ -390,7 +390,11 @@ var photos = {
 		photos.selected = [];
 		mouse.click({target: {}});
 
-		// Allow upload only if there are photos
+		photos._remove();
+	},
+
+	// Allow upload only if there are photos
+	_remove: function() {
 		if (photos.count) {
 			buttons.upload.enable();
 		} else {
@@ -400,12 +404,13 @@ var photos = {
 				.style.display = 'none';
 			document.getElementById('photos_sort_revert')
 				.style.display = 'none';
-			document.getElementById('photos_init')
-				.style.display = '-moz-box';
+			if (!photos.errors) {
+				document.getElementById('photos_init')
+					.style.display = '-moz-box';
+			}
 			document.getElementById('no_meta_prompt')
 				.style.visibility = 'hidden';
 		}
-
 	},
 
 	// Rotate selected files

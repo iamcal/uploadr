@@ -635,30 +635,50 @@ var meta = {
 					locale.getString('video.edit.restricted.' + pl + '.cancel'),
 					'', result);
 
-				// Remove selected videos
+				// Remove selected videos and restrict selected photos
 				if ('cancel' == result.result) {
 					var new_selected = [];
 					for each (var id in photos.selected) {
 						if (null == photos.list[id]) {
 							continue;
 						}
-						var p = photos.list[id].path;
-						if (photos.is_photo(p)) {
-							new_selected.push(id);
-						} else if (photos.is_video(p)) {
+
+						// Remove videos
+						if (photos.is_video(photos.list[id].path)) {
 							var li = document.getElementById('photo' + id);
 							li.parentNode.removeChild(li);
 							photos.batch_size -= photos.list[id].size;
 							if (users.username && !users.is_pro &&
-								0 < users.bandwidth.remaining - photos.batch_size) {
+								users.bandwidth &&
+								0 < users.bandwidth.remaining -
+								photos.batch_size) {
 								status.clear();
 							}
 							photos.list[id] = null;
 							--photos.count;
 						}
+
+						// Restrict photos
+						else {
+							new_selected.push(id);
+							photos.list[id].safety_level = 3;
+						}
+
 					}
 					ui.bandwidth_updated();
 					photos.selected = new_selected;
+					if (photos.selected.length) {
+						if (1 == photos.selected.length) {
+							meta.load(photos.selected[0]);
+							meta.enable();
+						} else {
+							meta.load();
+							meta.batch();
+						}
+					} else {
+						meta.disable();
+						photos._remove();
+					}
 
 					// If remove is blocked then we know photos.normalize
 					// will be called as it is unblocked
