@@ -8,6 +8,8 @@
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
 
+#include <stdio.h>
+
 #include "flGM.h"
 
 // GraphicsMagick
@@ -93,7 +95,19 @@ string * conv_path(const nsAString & utf16, bool is_dir) {
 		// Try GetShortPathNameW to get ASCII in a wchar_t *
 		wchar_t short_arr[4096];
 		*short_arr = 0;
-		if (0 == GetShortPathNameW(wide_arr, short_arr, 4096)) {
+		int sp = GetShortPathNameW(wide_arr, short_arr, 4096);
+
+		// See if we still need Unicode
+		needs_unicode = false;
+		wchar_t * short_arr_p = short_arr;
+		while (*short_arr_p) {
+			if (0x7f < *short_arr_p++) {
+				needs_unicode = true;
+				break;
+			}
+		}
+
+		if (0 == sp || needs_unicode) {
 
 			// Try to find a TEMP directory
 			//   This would be the easy way except that it will never work
@@ -132,42 +146,39 @@ string * conv_path(const nsAString & utf16, bool is_dir) {
 			}
 
 			// But if this is a file we actually need to copy it
-			else {
-				string base(temp_arr);
-				base += "original";
+			string base(temp_arr);
+			base += "original";
 
-				// Copy the file extension of the original to our base
-				wstring wide_w(wide_arr);
-				wstring ext_w = wide_w.substr(wide_w.rfind('.'));
-				string ext_s;
-				wchar_t * ext_p = (wchar_t *)ext_w.c_str();
-				while (*ext_p) {
-					ext_s += (char)*ext_p++;
-				}
-				base += ext_s;
-
-				// Destination path
-				string * temp = find_path(&base, "");
-				wchar_t * temp_wide_arr = new wchar_t[temp->size() + 1];
-				wchar_t * temp_wide_arr_p = temp_wide_arr;
-				char * temp_p = (char *)temp->c_str();
-				while (*temp_p) {
-					*temp_wide_arr_p++ = (wchar_t)*temp_p++;
-				}
-				*temp_wide_arr_p = 0;
-
-				// Copy the file
-				if (0 == CopyFileW(wide_arr, temp_wide_arr, false)) {
-					delete [] wide_arr;
-					delete temp;
-					delete [] temp_wide_arr;
-					return 0;
-				}
-				delete [] wide_arr;
-				delete [] temp_wide_arr;
-				return temp;
-
+			// Copy the file extension of the original to our base
+			wstring wide_w(wide_arr);
+			wstring ext_w = wide_w.substr(wide_w.rfind('.'));
+			string ext_s;
+			wchar_t * ext_p = (wchar_t *)ext_w.c_str();
+			while (*ext_p) {
+				ext_s += (char)*ext_p++;
 			}
+			base += ext_s;
+
+			// Destination path
+			string * temp = find_path(&base, "");
+			wchar_t * temp_wide_arr = new wchar_t[temp->size() + 1];
+			wchar_t * temp_wide_arr_p = temp_wide_arr;
+			char * temp_p = (char *)temp->c_str();
+			while (*temp_p) {
+				*temp_wide_arr_p++ = (wchar_t)*temp_p++;
+			}
+			*temp_wide_arr_p = 0;
+
+			// Copy the file
+			if (0 == CopyFileW(wide_arr, temp_wide_arr, false)) {
+				delete [] wide_arr;
+				delete temp;
+				delete [] temp_wide_arr;
+				return 0;
+			}
+			delete [] wide_arr;
+			delete [] temp_wide_arr;
+			return temp;
 
 		}
 		delete [] wide_arr;
@@ -176,7 +187,7 @@ string * conv_path(const nsAString & utf16, bool is_dir) {
 		// wchar_t * to std::string
 		string * short_s = new string();
 		if (0 == short_s) return 0;
-		wchar_t * short_arr_p = short_arr;
+		short_arr_p = short_arr;
 		while (*short_arr_p) {
 			*short_s += (char)*short_arr_p++;
 		}
@@ -809,7 +820,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		// If all went well, return stuff
 		string o_s = out.str();
 		unconv_path(o_s, _retval);
-	
+
 		return NS_OK;
 	}
 
