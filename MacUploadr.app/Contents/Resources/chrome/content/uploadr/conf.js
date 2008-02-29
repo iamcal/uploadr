@@ -15,12 +15,12 @@ const NS_HTML = 'http://www.w3.org/1999/xhtml';
 const conf = {
 
 	// What version am I?
-	version: '3.1a3',
+	version: '3.1a4',
 
 	// What types of API events should be written to the console?
 	console: {
-		request: false,
-		response: false,
+		request: true,
+		response: true,
 		error: true,
 		timeout: true,
 		retry: true
@@ -55,7 +55,7 @@ const conf = {
 	tickets_retry_count: 10,
 
 	// Should we use the new socket uploadr?
-	socket_uploadr: true,
+	socket_uploadr: false,//true,
 
 
 

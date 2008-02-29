@@ -148,7 +148,7 @@ var photos = {
 		}
 		paths = new_paths;
 
-		// Yell about anything added that wasn't an image
+		// Yell about anything added that wasn't a photo or video
 		if (bad.length) {
 			var pl = (1 == bad.length ? 's' : 'p') +
 				(0 == paths.length ? 'z' : 'p');
@@ -491,6 +491,8 @@ var photos = {
 					new_list.push(p);
 				} else if (!users.is_pro || conf.video_max < p.size) {
 					photos.batch_size -= p.size;
+				} else {
+					new_list.push(p);
 				}
 			}
 			list = new_list;

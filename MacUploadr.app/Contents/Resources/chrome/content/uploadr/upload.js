@@ -747,19 +747,19 @@ Upload.prototype = {
 		// POST over a raw socket connection
 		//   http://www.xulplanet.com/tutorials/mozsdk/sockets.php
 		try {
-			var transportService =
+			var service =
 				Cc['@mozilla.org/network/socket-transport-service;1']
 				.getService(Ci.nsISocketTransportService);
-			var transport = transportService.createTransport(
-				null, 0, UPLOAD_HOST, 80, null);
+			var transport = service.createTransport(null, 0,
+				UPLOAD_HOST, 80, null);
 			var ostream = transport.openOutputStream(
 				Ci.nsITransport.OPEN_BLOCKING, 0, 0);
 			while (mstream.available()) {
+				var a = mstream.available();
 				ostream.writeFrom(mstream,
-					Math.min(mstream.available(), 8192));
-					threads.main.dispatch(new UploadProgress(
-						mstream.available(), this.id),
-						threads.main.DISPATCH_NORMAL);
+					Math.min(a, 8192));
+				threads.main.dispatch(new UploadProgress(a, this.id),
+					threads.main.DISPATCH_NORMAL);
 			}
 			var _istream = transport.openInputStream(0,0,0);
 			var istream = Cc['@mozilla.org/scriptableinputstream;1']

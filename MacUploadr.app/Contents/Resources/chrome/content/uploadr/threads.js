@@ -372,8 +372,10 @@ SortCallback.prototype = {
 			}
 		});
 
-		// Lazily do the UI refresh by appendChild'ing everything in the right order
-		//   This is far from being a bottleneck, so leave it alone until it is
+		// Lazily do the UI refresh by appendChild'ing everything in the
+		// right order
+		//   This is far from being a bottleneck, so leave it alone
+		//   until it is
 		var list = document.getElementById('photos_list');
 		for (var i = p.length - 1; i >= 0; --i) {
 			if (null != p[i]) {

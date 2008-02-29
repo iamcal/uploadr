@@ -48,12 +48,13 @@ var file = {
 		var stream = Cc['@mozilla.org/intl/converter-output-stream;1'].createInstance(
 			Ci.nsIConverterOutputStream);
 		stream.init(_stream, 'UTF-8', 0, '?'.charCodeAt(0));
-		if ('string' == typeof data) {
-			stream.writeString(data);
-		} else {
+//		if ('string' == typeof data) {
+//			stream.writeString(data);
+//		} else {
 			stream.writeString(data.toSource());
-		}
+//		}
 		stream.close();
+		_stream.close();
 	},
 
 	// File size in kilobytes
