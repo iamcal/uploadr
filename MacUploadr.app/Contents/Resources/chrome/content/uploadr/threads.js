@@ -154,8 +154,10 @@ ThumbCallback.prototype = {
 
 				// Title/tags/description
 				if ('' == photos.list[this.id].title) {
-					var title = thumb[7] ? thumb[7].replace(/^\s+|\s+$/,
-						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###') : '';
+					var title = thumb[7] ?
+						thumb[7].replace(/^\s+|\s+$/, '')
+						.replace(/\{---THREE---POUND---DELIM---\}/g, '###')
+						.replace(/^lang="[^"]+"\s*/g, '') : '';
 					if ('' == title) {
 						title = photos.list[this.id].filename.split(
 							/(.+)\.[a-z0-9]{3,4}/i);
@@ -165,8 +167,10 @@ ThumbCallback.prototype = {
 					}
 				}
 				if ('' == photos.list[this.id].description) {
-					var desc = thumb[8] ? thumb[8].replace(/^\s+|\s+$/g,
-						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###') : '';
+					var desc = thumb[8] ?
+						thumb[8].replace(/^\s+|\s+$/g, '')
+						.replace(/\{---THREE---POUND---DELIM---\}/g, '###')
+						.replace(/^lang="[^"]+"\s*/g, '') : '';
 
 					// Copy the site's rules for bad descriptions
 					if ('DCF 1.0' == desc ||

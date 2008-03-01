@@ -424,6 +424,24 @@ void unconv_path(string & path_s, nsAString & _retval) {
 
 }
 
+void quote(string & s) {
+	if (string::npos != s.find(" ", 0)) {
+		s.insert(0, "\"").append("\"");
+	}
+}
+
+// Extract a metadata key if it exists in the collection given
+template<class D, class K>
+bool extract(D & data, const char * k, string & s, bool q) {
+	typename D::iterator it = data.findKey(K(string(k)));
+	if (data.end() == it) { return false; }
+	else {
+		s = it->toString();
+		if (q) { quote(s); }
+		return true;
+	}
+}
+
 NS_IMPL_ISUPPORTS1(flGM, flIGM)
 
 flGM::flGM() {
@@ -480,62 +498,43 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			Exiv2::ExifData & exif = meta_r->exifData();
 			orient = base_orient(exif, img);
 
-			// IPTC metadata
+			// XMP and IPTC metadata
+			Exiv2::XmpData & xmp = meta_r->xmpData();
 			Exiv2::IptcData & iptc = meta_r->iptcData();
-			title = iptc["Iptc.Application2.ObjectName"].toString();
-			if (0 == title.size()) {
-				title = iptc["Iptc.Application2.Headline"].toString();
-			}
-			description = iptc["Iptc.Application2.Caption"].toString();
-			if (0 == description.size()) {
-				try {
-					Exiv2::ExifData & exif = meta_r->exifData();
-					description = exif["Exif.Image.ImageDescription"].toString();
-				} catch (Exiv2::Error &) {}
-			}
+			extract<Exiv2::XmpData, Exiv2::XmpKey>(
+				xmp, "Xmp.dc.title", title, false) ||
+				extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				iptc, "Iptc.Application2.ObjectName", title, false) ||
+				extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				iptc, "Iptc.Application2.Headline", title, false);
+			extract<Exiv2::XmpData, Exiv2::XmpKey>(
+				xmp, "Xmp.dc.description", description, false) ||
+				extract<Exiv2::XmpData, Exiv2::XmpKey>(
+				xmp, "Xmp.photoshop.Headline", description, false) ||
+				extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				iptc, "Iptc.Application2.Caption", description, false) ||
+				extract<Exiv2::ExifData, Exiv2::ExifKey>(
+				exif, "Exif.Image.ImageDescription", description, false);
 			string key("Iptc.Application2.Keywords");
 			Exiv2::IptcKey k = Exiv2::IptcKey(key);
-			Exiv2::IptcMetadata::iterator i, ii = iptc.end();
+			Exiv2::IptcData::iterator i, ii = iptc.end();
 			for (i = iptc.begin(); i != ii; ++i) {
 				if (i->key() == key) {
 					string val = i->toString();
-					if (string::npos == val.find(" ", 0)) {
-						tags += val;
-					} else {
-						tags += "\"";
-						tags += val;
-						tags += "\"";
-					}
-					tags += " ";
+					quote(val);
+					tags += val + " ";
 				}
 			}
-			tags += " ";
-			string city = iptc["Iptc.Application2.City"].toString();
-			if (string::npos == city.find(" ", 0)) {
-				tags += city;
-			} else {
-				tags += "\"";
-				tags += city;
-				tags += "\"";
-			}
-			tags += " ";
-			string state = iptc["Iptc.Application2.ProvinceState"].toString();
-			if (string::npos == state.find(" ", 0)) {
-				tags += state;
-			} else {
-				tags += "\"";
-				tags += state;
-				tags += "\"";
-			}
-			tags += " ";
-			string country = iptc["Iptc.Application2.CountryName"].toString();
-			if (string::npos == country.find(" ", 0)) {
-				tags += country;
-			} else {
-				tags += "\"";
-				tags += country;
-				tags += "\"";
-			}
+			string city = "", state = "", country = "";
+			extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				iptc, "Iptc.Application2.City", city, true);
+			tags += city + " ";
+			extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				iptc, "Iptc.Application2.ProvinceState", state, true);
+			tags += state + " ";
+			extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				iptc, "Iptc.Application2.CountryName", country, true);
+			tags += country;
 
 		} catch (Exiv2::Error &) {}
 		ostringstream out1;

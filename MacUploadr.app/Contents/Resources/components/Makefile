@@ -102,7 +102,7 @@ endif
 		-L$(XULRUNNER) -Wl,-executable_path,$(XULRUNNER) \
 		-lxpcomglue_s -lxpcom -lnspr4 \
 		-lGraphicsMagick -lGraphicsMagick++ \
-		-lexiv2 -liconv \
+		-lexiv2 -liconv -lexpat \
 		-lz -lbz2 \
 		-lxml2 \
 		-ljpeg -lpng -ltiff \
@@ -165,7 +165,7 @@ gm_test:
 		$(GM_LIB) \
 		$(PORTS_LIB) \
 		-lGraphicsMagick++ -lGraphicsMagick \
-		-lexiv2 \
+		-lexiv2 -liconv -lexpat \
 		-lz -lbz2 \
 		-lxml2 \
 		-ljpeg -lpng -ltiff
@@ -184,7 +184,7 @@ ff_test:
 		$(PORTS_LIB) \
 		-lavformat -lavcodec -lavutil \
 		-lGraphicsMagick++ -lGraphicsMagick \
-		-lexiv2 -liconv \
+		-lexiv2 -liconv -lexpat \
 		-lz -lbz2 \
 		-lxml2 \
 		-ljpeg -lpng -ltiff
@@ -200,7 +200,7 @@ rotate:
 		$(GM_LIB) \
 		$(PORTS_LIB) \
 		-lGraphicsMagick++ -lGraphicsMagick \
-		-lexiv2 -liconv \
+		-lexiv2 -liconv -lexpat \
 		-lz -lbz2 \
 		-lxml2 \
 		-ljpeg -lpng -ltiff
