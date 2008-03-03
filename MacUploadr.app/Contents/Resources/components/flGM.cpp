@@ -480,16 +480,14 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 		// Get the path as a C++ string
 		path_s = conv_path(path, false);
-		if (!path_s) {
-			return NS_ERROR_INVALID_ARG;
-		}
+		if (!path_s) { return NS_ERROR_INVALID_ARG; }
 
 		// Open the image
 		Magick::Image img(*path_s);
 
 		// Extract EXIF and IPTC data that we care about
 		int orient = 1;
-		string title = "", description = "", tags = "";
+		string title = "", description = "", tags = "", date_taken = "";
 		try {
 			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
@@ -502,18 +500,18 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			Exiv2::XmpData & xmp = meta_r->xmpData();
 			Exiv2::IptcData & iptc = meta_r->iptcData();
 			extract<Exiv2::XmpData, Exiv2::XmpKey>(
-				xmp, "Xmp.dc.title", title, false) ||
-				extract<Exiv2::IptcData, Exiv2::IptcKey>(
-				iptc, "Iptc.Application2.ObjectName", title, false) ||
-				extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				xmp, "Xmp.dc.title", title, false)
+				|| extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				iptc, "Iptc.Application2.ObjectName", title, false)
+				|| extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.Headline", title, false);
 			extract<Exiv2::XmpData, Exiv2::XmpKey>(
-				xmp, "Xmp.dc.description", description, false) ||
-				extract<Exiv2::XmpData, Exiv2::XmpKey>(
-				xmp, "Xmp.photoshop.Headline", description, false) ||
-				extract<Exiv2::IptcData, Exiv2::IptcKey>(
-				iptc, "Iptc.Application2.Caption", description, false) ||
-				extract<Exiv2::ExifData, Exiv2::ExifKey>(
+				xmp, "Xmp.dc.description", description, false)
+				|| extract<Exiv2::XmpData, Exiv2::XmpKey>(
+				xmp, "Xmp.photoshop.Headline", description, false)
+				|| extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				iptc, "Iptc.Application2.Caption", description, false)
+				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
 				exif, "Exif.Image.ImageDescription", description, false);
 			string key("Iptc.Application2.Keywords");
 			Exiv2::IptcKey k = Exiv2::IptcKey(key);
@@ -536,6 +534,20 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 				iptc, "Iptc.Application2.CountryName", country, true);
 			tags += country;
 
+			// XMP and EXIF date taken
+			extract<Exiv2::XmpData, Exiv2::XmpKey>(
+				xmp, "Xmp.exif.DateTimeOriginal", date_taken, false)
+				|| extract<Exiv2::XmpData, Exiv2::XmpKey>(
+				xmp, "Xmp.exif.DateTimeDigitized", date_taken, false)
+				|| extract<Exiv2::XmpData, Exiv2::XmpKey>(
+				xmp, "Xmp.iptc.DateTime", date_taken, false)
+				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(            // Previously
+				exif, "Exif.Photo.DateTimeOriginal", date_taken, false) // this was primary
+				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
+				exif, "Exif.Photo.DateTimeDigitized", date_taken, false)
+				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
+				exif, "Exif.Image.DateTime", date_taken, false);
+
 		} catch (Exiv2::Error &) {}
 		ostringstream out1;
 		out1 << orient << "###";
@@ -552,7 +564,8 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		int base = bw > bh ? bw : bh;
 		out1 << bw << "###" << bh << "###";
 
-		// EXIF date taken
+		// Output date taken
+		/*
 		string date_taken = img.attribute("EXIF:DateTimeOriginal");
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTimeDigitized");
@@ -560,6 +573,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		if (0 == date_taken.size()) {
 			date_taken = img.attribute("EXIF:DateTime");
 		}
+		*/
 		out1 << date_taken << "###";
 
 		// Thumbnail width and height
@@ -596,9 +610,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 		// Create a new path
 		thumb_s = find_path(path_s, "-thumb");
-		if (!thumb_s) {
-			return NS_ERROR_NULL_POINTER;
-		}
+		if (!thumb_s) { return NS_ERROR_NULL_POINTER; }
 		delete path_s; path_s = 0;
 
 		// If this image is a TIFF, force the thumbnail to be a JPEG
@@ -608,13 +620,9 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 		// Find the sharpen sigma as the website does
 		double sigma;
-		if (base <= 800) {
-			sigma = 1.9;
-		} else if (base <= 1600) {
-			sigma = 2.85;
-		} else {
-			sigma = 3.8;
-		}
+		if (base <= 800) { sigma = 1.9; }
+		else if (base <= 1600) { sigma = 2.85; }
+		else { sigma = 3.8; }
 
 		// Create the actual thumbnail
 		img.scale(dim.str());
@@ -626,18 +634,14 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		string out1_s = out1.str();
 		char * o = (char *)out1_s.c_str();
 		nsCString utf8;
-		while (*o) {
-			utf8.Append(*o++);
-		}
+		while (*o) { utf8.Append(*o++); }
 		_retval.Append(NS_ConvertUTF8toUTF16(utf8));
 		unconv_path(*thumb_s, _retval);
 		delete thumb_s; thumb_s = 0;
 		string out2_s = out2.str();
 		o = (char *)out2_s.c_str();
 		utf8.Assign(NS_LITERAL_CSTRING(""));
-		while (*o) {
-			utf8.Append(*o++);
-		}
+		while (*o) { utf8.Append(*o++); }
 		_retval.Append(NS_ConvertUTF8toUTF16(utf8));
 
 		return NS_OK;
@@ -648,9 +652,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		delete path_s;
 		delete thumb_s;
 		char * o = (char *)e.what();
-		while (*o) {
-			_retval.Append(*o++);
-		}
+		while (*o) { _retval.Append(*o++); }
 	}
 	return NS_OK;
 
@@ -670,9 +672,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		}
 
 		path_s = conv_path(path, false);
-		if (!path_s) {
-			return NS_ERROR_INVALID_ARG;
-		}
+		if (!path_s) { return NS_ERROR_INVALID_ARG; }
 
 		// Yank out all the metadata we want to save
 		Exiv2::ExifData exif;
@@ -686,9 +686,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 
 		// Create a new path
 		rotate_s = find_path(path_s, "-rotate");
-		if (!rotate_s) {
-			return NS_ERROR_NULL_POINTER;
-		}
+		if (!rotate_s) { return NS_ERROR_NULL_POINTER; }
 
 		// Rotate the image
 		Magick::Image img(*path_s);
@@ -721,9 +719,7 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		delete path_s;
 		delete rotate_s;
 		char * o = (char *)e.what();
-		while (*o) {
-			_retval.Append(*o++);
-		}
+		while (*o) { _retval.Append(*o++); }
 	}
 	return NS_OK;
 
@@ -735,9 +731,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 	string * resize_s = 0;
 	try {
 		path_s = conv_path(path, false);
-		if (!path_s) {
-			return NS_ERROR_INVALID_ARG;
-		}
+		if (!path_s) { return NS_ERROR_INVALID_ARG; }
 
 		// Yank out all the metadata we want to save
 		Exiv2::ExifData exif;
@@ -791,9 +785,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 
 		// Create a new path
 		resize_s = find_path(path_s, "-resize");
-		if (!resize_s) {
-			return NS_ERROR_NULL_POINTER;
-		}
+		if (!resize_s) { return NS_ERROR_NULL_POINTER; }
 		delete path_s; path_s = 0;
 		out << *resize_s;
 
@@ -837,13 +829,8 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 }
 
 NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) {
-
-_retval.Append('f');_retval.Append('o');_retval.Append('o');_retval.Append(' ');
-
 	string * path_s = conv_path(path, false);
-	if (!path_s) {
-		return NS_ERROR_INVALID_ARG;
-	}
+	if (!path_s) { return NS_ERROR_INVALID_ARG; }
 
 	// Open the video file and decode it
 	av_register_all();
@@ -861,14 +848,10 @@ _retval.Append('f');_retval.Append('o');_retval.Append('o');_retval.Append(' ');
 			break;
 		}
 	}
-	if (-1 == stream) {
-		return NS_ERROR_NULL_POINTER;
-	}
+	if (-1 == stream) { return NS_ERROR_NULL_POINTER; }
 	AVCodecContext * codec_ctx = format_ctx->streams[stream]->codec;
 	AVCodec * codec = avcodec_find_decoder(codec_ctx->codec_id);
-	if (!codec) {
-		return NS_ERROR_NULL_POINTER;
-	}
+	if (!codec) { return NS_ERROR_NULL_POINTER; }
 	if(0 > avcodec_open(codec_ctx, codec)) {
 		return NS_ERROR_NULL_POINTER;
 	}
@@ -880,18 +863,14 @@ _retval.Append('f');_retval.Append('o');_retval.Append('o');_retval.Append(' ');
 	int bytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
 		codec_ctx->height);
 	uint8_t * buffer = (uint8_t *)av_malloc(bytes * sizeof(uint8_t));
-	if (!buffer) {
-		return NS_ERROR_NULL_POINTER;
-	}
+	if (!buffer) { return NS_ERROR_NULL_POINTER; }
 	avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
 		codec_ctx->width, codec_ctx->height);
 
 	// Correct the frame rate if FFmpeg reports something stupid-high
 	//   Nokia N95 and N82 report 30000fps
 	double fps = (double)codec_ctx->time_base.den;
-	if (30000.0 == fps) {
-		fps /= 1000.0;
-	}
+	if (30000.0 == fps) { fps /= 1000.0; }
 
 	// Play through 15% of the video
 	int64_t seek = (int64_t)(0.00015 * (double)format_ctx->duration *
@@ -959,9 +938,7 @@ _retval.Append('f');_retval.Append('o');_retval.Append('o');_retval.Append(' ');
 					img.compressType(Magick::NoCompression);
 					path_s->append(".jpg");
 					thumb_s = find_path(path_s, "-thumb");
-					if (!thumb_s) {
-						return NS_ERROR_NULL_POINTER;
-					}
+					if (!thumb_s) { return NS_ERROR_NULL_POINTER; }
 					delete path_s; path_s = 0;
 					img.write(*thumb_s);
 
@@ -969,9 +946,7 @@ _retval.Append('f');_retval.Append('o');_retval.Append('o');_retval.Append(' ');
 					string out_s = out.str();
 					char * o = (char *)out_s.c_str();
 					nsCString utf8;
-					while (*o) {
-						utf8.Append(*o++);
-					}
+					while (*o) { utf8.Append(*o++); }
 					_retval.Append(NS_ConvertUTF8toUTF16(utf8));
 					unconv_path(*thumb_s, _retval);
 					delete thumb_s; thumb_s = 0;
@@ -980,9 +955,7 @@ _retval.Append('f');_retval.Append('o');_retval.Append('o');_retval.Append(' ');
 					delete path_s;
 					delete thumb_s;
 					char * o = (char *)e.what();
-					while (*o) {
-						_retval.Append(*o++);
-					}
+					while (*o) { _retval.Append(*o++); }
 				}
 
 				free(bytes);
