@@ -319,7 +319,8 @@ locale.getFormattedString = function(id, args) {
 	return str;
 };
 
-// Stacks to block removing photos, sorting photos and exiting Uploadr
+// Stacks to block removing photos, sorting photos, normalizing the
+// photos list and exiting Uploadr
 var _block_remove = 0;
 var block_remove = function() {
 	if (0 == _block_remove) {
@@ -339,6 +340,13 @@ var block_sort = function() {
 };
 var unblock_sort = function() {
 	--_block_sort;
+};
+var _block_normalize = 0;
+var block_normalize = function() {
+	++_block_normalize;
+};
+var unblock_normalize = function() {
+	--_block_normalize;
 };
 var _block_exit = 0;
 var block_exit = function() {

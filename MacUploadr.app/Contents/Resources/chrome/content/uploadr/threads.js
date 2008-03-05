@@ -85,7 +85,8 @@ var ThumbCallback = function(id, result, auto_select) {
 ThumbCallback.prototype = {
 	run: function() {
 		try {
-			--photos.loading;
+			unblock_normalize();
+Components.utils.reportError('ThumbCallback ++ _block_normalize: ' + _block_normalize);
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
@@ -232,9 +233,7 @@ ThumbCallback.prototype = {
 				++photos.errors;
 				img.onclick = function() {
 					this.parentNode.parentNode.removeChild(this.parentNode);
-					if (!photos.loading) {
-						photos.normalize();
-					}
+					photos.normalize();
 					--photos.errors;
 					if (0 == photos.count + photos.errors) {
 						document.getElementById('photos_init')
@@ -308,6 +307,8 @@ var RotateCallback = function(id, path) {
 };
 RotateCallback.prototype = {
 	run: function() {
+		unblock_normalize();
+Components.utils.reportError('RotateCallback -- _block_normalize: ' + _block_normalize);
 		photos.list[this.id].path = this.path;
 	},
 	QueryInterface: function(iid) {
@@ -357,7 +358,8 @@ SortCallback.prototype = {
 			if (1 == photos.list.length) {
 				buttons.upload.enable();
 			}
-			--photos.loading;
+			unblock_normalize();
+Components.utils.reportError('SortCallback no sort -- _block_normalize: ' + _block_normalize);
 			return;
 		}
 		var p = [];
@@ -389,8 +391,9 @@ SortCallback.prototype = {
 				list.appendChild(document.getElementById('photo' + p[i].id));
 			}
 		}
+		unblock_normalize();
+Components.utils.reportError('SortCallback -- _block_normalize: ' + _block_normalize);
 		photos.normalize();
-		--photos.loading;
 
 		// And finally allow them to upload
 		buttons.upload.enable();
@@ -488,7 +491,8 @@ var EnableUploadCallback = function() {
 };
 EnableUploadCallback.prototype = {
 	run: function() {
-		--photos.loading;
+		unblock_normalize();
+Components.utils.reportError('EnableUploadCallback -- _block_normalize: ' + _block_normalize);
 		buttons.upload.enable();
 		meta.first = false;
 	},
@@ -570,6 +574,7 @@ var PhotoAddCallback = function(path, obj) {
 };
 PhotoAddCallback.prototype = {
 	run: function() {
+		// TODO: Rewrite to submit whole object?
 		photos.add([this.path]);
 		if (null != this.obj) {
 			photos.list[photos.list.length - 1] = this.obj;

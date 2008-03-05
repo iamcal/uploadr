@@ -105,6 +105,8 @@ var mouse = {
 		// If we clicked the revert to sorted button
 		else if (e.target.id && 'photos_sort_revert' == e.target.id) {
 			buttons.upload.disable();
+			block_normalize();
+Components.utils.reportError('mouse.click ++ _block_normalize: ' + _block_normalize);
 			threads.worker.dispatch(new Sort(),
 				threads.worker.DISPATCH_NORMAL);
 			document.getElementById('photos_sort_default')
@@ -411,7 +413,8 @@ var mouse = {
 
 		// Clicks while adding photos prevents auto-selecting photos
 		// when added
-		if (0 != photos.loading) {
+Components.utils.reportError('mouse.mouseup testing _block_normalize: ' + _block_normalize);
+		if (_block_normalize) {
 			meta.auto_select = false;
 		}
 

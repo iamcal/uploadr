@@ -19,9 +19,6 @@ var photos = {
 	sort: true,
 	batch_size: 0,
 
-	// Number of photos that are loading
-	loading: 0,
-
 	// Upload tracking
 	uploading: [],
 	current: 0,
@@ -271,7 +268,8 @@ var photos = {
 
 		// Now add whatever's left
 		var ii = paths.length;
-		++photos.loading;
+		block_normalize();
+Components.utils.reportError('photos.add ++ _block_normalize: ' + _block_normalize);
 		for (var i = 0; i < ii; ++i) {
 			var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
 
@@ -318,6 +316,8 @@ var photos = {
 				.style.visibility = 'visible';
 			mouse.show_photos();
 		} else {
+			unblock_normalize();
+Components.utils.reportError('photos.add -- _block_normalize: ' + _block_normalize);
 			document.getElementById('photos_init').style.display = '-moz-box';
 			document.getElementById('photos_new').style.display = 'none';
 		}
@@ -331,7 +331,8 @@ var photos = {
 		var id = photos.list.length;
 		photos.list.push(new Photo(id, path));
 		++photos.count;
-		++photos.loading;
+		block_normalize();
+Components.utils.reportError('photos.add ++ _block_normalize: ' + _block_normalize);
 
 		// Create a spot for the image, leaving a spinning placeholder
 		//   Add images to the start of the list because this is our best
@@ -430,6 +431,8 @@ var photos = {
 		// the rotate job
 		buttons.upload.disable();
 		for (var i = 0; i < ii; ++i) {
+			block_normalize();
+Components.utils.reportError('photos.rotate ++ _block_normalize: ' + _block_normalize);
 			var p = photos.list[s[i]];
 			if (photos.is_photo(p.path)) {
 				block_sort();
@@ -681,6 +684,12 @@ var photos = {
 
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
+
+		// This action is blocked during loading but will always
+		// happen at the end of loading
+Components.utils.reportError('photos.normalize testing _block_normalize: ' + _block_normalize);
+		if (_block_normalize) { return; }
+
 		var list = document.getElementById('photos_list')
 			.getElementsByTagName('li');
 		var old_list = photos.list;
