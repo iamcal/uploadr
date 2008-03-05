@@ -106,7 +106,6 @@ var mouse = {
 		else if (e.target.id && 'photos_sort_revert' == e.target.id) {
 			buttons.upload.disable();
 			block_normalize();
-Components.utils.reportError('mouse.click ++ _block_normalize: ' + _block_normalize);
 			threads.worker.dispatch(new Sort(),
 				threads.worker.DISPATCH_NORMAL);
 			document.getElementById('photos_sort_default')
@@ -413,10 +412,7 @@ Components.utils.reportError('mouse.click ++ _block_normalize: ' + _block_normal
 
 		// Clicks while adding photos prevents auto-selecting photos
 		// when added
-Components.utils.reportError('mouse.mouseup testing _block_normalize: ' + _block_normalize);
-		if (_block_normalize) {
-			meta.auto_select = false;
-		}
+		if (_block_normalize) { meta.auto_select = false; }
 
 		// Prevent conflicts with select-all behavior
 		document.getElementById('photos').focus();

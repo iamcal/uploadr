@@ -86,18 +86,19 @@ ThumbCallback.prototype = {
 	run: function() {
 		try {
 			unblock_normalize();
-Components.utils.reportError('ThumbCallback ++ _block_normalize: ' + _block_normalize);
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
 			var thumb = this.result.split('###');
 
 			// Get this photo from the DOM and remove its loading class
-			var img = document.getElementById('photo' + this.id).getElementsByTagName('img')[0];
+			var img = document.getElementById('photo' + this.id)
+				.getElementsByTagName('img')[0];
 			img.style.visibility = 'hidden';
 			img.className = '';
 
-			// If successful, replace with the thumb and update the Photo object
+			// If successful, replace with the thumb and update the
+			// Photo object
 			if (7 <= thumb.length) {
 
 				// Undo escaping done in XPCOM
@@ -308,7 +309,6 @@ var RotateCallback = function(id, path) {
 RotateCallback.prototype = {
 	run: function() {
 		unblock_normalize();
-Components.utils.reportError('RotateCallback -- _block_normalize: ' + _block_normalize);
 		photos.list[this.id].path = this.path;
 	},
 	QueryInterface: function(iid) {
@@ -359,7 +359,6 @@ SortCallback.prototype = {
 				buttons.upload.enable();
 			}
 			unblock_normalize();
-Components.utils.reportError('SortCallback no sort -- _block_normalize: ' + _block_normalize);
 			return;
 		}
 		var p = [];
@@ -392,7 +391,6 @@ Components.utils.reportError('SortCallback no sort -- _block_normalize: ' + _blo
 			}
 		}
 		unblock_normalize();
-Components.utils.reportError('SortCallback -- _block_normalize: ' + _block_normalize);
 		photos.normalize();
 
 		// And finally allow them to upload
@@ -492,7 +490,6 @@ var EnableUploadCallback = function() {
 EnableUploadCallback.prototype = {
 	run: function() {
 		unblock_normalize();
-Components.utils.reportError('EnableUploadCallback -- _block_normalize: ' + _block_normalize);
 		buttons.upload.enable();
 		meta.first = false;
 	},

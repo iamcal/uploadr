@@ -112,17 +112,20 @@ var ui = {
 			} else {
 				remaining.className = '';
 			}
-			document.getElementById('bw_remaining').style.display = '-moz-box';
+			document.getElementById('bw_remaining')
+				.style.display = '-moz-box';
 		}
 
 		// Counter for current batch size
 		var batch = document.getElementById('bw_batch_mb');
 		batch.firstChild.nodeValue =
-			locale.getFormattedString('mb', [Math.round(photos.batch_size / 102.4) / 10]);
+			locale.getFormattedString('mb', [Math.round(
+			photos.batch_size / 102.4) / 10]);
 		if (users.bandwidth) {
 			if (photos.batch_size > users.bandwidth.remaining) {
 				batch.className = 'exhausted';
-			} else if (photos.batch_size + (6 << 10) > users.bandwidth.remaining) {
+			} else if (photos.batch_size + (6 << 10)
+				> users.bandwidth.remaining) {
 				batch.className = 'almost';
 			} else {
 				batch.className = '';
@@ -155,7 +158,8 @@ var pages = {
 			} else {
 				display = 'none';
 			}
-			document.getElementById('page_' + pages._list[i]).style.display = display;
+			document.getElementById('page_' + pages._list[i])
+				.style.display = display;
 		}
 
 		// Only the photos page has the toolbar
@@ -189,13 +193,16 @@ var menus = {
 				em.focus();
 				return;
 			}
-			window.openDialog('chrome://mozapps/content/extensions/extensions.xul',
-				'', 'chrome,menubar,extra-chrome,toolbar,dialog=no,resizable');
+			window.openDialog(
+				'chrome://mozapps/content/extensions/extensions.xul',
+				'',
+				'chrome,menubar,extra-chrome,toolbar,dialog=no,resizable'
+			);
 		},
 
 		console: function() {
 			window.open('chrome://global/content/console.xul', '_blank',
-				'chrome,extrachrome,menubar,resizable,scrollbars,status,toolbar');
+			'chrome,extrachrome,menubar,resizable,scrollbars,status,toolbar');
 		}
 
 	},
@@ -203,8 +210,9 @@ var menus = {
 	help: {
 
 		about: function() {
-			window.openDialog('chrome://uploadr/content/about.xul', 'dialog_about',
-				'chrome,modal', locale.getFormattedString('dialog.about.version',
+			window.openDialog('chrome://uploadr/content/about.xul',
+				'dialog_about', 'chrome,modal',
+				locale.getFormattedString('dialog.about.version',
 				[conf.version]));
 		},
 
@@ -224,13 +232,15 @@ var menus = {
 // Progress bars
 var ProgressBar = function(id, width) {
 	this.id = id;
-	this.width = null == width ? document.getElementById(id).parentNode.boxObject.width : width;
+	this.width = null == width ? document.getElementById(id).parentNode
+		.boxObject.width : width;
 };
 ProgressBar.prototype = {
 	update: function(percent) {
 		var bar = document.getElementById(this.id);
 		if (null != bar) {
-			bar.width = Math.round(this.width * Math.max(0, Math.min(1, percent)));
+			bar.width = Math.round(this.width * Math.max(0,
+				Math.min(1, percent)));
 		}
 	},
 	clear: function() {
@@ -273,15 +283,16 @@ var status = {
 
 };
 
-// Override the alert, confirm and prompt functions to take a title and text for OK/Cancel buttons
+// Override the alert, confirm and prompt functions to take a title and
+// text for OK/Cancel buttons
 var alert = function(msg, title, ok) {
 	window.openDialog('chrome://uploadr/content/alert.xul', 'dialog_alert',
 		'chrome,modal', msg, title, ok);
 };
 var confirm = function(msg, title, ok, cancel) {
 	var result = {result: false};
-	window.openDialog('chrome://uploadr/content/confirm.xul', 'dialog_confirm',
-		'chrome,modal', msg, title, ok, cancel, result);
+	window.openDialog('chrome://uploadr/content/confirm.xul',
+		'dialog_confirm', 'chrome,modal', msg, title, ok, cancel, result);
 	return result.result;
 };
 var prompt = function(msg, title, ok, cancel) {
@@ -294,10 +305,11 @@ var prompt = function(msg, title, ok, cancel) {
 // Open a browser window to the given URL
 var launch_browser = function(url) {
 	try {
-		var io = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+		var io = Cc['@mozilla.org/network/io-service;1']
+			.getService(Ci.nsIIOService);
 		var uri = io.newURI(url, null, null);
-		var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1'].getService(
-			Ci.nsIExternalProtocolService);
+		var eps = Cc['@mozilla.org/uriloader/external-protocol-service;1']
+			.getService(Ci.nsIExternalProtocolService);
 		var launcher = eps.getProtocolHandlerInfo('http');
 		launcher.preferredAction = Ci.nsIHandlerInfo.useSystemDefault;
 		launcher.launchWithURI(uri, null);

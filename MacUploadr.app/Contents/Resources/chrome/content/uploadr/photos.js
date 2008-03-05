@@ -105,9 +105,7 @@ var photos = {
 
 	// Add a list of photos
 	add: function(paths, silent) {
-		if (null == silent) {
-			silent = false;
-		}
+		if (null == silent) { silent = false; }
 		buttons.upload.disable();
 
 		// Tally up photos and videos and remove large videos
@@ -269,7 +267,6 @@ var photos = {
 		// Now add whatever's left
 		var ii = paths.length;
 		block_normalize();
-Components.utils.reportError('photos.add ++ _block_normalize: ' + _block_normalize);
 		for (var i = 0; i < ii; ++i) {
 			var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
 
@@ -317,7 +314,6 @@ Components.utils.reportError('photos.add ++ _block_normalize: ' + _block_normali
 			mouse.show_photos();
 		} else {
 			unblock_normalize();
-Components.utils.reportError('photos.add -- _block_normalize: ' + _block_normalize);
 			document.getElementById('photos_init').style.display = '-moz-box';
 			document.getElementById('photos_new').style.display = 'none';
 		}
@@ -332,7 +328,6 @@ Components.utils.reportError('photos.add -- _block_normalize: ' + _block_normali
 		photos.list.push(new Photo(id, path));
 		++photos.count;
 		block_normalize();
-Components.utils.reportError('photos.add ++ _block_normalize: ' + _block_normalize);
 
 		// Create a spot for the image, leaving a spinning placeholder
 		//   Add images to the start of the list because this is our best
@@ -358,15 +353,11 @@ Components.utils.reportError('photos.add ++ _block_normalize: ' + _block_normali
 	remove: function() {
 
 		// Respect the remove block
-		if (0 < _block_remove) {
-			return;
-		}
+		if (0 < _block_remove) { return; }
 
 		// Nothing to do if somehow there are no selected photos
 		var ii = photos.selected.length;
-		if (0 == ii) {
-			return;
-		}
+		if (0 == ii) { return; }
 
 		// Remove selected photos
 		for (var i = 0; i < ii; ++i) {
@@ -421,9 +412,7 @@ Components.utils.reportError('photos.add ++ _block_normalize: ' + _block_normali
 		// Prevent silliness
 		var s = photos.selected;
 		var ii = s.length;
-		if (0 == ii) {
-			return;
-		}
+		if (0 == ii) { return; }
 		photos.selected = [];
 		mouse.click({target: {}});
 
@@ -432,7 +421,6 @@ Components.utils.reportError('photos.add ++ _block_normalize: ' + _block_normali
 		buttons.upload.disable();
 		for (var i = 0; i < ii; ++i) {
 			block_normalize();
-Components.utils.reportError('photos.rotate ++ _block_normalize: ' + _block_normalize);
 			var p = photos.list[s[i]];
 			if (photos.is_photo(p.path)) {
 				block_sort();
@@ -459,9 +447,7 @@ Components.utils.reportError('photos.rotate ++ _block_normalize: ' + _block_norm
 	//   queue
 	upload: function(list, size) {
 		var from_user = null == list;
-		if (from_user) {
-			list = photos.list;
-		}
+		if (from_user) { list = photos.list; }
 
 		// Don't upload if this is a user action and the button is disabled
 		if (from_user && 'disabled_button' == document.getElementById(
@@ -687,7 +673,6 @@ Components.utils.reportError('photos.rotate ++ _block_normalize: ' + _block_norm
 
 		// This action is blocked during loading but will always
 		// happen at the end of loading
-Components.utils.reportError('photos.normalize testing _block_normalize: ' + _block_normalize);
 		if (_block_normalize) { return; }
 
 		var list = document.getElementById('photos_list')
@@ -718,9 +703,7 @@ Components.utils.reportError('photos.normalize testing _block_normalize: ' + _bl
 		var obj = file.read('photos.json');
 
 		// Don't bother if there are no photos
-		if ('undefined' == typeof obj.list) {
-			return;
-		}
+		if ('undefined' == typeof obj.list) { return; }
 
 		// Add the previous batch of photos
 		var list = obj.list;
@@ -746,9 +729,7 @@ Components.utils.reportError('photos.normalize testing _block_normalize: ' + _bl
 
 	// Save all metadata to disk
 	save: function() {
-		if (0 != _block_exit) {
-			return;
-		}
+		if (0 != _block_exit) { return; }
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
 		}
