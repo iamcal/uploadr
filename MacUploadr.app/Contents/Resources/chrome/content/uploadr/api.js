@@ -8,41 +8,14 @@
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
 
-// A note about the authentication API:
-//   Because authentication is rather involved, involving a bunch of API calls in sequence,
-//   authentication should be kicked off using users.login() in users.js.  The login sequence
-//   here is chained together in such a way that after users.login()'s callback returns, the
-//   users object is setup and ready for use.
+// API wrapped up with a bow
+var wrap = {
 
-// Grab the API endpoint from the prefs
-//(function() {
-var prefs = Cc['@mozilla.org/preferences-service;1']
-	.getService(Ci.nsIPrefBranch);
-try { var SITE_HOST = prefs.getCharPref('flickr.site_host'); }
-catch (err) { SITE_HOST = 'www.flickr.com'; }
-try { var REST_HOST = prefs.getCharPref('flickr.rest_host'); }
-catch (err) { REST_HOST = 'api.flickr.com'; }
-try { var UPLOAD_HOST = prefs.getCharPref('flickr.upload_host'); }
-catch(err) { UPLOAD_HOST = 'up.flickr.com'; }
-
-// The API key and secret are defined in flKey.cpp and included here
-try {
-	var key = Cc['@flickr.com/key;1'].createInstance(Ci.flIKey);
-} catch (err) {
-	Components.utils.reportError(err);
-}
-
-// The standard API
-var flickr = {
-
-	// Authentication - again, don't use this directly, use users.login()
+	// Authentication - don't use this directly, use users.login()
 	auth: {
 
 		checkToken: function(token) {
-			api.start({
-				'method': 'flickr.auth.checkToken',
-				'auth_token': token
-			});
+			flickr.auth.checkToken(wrap.auth._checkToken, token);
 		},
 		_checkToken: function(rsp) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
@@ -62,9 +35,7 @@ var flickr = {
 		},
 
 		getFrob: function(fresh) {
-			api.start({
-				'method': 'flickr.auth.getFrob'
-			}, null, null, null, fresh);
+			flickr.auth.getFrob(wrap.auth._getFrob, fresh);
 		},
 		_getFrob: function(rsp, fresh) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
@@ -75,7 +46,8 @@ var flickr = {
 
 				users.logout(false);
 			} else {
-				users.frob = rsp.getElementsByTagName('frob')[0].firstChild.nodeValue;
+				users.frob = rsp.getElementsByTagName('frob')[0]
+					.firstChild.nodeValue;
 				if (!confirm(locale.getString('auth.prompt.text'),
 					locale.getString('auth.prompt.title'),
 					locale.getString('auth.prompt.ok'),
@@ -95,18 +67,14 @@ var flickr = {
 		},
 
 		getToken: function(frob) {
-			if (frob) {
-				api.start({
-					'method': 'flickr.auth.getToken',
-					'frob': frob
-				});
-			}
+			flickr.auth.getToken(wrap.auth._getToken, frob);
 		},
 		_getToken: function(rsp) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 				users.logout(false);
 			} else {
-				users.token = rsp.getElementsByTagName('token')[0].firstChild.nodeValue;
+				users.token = rsp.getElementsByTagName('token')[0]
+					.firstChild.nodeValue;
 				var user = rsp.getElementsByTagName('user')[0];
 				users.nsid = user.getAttribute('nsid');
 				users.username = user.getAttribute('username');
@@ -119,18 +87,15 @@ var flickr = {
 
 	},
 
-	// Like the auth section, this is used by users.login() and won't need to be called
+	// Like the auth section, this is used by users.login() and won't
+	// need to be called
 	people: {
 
 		// Sets up the photostream header
-		getInfo: function(user_id) {
-			api.start({
-				'method': 'flickr.people.getInfo',
-				'auth_token': users.token,
-				'user_id': user_id
-			}, null, null, null, user_id);
+		getInfo: function(token, nsid) {
+			flickr.people.getInfo(wrap.people._getInfo, token, nsid);
 		},
-		_getInfo: function(rsp, id) {
+		_getInfo: function(rsp, nsid) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
 				var p = rsp.getElementsByTagName('person')[0];
 				var s = p.getAttribute('iconserver');
@@ -138,7 +103,7 @@ var flickr = {
 					document.getElementById('buddyicon').src =
 						'http://farm' + p.getAttribute('iconfarm') +
 						'.static.flickr.com/' + s + '/buddyicons/' +
-						id + '.jpg';
+						nsid + '.jpg';
 				} else {
 					document.getElementById('buddyicon').src =
 						'http://flickr.com/images/buddyicon.jpg';
@@ -153,17 +118,15 @@ var flickr = {
 			}
 		},
 
-		getUploadStatus: function() {
-			api.start({
-				'method': 'flickr.people.getUploadStatus',
-				'auth_token': users.token
-			});
+		getUploadStatus: function(token) {
+			flickr.people.getUploadStatus(wrap.people._getUploadStatus,
+				token);
 		},
 		_getUploadStatus: function(rsp) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 
 				// This can cause infinite looping, so stoppit
-				//flickr.people.getUploadStatus();
+				//wrap.people.getUploadStatus();
 
 			} else {
 				var user = rsp.getElementsByTagName('user')[0];
@@ -199,13 +162,10 @@ var flickr = {
 
 		upload: {
 
-			checkTickets: function(tickets) {
+			checkTickets: function(token, tickets) {
 				block_exit();
-				api.start({
-					'method': 'flickr.photos.upload.checkTickets',
-					'auth_token': users.token,
-					'tickets': tickets.join(',')
-				});
+				flickr.photos.upload.checkTickets(
+					wrap.photos.upload._checkTickets, token, tickets);
 			},
 			_checkTickets: function(rsp) {
 				var again = false;
@@ -293,14 +253,10 @@ var flickr = {
 
 	photosets: {
 
-		addPhoto: function(photoset_id, photo_id){
+		addPhoto: function(token, photoset_id, photo_id){
 			block_exit();
-			api.start({
-				'method': 'flickr.photosets.addPhoto',
-				'auth_token': users.token,
-				'photoset_id': photoset_id,
-				'photo_id': photo_id
-			}, null, null, true, photoset_id);
+			flickr.photosets.addPhoto(wrap.photosets._addPhoto,
+				token, photoset_id, photo_id);
 		},
 		_addPhoto: function(rsp, id) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
@@ -308,22 +264,17 @@ var flickr = {
 			}
 			meta.sets_map[id].shift();
 			if (0 != meta.sets_map[id].length) {
-				flickr.photosets.addPhoto(id, meta.sets_map[id][0]);
+				wrap.photosets.addPhoto(id, meta.sets_map[id][0]);
 			} else {
 				upload.finalize();
 			}
 			unblock_exit();
 		},
 
-		create: function(title, description, primary_photo_id) {
+		create: function(token, title, description, primary_photo_id) {
 			block_exit();
-			api.start({
-				'method': 'flickr.photosets.create',
-				'auth_token': users.token,
-				'title': title,
-				'description': description,
-				'primary_photo_id': primary_photo_id
-			}, null, null, true, title);
+			flickr.photosets.create(wrap.photosets._create,
+				token, title, description, primary_photo_id);
 		},
 		_create: function(rsp, id) {
 			meta.sets_map[id].shift();
@@ -364,7 +315,7 @@ var flickr = {
 				}
 
 				if (0 != meta.sets_map[set_id].length) {
-					flickr.photosets.addPhoto(set_id,
+					wrap.photosets.addPhoto(set_id,
 						meta.sets_map[set_id][0]);
 				} else {
 					upload.finalize();
@@ -373,11 +324,8 @@ var flickr = {
 			unblock_exit();
 		},
 
-		getList: function(user_id) {
-			api.start({
-				'method': 'flickr.photosets.getList',
-				'auth_token': users.token
-			});
+		getList: function(token, nsid) {
+			flickr.photosets.getList(wrap.photosets._getList, token, nsid);
 		},
 		_getList: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
@@ -453,11 +401,8 @@ var flickr = {
 	// Preferences are fetched from the site when no stored version can be found
 	prefs: {
 
-		getContentType: function() {
-			api.start({
-				'method': 'flickr.prefs.getContentType',
-				'auth_token': users.token
-			});
+		getContentType: function(token) {
+			flickr.prefs.getContentType(wrap.prefs._getContentType, token);
 		},
 		_getContentType: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
@@ -469,11 +414,8 @@ var flickr = {
 			}
 		},
 
-		getHidden: function() {
-			api.start({
-				'method': 'flickr.prefs.getHidden',
-				'auth_token': users.token
-			});
+		getHidden: function(token) {
+			flickr.prefs.getHidden(wrap.prefs._getHidden, token);
 		},
 		_getHidden: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
@@ -485,11 +427,8 @@ var flickr = {
 			}
 		},
 
-		getPrivacy: function() {
-			api.start({
-				'method': 'flickr.prefs.getPrivacy',
-				'auth_token': users.token
-			});
+		getPrivacy: function(token) {
+			flickr.prefs.getPrivacy(wrap.prefs._getPrivacy, token);
 		},
 		_getPrivacy: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
@@ -508,11 +447,8 @@ var flickr = {
 			}
 		},
 
-		getSafetyLevel: function() {
-			api.start({
-				'method': 'flickr.prefs.getSafetyLevel',
-				'auth_token': users.token
-			});
+		getSafetyLevel: function(token) {
+			flickr.prefs.getSafetyLevel(wrap.prefs.getSafetyLevel, token);
 		},
 		_getSafetyLevel: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
@@ -528,282 +464,12 @@ var flickr = {
 
 	utils: {
 
-		logUploadStats: function(source, num_photos, upload_time,
+		logUploadStats: function(token, source, num_photos, upload_time,
 			bytes, errors) {
-			api.start({
-				'method': 'flickr.utils.logUploadStats',
-				'auth_token': users.token,
-				'source': source,
-				'photos': num_photos,
-				'upload_time': upload_time,
-				'bytes': bytes,
-				'errors': errors
-			});
-		},
-		_logUploadStats: function(rsp) {
-			// Who cares!
+			flickr.utils.logUploadStats(null, token, source, num_photos,
+				upload_time, bytes, errors)
 		}
 
 	}
 
-};
-
-var api = {
-
-	// Hashes of timeouts and XHRs being used to track running API calls
-	timeouts: {},
-
-	// Escape and sign a set of parameters, returning the new version
-	escape_and_sign: function(params, post) {
-		params['api_key'] = key.key();
-		var sig = [];
-		var esc_params = {api_key: '', api_sig: ''};
-		for (var p in params) {
-			if ('object' == typeof params[p]) {
-				esc_params[p] = params[p];
-			} else {
-				sig.push(p);
-				esc_params[p] = escape_utf8('' + params[p], !post)
-					.replace(/(^\s+|\s+$)/g, '');
-			}
-		}
-		sig.sort();
-		var calc = [];
-		var ii = sig.length;
-		for (var i = 0; i < ii; ++i) {
-			calc.push(sig[i] + (post ? esc_params[sig[i]] : escape_utf8('' +
-				params[sig[i]], false)));
-		}
-		esc_params['api_sig'] = key.sign(calc.join(''));
-		return esc_params;
-	},
-
-	// The guts of the API object - this actually makes the XHR calls and
-	// finds the callback
-	//   Callbacks are named exactly like the API method but with an _ in
-	//   front of the last part of the method name (for example
-	//   flickr.foo.bar calls back to flickr.foo._bar)
-	start: function(params, url, browser, post, id) {
-		if (null == url) {
-			url = 'http://' + REST_HOST + '/services/rest/';
-		}
-		if (null == browser) {
-			browser = false;
-		}
-		if (null == post) {
-			post = false;
-		}
-		if (null == id) {
-			id = -1;
-		}
-		if (conf.console.request) {
-			Cc['@mozilla.org/consoleservice;1']
-				.getService(Ci.nsIConsoleService)
-				.logStringMessage('API REQUEST: ' + params.toSource() +
-				', ' + url);
-		}
-
-		// Escape params and sign the call
-		params = api.escape_and_sign(params, post);
-
-		// Build either a POST payload or a GET URL
-		//   There is an assumption here that no one will be sending a file over GET
-		var mstream = '';
-		var boundary = '------deadbeef---deadbeef---' + Math.random();
-		if (post) {
-			mstream = Cc['@mozilla.org/io/multiplex-input-stream;1'].createInstance(
-				Ci.nsIMultiplexInputStream);
-			var sstream;
-			for (var p in params) {
-				sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-					Ci.nsIStringInputStream);
-				sstream.setData('--' + boundary + '\r\nContent-Disposition: form-data; name="' +
-					p + '"', -1);
-				mstream.appendStream(sstream);
-				if ('object' == typeof params[p] && null != params[p]) {
-					sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-						Ci.nsIStringInputStream);
-					sstream.setData('; filename="' + params[p].filename +
-						'"\r\nContent-Type: application/octet-stream\r\n\r\n', -1);
-					mstream.appendStream(sstream);
-					var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-					file.initWithPath(params[p].path);
-					var fstream = Cc['@mozilla.org/network/file-input-stream;1'].createInstance(
-						Ci.nsIFileInputStream);
-					fstream.init(file, 1, 1, Ci.nsIFileInputStream.CLOSE_ON_EOF);
-					var bstream = Cc['@mozilla.org/network/buffered-input-stream;1'].createInstance(
-						Ci.nsIBufferedInputStream);
-					bstream.init(fstream, 4096);
-					mstream.appendStream(bstream);
-					sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-						Ci.nsIStringInputStream);
-					sstream.setData('\r\n', -1);
-					mstream.appendStream(sstream);
-				} else {
-					sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-						Ci.nsIStringInputStream);
-					sstream.setData('\r\n\r\n' + params[p] + '\r\n', -1);
-					mstream.appendStream(sstream);
-				}
-			}
-			sstream = Cc['@mozilla.org/io/string-input-stream;1'].createInstance(
-				Ci.nsIStringInputStream);
-			sstream.setData('--' + boundary + '--', -1);
-			mstream.appendStream(sstream);
-			upload.progress_total = mstream.available() >> 10;
-		} else {
-			var args = [];
-			for (var p in params) {
-				args.push(p + '=' + params[p]);
-			}
-			url += '?' + args.join('&');
-		}
-
-		// Open a browser
-		//   Only GET requests are supported here
-		if (browser) {
-			return launch_browser(url);
-		}
-
-		// Use XHR
-		//   GET and POST are supported here
-		else {
-
-			// Build up the callback
-			//   For the method foo.bar.baz this will call foo.bar._baz with the response
-			var callback;
-			if (params.method) {
-				var index = 1 + params.method.lastIndexOf('.');
-				callback = params.method.substring(0, index) + '_' +
-					params.method.substring(index, params.method.length) + '(rsp';
-				if (-1 != id) {
-					callback += ', id';
-				}
-				callback += ');';
-			}
-
-			// Callback
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function() {
-				if (4 == xhr.readyState && 200 == xhr.status && xhr.responseXML) {
-					try {
-						var rsp = xhr.responseXML.documentElement;
-						if (conf.console.error && (
-							'object' != typeof rsp || 'ok' != rsp.getAttribute('stat'))) {
-							Components.utils.reportError('API ERROR: ' + xhr.responseText);
-						} else if (conf.console.response) {
-							Cc['@mozilla.org/consoleservice;1']
-								.getService(Ci.nsIConsoleService)
-								.logStringMessage('API RESPONSE: ' + xhr.responseText);
-						}
-
-						// If this is a normal method call
-						if (params.method) {
-
-							// It returned normally, don't timeout
-							window.clearTimeout(api.timeouts[params['api_sig']]);
-							delete api.timeouts[params['api_sig']];
-
-							eval(callback);
-						}
-
-						// If this is an upload
-						else {
-							upload._start(rsp, id);
-						}
-
-					} catch (err) {
-						Components.utils.reportError(err);
-					}
-				}
-			};
-
-			// Send the request
-			xhr.open(post ? 'POST' : 'GET', url, true);
-			if (post) {
-				xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' +
-					boundary);
-			} else {
-				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			}
-			xhr.send(mstream);
-
-			// Setup upload progress indicator
-			if (post && -1 != id && !params.method) {
-				upload.progress_handle = window.setInterval(function() {
-					upload.progress(mstream, id);
-				}, conf.check);
-			}
-
-			// Setup timeout guard on everything else
-			else if (params.method) {
-				api.timeouts[params['api_sig']] = window.setTimeout(function() {
-					if (conf.console.timeout) {
-						Components.utils.reportError('API TIMEOUT: ' + callback);
-					}
-					var rsp = false;
-					eval(callback);
-				}, conf.timeout);
-			}
-
-		}
-
-	},
-
-	//
-
-};
-
-// Used when preparing the params and the signature
-//   The URL parameter controls whether data is escaped for inclusion in a URL or not
-var escape_utf8 = function(data, url) {
-	if (null == url) {
-		url = true;
-	}
-	if ('' == data || null == data || undefined == data) {
-		return '';
-	}
-	var chars = '0123456789abcdef';
-	data = data.toString();
-	var buffer = [];
-	var ii = data.length;
-	for (var i = 0; i < ii; ++i) {
-		var c = data.charCodeAt(i);
-		var bs = new Array();
-		if (c > 0x10000) {
-			bs[0] = 0xf0 | ((c & 0x1c0000) >>> 18);
-			bs[1] = 0x80 | ((c & 0x3f000) >>> 12);
-			bs[2] = 0x80 | ((c & 0xfc0) >>> 6);
-			bs[3] = 0x80 | (c & 0x3f);
-		} else if (c > 0x800) {
-			bs[0] = 0xe0 | ((c & 0xf000) >>> 12);
-			bs[1] = 0x80 | ((c & 0xfc0) >>> 6);
-			bs[2] = 0x80 | (c & 0x3f);
-		} else if (c > 0x80) {
-			bs[0] = 0xc0 | ((c & 0x7c0) >>> 6);
-			bs[1] = 0x80 | (c & 0x3f);
-		} else {
-			bs[0] = c;
-		}
-		var jj = bs.length
-		if (1 < jj) {
-			if (url) {
-				for (var j = 0; j < jj; ++j) {
-					var b = bs[j];
-					buffer.push('%' + chars.charAt((b & 0xf0) >>> 4) + chars.charAt(b & 0x0f));
-				}
-			} else {
-				for (var j = 0; j < jj; ++j) {
-					buffer.push(String.fromCharCode(bs[j]));
-				}
-			}
-		} else {
-			if (url) {
-				buffer.push(encodeURIComponent(String.fromCharCode(bs[0])));
-			} else {
-				buffer.push(String.fromCharCode(bs[0]));
-			}
-		}
-	}
-	return buffer.join('');
 };

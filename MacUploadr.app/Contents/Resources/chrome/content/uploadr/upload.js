@@ -349,7 +349,7 @@ Cc['@mozilla.org/consoleservice;1']
 			tickets.push(t);
 		}
 		if (0 != tickets.length) {
-			flickr.photos.upload.checkTickets(tickets);
+			wrap.photos.upload.checkTickets(users.token, tickets);
 		}
 	},
 	_check_tickets: function() {
@@ -485,6 +485,9 @@ Cc['@mozilla.org/consoleservice;1']
 		}
 
 		// Kick off the chain of adding photos to a set
+Cc['@mozilla.org/consoleservice;1']
+	.getService(Ci.nsIConsoleService)
+	.logStringMessage('sets: ' + meta.sets_map.toSource());
 		var not_adding_to_sets = true;
 		for (var set_id in meta.sets_map) {
 			if (0 == meta.sets_map[set_id].length) {
@@ -494,9 +497,10 @@ Cc['@mozilla.org/consoleservice;1']
 			not_adding_to_sets = false;
 			var index = meta.created_sets.indexOf(set_id);
 			if (-1 == index) {
-				flickr.photosets.addPhoto(set_id, meta.sets_map[set_id][0]);
+				wrap.photosets.addPhoto(users.token, set_id,
+					meta.sets_map[set_id][0]);
 			} else {
-				flickr.photosets.create(set_id,
+				wrap.photosets.create(users.token, set_id,
 					meta.created_sets_desc[index],
 					meta.sets_map[set_id][0]);
 			}
@@ -564,11 +568,12 @@ Cc['@mozilla.org/consoleservice;1']
 		}
 
 		// Ask the site for an update
-		flickr.photosets.getList(users.nsid);
-		flickr.people.getUploadStatus();
+		wrap.photosets.getList(users.token, users.nsid);
+		wrap.people.getUploadStatus(users.token);
 
 		// Send stats to the site
-		flickr.utils.logUploadStats(0 /* Source, known by API key */,
+		wrap.utils.logUploadStats(users.token,
+			0 /* Source, known by API key */,
 			upload.stats.photos + photos.ok + photos.fail,
 			1000 * (upload.timestamps.latest - upload.timestamps.earliest),
 			upload.stats.bytes + 1024 * photos.kb.total,
@@ -758,7 +763,7 @@ Upload.prototype = {
 				var a = mstream.available();
 				ostream.writeFrom(mstream,
 					Math.min(a, 8192));
-				threads.main.dispatch(new UploadProgress(a, this.id),
+				threads.main.dispatch(new UploadProgressCallback(a, this.id),
 					threads.main.DISPATCH_NORMAL);
 			}
 			var _istream = transport.openInputStream(0,0,0);
@@ -775,7 +780,7 @@ Upload.prototype = {
 				onStopRequest: function(request, context, status) {
 					istream.close();
 					ostream.close();
-					threads.main.dispatch(new UploadDone(
+					threads.main.dispatch(new UploadDoneCallback(
 						this.raw.join(''), this.id),
 						threads.main.DISPATCH_NORMAL);
 				},
@@ -797,11 +802,11 @@ Upload.prototype = {
 	}
 };
 
-var UploadProgress = function(available, id) {
+var UploadProgressCallback = function(available, id) {
 	this.available = available;
 	this.id = id;
 }
-UploadProgress.prototype = {
+UploadProgressCallback.prototype = {
 	run: function() {
 		upload.progress2(this.available, this.id);
 	},
@@ -813,11 +818,11 @@ UploadProgress.prototype = {
 	}
 };
 
-var UploadDone = function(raw, id) {
+var UploadDoneCallback = function(raw, id) {
 	this.raw = raw;
 	this.id = id;
 }
-UploadDone.prototype = {
+UploadDoneCallback.prototype = {
 	run: function() {
 
 		// Parse HTTP

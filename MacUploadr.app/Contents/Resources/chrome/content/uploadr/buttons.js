@@ -31,7 +31,7 @@ var buttons = {
 
 	auth: {
 		click: function() {
-			flickr.auth.getToken(users.frob);
+			wrap.auth.getToken(users.frob);
 			pages.go('photos');
 		}
 	},

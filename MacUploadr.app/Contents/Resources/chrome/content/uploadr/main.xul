@@ -33,6 +33,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/upgrade.js" />
 	<script src="chrome://uploadr/content/file.js" />
 	<script src="chrome://uploadr/content/threads.js" />
+	<script src="chrome://uploadr/content/flickr.js" />
 	<script src="chrome://uploadr/content/api.js" />
 	<script src="chrome://uploadr/content/upload.js" />
 	<script src="chrome://uploadr/content/photos.js" />

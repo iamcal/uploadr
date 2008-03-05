@@ -37,7 +37,7 @@ var users = {
 		if (users.token) {
 			var t = users.token;
 			users.token = null;
-			flickr.auth.checkToken(t);
+			wrap.auth.checkToken(t);
 		}
 
 		// If we don't have a token and we're not forcing a fresh token
@@ -57,19 +57,19 @@ var users = {
 				}
 			}
 			if (users.token) {
-				flickr.auth.checkToken(users.token);
+				wrap.auth.checkToken(users.token);
 			}
 
 			// If we still don't have one, go get a frob
 			else {
-				flickr.auth.getFrob(fresh);
+				wrap.auth.getFrob(fresh);
 			}
 
 		}
 
 		// If we really want a fresh token, go get one
 		else {
-			flickr.auth.getFrob(fresh);
+			wrap.auth.getFrob(fresh);
 		}
 
 	},
@@ -79,9 +79,9 @@ var users = {
 			settings.load();
 
 			// User specific API calls that must be made (and havent already been)
-			flickr.people.getInfo(users.nsid);
-			flickr.people.getUploadStatus();
-			flickr.photosets.getList(users.nsid);
+			wrap.people.getInfo(users.token, users.nsid);
+			wrap.people.getUploadStatus(users.token);
+			wrap.photosets.getList(users.token, users.nsid);
 
 			// Update the UI
 			document.getElementById('username').firstChild.nodeValue =

@@ -34,10 +34,10 @@ var settings = {
 		// For fresh users, go straight to the website
 		if (users.list[users.username].fresh) {
 			users.list[users.username].fresh = false;
-			flickr.prefs.getPrivacy();
-			flickr.prefs.getContentType();
-			flickr.prefs.getHidden();
-			flickr.prefs.getSafetyLevel();
+			wrap.prefs.getPrivacy(users.token);
+			wrap.prefs.getContentType(users.token);
+			wrap.prefs.getHidden(users.token);
+			wrap.prefs.getSafetyLevel(users.token);
 		}
 
 		// For everyone else, start by trying to use locally stored prefs
@@ -65,16 +65,16 @@ var settings = {
 			if (isNaN(settings.is_public) || null == settings.is_public ||
 				isNaN(settings.is_friend) || null == settings.is_friend ||
 				isNaN(settings.is_family) || null == settings.is_family) {
-				flickr.prefs.getPrivacy();
+				wrap.prefs.getPrivacy(users.token);
 			}
 			if (isNaN(settings.content_type) || null == settings.content_type) {
-				flickr.prefs.getContentType();
+				wrap.prefs.getContentType(users.token);
 			}
 			if (isNaN(settings.hidden) || null == settings.hidden) {
-				flickr.prefs.getHidden();
+				wrap.prefs.getHidden(users.token);
 			}
 			if (isNaN(settings.safety_level) || null == settings.safety_level) {
-				flickr.prefs.getSafetyLevel();
+				wrap.prefs.getSafetyLevel(users.token);
 			}
 
 		}

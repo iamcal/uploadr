@@ -12,6 +12,19 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 const NS_HTML = 'http://www.w3.org/1999/xhtml';
 
+// Grab the API endpoint from the prefs
+var SITE_HOST = '', REST_HOST = '', UPLOAD_HOST = '';
+(function() {
+	var prefs = Cc['@mozilla.org/preferences-service;1']
+		.getService(Ci.nsIPrefBranch);
+	try { SITE_HOST = prefs.getCharPref('flickr.site_host'); }
+	catch (err) { SITE_HOST = 'www.flickr.com'; }
+	try { REST_HOST = prefs.getCharPref('flickr.rest_host'); }
+	catch (err) { REST_HOST = 'api.flickr.com'; }
+	try { UPLOAD_HOST = prefs.getCharPref('flickr.upload_host'); }
+	catch(err) { UPLOAD_HOST = 'up.flickr.com'; }
+})();
+
 const conf = {
 
 	// What version am I?
@@ -19,8 +32,8 @@ const conf = {
 
 	// What types of API events should be written to the console?
 	console: {
-		request: false,
-		response: false,
+		request: true,
+		response: true,
 		error: true,
 		timeout: true,
 		retry: true
