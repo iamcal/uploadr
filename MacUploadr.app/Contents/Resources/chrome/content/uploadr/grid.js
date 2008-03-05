@@ -57,8 +57,10 @@ var grid = {
 		var p = photos.list;
 		for (var i = p.length; i >= 0; --i) {
 			if (null != p[i]) {
-				var img = document.getElementById('photo' + i).getElementsByTagName('img')[0];
-				if (-1 == img.className.indexOf('error')) {
+				var img = document.getElementById('photo' + i)
+					.getElementsByTagName('img')[0];
+				if (-1 == img.className.indexOf('error')
+					&& -1 == img.className.indexOf('loading')) {
 					if (img.offsetLeft + OFFSET_X + img.width >= x1 &&
 						img.offsetLeft + OFFSET_X <= x2 &&
 						img.offsetTop + OFFSET_Y + img.height >= y1 &&

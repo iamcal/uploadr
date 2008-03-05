@@ -80,7 +80,7 @@ Cc['@mozilla.org/consoleservice;1']
 			// Dispatch for health and non-blocking profit!
 			threads.uploadr.dispatch(new Upload({
 				'async': 'async' == conf.mode ? 1 : 0,
-				'auth_token': users.token,
+				'auth_token': photo.token,
 				'title': photo.title,
 				'description': photo.description,
 				'tags': photo.tags,
@@ -102,7 +102,7 @@ Cc['@mozilla.org/consoleservice;1']
 		else {
 			api.start({
 				'async': 'async' == conf.mode ? 1 : 0,
-				'auth_token': users.token,
+				'auth_token': photo.token,
 				'title': photo.title,
 				'description': photo.description,
 				'tags': photo.tags,

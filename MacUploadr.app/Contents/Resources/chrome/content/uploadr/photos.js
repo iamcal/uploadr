@@ -271,6 +271,7 @@ var photos = {
 
 		// Now add whatever's left
 		var ii = paths.length;
+		++photos.loading;
 		for (var i = 0; i < ii; ++i) {
 			var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
 
@@ -609,6 +610,10 @@ var photos = {
 		var ready = [];
 		for each (var p in list) {
 
+			// Keep the current auth token with each photo so to allow
+			// people to change accounts from one batch to the next
+			p.token = users.token;
+
 			// If we have to queue this batch
 			if (from_user && upload.processing) {
 				ready.push(p);
@@ -792,4 +797,5 @@ var Photo = function(id, path) {
 	this.hidden = settings.hidden;
 	this.sets = [];
 	this.progress_bar = null;
+	this.token = null;
 };

@@ -55,7 +55,7 @@ const conf = {
 	tickets_retry_count: 10,
 
 	// Should we use the new socket uploadr?
-	socket_uploadr: false,//true,
+	socket_uploadr: true,
 
 
 

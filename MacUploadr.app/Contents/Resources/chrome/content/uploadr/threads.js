@@ -232,7 +232,9 @@ ThumbCallback.prototype = {
 				++photos.errors;
 				img.onclick = function() {
 					this.parentNode.parentNode.removeChild(this.parentNode);
-					photos.normalize();
+					if (!photos.loading) {
+						photos.normalize();
+					}
 					--photos.errors;
 					if (0 == photos.count + photos.errors) {
 						document.getElementById('photos_init')
@@ -355,6 +357,7 @@ SortCallback.prototype = {
 			if (1 == photos.list.length) {
 				buttons.upload.enable();
 			}
+			--photos.loading;
 			return;
 		}
 		var p = [];
@@ -387,6 +390,7 @@ SortCallback.prototype = {
 			}
 		}
 		photos.normalize();
+		--photos.loading;
 
 		// And finally allow them to upload
 		buttons.upload.enable();
@@ -484,6 +488,7 @@ var EnableUploadCallback = function() {
 };
 EnableUploadCallback.prototype = {
 	run: function() {
+		--photos.loading;
 		buttons.upload.enable();
 		meta.first = false;
 	},
