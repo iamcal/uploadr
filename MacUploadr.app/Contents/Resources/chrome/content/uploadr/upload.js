@@ -240,6 +240,7 @@ Cc['@mozilla.org/consoleservice;1']
 			}
 			photos.uploaded.push(photo_id);
 
+/*
 			// Add to the map of sets to photos
 			for each (var set_id in photos.uploading[id].sets) {
 				if ('undefined' == typeof meta.sets_map[set_id]) {
@@ -248,6 +249,13 @@ Cc['@mozilla.org/consoleservice;1']
 					meta.sets_map[set_id].push(photo_id);
 				}
 			}
+*/
+
+			// Add to sets
+			// TODO
+Components.utils.reportError('photos.uploading[id].sets: ' +
+photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
+', meta.created_sets: ' + meta.created_sets.toSource());
 
 		} else if ('fail' == stat) {
 			photos.uploading[id].progress_bar.done(false);
@@ -485,10 +493,8 @@ Cc['@mozilla.org/consoleservice;1']
 		}
 
 		// Kick off the chain of adding photos to a set
-Cc['@mozilla.org/consoleservice;1']
-	.getService(Ci.nsIConsoleService)
-	.logStringMessage('sets: ' + meta.sets_map.toSource());
 		var not_adding_to_sets = true;
+/*
 		for (var set_id in meta.sets_map) {
 			if (0 == meta.sets_map[set_id].length) {
 				continue;
@@ -505,6 +511,7 @@ Cc['@mozilla.org/consoleservice;1']
 					meta.sets_map[set_id][0]);
 			}
 		}
+*/
 
 		// If we are adding photos to a set, the last one will call this,
 		// otherwise we have to here.  If it doesn't get called then
@@ -519,6 +526,7 @@ Cc['@mozilla.org/consoleservice;1']
 	finalize: function() {
 		status.clear();
 
+/*
 		// Make sure the sets map is actually empty
 		for (var set_id in meta.sets_map) {
 			if (meta.sets_map[set_id].length) {
@@ -528,16 +536,17 @@ Cc['@mozilla.org/consoleservice;1']
 
 		// Normalize the list of created sets
 		var created_sets = [];
-		var created_sets_desc = [];
+//		var created_sets_desc = [];
 		var ii = meta.created_sets.length;
 		for (var i = 0; i < ii; ++i) {
 			if (null != meta.created_sets[i]) {
 				created_sets.push(meta.created_sets[i]);
-				created_sets_desc.push(meta.created_sets_desc[i]);
+//				created_sets_desc.push(meta.created_sets_desc[i]);
 			}
 		}
 		meta.created_sets = created_sets;
-		meta.created_sets_desc = created_sets_desc;
+//		meta.created_sets_desc = created_sets_desc;
+*/
 
 		// If there is a batch queued up, start that batch, preserving the
 		// timestamps so that this looks like one big batch

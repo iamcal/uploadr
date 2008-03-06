@@ -11,9 +11,8 @@
 var meta = {
 
 	// Map of set IDs to names
-	sets: {},
+	sets: [],
 	created_sets: [],
-	created_sets_desc: [],
 	sets_map: {},
 
 	// Show a special status message for their first batch
@@ -149,13 +148,14 @@ var meta = {
 				meta_img.src = img.src;
 				meta_div.appendChild(meta_img);
 			}
-			document.getElementById('meta_dim').value = locale.getFormattedString('meta.dim',
-				[p.width, p.height]);
+			document.getElementById('meta_dim').value =
+				locale.getFormattedString('meta.dim', [p.width, p.height]);
 			if (1024 > p.size) {
-				document.getElementById('meta_size').value = locale.getFormattedString('kb',
-					[p.size]);
+				document.getElementById('meta_size').value =
+					locale.getFormattedString('kb', [p.size]);
 			} else {
-				document.getElementById('meta_size').value = locale.getFormattedString('mb',
+				document.getElementById('meta_size').value =
+					locale.getFormattedString('mb',
 					[Math.round(p.size / 102.4) / 10]);
 			}
 
@@ -184,12 +184,13 @@ var meta = {
 				ul.appendChild(li);
 			} else {
 				for (var i = 0; i < ii; ++i) {
-					document.getElementById('single_sets_add_' + p.sets[i]).className =
-						'sets_disabled';
+					document.getElementById('single_sets_add_' + p.sets[i])
+						.className = 'sets_disabled';
 					var li = document.createElementNS(NS_HTML, 'li');
 					li.id = 'single_sets_added_' + p.sets[i];
 					li.className = 'sets_trash';
-					li.appendChild(document.createTextNode(meta.sets[p.sets[i]]));
+					li.appendChild(document.createTextNode(
+						meta.sets[p.sets[i]].title));
 					ul.appendChild(li);
 				}
 			}
@@ -399,7 +400,8 @@ var meta = {
 		var quotes = false;
 		while (/\{WHITESPACE-[0-9]+\}/.test(tag)) {
 			var match = /\{WHITESPACE-([0-9]+)\}/.exec(tag);
-			tag = tag.replace(/\{WHITESPACE-[0-9]+\}/, String.fromCharCode(parseInt(match[1])));
+			tag = tag.replace(/\{WHITESPACE-[0-9]+\}/,
+				String.fromCharCode(parseInt(match[1])));
 			quotes = true;
 		}
 		while (/\{COMMA\}/.test(tag)) {
@@ -407,8 +409,8 @@ var meta = {
 			tag = tag.replace(/\{COMMA\}/, ',');
 			quotes = true;
 		}
-		return (quotes ? '"' : '') + tag.replace(/^\s+/, '').replace(/\s+$/, '') +
-			(quotes ? '"' : '');
+		return (quotes ? '"' : '') + tag.replace(/^\s+/, '')
+			.replace(/\s+$/, '') + (quotes ? '"' : '');
 	},
 
 	// Create a new set if we have any left
@@ -422,9 +424,16 @@ var meta = {
 			if (!name) {
 				return;
 			}
-			meta.created_sets.push(name);
-			meta.created_sets_desc.push(desc);
-			meta.sets[name] = name;
+			meta.created_sets.push({
+				title: name, // Sorry
+				description: desc,
+				busy: false,
+				add: []
+			});
+			meta.sets.push({
+				id: null,
+				title: name // Also sorry
+			});
 			var prefixes = ['single', 'batch'];
 			for each (var prefix in prefixes) {
 				var ul = document.getElementById(prefix + '_sets_add');
@@ -432,18 +441,18 @@ var meta = {
 					ul.removeChild(ul.firstChild);
 				}
 				var li = document.createElementNS(NS_HTML, 'li');
-				li.id = prefix + '_sets_add_' + name;
+				li.id = prefix + '_sets_add_' + (meta.sets.length - 1);
 				li.className = 'sets_plus';
 				li.style.fontWeight = 'bold';
 				li.appendChild(document.createTextNode(name));
 				ul.insertBefore(li, ul.firstChild);
 			}
 			var prefix = 1 == photos.selected.length ? 'single' : 'batch';
-			meta.add_to_set({
-				target: document.getElementById(prefix + '_sets_add').firstChild
-			});
+			meta.add_to_set({target:
+				document.getElementById(prefix + '_sets_add').firstChild});
 			if (meta.created_sets.length == users.sets) {
-				document.getElementById(prefix + '_sets_create').style.visibility = 'hidden';
+				document.getElementById(prefix + '_sets_create')
+					.style.visibility = 'hidden';
 			}
 		}
 	},
@@ -457,15 +466,15 @@ var meta = {
 		}
 		var li = e.target;
 		li.className = 'sets_disabled';
-		var set_id = li.id.replace(/^(single|batch)_sets_add_/, '');
-		var name = li.firstChild.nodeValue;
+		var set_index = li.id.replace(/^(single|batch)_sets_add_/, '');
+		var title = li.firstChild.nodeValue;
 
 		// Add each selected photo to this set
 		var ii = photos.selected.length;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[photos.selected[i]];
-			if (null != p && -1 == p.sets.indexOf(set_id)) {
-				p.sets.push(set_id);
+			if (null != p && -1 == p.sets.indexOf(set_index)) {
+				p.sets.push(set_index);
 			}
 		}
 
@@ -476,9 +485,9 @@ var meta = {
 			ul.removeChild(ul.firstChild);
 		}
 		var li = document.createElementNS(NS_HTML, 'li');
-		li.id = prefix + '_sets_added_' + set_id;
+		li.id = prefix + '_sets_added_' + set_index;
 		li.className = 'sets_trash';
-		li.appendChild(document.createTextNode(name));
+		li.appendChild(document.createTextNode(title));
 		ul.appendChild(li);
 
 	},
@@ -490,20 +499,18 @@ var meta = {
 			return;
 		}
 		var li = e.target;
-		var set_id = li.id.replace(/^(single|batch)_sets_added_/, '');
+		var set_index = li.id.replace(/^(single|batch)_sets_added_/, '');
 		var name = li.firstChild.nodeValue;
 
 		// Remove each selected photo from this set
 		var ii = photos.selected.length;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[photos.selected[i]];
-			if (null == p) {
-				continue;
-			}
+			if (null == p) { continue; }
 			var new_sets = [];
 			var jj = p.sets.length;
 			for (var j = 0; j < jj; ++j) {
-				if (set_id != p.sets[j]) {
+				if (set_index != p.sets[j]) {
 					new_sets.push(p.sets[j]);
 				}
 			}
@@ -517,10 +524,12 @@ var meta = {
 		if (0 == ul.getElementsByTagName('li').length) {
 			li = document.createElementNS(NS_HTML, 'li');
 			li.className = 'sets_none';
-			li.appendChild(document.createTextNode(locale.getString('meta.sets.added.none')));
+			li.appendChild(document.createTextNode(
+				locale.getString('meta.sets.added.none')));
 			ul.appendChild(li);
 		}
-		document.getElementById(prefix + '_sets_add_' + set_id).className = 'sets_plus';
+		document.getElementById(prefix + '_sets_add_' + set_index)
+			.className = 'sets_plus';
 
 	},
 

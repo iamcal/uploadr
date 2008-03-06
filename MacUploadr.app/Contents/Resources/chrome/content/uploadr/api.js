@@ -329,24 +329,35 @@ var wrap = {
 		},
 		_getList: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
-				meta.sets = {};
+				meta.sets = [];
 				var sets = rsp.getElementsByTagName('photosets')[0]
 					.getElementsByTagName('photoset');
 				var ii = sets.length;
 				var order = [];
 				for (var i = 0; i < ii; ++i) {
-					order.push([sets[i].getAttribute('id'),
-						sets[i].getElementsByTagName('title')[0]
-						.firstChild.nodeValue]);
+					order.push({
+						id: sets[i].getAttribute('id'),
+						title: sets[i].getElementsByTagName('title')[0]
+							.firstChild.nodeValue
+					});
 				}
+
+				// We really shouldn't break our own API spec
+				//   TODO: Offer a sort toggle
+				/*
 				order.sort(function(a, b) {
-					return a[1].toLowerCase() > b[1].toLowerCase();
+					return a.title.toLowerCase() > b.title.toLowerCase();
 				});
-				for each (var name in meta.created_sets) {
-					meta.sets[name] = name;
+				*/
+
+				for each (var s in meta.created_sets) {
+					meta.sets.push({
+						id: null,
+						title: s.title
+					});
 				}
 				for (var i = 0; i < ii; ++i) {
-					meta.sets[order[i][0]] = order[i][1];
+					meta.sets.push(order[i]);
 				}
 				var prefixes = ['single', 'batch'];
 				for each (var prefix in prefixes) {
@@ -361,12 +372,13 @@ var wrap = {
 							locale.getString('meta.sets.add.none')));
 						ul.appendChild(li);
 					} else {
-						for (var set_id in meta.sets) {
+						var ii = meta.sets.length;
+						for (var i = 0; i < ii; ++i) {
 							var li = document.createElementNS(NS_HTML, 'li');
-							li.id = prefix + '_sets_add_' + set_id;
+							li.id = prefix + '_sets_add_' + i;
 							li.className = 'sets_plus';
 							li.appendChild(document.createTextNode(
-								meta.sets[set_id]));
+								meta.sets[i].title));
 							ul.appendChild(li);
 						}
 					}
@@ -386,7 +398,7 @@ var wrap = {
 							li.id = 'single_sets_' + p.sets[i];
 							li.className = 'sets_trash';
 							li.appendChild(document.createTextNode(
-								meta.sets[p.sets[i]]));
+								meta.sets[p.sets[i]].title));
 							ul.appendChild(li);
 						}
 					}

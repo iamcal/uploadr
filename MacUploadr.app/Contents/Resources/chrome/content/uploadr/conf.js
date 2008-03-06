@@ -67,6 +67,12 @@ const conf = {
 	// How many times should checkTickets retry before giving up?
 	tickets_retry_count: 10,
 
+
+
+	//
+	// Feature switches
+	//
+
 	// Should we use the new socket uploadr?
 	socket_uploadr: true,
 
