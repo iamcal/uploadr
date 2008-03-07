@@ -718,11 +718,8 @@ var photos = {
 		}
 		photos.add(list, true);
 
-		// Bring in old sets that were created locally but not on the site
-		for each (var s in obj.sets) {
-			meta.created_sets.push(s);
-			meta.sets[s.title] = s.title;
-		}
+		// Bring in last known sets configuration
+		meta.sets = obj.sets;
 
 	},
 
@@ -732,12 +729,9 @@ var photos = {
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
 		}
-		if (0 == photos.count) {
-			meta.created_sets = [];
-		}
 		file.write('photos.json', {
 			sort: photos.sort,
-			sets: meta.created_sets,
+			sets: meta.sets,
 			list: photos.list
 		});
 	},
