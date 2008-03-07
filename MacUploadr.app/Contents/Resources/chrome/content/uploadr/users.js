@@ -133,7 +133,7 @@ var users = {
 
 	// Update the app for the newly logged in user
 	update: function() {
-		if (null == users.username) {
+		if (null == users.nsid) {
 			return;
 		}
 
@@ -141,8 +141,8 @@ var users = {
 		for each (var u in users.list) {
 			u.current = false;
 		}
-		if (users.list[users.username]) {
-			var u = users.list[users.username];
+		if (users.list[users.nsid]) {
+			var u = users.list[users.nsid];
 			u.token = users.token;
 			u.is_pro = users.is_pro;
 			u.bandwidth = users.bandwidth;
@@ -150,7 +150,7 @@ var users = {
 			u.sets = users.sets;
 			u.current = true;
 		} else {
-			users.list[users.username] = new User(users.username, users.nsid,
+			users.list[users.nsid] = new User(users.username, users.nsid,
 				users.token, users.is_pro, users.bandwidth, users.filesize,
 				users.sets);
 		}

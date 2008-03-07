@@ -80,7 +80,7 @@ Cc['@mozilla.org/consoleservice;1']
 			// Dispatch for health and non-blocking profit!
 			threads.uploadr.dispatch(new Upload({
 				'async': 'async' == conf.mode ? 1 : 0,
-				'auth_token': photo.token,
+				'auth_token': users.list[photo.nsid].token,
 				'title': photo.title,
 				'description': photo.description,
 				'tags': photo.tags,
@@ -99,10 +99,11 @@ Cc['@mozilla.org/consoleservice;1']
 		}
 
 		// Pass the photo to the regular API
+		//   Possibly/probably broken
 		else {
 			api.start({
 				'async': 'async' == conf.mode ? 1 : 0,
-				'auth_token': photo.token,
+				'auth_token': users.list[photo.nsid].token,
 				'title': photo.title,
 				'description': photo.description,
 				'tags': photo.tags,
@@ -116,7 +117,8 @@ Cc['@mozilla.org/consoleservice;1']
 					'filename': photo.filename,
 					'path': photo.path
 				}
-			}, 'http://' + UPLOAD_HOST + '/services/upload/', false, true, id);
+			}, null, 'http://' + UPLOAD_HOST + '/services/upload/',
+				false, true, id);
 		}
 
 	},
@@ -136,6 +138,10 @@ Cc['@mozilla.org/consoleservice;1']
 
 		// If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
+			if (conf.console.error) {
+				Components.utils.reportError('UPLOAD ERROR: ' +
+					rsp.toSource());
+			}
 
 			// Make sure this isn't a bandwidth error, as those are
 			// unrecoverable
@@ -240,22 +246,62 @@ Cc['@mozilla.org/consoleservice;1']
 			}
 			photos.uploaded.push(photo_id);
 
-/*
-			// Add to the map of sets to photos
-			for each (var set_id in photos.uploading[id].sets) {
-				if ('undefined' == typeof meta.sets_map[set_id]) {
-					meta.sets_map[set_id] = [photo_id];
-				} else {
-					meta.sets_map[set_id].push(photo_id);
-				}
-			}
-*/
-
 			// Add to sets
-			// TODO
-Components.utils.reportError('photos.uploading[id].sets: ' +
-photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
-', meta.created_sets: ' + meta.created_sets.toSource());
+			for each (var i in photos.uploading[id].sets) {
+				var token = users.list[photos.uploading[id].nsid].token;
+				var set = photos.sets[photos.uploading[id].nsid][i];
+				if (null == set.id) {
+
+					// Queue this photo if a create call hasn't returned
+					if (set.busy) { set.add.push(photo_id); }
+
+					// Otherwise create
+					else {
+						block_exit();
+						set.busy = true;
+						var _nsid = photos.uploading[id].nsid;
+						++photos.sets_out;
+						flickr.photosets.create(function(rsp) {
+							var nsid = _nsid;
+
+							// Failure just fails and moves on
+							if ('object' != typeof rsp
+								|| 'ok' != rsp.getAttribute('stat')) {
+								photos.sets_fail = true;
+								// TODO: Retry or at least deal with set.add
+							}
+
+							// Success needs to update sets list and other
+							// photos
+							else {
+								set.id = rsp.getElementsByTagName(
+									'photoset')[0].getAttribute('id');
+								for each (var p in set.add) {
+									wrap.photosets.addPhoto(token, set.id, p);
+								}
+								set.busy = false;
+
+								// If we're still the same user as is
+								// uploading, update the main sets list
+								if (users.nsid == nsid) {
+									meta.sets[i].id = set.id;
+								}
+
+							}
+
+							--photos.sets_out;
+							unblock_exit();
+							upload.finalize();
+						}, token, set.title, set.description, photo_id);
+					}
+				}
+
+				// Add photo to set
+				else {
+					wrap.photosets.addPhoto(token, set.id, photo_id);
+				}
+
+			}
 
 		} else if ('fail' == stat) {
 			photos.uploading[id].progress_bar.done(false);
@@ -357,6 +403,7 @@ photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
 			tickets.push(t);
 		}
 		if (0 != tickets.length) {
+			// TODO: Use proper token here
 			wrap.photos.upload.checkTickets(users.token, tickets);
 		}
 	},
@@ -379,9 +426,7 @@ photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
 			document.getElementById('progress').style.display = 'none';
 			var f = photos.failed;
 			for each (var p in photos.uploading) {
-				if (null != p && -1 == f.indexOf(p.path)) {
-					f.push(p);
-				}
+				if (null != p && -1 == f.indexOf(p.path)) { f.push(p); }
 			}
 			var ii = f.length;
 			if (0 != ii) {
@@ -492,61 +537,19 @@ photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
 
 		}
 
-		// Kick off the chain of adding photos to a set
-		var not_adding_to_sets = true;
-/*
-		for (var set_id in meta.sets_map) {
-			if (0 == meta.sets_map[set_id].length) {
-				continue;
-			}
-			status.set(locale.getString('status.sets'));
-			not_adding_to_sets = false;
-			var index = meta.created_sets.indexOf(set_id);
-			if (-1 == index) {
-				wrap.photosets.addPhoto(users.token, set_id,
-					meta.sets_map[set_id][0]);
-			} else {
-				wrap.photosets.create(users.token, set_id,
-					meta.created_sets_desc[index],
-					meta.sets_map[set_id][0]);
-			}
-		}
-*/
-
-		// If we are adding photos to a set, the last one will call this,
-		// otherwise we have to here.  If it doesn't get called then
-		// limits and such will not be updated for the next upload.
-		if (not_adding_to_sets) {
-			upload.finalize();
-		}
-
+		upload.finalize();
 	},
 
 	// Finally give the user feedback on their upload
 	finalize: function() {
 		status.clear();
 
-/*
-		// Make sure the sets map is actually empty
-		for (var set_id in meta.sets_map) {
-			if (meta.sets_map[set_id].length) {
-				return;
-			}
+		// An upload must be done before it can be finalized
+		//   Uploads that are done might still have set calls outstanding
+		if (!upload.cancel && photos.ok != photos.uploading.length
+			|| upload.tickets_count || photos.sets_out) {
+			return;
 		}
-
-		// Normalize the list of created sets
-		var created_sets = [];
-//		var created_sets_desc = [];
-		var ii = meta.created_sets.length;
-		for (var i = 0; i < ii; ++i) {
-			if (null != meta.created_sets[i]) {
-				created_sets.push(meta.created_sets[i]);
-//				created_sets_desc.push(meta.created_sets_desc[i]);
-			}
-		}
-		meta.created_sets = created_sets;
-//		meta.created_sets_desc = created_sets_desc;
-*/
 
 		// If there is a batch queued up, start that batch, preserving the
 		// timestamps so that this looks like one big batch
@@ -561,7 +564,7 @@ photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
 			upload.stats.errors += photos.fail;
 			photos.ok = 0;
 			photos.fail = 0;
-			photos.sets = true;
+			photos.sets_fail = false;
 			photos.kb.sent = 0;
 			upload.stats.bytes += 1024 * photos.kb.total;
 			photos.kb.total = 0;
@@ -592,7 +595,7 @@ photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
 		// Decide which message to show
 		var go_to_flickr = false;
 		var try_again = false;
-		if (0 == photos.fail && 0 < photos.ok && photos.sets) {
+		if (0 == photos.fail && 0 < photos.ok && !photos.sets_fail) {
 			go_to_flickr = confirm(locale.getString('upload.success.text'),
 				locale.getString('upload.success.title'),
 				locale.getString('upload.success.ok'),
@@ -606,17 +609,13 @@ photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
 				locale.getString('upload.error.some.title'),
 				locale.getString('upload.error.some.ok'),
 				locale.getString('upload.error.some.cancel'));
-			if (c) {
-				try_again = true;
-			} else {
-				go_to_flickr = true;
-			}
-		} else if (0 == photos.fail && 0 < photos.ok && !photos.sets) {
+			if (c) { try_again = true; }
+			else { go_to_flickr = true; }
+		} else if (0 == photos.fail && 0 < photos.ok && photos.sets_fail) {
 			go_to_flickr = confirm([
 					locale.getString('upload.error.sets.text'),
-					locale.getString('upload.error.sets.more')
+					locale.getString('upload.error.sets.text.more')
 				],
-				locale.getString('upload.error.sets.more'),
 				locale.getString('upload.error.sets.title'),
 				locale.getString('upload.error.sets.ok'),
 				locale.getString('upload.error.sets.cancel'));
@@ -647,7 +646,7 @@ photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
 		photos.uploaded = [];
 		photos.ok = 0;
 		photos.fail = 0;
-		photos.sets = true;
+		photos.sets_fail = false;
 		photos.kb.sent = 0;
 		photos.kb.total = 0;
 		upload.progress_bar = null;
@@ -680,9 +679,7 @@ photos.uploading[id].sets.toSource() + ', meta.sets: ' + meta.sets.toSource() +
 		}
 
 		// Otherwise drop the recovered photos into the current batch
-		else {
-			photos.add(upload.try_again);
-		}
+		else { photos.add(upload.try_again); }
 		upload.try_again = [];
 
 	}
@@ -695,6 +692,11 @@ var Upload = function(params, id) {
 }
 Upload.prototype = {
 	run: function() {
+		if (conf.console.upload) {
+			Cc['@mozilla.org/consoleservice;1']
+				.getService(Ci.nsIConsoleService)
+				.logStringMessage('UPLOAD: ' + this.params.toSource());
+		}
 		var esc_params = api.escape_and_sign(this.params, true);
 
 		// Stream containing the entire HTTP POST payload
@@ -833,15 +835,18 @@ var UploadDoneCallback = function(raw, id) {
 }
 UploadDoneCallback.prototype = {
 	run: function() {
+		if (conf.console.upload) {
+			Cc['@mozilla.org/consoleservice;1']
+				.getService(Ci.nsIConsoleService)
+				.logStringMessage('UPLOAD DONE: ' + this.raw);
+		}
 
 		// Parse HTTP
 		var http = this.raw.split(/\r?\n/);
 		var rsp = false;
 		if (http && http[0] &&
 			http[0].match(/^HTTP\/1\.[01] 200 OK/)) {
-			while ('' != http[0]) {
-				http.shift();
-			}
+			while ('' != http[0]) { http.shift(); }
 			try {
 				var parser =
 					Cc['@mozilla.org/xmlextras/domparser;1']

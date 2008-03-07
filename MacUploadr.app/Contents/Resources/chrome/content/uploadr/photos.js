@@ -21,13 +21,14 @@ var photos = {
 
 	// Upload tracking
 	uploading: [],
-	current: 0,
 	uploaded: [],
 	add_to_set: [],
 	failed: [],
+	sets: {},
 	ok: 0,
 	fail: 0,
-	sets: true,
+	sets_fail: false,
+	sets_out: 0,
 	kb: {
 		sent: 0,
 		total: 0,
@@ -593,15 +594,16 @@ var photos = {
 			document.getElementById('no_meta_prompt')
 				.style.visibility = 'hidden';
 			meta.disable();
+			photos.sets[users.nsid] = meta.sets;
 		}
 
 		// Take the list of photos into upload mode and reset the UI
 		var ready = [];
 		for each (var p in list) {
 
-			// Keep the current auth token with each photo so to allow
+			// Keep the uploading user's NSID with each photo so to allow
 			// people to change accounts from one batch to the next
-			p.token = users.token;
+			p.nsid = users.nsid;
 
 			// If we have to queue this batch
 			if (from_user && upload.processing) {
@@ -782,5 +784,5 @@ var Photo = function(id, path) {
 	this.hidden = settings.hidden;
 	this.sets = [];
 	this.progress_bar = null;
-	this.token = null;
+	this.nsid = null;
 };

@@ -32,8 +32,8 @@ var settings = {
 	load: function() {
 
 		// For fresh users, go straight to the website
-		if (users.list[users.username].fresh) {
-			users.list[users.username].fresh = false;
+		if (users.list[users.nsid].fresh) {
+			users.list[users.nsid].fresh = false;
 			wrap.prefs.getPrivacy(users.token);
 			wrap.prefs.getContentType(users.token);
 			wrap.prefs.getHidden(users.token);
@@ -42,7 +42,7 @@ var settings = {
 
 		// For everyone else, start by trying to use locally stored prefs
 		else {
-			var u = users.list[users.username].settings;
+			var u = users.list[users.nsid].settings;
 			settings.is_public = u.is_public;
 			settings.is_friend = u.is_friend;
 			settings.is_family = u.is_family;
@@ -85,8 +85,8 @@ var settings = {
 	save: function() {
 
 		// Store settings locally
-		if (users.username) {
-			var u = users.list[users.username].settings;
+		if (users.nsid) {
+			var u = users.list[users.nsid].settings;
 			u.is_public = isNaN(settings.is_public) ? 1 : settings.is_public;
 			u.is_friend = isNaN(settings.is_friend) ? 1 : settings.is_friend;
 			u.is_family = isNaN(settings.is_family) ? 1 : settings.is_family;
@@ -102,11 +102,11 @@ var settings = {
 	show: function() {
 
 		// Open the settings dialog, passing a copy of the users list,
-		// the current username and the maximum file size string
+		// the current NSID and the maximum file size string
 		var u = eval(users.list.toSource());
 		var result = {};
 		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
-			'chrome,modal', users.username, u, locale.getFormattedString(
+			'chrome,modal', users.nsid, u, locale.getFormattedString(
 			'settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
 			[users.filesize >> 10]), result);
 
@@ -128,7 +128,7 @@ var settings = {
 			for each (var user in users.list) {
 				if (user.current) {
 					logged_out = false;
-					if (user.username != users.username) {
+					if (user.nsid != users.nsid) {
 						users.logout(false);
 						users.token = user.token;
 						users.login(false);
@@ -141,8 +141,8 @@ var settings = {
 			}
 
 			// Apply new settings
-			if (user && user.username) {
-				var s = users.list[user.username].settings;
+			if (user && user.nsid) {
+				var s = users.list[user.nsid].settings;
 				settings.is_public = s.is_public;
 				settings.is_friend = s.is_friend;
 				settings.is_family = s.is_family;
@@ -177,8 +177,8 @@ var settings = {
 			}
 
 			// If they've changed to a free account and have videos, warn them
-			if (user && 'boolean' == typeof users.list[user.username].is_pro &&
-				!users.list[user.username].is_pro) {
+			if (user && 'boolean' == typeof users.list[user.nsid].is_pro &&
+				!users.list[user.nsid].is_pro) {
 				var v_count = 0;
 				for each (var p in photos.list) {
 					if (null != p && photos.is_video(p.path)) {
@@ -193,7 +193,8 @@ var settings = {
 
 			// Get permission to overwrite any changes that were made
 			if (0 < photos.count &&
-				!confirm(locale.getFormattedString('settings.overwrite.text', [photos.count]),
+				!confirm(locale.getFormattedString('settings.overwrite.text',
+					[photos.count]),
 					locale.getString('settings.overwrite.title'),
 					locale.getString('settings.overwrite.ok'),
 					locale.getString('settings.overwrite.cancel'))) {

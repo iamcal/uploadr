@@ -58,7 +58,7 @@ var wrap = {
 				var url = api.start({
 					'perms': 'write',
 					'frob': users.frob,
-				}, 'http://' + SITE_HOST + '/services/auth/' +
+				}, null, 'http://' + SITE_HOST + '/services/auth/' +
 					(fresh ? 'fresh/' : ''), true);
 				document.getElementById('auth_url').value = url;
 				pages.go('auth');
@@ -254,82 +254,31 @@ var wrap = {
 	photosets: {
 
 		addPhoto: function(token, photoset_id, photo_id){
-			block_exit();
+			++photos.sets_out;
 			flickr.photosets.addPhoto(wrap.photosets._addPhoto,
 				token, photoset_id, photo_id);
 		},
-		_addPhoto: function(rsp, id) {
+		_addPhoto: function(rsp) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				photos.sets = false;
+				photos.sets_fail = true;
 			}
-			meta.sets_map[id].shift();
-			if (0 != meta.sets_map[id].length) {
-				wrap.photosets.addPhoto(id, meta.sets_map[id][0]);
-			} else {
-				upload.finalize();
-			}
-			unblock_exit();
+			--photos.sets_out;
+			upload.finalize();
 		},
 
+		// Unused, done using a closure in upload.js
+		/*
 		create: function(token, title, description, primary_photo_id) {
-			block_exit();
-			flickr.photosets.create(wrap.photosets._create,
-				token, title, description, primary_photo_id);
 		},
-		_create: function(rsp, id) {
-			meta.sets_map[id].shift();
-			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-				photos.sets = false;
-				meta.sets_map[id] = [];
-				upload.finalize();
-			} else {
-
-				// Update the map with this new set ID
-				var list = meta.sets_map[id];
-				var set_id = rsp.getElementsByTagName('photoset')[0]
-					.getAttribute('id');
-				meta.sets_map[set_id] = list;
-				delete meta.sets_map[id];
-
-				// Remove this from the list of sets to be created
-				var index = meta.created_sets.indexOf(id);
-				meta.created_sets[index] = null;
-				meta.created_sets_desc[index] = null;
-
-				// Update remaining photos in case we fail
-				var ii = photos.failed.length;
-				for (var i = 0; i < ii; ++i) {
-					var index = photos.failed[i].sets.indexOf(id);
-					if (-1 != index) {
-						photos.failed[i].sets[index] = set_id;
-					}
-				}
-				var ii = photos.uploading.length;
-				for (var i = 0; i < ii; ++i) {
-					if (null != photos.uploading[i]) {
-						var index = photos.uploading[i].sets.indexOf(id);
-						if (-1 != index) {
-							photos.uploading[i].sets[index] = set_id;
-						}
-					}
-				}
-
-				if (0 != meta.sets_map[set_id].length) {
-					wrap.photosets.addPhoto(set_id,
-						meta.sets_map[set_id][0]);
-				} else {
-					upload.finalize();
-				}
-			}
-			unblock_exit();
+		_create: function(rsp) {
 		},
+		*/
 
 		getList: function(token, nsid) {
 			flickr.photosets.getList(wrap.photosets._getList, token, nsid);
 		},
 		_getList: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {
-				meta.sets = [];
 				var sets = rsp.getElementsByTagName('photosets')[0]
 					.getElementsByTagName('photoset');
 				var ii = sets.length;
@@ -344,28 +293,52 @@ var wrap = {
 
 				// We really shouldn't break our own API spec
 				//   TODO: Offer a sort toggle
-				/*
+				//*
 				order.sort(function(a, b) {
 					return a.title.toLowerCase() > b.title.toLowerCase();
 				});
-				*/
+				//*/
 
-				for each (var s in meta.created_sets) {
-					meta.sets.push({
-						id: null,
-						title: s.title
-					});
-				}
+				// Start the map of old indexes to new ones with any
+				// created sets
+				var sets_map = {};
+				var new_sets = [];
+				var ii = meta.sets.length;
 				for (var i = 0; i < ii; ++i) {
-					meta.sets.push(order[i]);
+					if (null != meta.sets[i].id) { continue; }
+					sets_map[i] = new_sets.length;
+					new_sets.push(meta.sets[i]);
 				}
+
+				// Find each set in the API result in our old list
+				var jj = order.length;
+				for (var j = 0; j < jj; ++j) {
+					for (var i = 0; i < ii; ++i) {
+						if (order[j].id == meta.sets[i].id) {
+							sets_map[i] = new_sets.length;							
+							break;
+						}
+					}
+					new_sets.push(order[j]);
+				}
+
+				// Translate photos in the batch to this list
+				for each (var p in photos.list) {
+					for (var i in p.sets) {
+						p.sets[i] = sets_map[p.sets[i]];
+					}
+				}
+				meta.sets = new_sets;
+
+				// Update the lists of available sets
+				var ii = meta.sets.length;
 				var prefixes = ['single', 'batch'];
 				for each (var prefix in prefixes) {
 					var ul = document.getElementById(prefix + '_sets_add');
 					while (ul.hasChildNodes()) {
 						ul.removeChild(ul.firstChild);
 					}
-					if (0 == ii && 0 == meta.created_sets.length) {
+					if (0 == ii && 0 == meta.created_sets) {
 						var li = document.createElementNS(NS_HTML, 'li');
 						li.className = 'sets_none';
 						li.appendChild(document.createTextNode(
@@ -384,23 +357,20 @@ var wrap = {
 					}
 				}
 
-				// Update a single selected photo
-				if (1 == photos.selected.length) {
-					var ul = document.getElementById('single_sets_added');
-					var p = photos.list[photos.selected[0]];
-					var ii = p.sets.length;
-					if (0 != ii) {
-						while (ul.hasChildNodes()) {
-							ul.removeChild(ul.firstChild);
-						}
-						for (var i = 0; i < ii; ++i) {
-							var li = document.createElementNS(NS_HTML, 'li');
-							li.id = 'single_sets_' + p.sets[i];
-							li.className = 'sets_trash';
-							li.appendChild(document.createTextNode(
-								meta.sets[p.sets[i]].title));
-							ul.appendChild(li);
-						}
+				// Update selected photos
+				if (photos.selected.length) {
+					var prefix = 1 == photos.selected.length ?
+						'single' : 'batch';
+					var li = document.getElementById(prefix + '_sets_added')
+						.getElementsByTagName('li');
+					var ii = li.length;
+					for (var i = 0; i < ii; ++i) {
+						if ('sets_none' == li[i].className) { continue; }
+						var id = sets_map[parseInt(li[i].id.replace(
+							/^(single|batch)_sets_added_/, ''))];
+						li[i].id = prefix + '_sets_added_' + id;
+						document.getElementById(prefix + '_sets_add_' + id)
+							.className = 'sets_disabled';
 					}
 				}
 
@@ -460,7 +430,7 @@ var wrap = {
 		},
 
 		getSafetyLevel: function(token) {
-			flickr.prefs.getSafetyLevel(wrap.prefs.getSafetyLevel, token);
+			flickr.prefs.getSafetyLevel(wrap.prefs._getSafetyLevel, token);
 		},
 		_getSafetyLevel: function(rsp) {
 			if ('object' == typeof rsp && 'ok' == rsp.getAttribute('stat')) {

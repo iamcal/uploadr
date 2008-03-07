@@ -12,8 +12,7 @@ var meta = {
 
 	// Map of set IDs to names
 	sets: [],
-	created_sets: [],
-	sets_map: {},
+	created_sets: 0,
 
 	// Show a special status message for their first batch
 	first: true,
@@ -109,7 +108,7 @@ var meta = {
 				locale.getString('meta.sets.added.none')));
 			ul.appendChild(li);
 			document.getElementById('batch_sets_create').style.display =
-				meta.created_sets.length == users.sets ? 'none' : 'block';
+				meta.created_sets == users.sets ? 'none' : 'block';
 
 		}
 
@@ -195,7 +194,7 @@ var meta = {
 				}
 			}
 			document.getElementById('single_sets_create').style.display =
-				meta.created_sets.length == users.sets ? 'none' : 'block';
+				meta.created_sets == users.sets ? 'none' : 'block';
 
 		}
 
@@ -421,19 +420,14 @@ var meta = {
 				'dialog_set', 'chrome,modal', result);
 			var name = result.name;
 			var desc = result.desc;
-			if (!name) {
-				return;
-			}
-			meta.created_sets.push({
+			if (!name) { return; }
+			meta.sets.push({
 				title: name, // Sorry
 				description: desc,
 				busy: false,
 				add: []
 			});
-			meta.sets.push({
-				id: null,
-				title: name // Also sorry
-			});
+			++meta.created_sets;
 			var prefixes = ['single', 'batch'];
 			for each (var prefix in prefixes) {
 				var ul = document.getElementById(prefix + '_sets_add');
@@ -450,7 +444,7 @@ var meta = {
 			var prefix = 1 == photos.selected.length ? 'single' : 'batch';
 			meta.add_to_set({target:
 				document.getElementById(prefix + '_sets_add').firstChild});
-			if (meta.created_sets.length == users.sets) {
+			if (meta.created_sets == users.sets) {
 				document.getElementById(prefix + '_sets_create')
 					.style.visibility = 'hidden';
 			}
@@ -466,7 +460,8 @@ var meta = {
 		}
 		var li = e.target;
 		li.className = 'sets_disabled';
-		var set_index = li.id.replace(/^(single|batch)_sets_add_/, '');
+		var set_index = parseInt(li.id.replace(/^(single|batch)_sets_add_/,
+			''));
 		var title = li.firstChild.nodeValue;
 
 		// Add each selected photo to this set
@@ -499,7 +494,8 @@ var meta = {
 			return;
 		}
 		var li = e.target;
-		var set_index = li.id.replace(/^(single|batch)_sets_added_/, '');
+		var set_index = parseInt(li.id.replace(/^(single|batch)_sets_added_/,
+			''));
 		var name = li.firstChild.nodeValue;
 
 		// Remove each selected photo from this set

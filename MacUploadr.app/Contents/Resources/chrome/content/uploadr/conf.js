@@ -34,6 +34,7 @@ const conf = {
 	console: {
 		request: true,
 		response: true,
+		upload: true,
 		error: true,
 		timeout: true,
 		retry: true
@@ -51,10 +52,12 @@ const conf = {
 	// How often should the app auto-save metadata? (seconds)
 	auto_save: 60,
 
-	// Should we warn users when they're about to clobber data when leaving a batch?
+	// Should we warn users when they're about to clobber data when
+	// leaving a batch?
 	confirm_batch_save: false,
 
-	// Should we auto-select images as they're added? (at least until the user clicks)
+	// Should we auto-select images as they're added? (at least until
+	// the user clicks)
 	auto_select: false,
 
 	// Should we auto-select after rotating
@@ -74,6 +77,7 @@ const conf = {
 	//
 
 	// Should we use the new socket uploadr?
+	//   Using XHR for uploads (socket_uploadr: false) is deprecated
 	socket_uploadr: true,
 
 
@@ -91,7 +95,7 @@ const conf = {
 
 	// Upload mode
 	//   Must be 'sync' or 'async'
-	//   'sync' will not send the user to the after-upload page correctly
+	//   'sync' is very very deprecated
 	mode: 'async',
 
 	// Scrollbar width (pixels)

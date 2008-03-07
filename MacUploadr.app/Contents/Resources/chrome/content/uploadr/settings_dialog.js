@@ -10,13 +10,13 @@
 
 var settings = {
 
-	username: window.arguments[0],
+	nsid: window.arguments[0],
 	list: window.arguments[1],
 
 	load: function() {
 
 		// Show a login message for non-logged-in users
-		if (null == settings.username) {
+		if (null == settings.nsid) {
 			document.getElementById('dialog_settings').style.width = '300px';
 			document.getElementById('notloggedin').style.display = '-moz-box';
 			document.getElementById('loggedin').style.display = 'none';
@@ -33,10 +33,10 @@ var settings = {
 			var u = settings.list;
 			var i = 0;
 			for each (var user in u) {
-				dropdown.appendItem(user.username, user.username);
+				dropdown.appendItem(user.username, user.nsid);
 				if (user.current) {
 					dropdown.selectedIndex = i;
-					settings._load(user.username);
+					settings._load(user.nsid);
 				}
 				++i;
 			}
@@ -48,8 +48,8 @@ var settings = {
 	},
 
 	// Load a user's data
-	_load: function(username) {
-		var s = settings.list[username].settings;
+	_load: function(nsid) {
+		var s = settings.list[nsid].settings;
 		document.getElementById('is_public').value = s.is_public;
 		document.getElementById('is_friend').checked = 1 == s.is_friend;
 		document.getElementById('is_family').checked = 1 == s.is_family;
@@ -73,21 +73,21 @@ var settings = {
 			user.current = false;
 		}
 		var dropdown = document.getElementById('user');
-		settings.username = dropdown.value;
-		settings.list[settings.username].current = true;
-		settings._load(settings.username);
+		settings.nsid = dropdown.value;
+		settings.list[settings.nsid].current = true;
+		settings._load(settings.nsid);
 	},
 
 	// Remove a user from the list, which will be made permanent by pressing OK
 	remove_user: function() {
 		var dropdown = document.getElementById('user');
-		delete settings.list[settings.username];
+		delete settings.list[settings.nsid];
 		dropdown.removeItemAt(dropdown.selectedIndex);
 		dropdown.selectedIndex = 0;
-		settings.username = dropdown.value ? dropdown.value : null;
-		if (null != settings.username) {
-			settings.list[settings.username].current = true;
-			settings._load(settings.username);
+		settings.nsid = dropdown.value ? dropdown.value : null;
+		if (null != settings.nsid) {
+			settings.list[settings.nsid].current = true;
+			settings._load(settings.nsid);
 		}
 	},
 
@@ -99,7 +99,7 @@ var settings = {
 
 	// Copy form data back into storage whenever things are changed
 	is_public: function(value) {
-		settings.list[settings.username].settings.is_public = parseInt(value);
+		settings.list[settings.nsid].settings.is_public = parseInt(value);
 		if (1 == parseInt(value)) {
 			document.getElementById('is_friend').checked = false;
 			document.getElementById('is_family').checked = false;
@@ -111,22 +111,22 @@ var settings = {
 		}
 	},
 	is_friend: function(checked) {
-		settings.list[settings.username].settings.is_friend = checked ? 1 : 0;
+		settings.list[settings.nsid].settings.is_friend = checked ? 1 : 0;
 	},
 	is_family: function(checked) {
-		settings.list[settings.username].settings.is_family = checked ? 1 : 0;
+		settings.list[settings.nsid].settings.is_family = checked ? 1 : 0;
 	},
 	hidden: function(checked) {
-		settings.list[settings.username].settings.hidden = checked ? 2 : 1;
+		settings.list[settings.nsid].settings.hidden = checked ? 2 : 1;
 	},
 	safety_level: function(value) {
-		settings.list[settings.username].settings.safety_level = parseInt(value);
+		settings.list[settings.nsid].settings.safety_level = parseInt(value);
 	},
 	content_type: function(value) {
-		settings.list[settings.username].settings.content_type = parseInt(value);
+		settings.list[settings.nsid].settings.content_type = parseInt(value);
 	},
 	resize: function(value) {
-		settings.list[settings.username].settings.resize = parseInt(value);
+		settings.list[settings.nsid].settings.resize = parseInt(value);
 	}
 
 };
