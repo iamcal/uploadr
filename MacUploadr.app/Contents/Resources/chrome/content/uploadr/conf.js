@@ -91,7 +91,7 @@ const conf = {
 	thumb_size: 100,
 
 	// Maximum size of a video upload (kilobytes)
-	video_max: 100 << 10,
+	video_max: 400 << 10,
 
 	// Upload mode
 	//   Must be 'sync' or 'async'

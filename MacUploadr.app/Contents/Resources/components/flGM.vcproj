@@ -127,7 +127,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10\Magick++\lib&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10&quot;;&quot;..\..\..\..\..\exiv2-0.15\src&quot;;c:\msys\1.0\local\include\ffmpeg;c:\msys\1.0\local\include"
-				PreprocessorDefinitions="XP_WIN;XP_WIN32;NDEBUG;WIN32;_CONSOLE;_VISUALC_;NeedFunctionPrototypes;_MAGICKMOD_;_LIB;NEED_SOCKETS"
+				PreprocessorDefinitions="XP_WIN;XP_WIN32;NDEBUG;WIN32;_CONSOLE;_VISUALC_;NeedFunctionPrototypes;_MAGICKMOD_;_LIB;NEED_SOCKETS;XML_STATIC"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
@@ -150,7 +150,7 @@
 				AdditionalDependencies="CORE_RL_Magick++_.lib CORE_RL_bzlib_.lib CORE_RL_coders_.lib CORE_RL_filters_.lib CORE_RL_jbig_.lib CORE_RL_jp2_.lib CORE_RL_jpeg_.lib CORE_RL_lcms_.lib CORE_RL_libxml_.lib CORE_RL_magick_.lib CORE_RL_png_.lib CORE_RL_tiff_.lib CORE_RL_ttf_.lib CORE_RL_wand_.lib CORE_RL_wmf_.lib CORE_RL_xlib_.lib CORE_RL_zlib_.lib X11.lib Xext.lib Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib exiv2.lib libavutil.a libavcodec.a libavformat.a libgcc.a libmingwex.a"
 				OutputFile="$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.10\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;;&quot;..\..\..\..\..\exiv2-0.15\msvc\exiv2lib\Release&quot;;c:\msys\1.0\local\lib;c:\msys\1.0\mingw\lib\gcc\mingw32\3.4.5;C:\msys\1.0\mingw\lib"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.10\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;;&quot;..\..\..\..\..\exiv2-0.15\msvc\exiv2lib\Release&quot;;c:\msys\1.0\local\lib;C:\msys\1.0\mingw\lib;c:\msys\1.0\mingw\lib\gcc\mingw32\3.4.5"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

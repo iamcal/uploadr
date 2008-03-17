@@ -497,19 +497,27 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			orient = base_orient(exif, img);
 
 			// XMP and IPTC metadata
+#ifndef XP_WIN
 			Exiv2::XmpData & xmp = meta_r->xmpData();
+#endif
 			Exiv2::IptcData & iptc = meta_r->iptcData();
+#ifndef XP_WIN
 			extract<Exiv2::XmpData, Exiv2::XmpKey>(
 				xmp, "Xmp.dc.title", title, false)
-				|| extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				||
+#endif
+				extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.ObjectName", title, false)
 				|| extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.Headline", title, false);
+#ifndef XP_WIN
 			extract<Exiv2::XmpData, Exiv2::XmpKey>(
 				xmp, "Xmp.dc.description", description, false)
 				|| extract<Exiv2::XmpData, Exiv2::XmpKey>(
 				xmp, "Xmp.photoshop.Headline", description, false)
-				|| extract<Exiv2::IptcData, Exiv2::IptcKey>(
+				||
+#endif
+				extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.Caption", description, false)
 				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
 				exif, "Exif.Image.ImageDescription", description, false);
@@ -535,13 +543,16 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			tags += country;
 
 			// XMP and EXIF date taken
+#ifndef XP_WIN
 			extract<Exiv2::XmpData, Exiv2::XmpKey>(
 				xmp, "Xmp.exif.DateTimeOriginal", date_taken, false)
 				|| extract<Exiv2::XmpData, Exiv2::XmpKey>(
 				xmp, "Xmp.exif.DateTimeDigitized", date_taken, false)
 				|| extract<Exiv2::XmpData, Exiv2::XmpKey>(
 				xmp, "Xmp.iptc.DateTime", date_taken, false)
-				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(            // Previously
+				||
+#endif
+				extract<Exiv2::ExifData, Exiv2::ExifKey>(               // Previously
 				exif, "Exif.Photo.DateTimeOriginal", date_taken, false) // this was primary
 				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
 				exif, "Exif.Photo.DateTimeDigitized", date_taken, false)
@@ -565,15 +576,6 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		out1 << bw << "###" << bh << "###";
 
 		// Output date taken
-		/*
-		string date_taken = img.attribute("EXIF:DateTimeOriginal");
-		if (0 == date_taken.size()) {
-			date_taken = img.attribute("EXIF:DateTimeDigitized");
-		}
-		if (0 == date_taken.size()) {
-			date_taken = img.attribute("EXIF:DateTime");
-		}
-		*/
 		out1 << date_taken << "###";
 
 		// Thumbnail width and height
@@ -677,11 +679,17 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 		// Yank out all the metadata we want to save
 		Exiv2::ExifData exif;
 		Exiv2::IptcData iptc;
+#ifndef XP_WIN
+		Exiv2::XmpData xmp;
+#endif
 		try {
 			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
 			exif = meta_r->exifData();
 			iptc = meta_r->iptcData();
+#ifndef XP_WIN
+			xmp = meta_r->xmpData();
+#endif
 		} catch (Exiv2::Error &) {}
 
 		// Create a new path
@@ -704,6 +712,9 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 			Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*rotate_s);
 			meta_w->setExifData(exif);
 			meta_w->setIptcData(iptc);
+#ifndef XP_WIN
+			meta_w->setXmpData(xmp);
+#endif
 			meta_w->writeMetadata();
 		} catch (Exiv2::Error &) {}
 
@@ -736,11 +747,17 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		// Yank out all the metadata we want to save
 		Exiv2::ExifData exif;
 		Exiv2::IptcData iptc;
+#ifndef XP_WIN
+		Exiv2::XmpData xmp;
+#endif
 		try {
 			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
 			exif = meta_r->exifData();
 			iptc = meta_r->iptcData();
+#ifndef XP_WIN
+			xmp = meta_r->xmpData();
+#endif
 		} catch (Exiv2::Error &) {}
 
 		// Open the image
@@ -789,13 +806,8 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 		delete path_s; path_s = 0;
 		out << *resize_s;
 
-		// Find the sharpen sigma as the website does
-		//   Which is easy, because for these sizes it's just 0.95
-//		double sigma = 0.95;
-
 		// Resize the image
 		img.scale(dim);
-//		img.sharpen(1, sigma);
 		img.compressType(Magick::NoCompression);
 		img.write(*resize_s);
 
@@ -804,6 +816,9 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 			Exiv2::Image::AutoPtr meta_w = Exiv2::ImageFactory::open(*resize_s);
 			meta_w->setExifData(exif);
 			meta_w->setIptcData(iptc);
+#ifndef XP_WIN
+			meta_w->setXmpData(xmp);
+#endif
 			meta_w->writeMetadata();
 		} catch (Exiv2::Error &) {}
 		delete resize_s; resize_s = 0;
