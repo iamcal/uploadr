@@ -1,17 +1,12 @@
 <!--
-
 Flickr Uploadr
-
 Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
 free software; you can redistribute it and/or modify it under the terms of
 the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
-
 -->
-
 <!ENTITY title "Flickr Uploadr">
-
 <!ENTITY menu.upload "上載">
 <!ENTITY menu.upload.add "增加">
 <!ENTITY menu.upload.preferences "偏好">
@@ -21,40 +16,35 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.edit.copy "複製">
 <!ENTITY menu.edit.paste "貼上">
 <!ENTITY menu.edit.select_all "全選">
+<!ENTITY menu.tools "工具">
+<!ENTITY menu.tools.addons "附加內容">
+<!ENTITY menu.tools.console "控制台">
 <!ENTITY menu.help "Flickr 小幫手">
 <!ENTITY menu.help.about "關於 Flickr Uploadr">
 <!ENTITY menu.help.tips "提示和竅門">
 <!ENTITY menu.help.faq "常見問題">
 <!ENTITY menu.help.update "檢查更新…">
-<!ENTITY menu.help.console "控制台">
-
 <!ENTITY notloggedin "你正離線工作。">
 <!ENTITY login "登入">
 <!ENTITY switch "是否要切換使用者？">
-
 <!ENTITY auth.confirm "在授權 Flickr Uploadr 連接至 Flickr 網站上你的帳戶後，按一下大的「準備就緒！」按鈕。">
 <!ENTITY auth.confirm.oops "是否再授權一次？">
-
+<!ENTITY auth.alternate "如果你的瀏覽器沒有自動開啟，你可以訪問此 URL，然後返回，並按一下「準備就緒！」大按鈕。">
 <!ENTITY tools.add "+ 增加">
 <!ENTITY tools.remove "- 移除">
-
-<!ENTITY buttons.upload "上載相片">
+<!ENTITY buttons.upload "上載">
 <!ENTITY buttons.cancel "取消">
 <!ENTITY buttons.auth "準備就緒！">
 <!ENTITY buttons.ok "確定">
-
 <!ENTITY bandwidth.remaining "保留本月">
 <!ENTITY bandwidth.batch "此批次">
-
-<!ENTITY photostream.title "你的相片">
-
-<!ENTITY photos.sort.default "你的相片目前按拍攝日期排序。可透過拖放作業重新排序。">
-<!ENTITY photos.sort.revert "按拍攝日期重新排序相片">
-<!ENTITY photos.init "將相片拖曳至此處即可開始。">
-<!ENTITY photos.init.text.1 "或者，按一下 ">
-<!ENTITY photos.init.text.2 " 在你的電腦上尋找相片。">
+<!ENTITY photostream.title "你的所有相片">
+<!ENTITY photos.sort.default "你的項目目前按拍攝日期排序。可透過拖放作業重新排序。">
+<!ENTITY photos.sort.revert "按拍攝日期重新排序項目">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.note "請注意：">
 <!ENTITY photos.new "該批次正在上載，你可以開始新批次。">
-
 <!ENTITY settings "設定">
 <!ENTITY settings.notloggedin "你需要登入來調整你的偏好">
 <!ENTITY settings.users "授權：">
@@ -62,7 +52,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.users.remove "移除所選使用者">
 <!ENTITY settings.users.add "新增使用者">
 <!ENTITY settings.privacy "預設私隱：">
-<!ENTITY settings.privacy.who "誰可以看到你的相片？">
+<!ENTITY settings.privacy.who "誰可以看到你的項目？">
 <!ENTITY settings.privacy.private "僅你自己">
 <!ENTITY settings.privacy.friend "你的朋友">
 <!ENTITY settings.privacy.family "你的家人">
@@ -86,21 +76,18 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.resize.2048 "2048 圖素(最適合存檔)">
 <!ENTITY settings.note "注意：">
 <!ENTITY settings.note.text "你在 Uploadr 中的私隱、安全和內容類型設定與你的 flickr.com 設定是相互獨立的。">
-
 <!ENTITY meta.single.title "標題：">
 <!ENTITY meta.batch.title "取代標題：">
-<!ENTITY meta.batch.title.tooltip "在此處輸入標題將取代所選相片的標題。">
+<!ENTITY meta.batch.title.tooltip "在此處輸入標題將取代所選項目的標題。">
 <!ENTITY meta.single.description "描述：">
 <!ENTITY meta.batch.description "新增至現有描述：">
-<!ENTITY meta.batch.description.tooltip "輸入的描述將附加至所選相片的描述。">
+<!ENTITY meta.batch.description.tooltip "輸入描述會將該描述附加至所選項目的描述。">
 <!ENTITY meta.single.tags "標籤：">
 <!ENTITY meta.batch.tags "新增至現有標籤：">
 <!ENTITY meta.tags.tooltip "各標籤間使用空格隔開：cameraphone urban moblog。或者將兩個單字組合作為一個標籤，使用雙引號括起：&#34;daily commute&#34;。">
-<!ENTITY meta.single.who "誰可以查看此相片？">
-<!ENTITY meta.batch.who "誰可以看到這些相片？">
 <!ENTITY meta.content_type "內容類型︰">
 <!ENTITY meta.safety_level "安全水平：">
-<!ENTITY meta.first "已選擇所有相片">
+<!ENTITY meta.first "已選擇所有項目">
 <!ENTITY meta.single.sets.add "新增至相片集：">
 <!ENTITY meta.batch.sets.add "新增至更多相片集：">
 <!ENTITY meta.sets.add.none "沒有相片集">
@@ -109,25 +96,22 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY meta.batch.sets.added "會將其增加至：">
 <!ENTITY meta.sets.added.none "你尚未選擇任何相片集">
 <!ENTITY meta.hidden "請登入以查看你的相片集">
-
-<!ENTITY meta.no.prompt "選擇一張相片（或更多）以增加標題、標籤和描述，或者將你的相片增加至相片集。">
+<!ENTITY meta.no.prompt "選擇一個項目（或更多）以增加標題、標籤和描述，或者將你的項目新增至相片集">
 <!ENTITY meta.batch.prompt "現在，你可以使用一個新標題取代所有標題、新增至現有描述、新增更多標籤或新增至更多相片集。">
-
 <!ENTITY dialog.set.title "建立相片集">
 <!ENTITY dialog.set.name "給你的新相片集取一個名稱：">
 <!ENTITY dialog.set.description "以及描述（可選的）：">
-
 <!ENTITY dialog.about "關於 Flickr Uploadr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc. 版權所有，不得轉載。此程式為免費軟體；你可以在 GNU General Public License（GPL）條款下重新散佈和/或修改此程式（僅限第 2 版）。">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner 的版權歸 © 2007 Mozilla Foundation 所有。它根據 Mozilla Public License、GNU General Public License 或 GNU Lesser General Public License 使用。">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick 的版權歸 © 2007 GraphicsMagick Group 所有。它根據 MIT/X11 授權使用。">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 的版權歸 © 2004-2007 Andreas Hugge1 所有。它根據 GNU General Public License 使用。">
 <!ENTITY dialog.about.code "原始程式碼可以從 http://flickr.com/tools/uploadr/ 獲取。">
-
 <!ENTITY help "提示和竅門">
-<!ENTITY help.offline "^^拖放^^是你的好幫手。">
+<!ENTITY help.offline "你可以^^離線工作^^。">
 <!ENTITY help.offline.text.first "Uploadr 旨在讓你可以在離線狀態下執行大部分的相片管理和加標籤的工作。上載至 Flickr 的準備工作做好後，請登入你的帳戶，然後按很大的「上載相片」按鈕。">
-<!ENTITY help.offline.text.second "如果你愿意可以一直保持登入狀態。登入後，你可以管理相片組成相片集。">
+<!ENTITY help.offline.text.second "如果你愿意可以一直保持登入狀態。登入後，你可以管理項目組成相片集。">
 <!ENTITY help.drag "^^拖放^^是你的好幫手。">
-<!ENTITY help.drag.text "相片上載後，你可以將其按照你想要它們在相片頁面上顯示的順序拖曳以進行排列。如果需要的話，你還可以重新設定所做的任何排列方式，以使相片恢復為按拍攝日期排序。">
-<!ENTITY help.faq "如果你還有其他問題，請訪問我們的^^Uploadr 常見問題^^">
+<!ENTITY help.drag.text "項目上載後，你可以將其按照你想要它們在所有相片頁面上顯示的順序拖曳以進行排列。如果需要的話，你還可以重新設定所做的任何排列方式，以使項目恢復為按拍攝日期排序。">
+<!ENTITY help.faq "如果你還有其他問題，請訪問我們的 ^^Uploadr 常見問題^^">
+<!ENTITY photos.init.text.joined "或者，按一下「」在你的電腦上尋找檔案。">

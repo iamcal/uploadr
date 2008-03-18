@@ -1,17 +1,12 @@
 <!--
-
 Flickr Uploadr
-
 Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
 free software; you can redistribute it and/or modify it under the terms of
 the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
-
 -->
-
 <!ENTITY title "Flickr Uploadr">
-
 <!ENTITY menu.upload "Hochladen">
 <!ENTITY menu.upload.add "Hinzufügen">
 <!ENTITY menu.upload.preferences "Einstellungen">
@@ -21,40 +16,35 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.edit.copy "Kopieren">
 <!ENTITY menu.edit.paste "Einfügen">
 <!ENTITY menu.edit.select_all "Alle auswählen">
+<!ENTITY menu.tools "Extras">
+<!ENTITY menu.tools.addons "Zusätze">
+<!ENTITY menu.tools.console "Konsole">
 <!ENTITY menu.help "Hilfe">
 <!ENTITY menu.help.about "Infos zu Flickr Uploadr">
-<!ENTITY menu.help.tips "Tipps und Tricks">
+<!ENTITY menu.help.tips "Tipps & Tricks">
 <!ENTITY menu.help.faq "FAQ">
 <!ENTITY menu.help.update "Auf Updates prüfen...">
-<!ENTITY menu.help.console "Konsole">
-
 <!ENTITY notloggedin "Sie arbeiten derzeit offline.">
 <!ENTITY login "Anmelden">
 <!ENTITY switch "Benutzer wechseln?">
-
 <!ENTITY auth.confirm "Wenn Sie die Berechtigung Flickr Uploadr für die Verbindung zu Ihrem Account auf der Flickr Website erteilt haben, klicken Sie auf die Schaltfläche BEREIT!">
 <!ENTITY auth.confirm.oops "Berechtigung erneut erteilen?">
-
+<!ENTITY auth.alternate "Wenn Ihr Browser nicht automatisch geöffnet wird, können Sie zu dieser URL wechseln, anschließend zurückkehren und auf die große Schaltfläche BEREIT! klicken.">
 <!ENTITY tools.add "+ Hinzufügen">
 <!ENTITY tools.remove "- Entfernen">
-
-<!ENTITY buttons.upload "Fotos hochladen">
+<!ENTITY buttons.upload "Hochladen">
 <!ENTITY buttons.cancel "Abbrechen">
 <!ENTITY buttons.auth "Bereit!">
 <!ENTITY buttons.ok "OK">
-
 <!ENTITY bandwidth.remaining "Diesen Monat übrig">
 <!ENTITY bandwidth.batch "Diese Serie">
-
-<!ENTITY photostream.title "Meine Fotos">
-
-<!ENTITY photos.sort.default "Ihre Fotos sind derzeit nach Aufnahmedatum sortiert.  Zum Neuordnen mit der Maus ziehen und ablegen.">
-<!ENTITY photos.sort.revert "Fotos wieder nach Aufnahmedatum sortieren">
-<!ENTITY photos.init "Fotos hier ablegen, um loszulegen.">
-<!ENTITY photos.init.text.1 "Sie können auch auf ">
-<!ENTITY photos.init.text.2 " klicken, um Fotos auf Ihrem Computer zu suchen.">
+<!ENTITY photostream.title "Ihr Photostream">
+<!ENTITY photos.sort.default "Ihre Elemente sind derzeit nach Aufnahmedatum sortiert.  Zum Neuordnen mit der Maus ziehen und ablegen.">
+<!ENTITY photos.sort.revert "Elemente wieder nach Aufnahmedatum sortieren">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.note "Hinweis:">
 <!ENTITY photos.new "Während diese Serie hochgeladen wird, können Sie eine neue beginnen.">
-
 <!ENTITY settings "Einstellungen">
 <!ENTITY settings.notloggedin "Sie müssen sich anmelden, um Ihre Einstellungen anzupassen">
 <!ENTITY settings.users "Autorisierung:">
@@ -62,7 +52,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.users.remove "Ausgewählten Benutzer entfernen">
 <!ENTITY settings.users.add "Neuen Benutzer hinzufügen">
 <!ENTITY settings.privacy "Standarddatenschutz:">
-<!ENTITY settings.privacy.who "Wer kann Ihre Fotos anzeigen?">
+<!ENTITY settings.privacy.who "Wer darf Ihre Elemente sehen?">
 <!ENTITY settings.privacy.private "Nur Sie">
 <!ENTITY settings.privacy.friend "Ihre Freunde">
 <!ENTITY settings.privacy.family "Ihre Familie">
@@ -86,48 +76,42 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.resize.2048 "2048 Pixel (für die Archivierung)">
 <!ENTITY settings.note "Hinweis:">
 <!ENTITY settings.note.text "Ihre Einstellungen für Datenschutz, Sicherheit und Inhaltstyp in Uploadr sind getrennt von Ihren flickr.com-Einstellungen.">
-
 <!ENTITY meta.single.title "Titel:">
 <!ENTITY meta.batch.title "Titel ersetzen:">
-<!ENTITY meta.batch.title.tooltip "Die Titel der ausgewählten Fotos werden mit dem hier eingegebenen Titel überschrieben.">
+<!ENTITY meta.batch.title.tooltip "Die Titel der ausgewählten Elemente werden mit dem hier eingegebenen Titel überschrieben.">
 <!ENTITY meta.single.description "Beschreibung:">
 <!ENTITY meta.batch.description "Zu vorhandenen Beschreibungen hinzufügen:">
-<!ENTITY meta.batch.description.tooltip "Die hier eingegebene Beschreibung wird an die Beschreibungen der ausgewählten Fotos angehängt.">
+<!ENTITY meta.batch.description.tooltip "Die hier eingegebene Beschreibung wird an die Beschreibungen der ausgewählten Elemente angehängt.">
 <!ENTITY meta.single.tags "Tags:">
 <!ENTITY meta.batch.tags "Zu vorhandenen Tags hinzufügen:">
 <!ENTITY meta.tags.tooltip "Die einzelnen Tags durch Leerzeichen trennen: Fotohandy Stadt Moblog. Verwenden Sie Anführungszeichen, wenn ein Tag aus zwei Begriffen bestehen soll: &#34;täglicher Arbeitsweg&#34;.">
-<!ENTITY meta.single.who "Wer kann dieses Foto anzeigen?">
-<!ENTITY meta.batch.who "Wer kann diese Fotos anzeigen?">
 <!ENTITY meta.content_type "Inhaltstyp:">
 <!ENTITY meta.safety_level "Sicherheitsstufe:">
-<!ENTITY meta.first "Alle Fotos sind ausgewählt">
+<!ENTITY meta.first "Alle Elemente sind ausgewählt">
 <!ENTITY meta.single.sets.add "Zu Alben hinzufügen:">
 <!ENTITY meta.batch.sets.add "Zu weiteren Alben hinzufügen:">
 <!ENTITY meta.sets.add.none "Keine Serien">
-<!ENTITY meta.sets.create "Album erstellen...">
+<!ENTITY meta.sets.create "Serie erstellen...">
 <!ENTITY meta.single.sets.added "Dies wird hinzugefügt zu:">
 <!ENTITY meta.batch.sets.added "Diese werden hinzugefügt zu:">
-<!ENTITY meta.sets.added.none "Sie haben keine Alben ausgewählt">
+<!ENTITY meta.sets.added.none "Sie haben keine Serien ausgewählt">
 <!ENTITY meta.hidden "Melden Sie sich an, um Ihre Serien anzuzeigen">
-
-<!ENTITY meta.no.prompt "Wählen Sie ein oder mehrere Fotos aus, um Titel, Tags und Beschreibungen hinzuzufügen, oder gruppieren Sie Ihre Fotos in Alben.">
+<!ENTITY meta.no.prompt "Wählen Sie ein oder mehrere Elemente aus, um Titel, Tags und Beschreibungen hinzuzufügen, oder gruppieren Sie Ihre Elemente  in Alben.">
 <!ENTITY meta.batch.prompt "Sie können jetzt alle Titel durch einen neuen ersetzen, zu vorhandenen Beschreibungen hinzufügen, weitere Tags hinfügen oder zu weiteren Alben hinzufügen.">
-
 <!ENTITY dialog.set.title "Album erstellen">
-<!ENTITY dialog.set.name "Geben Sie Ihrem neuen Album einen Namen:">
+<!ENTITY dialog.set.name "Geben Sie Ihrer neuen Serie einen Namen:">
 <!ENTITY dialog.set.description "Und eine Beschreibung (optional):">
-
 <!ENTITY dialog.about "Infos zu Flickr Uploadr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc.  Alle Rechte vorbehalten.  Dieses Softwareprogramm ist kostenlos. Sie können es nur gemäß den Bedingungen der GNU General Public License (GPL) Version 2 weitergeben und/oder verändern.">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner unterliegt Copyright © 2007 Mozilla Foundation.  Es ist im Rahmen der Mozilla Public License, der GNU General Public License oder der GNU Lesser General Public License verfügbar.">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick unterliegt Copyright  © 2007 GraphicsMagick Group.  Es ist im Rahmen der MIT/X11-Lizenz verfügbar.">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 unterliegt Copyright © 2004-2007 Andreas Huggel.  Es ist im Rahmen der GNU General Public License verfügbar.">
 <!ENTITY dialog.about.code "Quellcode verfügbar unter http://flickr.com/tools/uploadr/.">
-
-<!ENTITY help "Tipps und Tricks">
-<!ENTITY help.offline "Sie können ^^offline arbeiten^^.">
-<!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie bereit zum Hochladen auf Flickr sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche &#34;Fotos hochladen&#34;.">
-<!ENTITY help.offline.text.second "Wenn Sie möchten, können Sie die ganze Zeit angemeldet bleiben.  Wenn Sie angemeldet sind, können Sie Ihre Fotos in Serien organisieren.">
-<!ENTITY help.drag "^^Mit der Maus ziehen und ablegen^^ ist einfach praktisch.">
-<!ENTITY help.drag.text "Sie können Fotos in die Reihenfolge ziehen, in der sie nach dem Hochladen auf Ihrer Fotoseite angezeigt werden sollen.  Sie können jede Sortierung auch wieder rückgängig machen, sodass die Fotos wieder nach Aufnahmedatum sortiert werden.">
-<!ENTITY help.faq "Wenn Sie weitere Fragen haben, besuchen Sie bitte unsere ^^Uploadr FAQ^^">
+<!ENTITY help "Tipps & Tricks">
+<!ENTITY help.offline "Sie können offline arbeiten.">
+<!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie bereit zum Hochladen auf Flickr sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche "Fotos hochladen".">
+<!ENTITY help.offline.text.second "Wenn Sie möchten, können Sie die ganze Zeit angemeldet bleiben.  Wenn Sie angemeldet sind, können Sie Ihre Elemente in Serien organisieren.">
+<!ENTITY help.drag "Mit der Maus ziehen und ablegen ist einfach praktisch.">
+<!ENTITY help.drag.text "Sie können die Elemente in die Reihenfolge ziehen, in der sie nach dem Hochladen auf Ihrer Photostream-Seite angezeigt werden sollen.  Sie können jede Sortierung auch wieder rückgängig machen, sodass die Elemente wieder nach Aufnahmedatum sortiert werden.">
+<!ENTITY help.faq "Wenn Sie weitere Fragen haben, besuchen Sie bitte unsere Uploadr FAQ.">
+<!ENTITY photos.init.text.joined "Sie können auch auf  klicken, um Dateien auf Ihrem Computer zu suchen.">

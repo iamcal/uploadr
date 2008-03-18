@@ -1,17 +1,12 @@
 <!--
-
 Flickr Uploadr
-
 Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
 free software; you can redistribute it and/or modify it under the terms of
 the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
-
 -->
-
 <!ENTITY title "Flickr Uploadr">
-
 <!ENTITY menu.upload "Carica">
 <!ENTITY menu.upload.add "Aggiungi">
 <!ENTITY menu.upload.preferences "Preferenze">
@@ -21,40 +16,35 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.edit.copy "Copia">
 <!ENTITY menu.edit.paste "Incolla">
 <!ENTITY menu.edit.select_all "Seleziona tutto">
+<!ENTITY menu.tools "Strumenti">
+<!ENTITY menu.tools.addons "Aggiunte">
+<!ENTITY menu.tools.console "Console">
 <!ENTITY menu.help "Aiuto">
 <!ENTITY menu.help.about "Informazioni sull'Uploadr di Flickr">
 <!ENTITY menu.help.tips "Trucchi e suggerimenti">
 <!ENTITY menu.help.faq "FAQ">
 <!ENTITY menu.help.update "Controlla aggiornamenti...">
-<!ENTITY menu.help.console "Console">
-
 <!ENTITY notloggedin "Stai lavorando offline.">
 <!ENTITY login "Entra">
 <!ENTITY switch "Cambiare utente?">
-
 <!ENTITY auth.confirm "Una volta concessa all'Uploadr di Flickr la tua autorizzazione per la connessione al tuo account sul sito Web di Flickr, fai clic sul grande pulsante PRONTO.">
 <!ENTITY auth.confirm.oops "Concedere di nuovo l'autorizzazione?">
-
+<!ENTITY auth.alternate "Se il browser non si apre automaticamente, puoi visitare questo URL, tornare indietro e fare clic sul grande pulsante PRONTO!.">
 <!ENTITY tools.add "+ Aggiungi">
 <!ENTITY tools.remove "- Rimuovi">
-
-<!ENTITY buttons.upload "Carica una foto">
+<!ENTITY buttons.upload "Carica">
 <!ENTITY buttons.cancel "Annulla">
 <!ENTITY buttons.auth "Pronto">
 <!ENTITY buttons.ok "OK">
-
 <!ENTITY bandwidth.remaining "Rimasto/i questo mese">
 <!ENTITY bandwidth.batch "Questo batch">
-
-<!ENTITY photostream.title "Le tue foto">
-
-<!ENTITY photos.sort.default "Le tue foto sono attualmente ordinate per data di scatto.  Trascinale per riordinarle.">
-<!ENTITY photos.sort.revert "Riordina foto per data di scatto">
-<!ENTITY photos.init "Trascina le foto qui per iniziare.">
-<!ENTITY photos.init.text.1 "Oppure fai clic su ">
-<!ENTITY photos.init.text.2 " per trovare foto sul tuo computer.">
+<!ENTITY photostream.title "Il tuo book fotografico">
+<!ENTITY photos.sort.default "I tuoi elementi sono attualmente ordinati per data di scatto.  Trascinali per riordinarli.">
+<!ENTITY photos.sort.revert "Riordina elementi per data di scatto">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.note "Nota:">
 <!ENTITY photos.new "Mentre il batch viene caricato, puoi iniziarne uno nuovo.">
-
 <!ENTITY settings "Impostazioni">
 <!ENTITY settings.notloggedin "Devi effettuare l'accesso per impostare le tue preferenze">
 <!ENTITY settings.users "Autorizzazione:">
@@ -62,7 +52,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.users.remove "Elimina utente selezionato">
 <!ENTITY settings.users.add "Aggiungi nuovo utente">
 <!ENTITY settings.privacy "Privacy predefinita:">
-<!ENTITY settings.privacy.who "Chi può vedere le tue foto?">
+<!ENTITY settings.privacy.who "Chi può vedere i tuoi elementi?">
 <!ENTITY settings.privacy.private "Solo tu">
 <!ENTITY settings.privacy.friend "I tuoi amici">
 <!ENTITY settings.privacy.family "La tua famiglia">
@@ -86,21 +76,18 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.resize.2048 "2048 pixel (archiviazione)">
 <!ENTITY settings.note "Attenzione:">
 <!ENTITY settings.note.text "Le tue impostazioni di privacy, sicurezza e tipo di contenuto nell'Uploadr sono distinte dalle tue impostazioni su flickr.com.">
-
 <!ENTITY meta.single.title "Titolo:">
 <!ENTITY meta.batch.title "Sostituisci titoli:">
-<!ENTITY meta.batch.title.tooltip "L’immissione di un nuovo titolo qui sovrascriverà i titoli esistenti delle foto selezionate.">
+<!ENTITY meta.batch.title.tooltip "L’immissione di un nuovo titolo qui sovrascriverà i titoli esistenti degli elementi selezionati.">
 <!ENTITY meta.single.description "Descrizione:">
 <!ENTITY meta.batch.description "Aggiungi a descrizioni esistenti:">
-<!ENTITY meta.batch.description.tooltip "La nuova descrizione aggiunta verrà inserita dopo le descrizioni esistenti delle foto selezionate.">
+<!ENTITY meta.batch.description.tooltip "La nuova descrizione aggiunta verrà inserita dopo le descrizioni esistenti degli elementi selezionati.">
 <!ENTITY meta.single.tags "Tag:">
 <!ENTITY meta.batch.tags "Aggiungi a tag esistenti:">
 <!ENTITY meta.tags.tooltip "Separa ogni tag con uno spazio: cameraphone urban moblog. O per unire 2 parole in un tag usa le virgolette doppie: &#34;daily commute&#34;.">
-<!ENTITY meta.single.who "Chi può vedere questa foto?">
-<!ENTITY meta.batch.who "Chi può vedere queste foto?">
 <!ENTITY meta.content_type "Tipo di contenuto:">
 <!ENTITY meta.safety_level "Livello di sicurezza:">
-<!ENTITY meta.first "Tutte le foto sono selezionate">
+<!ENTITY meta.first "Tutti gli elementi sono selezionati">
 <!ENTITY meta.single.sets.add "Aggiungi ai set:">
 <!ENTITY meta.batch.sets.add "Aggiungi ad altri set:">
 <!ENTITY meta.sets.add.none "Nessun set">
@@ -109,25 +96,22 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY meta.batch.sets.added "Verranno aggiunte a:">
 <!ENTITY meta.sets.added.none "Non hai selezionato alcun set">
 <!ENTITY meta.hidden "Accedi per vedere i tuoi set">
-
-<!ENTITY meta.no.prompt "Seleziona una (o più) foto per aggiungere titoli, tag e descrizioni oppure per aggiungere le foto a un set">
+<!ENTITY meta.no.prompt "Seleziona uno (o più) elementi per aggiungere titoli, tag e descrizioni oppure per aggiungere gli elementi a un set">
 <!ENTITY meta.batch.prompt "Ora puoi sostituire tutti i titoli con uno nuovo, aggiungere contenuti alle descrizioni esistenti, aggiungere tag o aggiungere contenuti ad altri set.">
-
 <!ENTITY dialog.set.title "Creazione di un set">
 <!ENTITY dialog.set.name "Assegna un nome al tuo nuovo set:">
 <!ENTITY dialog.set.description "Aggiungi una descrizione (opzionale):">
-
 <!ENTITY dialog.about "Informazioni sull'Uploadr di Flickr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc. Tutti i diritti riservati.  Questo è software libero; puoi ridistribuirlo e/o modificarlo in base ai termini della licenza GNU General Public License (GPL), solo versione 2.">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner è copyright © 2007 di Mozilla Foundation  ed è disponibile sotto licenza Mozilla Public License, GNU General Public License o GNU Lesser General Public License.">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick è copyright © 2007 di GraphicsMagick Group  ed è disponibile sotto licenza MIT/X11.">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 è copyright © 2004-2007 di Andreas Huggel  ed è disponibile sotto licenza GNU General Public License.">
 <!ENTITY dialog.about.code "Codice sorgente disponibile all’indirizzo http://flickr.com/tools/uploadr/.">
-
 <!ENTITY help "Trucchi e suggerimenti">
-<!ENTITY help.offline "Puoi ^^lavorare offline^^.">
+<!ENTITY help.offline "Puoi lavorare ^^offline^^.">
 <!ENTITY help.offline.text.first "L’Uploadr è studiato per consentirti di effettuare la maggior parte delle operazioni di organizzazione e di inserimento dei tag offline.  Quando sei pronto per il caricamento su Flickr, accedi al tuo account e fai clic su Inserisci una foto.">
-<!ENTITY help.offline.text.second "Puoi restare connesso in permanenza, se lo desideri.  Una volta effettuato l'accesso, puoi organizzare le tue foto in set.">
+<!ENTITY help.offline.text.second "Puoi restare connesso in permanenza, se lo desideri.  Una volta effettuato l'accesso, puoi organizzare i tuoi elementi in set.">
 <!ENTITY help.drag "Il ^^drag-and-drop^^ è tuo amico.">
-<!ENTITY help.drag.text "Puoi trascinare le foto nell’ordine in cui desideri che vengano visualizzate sulla pagina delle tue foto mentre le carichi.  All’occorrenza, puoi anche annullare qualsiasi impostazione applicata in modo che le foto tornino a essere ordinate per data di scatto.">
-<!ENTITY help.faq "Se hai altri dubbi, leggi le ^^FAQ su Uploadr^^.">
+<!ENTITY help.drag.text "Puoi trascinare gli elementi nell’ordine in cui desideri che vengano visualizzati sulla pagina del tuo book fotografico mentre li carichi.  All’occorrenza, puoi anche annullare qualsiasi impostazione applicata in modo che gli elementi tornino a essere ordinati per data di scatto.">
+<!ENTITY help.faq "Se hai altri dubbi, leggi le ^^FAQ su Uploadr^^">
+<!ENTITY photos.init.text.joined "Oppure fai clic su  per trovare file sul tuo computer.">

@@ -1,18 +1,13 @@
 <!--
-
 Flickr Uploadr
-
 Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
 free software; you can redistribute it and/or modify it under the terms of
 the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
-
 -->
-
 <!ENTITY title "Uploadr de Flickr">
-
-<!ENTITY menu.upload "Subir fotos">
+<!ENTITY menu.upload "Cargar">
 <!ENTITY menu.upload.add "Agregar">
 <!ENTITY menu.upload.preferences "Preferencias">
 <!ENTITY menu.upload.exit "Salir">
@@ -21,40 +16,35 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.edit.copy "Copiar">
 <!ENTITY menu.edit.paste "Pegar">
 <!ENTITY menu.edit.select_all "Seleccionar todas">
+<!ENTITY menu.tools "Herramientas">
+<!ENTITY menu.tools.addons "Complementos">
+<!ENTITY menu.tools.console "Consola">
 <!ENTITY menu.help "Ayuda">
 <!ENTITY menu.help.about "Acerca del Uploadr de Flickr">
 <!ENTITY menu.help.tips "Trucos y sugerencias">
 <!ENTITY menu.help.faq "Preguntas frecuentes">
 <!ENTITY menu.help.update "Busca actualizaciones...">
-<!ENTITY menu.help.console "Consola">
-
 <!ENTITY notloggedin "Estás trabajando sin conexión.">
 <!ENTITY login "Iniciar sesión">
 <!ENTITY switch "¿Deseas cambiar usuarios?">
-
 <!ENTITY auth.confirm "Cuando le hayas dado permiso al Uploadr de Flickr para conectarse a tu cuenta en el sitio Web de Flickr, haz clic en el gran botón ¡LISTO!">
 <!ENTITY auth.confirm.oops "¿Deseas dar permiso otra vez?">
-
+<!ENTITY auth.alternate "Si tu explorador no se abre automáticamente, puedes visitar esta dirección URL y luego regresar y hacer clic en el botón ¡LISTO! grande.">
 <!ENTITY tools.add "+ Agregar">
 <!ENTITY tools.remove "- Quitar">
-
-<!ENTITY buttons.upload "Subir fotos">
+<!ENTITY buttons.upload "Cargar">
 <!ENTITY buttons.cancel "Cancelar">
 <!ENTITY buttons.auth "¡Listo!">
 <!ENTITY buttons.ok "ACEPTAR">
-
 <!ENTITY bandwidth.remaining "Disponible este mes">
 <!ENTITY bandwidth.batch "Este lote">
-
-<!ENTITY photostream.title "Tus fotos">
-
-<!ENTITY photos.sort.default "En este momento, tus fotos están ordenadas por la fecha en que se tomaron.  Arrastra y coloca para reordenar.">
-<!ENTITY photos.sort.revert "Reordenar fotos por fecha en que se tomaron">
-<!ENTITY photos.init "Arrastra fotos aquí para comenzar.">
-<!ENTITY photos.init.text.1 "O bien, haz clic en ">
-<!ENTITY photos.init.text.2 " para buscar fotos en tu computadora.">
+<!ENTITY photostream.title "Tu fotosecuencia">
+<!ENTITY photos.sort.default "En este momento, tus elementos están ordenados por la fecha en que se tomaron.  Arrastra y coloca para reordenar.">
+<!ENTITY photos.sort.revert "Reordenar elementos por fecha en que se tomaron">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.note "Nota:">
 <!ENTITY photos.new "Mientras ese lote se carga, puedes comenzar uno nuevo.">
-
 <!ENTITY settings "Configuración">
 <!ENTITY settings.notloggedin "Debes iniciar sesión para ajustar tus preferencias">
 <!ENTITY settings.users "Autorización:">
@@ -62,7 +52,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.users.remove "Quitar usuario seleccionado">
 <!ENTITY settings.users.add "Añadir usuario nuevo">
 <!ENTITY settings.privacy "Privacidad predeterminada:">
-<!ENTITY settings.privacy.who "¿Quiénes pueden ver tus fotos?">
+<!ENTITY settings.privacy.who "¿Quiénes pueden ver tus elementos?">
 <!ENTITY settings.privacy.private "Sólo tú">
 <!ENTITY settings.privacy.friend "Tus amigos">
 <!ENTITY settings.privacy.family "Tus familiares">
@@ -86,48 +76,42 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.resize.2048 "2048 píxeles (óptimo para almacenamiento)">
 <!ENTITY settings.note "Atención:">
 <!ENTITY settings.note.text "Tu configuración de privacidad, seguridad y tipo de contenido en el Uploadr es independiente de tu configuración de flickr.com.">
-
 <!ENTITY meta.single.title "Título:">
 <!ENTITY meta.batch.title "Reemplazar títulos:">
-<!ENTITY meta.batch.title.tooltip "Si ingresas un título aquí, se sobrescribirán los títulos de las fotos seleccionadas.">
+<!ENTITY meta.batch.title.tooltip "Si ingresas un título aquí, se sobrescribirán los títulos de los elementos seleccionados.">
 <!ENTITY meta.single.description "Descripción:">
 <!ENTITY meta.batch.description "Agregar a descripciones existentes:">
-<!ENTITY meta.batch.description.tooltip "Si ingresas una descripción, ésta se anexará a las descripciones de las fotos seleccionadas.">
+<!ENTITY meta.batch.description.tooltip "Si ingresas una descripción, ésta se anexará a las descripciones de los elementos seleccionados.">
 <!ENTITY meta.single.tags "Etiquetas:">
 <!ENTITY meta.batch.tags "Agregar a etiquetas existentes:">
 <!ENTITY meta.tags.tooltip "Separa cada etiqueta con un espacio: moblog urbano teléfono. O bien, para unir 2 palabras en una sola etiqueta, utiliza comillas dobles: &#34;transporte diario&#34;.">
-<!ENTITY meta.single.who "¿Quiénes pueden ver esta foto?">
-<!ENTITY meta.batch.who "¿Quiénes pueden ver estas fotos?">
 <!ENTITY meta.content_type "Tipo de contenido:">
 <!ENTITY meta.safety_level "Nivel de seguridad:">
-<!ENTITY meta.first "Todas las fotos están seleccionadas">
-<!ENTITY meta.single.sets.add "Agregar al set:">
-<!ENTITY meta.batch.sets.add "Agregar a más sets:">
+<!ENTITY meta.first "Todos los elementos están seleccionados">
+<!ENTITY meta.single.sets.add "Agregar al álbum:">
+<!ENTITY meta.batch.sets.add "Agregar a más álbumes:">
 <!ENTITY meta.sets.add.none "Ningún álbum">
 <!ENTITY meta.sets.create "Crear un álbum...">
 <!ENTITY meta.single.sets.added "Se agregará a:">
 <!ENTITY meta.batch.sets.added "Se agregarán a:">
 <!ENTITY meta.sets.added.none "No has seleccionado ningún álbum">
 <!ENTITY meta.hidden "Inicia sesión para ver tus álbumes">
-
-<!ENTITY meta.no.prompt "Selecciona una foto (o varias) para agregar títulos, etiquetas y descripciones o agregar tus fotos a álbumes">
-<!ENTITY meta.batch.prompt "Ahora puedes reemplazar todos los títulos con uno nuevo, agregar a descripciones existentes, agregar más etiquetas o más sets.">
-
-<!ENTITY dialog.set.title "Crear un set">
+<!ENTITY meta.no.prompt "Selecciona un elemento (o varios) para agregar títulos, etiquetas y descripciones o agregar tus elementos a álbumes">
+<!ENTITY meta.batch.prompt "Ahora puedes reemplazar todos los títulos con uno nuevo, agregar a descripciones existentes, agregar más etiquetas o más álbumes.">
+<!ENTITY dialog.set.title "Crear un álbum">
 <!ENTITY dialog.set.name "Dale un nombre a tu álbum nuevo:">
 <!ENTITY dialog.set.description "Y una descripción (opcional):">
-
 <!ENTITY dialog.about "Acerca del Uploadr de Flickr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc. Todos los derechos reservados.  Este programa es un software gratuito, puedes redistribuirlo y/o modificarlo según los términos de la Licencia Pública General (GPL) de GNU, solamente versión 2.">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner es propiedad de © 2007 Mozilla Foundation.  Está disponible según la Licencia Pública de Mozilla, la Licencia Pública General de GNU, o la Licencia Pública General Menor de GNU.">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick es propiedad de © 2007 GraphicsMagick Group.  Está disponible según la Licencia MIT/X11.">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 es propiedad de © 2004-2007 Andreas Huggel. Está disponible según la Licencia Pública General de GNU">
 <!ENTITY dialog.about.code "Código fuente disponible en http://flickr.com/tools/uploadr/.">
-
 <!ENTITY help "Trucos y sugerencias">
 <!ENTITY help.offline "Puedes ^^trabajar sin conexión^^.">
 <!ENTITY help.offline.text.first "El Uploadr está diseñado para permitirte realizar gran parte de tus actividades de organización y etiquetado de fotos sin conexión.  Cuando estés listo para cargar a Flickr, inicia sesión en tu cuenta y presiona el enorme botón Cargar fotos.">
-<!ENTITY help.offline.text.second "Si lo deseas, puedes mantener la sesión abierta todo el tiempo.  Cuando hayas iniciado sesión, puedes organizar tus fotos en álbumes.">
+<!ENTITY help.offline.text.second "Si lo deseas, puedes mantener la sesión abierta todo el tiempo.  Cuando hayas iniciado sesión, puedes organizar tus elementos en álbumes.">
 <!ENTITY help.drag "^^Arrastrar y colocar^^ es tu amigo.">
-<!ENTITY help.drag.text "Puedes arrastrar fotos en el orden que desees que aparezcan en tu página de fotos cuando estén cargadas.  Si necesitas hacerlo, también puedes restablecer la organización de modo que las fotos vuelvan a estar ordenadas por la fecha en que se tomaron.">
+<!ENTITY help.drag.text "Puedes arrastrar elementos en el orden que desees que aparezcan en la página de tu fotosecuencia cuando estén cargados.  Si necesitas hacerlo, también puedes restablecer la organización de modo que los elementos vuelvan a estar ordenados por la fecha en que se tomaron.">
 <!ENTITY help.faq "Si tienes alguna duda más, visita nuestra ^^pregunta frecuente sobre Uploadr^^">
+<!ENTITY photos.init.text.joined "O bien, haz clic en  para buscar archivos en tu computadora.">
