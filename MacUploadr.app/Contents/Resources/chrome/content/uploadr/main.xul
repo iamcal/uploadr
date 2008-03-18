@@ -126,7 +126,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 						oncommand="menus.tools.console();" />
 					<menuseparator />
 					<menuitem label="&menu.upload.preferences;"
-						key="key_prefs" accesskey="P"
+						id="menu_preferences" key="key_prefs" accesskey="P"
 						oncommand="settings.show();" />
 				</menupopup>
 			</menu>

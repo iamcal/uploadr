@@ -156,20 +156,51 @@ Download Exiv2 source from:
 Windows
 -------
 
+Do all of the MSys/MinGW stuff to get up and running:
+  http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php
+
+Additionally add in dependencies like zlib this way:
+  http://wiki.videolan.org/Win32CompileMSYS
+
+Download Expat in MinGW from:
+  http://sourceforge.net/projects/expat/
+
+Build Expat like this:
+  $ ./configure --disable-shared --prefix=/mingw
+  $ make && make install
+
+Unpack the Exiv2 source and build it like normal:
+  $ ./configure --disable-shared
+  $ make && make install
+
+
+
+
+
+
 Just like GraphicsMagick, let Visual Studio 8 eat the 7.1 project files
 and then make the following changes:
-  o Change the Runtime Library for the exiv2lib project under
+  o Change the Runtime Library for the exiv2lib and xmpsdk projects under
     Configuration Properties > C/C++ > Code Generation to
     "Multi-threaded DLL (/MD)"
-  o Comment out a few conflicting blocks of code, starting at:
-      o localtime.c:196 - char * block
-      o localtime.c:965 - tzset function
-      o private.h:136
+  o Disable every project in the Exiv2 solution except exiv2lib and xmpsdk
+  o Add the path to Expat's source code to the include path of each
+    remaining project within Exiv2 (by default this is something like
+    "C:\Program Files\Expat 2.0.1\Source\lib")
+  o Set the exiv2lib project Configuration Properties > Librarian >
+    General > Link Library Dependencies to "Yes"
+  o Ignore the rest of the Exiv2 README
+
+
 
 Mac
 ---
 
-  $ ./configure --disable-shared
+In Unix-land, it's easy!
+  $ sudo port install libiconv
+  $ sudo port install expat
+  $ sudo port install xml2
+  $ ./configure --disable-shared --with-expat=/opt/local
   $ make && sudo make install
 
 Again because of static linker weirdness, after building Exiv2, run
@@ -185,11 +216,12 @@ FFmpeg
 
 Checkout FFmpeg like this:
   $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
+  $ cd ffmpeg
 
 Windows
 -------
 
-Do all of the msys/mingw stuff to get up and running.
+Do all of the MSys/MinGW stuff to get up and running.
   http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php
 
 Once that's all up and running, time to configure/make/install.
@@ -197,14 +229,12 @@ Once that's all up and running, time to configure/make/install.
     --enable-memalign-hack --enable-static --disable-shared
   $ make && make install
 
-The Visual Studio project is setup to expect the MinGW bits for linking
-FFmpeg into the flGM XPCOM object.
+The Uploadr Visual Studio project is setup to expect the MinGW bits for
+linking FFmpeg into the flGM XPCOM object.
 
 Mac
 ---
 
-  $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
-  $ cd ffmpeg
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
     --disable-vhook --disable-mmx --enable-static --disable-shared \
     --extra-cflags=-fno-common
