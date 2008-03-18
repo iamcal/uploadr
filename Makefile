@@ -38,7 +38,7 @@ endif
 PKG := ~/Desktop/build/$(INTL)
 
 # Version number for Uploadr
-VER := 3.1a3
+VER := 3.1a4
 
 # Location of Mozilla tree
 MOZILLA := ~/mozilla
@@ -137,6 +137,16 @@ build:
 	mkdir content
 	mkdir content/uploadr
 	cp $(SRC)/Resources/chrome/content/uploadr/*.* content/uploadr/
+	mkdir content/hacks
+	mkdir content/hacks/mac
+	cp $(SRC)/Resources/chrome/content/hacks/mac/*.xul content/hacks/mac/
+	cp $(SRC)/Resources/chrome/content/hacks/mac/*.js content/hacks/mac/
+	mkdir content/hacks/win
+	cp $(SRC)/Resources/chrome/content/hacks/win/*.xul content/hacks/win/
+	cp $(SRC)/Resources/chrome/content/hacks/win/*.js content/hacks/win/
+	mkdir content/hacks/unix
+	cp $(SRC)/Resources/chrome/content/hacks/unix/*.xul content/hacks/unix/
+	cp $(SRC)/Resources/chrome/content/hacks/unix/*.js content/hacks/unix/
 	mkdir locale
 	mkdir locale/branding
 	cp $(SRC)/Resources/chrome/locale/branding/*.* locale/branding/
