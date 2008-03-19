@@ -96,6 +96,10 @@ var users = {
 			// Check the command line
 			clh();
 
+			// Login is not *really* finished yet because API calls haven't
+			// returned but do extension stuff anyway
+			extension.after_login.exec(users.list[users.nsid]);
+
 		} else {
 			users.logout(false);
 		}

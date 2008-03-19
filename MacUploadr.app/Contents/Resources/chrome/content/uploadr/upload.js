@@ -463,7 +463,6 @@ Cc['@mozilla.org/consoleservice;1']
 
 			photos.uploading = [];
 			photos.uploaded = [];
-			photos.add_to_set = [];
 			photos.failed = [];
 			photos.ok = 0;
 			photos.fail = 0;
@@ -551,13 +550,15 @@ Cc['@mozilla.org/consoleservice;1']
 			return;
 		}
 
+		// An upload has completed so do extension stuff
+		extension.after_upload.exec(photos.uploaded, photos.failed);
+
 		// If there is a batch queued up, start that batch, preserving the
 		// timestamps so that this looks like one big batch
 		upload.processing = false;
 		if (photos.ready.length) {
 			buttons.upload.enable();
 			photos.uploading = [];
-			photos.add_to_set = [];
 			photos.failed = [];
 			photos.uploaded = [];
 			upload.stats.photos += photos.ok + photos.fail;
@@ -590,7 +591,6 @@ Cc['@mozilla.org/consoleservice;1']
 			1000 * (upload.timestamps.latest - upload.timestamps.earliest),
 			upload.stats.bytes + 1024 * photos.kb.total,
 			upload.stats.errors + photos.fail);
-			
 
 		// Decide which message to show
 		var go_to_flickr = false;
@@ -641,7 +641,6 @@ Cc['@mozilla.org/consoleservice;1']
 		// Really finally actually done, so reset
 		buttons.upload.enable();
 		photos.uploading = [];
-		photos.add_to_set = [];
 		photos.failed = [];
 		photos.uploaded = [];
 		photos.ok = 0;

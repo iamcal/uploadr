@@ -273,6 +273,7 @@ var photos = {
 		// Now add whatever's left
 		var ii = paths.length;
 		block_normalize();
+		var ext_list = [];
 		for (var i = 0; i < ii; ++i) {
 			var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
 
@@ -282,7 +283,7 @@ var photos = {
 					.getService(Ci.nsIFileProtocolHandler)
 					.getFileFromURLSpec(p).path;
 			}
-			photos._add(p);
+			ext_list.push(photos._add(p));
 
 			// Photos can be passed as an object which already has metadata
 			if ('object' == typeof paths[i]) {
@@ -292,9 +293,13 @@ var photos = {
 			}
 
 		}
-		photos.normalize();
+
+		// Do extension stuff after we've added all of the photos but
+		// before the list we've saved potentially becomes invalid
+		extension.after_add.exec(ext_list);
 
 		// Update the UI
+		photos.normalize();
 		if (photos.count + photos.errors) {
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(),
@@ -331,7 +336,8 @@ var photos = {
 
 		// Add the original image to the list and set our status
 		var id = photos.list.length;
-		photos.list.push(new Photo(id, path));
+		var p = new Photo(id, path);
+		photos.list.push(p);
 		++photos.count;
 		block_normalize();
 
@@ -353,6 +359,7 @@ var photos = {
 		threads.worker.dispatch(new Thumb(id, conf.thumb_size, path),
 			threads.worker.DISPATCH_NORMAL);
 
+		return p;
 	},
 
 	// Remove selected photos
@@ -602,6 +609,9 @@ var photos = {
 			meta.disable();
 			photos.sets[users.nsid] = meta.sets;
 		}
+
+		// We're really going to start or queue a batch, so do extension stuff
+		extension.before_upload.exec(list);
 
 		// Take the list of photos into upload mode and reset the UI
 		var ready = [];

@@ -46,6 +46,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/mouse.js" />
 	<script src="chrome://uploadr/content/keyboard.js" />
 	<script src="chrome://uploadr/content/buttons.js" />
+	<script src="chrome://uploadr/content/extension.js" />
 	<keyset id="key">
 		<key id="key_add" modifiers="accel" key="o"
 			oncommand="photos.add_dialog();" />
@@ -119,7 +120,7 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 				</menupopup>
 			</menu>
 			<menu label="&menu.tools;" accesskey="T">
-				<menupopup>
+				<menupopup id="menu_ToolsPopup">
 					<menuitem label="&menu.tools.addons;" accesskey="A"
 						oncommand="menus.tools.addons();" />
 					<menuitem label="&menu.tools.console;" accesskey="C"
