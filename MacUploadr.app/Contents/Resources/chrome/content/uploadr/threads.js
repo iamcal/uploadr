@@ -86,6 +86,11 @@ ThumbCallback.prototype = {
 	run: function() {
 		try {
 			unblock_normalize();
+			if (conf.console.thumb) {
+				Cc['@mozilla.org/consoleservice;1']
+					.getService(Ci.nsIConsoleService)
+					.logStringMessage('GM THUMB: ' + this.result);
+			}
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
