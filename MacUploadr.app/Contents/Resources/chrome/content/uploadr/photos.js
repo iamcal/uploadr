@@ -186,8 +186,8 @@ var photos = {
 					locale.getString('video.add.big.' + pl + '.title'),
 					locale.getFormattedString(
 						'video.add.big.' + pl + '.explain',
-						[null == users.videosize
-						? conf.videosize : users.videosize]
+						[(null == users.videosize
+						? conf.videosize : users.videosize) >> 10]
 					),
 					1 == v_count ? '' : big_videos.join(', '),
 					locale.getString('video.add.big.' + pl + '.ok'));
