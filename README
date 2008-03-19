@@ -156,6 +156,7 @@ Download Exiv2 source from:
 Windows
 -------
 
+/*
 Do all of the MSys/MinGW stuff to get up and running:
   http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php
 
@@ -172,23 +173,29 @@ Build Expat like this:
 Unpack the Exiv2 source and build it like normal:
   $ ./configure --disable-shared
   $ make && make install
-
-
-
-
-
+*/
 
 Just like GraphicsMagick, let Visual Studio 8 eat the 7.1 project files
 and then make the following changes:
-  o Change the Runtime Library for the exiv2lib and xmpsdk projects under
+  o Disable every project in the Exiv2 solution except exiv2lib and xmpsdk
+  o Change the Runtime Library for remaining projects under
     Configuration Properties > C/C++ > Code Generation to
     "Multi-threaded DLL (/MD)"
-  o Disable every project in the Exiv2 solution except exiv2lib and xmpsdk
-  o Add the path to Expat's source code to the include path of each
-    remaining project within Exiv2 (by default this is something like
-    "C:\Program Files\Expat 2.0.1\Source\lib")
-  o Set the exiv2lib project Configuration Properties > Librarian >
+  o Set remaining projects to their Release state
+      o But in the steps below, pull base values from Debug and  make
+        changes in All Configurations
+  o Add Expat to the xmpsdk project
+      o Change Configuration Properties > C/C++ > General >
+        Additional Include Directories to
+        "C:\Program Files\Expat 2.0.1\Source\lib" (or your equivalent),
+      o Change Configuration Properties > Librarian > General >
+        Additional Dependencies to "libexpat.lib"
+      o Change Configuration Properties > Librarian > General >
+        Additional Library Directories to "C:\Program Files\Expat 2.0.1\Bin"
+  o Set the exiv2lib project's Configuration Properties > Librarian >
     General > Link Library Dependencies to "Yes"
+  o Copy libexpat.dll from C:\Program Files\Expat 2.0.1\Bin to
+    UPLOADR\MacUploadr.app\Contents\Resources
   o Ignore the rest of the Exiv2 README
 
 

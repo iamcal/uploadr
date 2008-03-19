@@ -57,6 +57,7 @@ all:
 	make ko-kr build
 	make pt-br build
 	make zh-hk build
+ifeq (update, $(filter update, $(MAKECMDGOALS)))
 	make de-de mar
 	make en-US mar
 	make es-us mar
@@ -65,6 +66,7 @@ all:
 	make ko-kr mar
 	make pt-br mar
 	make zh-hk mar
+endif
 
 de-de:
 	@echo "Building German (de-de)"
@@ -140,13 +142,13 @@ build:
 	mkdir content/hacks
 	mkdir content/hacks/mac
 	cp $(SRC)/Resources/chrome/content/hacks/mac/*.xul content/hacks/mac/
-	cp $(SRC)/Resources/chrome/content/hacks/mac/*.js content/hacks/mac/
+#	cp $(SRC)/Resources/chrome/content/hacks/mac/*.js content/hacks/mac/
 	mkdir content/hacks/win
 	cp $(SRC)/Resources/chrome/content/hacks/win/*.xul content/hacks/win/
-	cp $(SRC)/Resources/chrome/content/hacks/win/*.js content/hacks/win/
+#	cp $(SRC)/Resources/chrome/content/hacks/win/*.js content/hacks/win/
 	mkdir content/hacks/unix
 	cp $(SRC)/Resources/chrome/content/hacks/unix/*.xul content/hacks/unix/
-	cp $(SRC)/Resources/chrome/content/hacks/unix/*.js content/hacks/unix/
+#	cp $(SRC)/Resources/chrome/content/hacks/unix/*.js content/hacks/unix/
 	mkdir locale
 	mkdir locale/branding
 	cp $(SRC)/Resources/chrome/locale/branding/*.* locale/branding/
