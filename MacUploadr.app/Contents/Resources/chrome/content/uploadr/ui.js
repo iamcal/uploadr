@@ -68,7 +68,8 @@ var ui = {
 			// Additional notes for pro users regarding videos
 			li = document.createElementNS(NS_HTML, 'li');
 			li.appendChild(document.createTextNode(locale.getFormattedString(
-				'photos.init.note.video_size', [conf.video_max >> 10])));
+				'photos.init.note.video_size', [(null == users.videosize
+				? conf.videosize : users.videosize) >> 10])));
 			notes.appendChild(li);
 			li = document.createElementNS(NS_HTML, 'li');
 			li.appendChild(document.createTextNode(locale.getString(

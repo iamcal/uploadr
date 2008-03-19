@@ -143,6 +143,11 @@ var wrap = {
 				}
 				users.filesize = parseInt(user.getElementsByTagName(
 					'filesize')[0].getAttribute('maxkb'));
+				var videosize = user.getElementsByTagName('videosize');
+				if (videosize.length) {
+					users.videosize = parseInt(videosize[0]
+						.getAttribute('maxkb'));
+				} else { users.videosize = conf.videosize; }
 				sets = user.getElementsByTagName('sets')[0]
 					.getAttribute('remaining');
 				if ('lots' == sets) {

@@ -20,6 +20,7 @@ var users = {
 	is_pro: null,
 	bandwidth: null,
 	filesize: null,
+	videosize: null,
 	sets: null,
 
 	// List of authorized users
@@ -52,6 +53,7 @@ var users = {
 					users.is_pro = u.is_pro;
 					users.bandwidth = u.bandwidth;
 					users.filesize = u.filesize;
+					users.videosize = u.videosize;
 					users.sets = u.sets;
 					break;
 				}
@@ -115,6 +117,7 @@ var users = {
 		users.is_pro = null;
 		users.bandwidth = null;
 		users.filesize = null;
+		users.videosize = null;
 		users.sets = null;
 
 		// Update the UI
@@ -147,12 +150,13 @@ var users = {
 			u.is_pro = users.is_pro;
 			u.bandwidth = users.bandwidth;
 			u.filesize = users.filesize;
+			u.videosize = users.videosize;
 			u.sets = users.sets;
 			u.current = true;
 		} else {
 			users.list[users.nsid] = new User(users.username, users.nsid,
 				users.token, users.is_pro, users.bandwidth, users.filesize,
-				users.sets);
+				users.videosize, users.sets);
 		}
 
 	},
@@ -187,13 +191,15 @@ var users = {
 };
 
 // A user encapsulated
-var User = function(username, nsid, token, is_pro, bw, filesize, sets) {
+var User = function(username, nsid, token, is_pro, bw, filesize, videosize,
+	sets) {
 	this.username = username;
 	this.nsid = nsid;
 	this.token = token;
 	this.is_pro = is_pro;
 	this.bandwidth = bw;
 	this.filesize = filesize;
+	this.videosize = videosize;
 	this.sets = sets;
 	this.current = true;
 	this.settings = {

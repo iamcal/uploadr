@@ -127,7 +127,8 @@ var photos = {
 			// Videos are allowed for now as long as they aren't too big
 			else if (photos.is_video(path)) {
 				++v_count;
-				if (file.size(path) > conf.video_max) {
+				if (file.size(path) > (null == users.videosize
+					? conf.videosize : users.videosize)) {
 					var filename = path.match(/([^\/\\]*)$/);
 					big_videos.push(null == filename ? path : filename[1]);
 				} else {
@@ -171,7 +172,7 @@ var photos = {
 			//     XXX.pp.XXX: singular video, plural photos
 			//     XXX.pp.XXX: plural videos, plural photos
 
-			// Warn if a video is larger than 100MB and remove offending
+			// Warn if a video is larger than ? MB and remove offending
 			// videos from the list
 			if (big_videos.length) {
 
@@ -183,7 +184,11 @@ var photos = {
 					'chrome://uploadr/content/video_big.xul',
 					'dialog_video_big', 'chrome,modal',
 					locale.getString('video.add.big.' + pl + '.title'),
-					locale.getString('video.add.big.' + pl + '.explain'),
+					locale.getFormattedString(
+						'video.add.big.' + pl + '.explain',
+						[null == users.videosize
+						? conf.videosize : users.videosize]
+					),
 					1 == v_count ? '' : big_videos.join(', '),
 					locale.getString('video.add.big.' + pl + '.ok'));
 				v_count -= big_videos.length;
@@ -480,7 +485,8 @@ var photos = {
 				}
 				if (photos.is_photo(p.path)) {
 					new_list.push(p);
-				} else if (!users.is_pro || conf.video_max < p.size) {
+				} else if (!users.is_pro || (null == users.videosize
+					? conf.videosize : users.videosize) < p.size) {
 					photos.batch_size -= p.size;
 				} else {
 					new_list.push(p);
