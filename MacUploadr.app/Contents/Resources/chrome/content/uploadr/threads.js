@@ -16,28 +16,30 @@ var threads = {
 	main: null,
 
 	// GraphicsMagick XPCOM object
-	gm: null
+	gm: null,
+	
+	// Create thread hooks and instantiate GraphicsMagick
+	init: function() {
+		try {
+
+			// Threads themselves
+			var t = Cc['@mozilla.org/thread-manager;1'].getService();
+			threads.worker = t.newThread(0);
+			threads.uploadr = t.newThread(0);
+			threads.main = t.mainThread;
+
+			// GraphicsMagick, for use on the worker thread
+			threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
+			threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
+				.getService(Ci.nsIProperties)
+				.get('resource:app', Ci.nsIFile).path);
+
+		} catch (err) {
+			Components.utils.reportError(err);
+		}
+	}
 
 };
-
-// Create thread hooks and instantiate GraphicsMagick
-try {
-
-	// Threads themselves
-	var t = Cc['@mozilla.org/thread-manager;1'].getService();
-	threads.worker = t.newThread(0);
-	threads.uploadr = t.newThread(0);
-	threads.main = t.mainThread;
-
-	// GraphicsMagick, for use on the worker thread
-	threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
-	threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
-		.getService(Ci.nsIProperties)
-		.get('resource:app', Ci.nsIFile).path);
-
-} catch (err) {
-	Components.utils.reportError(err);
-}
 
 // Thumbnail thread wrapper
 var Thumb = function(id, thumb_size, path, auto_select) {
