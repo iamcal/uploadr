@@ -830,9 +830,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	if (av_open_input_file(&format_ctx, path_s->c_str(), 0, 0, 0)) {
 		return NS_ERROR_NULL_POINTER;
 	}
-	if (0 > av_find_stream_info(format_ctx)) {
-		return NS_ERROR_NULL_POINTER;
-	}
+	if (0 > av_find_stream_info(format_ctx)) { return NS_ERROR_NULL_POINTER; }
 	int stream = -1;
 	for (int i = 0; i < format_ctx->nb_streams; ++i) {
 		if (CODEC_TYPE_VIDEO == format_ctx->streams[i]->codec->codec_type) {
@@ -844,14 +842,10 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	AVCodecContext * codec_ctx = format_ctx->streams[stream]->codec;
 	AVCodec * codec = avcodec_find_decoder(codec_ctx->codec_id);
 	if (!codec) { return NS_ERROR_NULL_POINTER; }
-	if(0 > avcodec_open(codec_ctx, codec)) {
-		return NS_ERROR_NULL_POINTER;
-	}
+	if (0 > avcodec_open(codec_ctx, codec)) { return NS_ERROR_NULL_POINTER; }
 	AVFrame * video_frame = avcodec_alloc_frame();
 	AVFrame * img_frame = avcodec_alloc_frame();
-	if (!video_frame || !img_frame) {
-		return NS_ERROR_NULL_POINTER;
-	}
+	if (!video_frame || !img_frame) { return NS_ERROR_NULL_POINTER; }
 	int bytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
 		codec_ctx->height);
 	uint8_t * buffer = (uint8_t *)av_malloc(bytes * sizeof(uint8_t));
@@ -861,12 +855,12 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 
 	// Correct the frame rate if FFmpeg reports something stupid-high
 	//   Nokia N95 and N82 report 30000fps
-	double fps = (double)codec_ctx->time_base.den;
+	double fps = (double)codec_ctx->time_base.den /
+		(double)codec_ctx->time_base.num;
 	if (30000.0 == fps) { fps /= 1000.0; }
 
 	// Play through 15% of the video
-	int64_t seek = (int64_t)(0.00015 * (double)format_ctx->duration *
-		(double)codec_ctx->time_base.num / fps);
+	int64_t seek = (int64_t)(0.00000015 * (double)format_ctx->duration * fps);
 	int i = 0;
 	AVPacket packet;
 	int have_frame;
@@ -886,9 +880,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 				int size = strlen(header) + 3 * codec_ctx->width *
 					codec_ctx->height;
 				char * bytes = (char *)malloc(size);
-				if (!bytes) {
-					return NS_ERROR_NULL_POINTER;
-				}
+				if (!bytes) { return NS_ERROR_NULL_POINTER; }
 				memcpy(bytes, header, strlen(header));
 				char * bytes_p = bytes + strlen(header);
 				int b = codec_ctx->width * 3;
@@ -904,7 +896,8 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 				try {
 					Magick::Image img(Magick::Blob(bytes, size));
 
-					// Output the size of the video and the embedded timestamp
+					// Output the size of the video and the embedded
+					// timestamp
 					int bw = img.baseColumns(), bh = img.baseRows();
 					ostringstream out;
 					out << "###" << bw << "###" << bh << "###"
