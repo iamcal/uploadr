@@ -16,30 +16,28 @@ var threads = {
 	main: null,
 
 	// GraphicsMagick XPCOM object
-	gm: null,
-
-	// Create thread hooks and instantiate GraphicsMagick
-	init: function() {
-		try {
-
-			// Threads themselves
-			var t = Cc['@mozilla.org/thread-manager;1'].getService();
-			threads.worker = t.newThread(0);
-			threads.uploadr = t.newThread(0);
-			threads.main = t.mainThread;
-
-			// GraphicsMagick, for use on the worker thread
-			threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
-			threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
-				.getService(Ci.nsIProperties)
-				.get('resource:app', Ci.nsIFile).path);
-
-		} catch (err) {
-			Components.utils.reportError(err);
-		}
-	}
+	gm: null
 
 };
+
+// Create thread hooks and instantiate GraphicsMagick
+try {
+
+	// Threads themselves
+	var t = Cc['@mozilla.org/thread-manager;1'].getService();
+	threads.worker = t.newThread(0);
+	threads.uploadr = t.newThread(0);
+	threads.main = t.mainThread;
+
+	// GraphicsMagick, for use on the worker thread
+	threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
+	threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
+		.getService(Ci.nsIProperties)
+		.get('resource:app', Ci.nsIFile).path);
+
+} catch (err) {
+	Components.utils.reportError(err);
+}
 
 // Thumbnail thread wrapper
 var Thumb = function(id, thumb_size, path, auto_select) {
@@ -50,8 +48,8 @@ var Thumb = function(id, thumb_size, path, auto_select) {
 };
 Thumb.prototype = {
 	run: function() {
+		var result = '';
 		try {
-			var result;
 
 			// Thumbnail your photos
 			if (photos.is_photo(this.path)) {
@@ -63,12 +61,17 @@ Thumb.prototype = {
 				result = threads.gm.keyframe(this.thumb_size, this.path);
 			}
 
-			threads.main.dispatch(new ThumbCallback(this.id, result, this.auto_select),
-				threads.main.DISPATCH_NORMAL);
+		}
 
-		} catch (err) {
+		// The nerdy error message
+		catch (err) {
 			Components.utils.reportError(err);
 		}
+
+		// Phone home to the UI
+		threads.main.dispatch(new ThumbCallback(this.id, result,
+			this.auto_select), threads.main.DISPATCH_NORMAL);
+
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
