@@ -32,7 +32,7 @@ const conf = {
 
 	// What types of API events should be written to the console?
 	console: {
-		thumb: true,
+		thumb: false,
 		request: false,
 		response: false,
 		upload: false,

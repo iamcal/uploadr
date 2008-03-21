@@ -466,6 +466,9 @@ var mouse = {
 					.style.display = 'block';
 				photos.sort = false;
 
+				// Let extensions know we reordered photos
+				extension.after_reorder.exec(true);
+
 			}
 			mouse.dragging = 0;
 			mouse.target = null;

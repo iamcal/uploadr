@@ -71,6 +71,9 @@ var upload = {
 
 		var photo = photos.uploading[id];
 
+		// Let extensions have their say
+		extension.before_one_upload.exec(photo);
+
 		// EXPERIMENTAL: Pass the photo to the socket uploadr
 		if (conf.socket_uploadr) {
 Cc['@mozilla.org/consoleservice;1']
@@ -244,7 +247,8 @@ Cc['@mozilla.org/consoleservice;1']
 				// timestamps here
 
 			}
-			photos.uploaded.push(photo_id);
+			photos.uploading[id].photo_id = photo_id;
+			photos.uploaded.push(photos.uploading[id]);
 
 			// Add to sets
 			for each (var i in photos.uploading[id].sets) {
@@ -311,6 +315,10 @@ Cc['@mozilla.org/consoleservice;1']
 				return;
 			}
 		}
+
+		// Let extensions have their say
+		extension.after_one_upload.exec(photos.uploading[id], 'ok' == stat);
+
 		photos.uploading[id] = null;
 
 		// For the last upload, we have some cleanup to do
@@ -347,6 +355,9 @@ Cc['@mozilla.org/consoleservice;1']
 		}
 		var a = available >> 10;
 		var kb = upload.progress_last - a;
+
+		// Tell extensions how many kilobytes went by
+		extension.on_upload_progress.exec(kb);
 
 		// Have we made any progress?
 		if (0 == kb) {

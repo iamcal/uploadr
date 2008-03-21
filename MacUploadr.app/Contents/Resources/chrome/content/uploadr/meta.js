@@ -198,6 +198,9 @@ var meta = {
 
 		}
 
+		// Send the selected photos list to extensions
+		extension.after_select.exec(photos.selected);
+
 	},
 
 	// Save photo metadata from the DOM into JS
@@ -266,6 +269,9 @@ var meta = {
 			p.hidden = parseInt(document.getElementById('single_hidden').value);
 			p.safety_level = parseInt(document.getElementById('single_safety_level').value);
 		}
+
+		// Send the selected photos list to extensions
+		extension.after_edit.exec(photos.selected);
 
 	},
 

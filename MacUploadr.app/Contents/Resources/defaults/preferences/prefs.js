@@ -14,7 +14,7 @@ pref('javascript.options.showInConsole', true);
 pref('javascript.options.strict', true);
 
 // Software updates
-pref('app.update.url', 'http://flickr.com/services/uploadr/updates/?product=%PRODUCT%&version=%VERSION%&build_id=%BUILD_ID%&build_target=%BUILD_TARGET%&locale=%LOCALE%&');
+pref('app.update.url', 'https://secure.flickr.com/services/uploadr/updates/?product=%PRODUCT%&version=%VERSION%&build_id=%BUILD_ID%&build_target=%BUILD_TARGET%&locale=%LOCALE%&');
 pref('app.update.url.manual', 'http://flickr.com/tools/uploadr/');
 pref('app.update.url.details', 'http://flickr.com/tools/uploadr/');
 

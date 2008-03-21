@@ -255,6 +255,10 @@ ThumbCallback.prototype = {
 		} catch (err) {
 			Components.utils.reportError(err);
 		}
+
+		// Tell extensions that we got a new thumbnail
+		extension.after_thumb.exec(this.id);
+
 		unblock_sort();
 		unblock_remove();
 	},
@@ -315,6 +319,10 @@ RotateCallback.prototype = {
 	run: function() {
 		unblock_normalize();
 		photos.list[this.id].path = this.path;
+
+		// Tell extensions that this photo was edited (rotated)
+		extension.after_edit.exec([this.id]);
+
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
@@ -401,6 +409,9 @@ SortCallback.prototype = {
 		// And finally allow them to upload
 		buttons.upload.enable();
 		meta.first = false;
+
+		// Tell extensions that photos were sorted
+		extension.after_reorder.exec(false);
 
 	},
 	QueryInterface: function(iid) {

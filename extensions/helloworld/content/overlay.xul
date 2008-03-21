@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://helloworld/skin/overlay.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://helloworld/locale/overlay.dtd">
+<!-- Above: Styles and strings for your extension -->
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	id="helloworld-overlay">
+
+	<!-- Some bit of script that makes your extension sing -->
+	<script src="overlay.js" />
+
+	<!-- Add an item to the Tools menu -->
+	<menupopup id="menu_ToolsPopup">
+		<menuitem id="helloworld-hello" label="&helloworld;"
+			oncommand="window.open('chrome://helloworld/content/hello.xul',
+			'', 'chrome');"/>
+	</menupopup>
+
+	<!-- Add a panel to the status bar -->
+	<statusbar id="status-bar">
+		<statusbarpanel label="&helloworld;" />
+	</statusbar>
+
+	<!--
+	The Tools menu and status bar are named just like they are in Firefox
+	to ease the transition from Firefox extension to Uploadr extension.
+	-->
+
+</overlay>

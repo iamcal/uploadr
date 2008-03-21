@@ -11,75 +11,49 @@
 // Centralized API for extensions to add event handlers
 var extension = {
 
-	after_login: {
-		list: [],
-		add: function(fn) {
-			return extension._add('after_login', fn);
-		},
-		remove: function(id) {
-			extension._remove('after_login', id);
-		},
-		exec: function(user) {
-			extension._exec('after_login', [user]);
-		}
+	// Dispatch a job to a background thread
+	//   The parameter must implement nsIRunnable
+	background: function(runnable) {
+		threads.worker.dispatch(runnable, threads.worker.DISPATCH_NORMAL);
 	},
 
-	after_add: {
-		list: [],
-		add: function(fn) {
-			return extension._add('after_add', fn);
-		},
-		remove: function(id) {
-			extension._remove('after_add', id);
-		},
-		exec: function(list) {
-			extension._exec('after_add', [list]);
-		}
+	// Event handlers
+	//   Please don't call these on your own.  Instead, check out the
+	//   helloworld extension on http://code.flickr.com/ and play along.
+	Handler: function() {
+		this.list = [];
+		this.add = function() { return extension._add.apply(this, arguments); };
+		this.remove = function() { extension._remove.apply(this, arguments); };
+		this.exec = function() { extension._exec.apply(this, arguments); };
 	},
-
-	before_upload: {
-		list: [],
-		add: function(fn) {
-			return extension._add('before_upload', fn);
-		},
-		remove: function(id) {
-			extension._remove('before_upload', id);
-		},
-		exec: function(list) {
-			extension._exec('before_upload', [list]);
-		}
-	},
-
-	after_upload: {
-		list: [],
-		add: function(fn) {
-			return extension._add('after_upload', fn);
-		},
-		remove: function(id) {
-			extension._remove('after_upload', id);
-		},
-		exec: function(ok, fail) {
-			extension._exec('after_upload', [ok, fail]);
-		}
-	},
-
-	// Don't call these on your own, use the nice hooks above
-	_add: function(e, fn) {
-		var id = extension[e].list.length;
-		extension[e].list.push(fn);
+	_add: function(fn) {
+		var id = this.list.length;
+		this.list.push(fn);
 		return id;
 	},
-	_remove: function(e, id) {
-		if (extension[e].list.length > id) {
-			extension[e].list[id] = null;
-		}
+	_remove: function(id) {
+		if (this.list.length > id) { this.list[id] = null; }
 	},
-	_exec: function(e, args) {
-		var ii = extension[e].list.length;
+	_exec: function() {
+		var ii = this.list.length;
 		for (var i = 0; i < ii; ++i) {
-			var fn = extension[e].list[i];
-			if ('function' == typeof fn) { fn.apply(null, args); }
+			var fn = this.list[i];
+			if ('function' == typeof fn) { fn.apply(null, arguments); }
 		}
 	}
 
 };
+
+// Create the event handlers
+extension.after_login = new extension.Handler();
+extension.after_add = new extension.Handler();
+extension.after_thumb = new extension.Handler();
+extension.before_remove = new extension.Handler();
+extension.after_select = new extension.Handler();
+extension.after_edit = new extension.Handler();
+extension.after_reorder = new extension.Handler();
+extension.before_upload = new extension.Handler();
+extension.before_one_upload = new extension.Handler();
+extension.after_one_upload = new extension.Handler();
+extension.on_upload_progress = new extension.Handler();
+extension.after_upload = new extension.Handler();

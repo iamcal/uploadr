@@ -372,6 +372,9 @@ var photos = {
 		var ii = photos.selected.length;
 		if (0 == ii) { return; }
 
+		// Tell extensions which photos we're removing
+		extension.before_remove.exec(photos.selected);
+
 		// Remove selected photos
 		for (var i = 0; i < ii; ++i) {
 			var id = photos.selected[i];
@@ -795,4 +798,5 @@ var Photo = function(id, path) {
 	this.sets = [];
 	this.progress_bar = null;
 	this.nsid = null;
+	this.photo_id = null;
 };
