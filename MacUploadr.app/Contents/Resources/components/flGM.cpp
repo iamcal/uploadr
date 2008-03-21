@@ -822,7 +822,7 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 
 NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) {
 	string * path_s = conv_path(path, false);
-	if (!path_s) { return NS_ERROR_INVALID_ARG; }
+	if (!path_s) { printf("a\n"); return NS_ERROR_INVALID_ARG; }
 
 	// Open the video file and decode it
 	av_register_all();
@@ -830,7 +830,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	if (av_open_input_file(&format_ctx, path_s->c_str(), 0, 0, 0)) {
 		return NS_ERROR_NULL_POINTER;
 	}
-	if (0 > av_find_stream_info(format_ctx)) { return NS_ERROR_NULL_POINTER; }
+	if (0 > av_find_stream_info(format_ctx)) { printf("b\n"); return NS_ERROR_NULL_POINTER; }
 	int stream = -1;
 	for (int i = 0; i < format_ctx->nb_streams; ++i) {
 		if (CODEC_TYPE_VIDEO == format_ctx->streams[i]->codec->codec_type) {
@@ -838,18 +838,18 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 			break;
 		}
 	}
-	if (-1 == stream) { return NS_ERROR_NULL_POINTER; }
+	if (-1 == stream) { printf("c\n"); return NS_ERROR_NULL_POINTER; }
 	AVCodecContext * codec_ctx = format_ctx->streams[stream]->codec;
 	AVCodec * codec = avcodec_find_decoder(codec_ctx->codec_id);
-	if (!codec) { return NS_ERROR_NULL_POINTER; }
-	if (0 > avcodec_open(codec_ctx, codec)) { return NS_ERROR_NULL_POINTER; }
+	if (!codec) { printf("d\n"); return NS_ERROR_NULL_POINTER; }
+	if (0 > avcodec_open(codec_ctx, codec)) { printf("e\n"); return NS_ERROR_NULL_POINTER; }
 	AVFrame * video_frame = avcodec_alloc_frame();
 	AVFrame * img_frame = avcodec_alloc_frame();
-	if (!video_frame || !img_frame) { return NS_ERROR_NULL_POINTER; }
+	if (!video_frame || !img_frame) { printf("f\n"); return NS_ERROR_NULL_POINTER; }
 	int bytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
 		codec_ctx->height);
 	uint8_t * buffer = (uint8_t *)av_malloc(bytes * sizeof(uint8_t));
-	if (!buffer) { return NS_ERROR_NULL_POINTER; }
+	if (!buffer) { printf("g\n"); return NS_ERROR_NULL_POINTER; }
 	avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
 		codec_ctx->width, codec_ctx->height);
 
@@ -861,6 +861,19 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 
 	// Play through 15% of the video
 	int64_t seek = (int64_t)(0.00000015 * (double)format_ctx->duration * fps);
+
+
+
+printf("time_base.den: %f, time_base.num: %f, fps: %f, duration: %f, seek: %d\n",
+(double)codec_ctx->time_base.den, (double)codec_ctx->time_base.num, fps,
+(double)format_ctx->duration, seek);
+printf("frame count: %f\n", 0.000001 * (double)format_ctx->duration * fps);
+printf("frame: %d\n", (int64_t)(0.00000015 * (double)format_ctx->duration * fps));
+//seek /= 2;
+
+
+
+
 	int i = 0;
 	AVPacket packet;
 	int have_frame;
@@ -869,6 +882,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 			avcodec_decode_video(codec_ctx, video_frame, &have_frame,
 				 packet.data, packet.size);
 			if (have_frame && seek == ++i) {
+printf("%d\n", i);
 				img_convert((AVPicture *)img_frame, PIX_FMT_RGB24,
 					(AVPicture*)video_frame, codec_ctx->pix_fmt,
 					codec_ctx->width, codec_ctx->height);
@@ -880,7 +894,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 				int size = strlen(header) + 3 * codec_ctx->width *
 					codec_ctx->height;
 				char * bytes = (char *)malloc(size);
-				if (!bytes) { return NS_ERROR_NULL_POINTER; }
+				if (!bytes) { printf("h\n"); return NS_ERROR_NULL_POINTER; }
 				memcpy(bytes, header, strlen(header));
 				char * bytes_p = bytes + strlen(header);
 				int b = codec_ctx->width * 3;
@@ -923,7 +937,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 					img.compressType(Magick::NoCompression);
 					path_s->append(".jpg");
 					thumb_s = find_path(path_s, "-thumb");
-					if (!thumb_s) { return NS_ERROR_NULL_POINTER; }
+					if (!thumb_s) { printf("i\n"); return NS_ERROR_NULL_POINTER; }
 					delete path_s; path_s = 0;
 					img.write(*thumb_s);
 
