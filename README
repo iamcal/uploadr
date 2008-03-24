@@ -156,25 +156,6 @@ Download Exiv2 source from:
 Windows
 -------
 
-/*
-Do all of the MSys/MinGW stuff to get up and running:
-  http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php
-
-Additionally add in dependencies like zlib this way:
-  http://wiki.videolan.org/Win32CompileMSYS
-
-Download Expat in MinGW from:
-  http://sourceforge.net/projects/expat/
-
-Build Expat like this:
-  $ ./configure --disable-shared --prefix=/mingw
-  $ make && make install
-
-Unpack the Exiv2 source and build it like normal:
-  $ ./configure --disable-shared
-  $ make && make install
-*/
-
 Just like GraphicsMagick, let Visual Studio 8 eat the 7.1 project files
 and then make the following changes:
   o Disable every project in the Exiv2 solution except exiv2lib and xmpsdk
@@ -231,9 +212,13 @@ Windows
 Do all of the MSys/MinGW stuff to get up and running.
   http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php
 
+Additionally add in dependencies like zlib this way:
+  http://wiki.videolan.org/Win32CompileMSYS
+
 Once that's all up and running, time to configure/make/install.
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --enable-memalign-hack --enable-static --disable-shared
+    --enable-memalign-hack --enable-static --disable-shared \
+    --disable-debug
   $ make && make install
 
 The Uploadr Visual Studio project is setup to expect the MinGW bits for
@@ -244,7 +229,7 @@ Mac
 
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
     --disable-vhook --disable-mmx --enable-static --disable-shared \
-    --extra-cflags=-fno-common
+    --extra-cflags=-fno-common --disable-debug
   $ make && sudo make install
 
 
