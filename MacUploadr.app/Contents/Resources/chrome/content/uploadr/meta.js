@@ -659,7 +659,7 @@ var meta = {
 							var li = document.getElementById('photo' + id);
 							li.parentNode.removeChild(li);
 							photos.batch_size -= photos.list[id].size;
-							if (users.username && !users.is_pro &&
+							if (users.nsid && !users.is_pro &&
 								users.bandwidth &&
 								0 < users.bandwidth.remaining -
 								photos.batch_size) {

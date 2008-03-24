@@ -26,9 +26,6 @@ var users = {
 	// List of authorized users
 	list: {},
 
-	// A one-time custom callback after login
-	after_login: null,
-
 	// Shortcut for the auth sequence
 	login: function(fresh) {
 		buttons.login.disable();
@@ -76,7 +73,7 @@ var users = {
 
 	},
 	_login: function() {
-		if (users.username) {
+		if (users.nsid) {
 			users.update();
 			settings.load();
 
@@ -102,10 +99,6 @@ var users = {
 
 		} else {
 			users.logout(false);
-		}
-		if ('function' == typeof users.after_login) {
-			users.after_login();
-			users.after_login = null;
 		}
 	},
 
@@ -180,7 +173,7 @@ var users = {
 
 		// Force the bandwidth meter and command line handler if there's
 		// no one logged in
-		if (!users.username) {
+		if (!users.nsid) {
 			ui.users_updated();
 			clh();
 		}

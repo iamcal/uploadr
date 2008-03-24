@@ -90,7 +90,7 @@ var ui = {
 
 		// No extra notes for offline users since we have no idea what
 		// to show them
-		if (users.username) {
+		if (users.nsid) {
 			document.getElementById('photos_init_note').style.display =
 				'-moz-box';
 		}

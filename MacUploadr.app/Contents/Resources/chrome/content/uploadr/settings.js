@@ -110,9 +110,8 @@ var settings = {
 			'settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
 			[users.filesize >> 10]), result);
 
-		// If we're adding a new user, auth and re-open the dialog
+		// If we're adding a new user, auth// and re-open the dialog
 		if (result.add_user) {
-			users.after_login = settings.show;
 			users.logout(true);
 			users.login(true);
 		}
@@ -279,7 +278,7 @@ var settings = {
 								var li = document.getElementById('photo' + i);
 								li.parentNode.removeChild(li);
 								photos.batch_size -= photos.list[i].size;
-								if (users.username && !users.is_pro &&
+								if (users.nsid && !users.is_pro &&
 									0 < users.bandwidth.remaining - photos.batch_size) {
 									status.clear();
 								}

@@ -383,7 +383,7 @@ var photos = {
 
 			// Free the size of this file
 			photos.batch_size -= photos.list[id].size;
-			if (users.username && !users.is_pro && users.bandwidth &&
+			if (users.nsid && !users.is_pro && users.bandwidth &&
 				0 < users.bandwidth.remaining - photos.batch_size) {
 				status.clear();
 			}

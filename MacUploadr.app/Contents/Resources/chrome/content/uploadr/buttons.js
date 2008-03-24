@@ -15,7 +15,7 @@ var buttons = {
 			if ('small button' != document.getElementById('login').className) {
 				return;
 			}
-			if (users.username) {
+			if (users.nsid) {
 				settings.show();
 			} else {
 				users.login();
@@ -47,7 +47,7 @@ var buttons = {
 
 	upload: {
 		enable: function() {
-			if (users.username && 'boolean' == typeof users.is_pro &&
+			if (users.nsid && 'boolean' == typeof users.is_pro &&
 				0 < photos.count) {
 				document.getElementById('button_upload').className = 'button';
 				document.getElementById('menu_upload').disabled = false;
