@@ -147,7 +147,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:libcmt.lib"
-				AdditionalDependencies="CORE_RL_Magick++_.lib CORE_RL_bzlib_.lib CORE_RL_coders_.lib CORE_RL_filters_.lib CORE_RL_jbig_.lib CORE_RL_jp2_.lib CORE_RL_jpeg_.lib CORE_RL_lcms_.lib CORE_RL_libxml_.lib CORE_RL_magick_.lib CORE_RL_png_.lib CORE_RL_tiff_.lib CORE_RL_ttf_.lib CORE_RL_wand_.lib CORE_RL_wmf_.lib CORE_RL_xlib_.lib CORE_RL_zlib_.lib X11.lib Xext.lib Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib exiv2.lib libavutil.a libavcodec.a libavformat.a libgcc.a libmingwex.a"
+				AdditionalDependencies="CORE_RL_Magick++_.lib CORE_RL_bzlib_.lib CORE_RL_coders_.lib CORE_RL_filters_.lib CORE_RL_jbig_.lib CORE_RL_jp2_.lib CORE_RL_jpeg_.lib CORE_RL_lcms_.lib CORE_RL_libxml_.lib CORE_RL_magick_.lib CORE_RL_png_.lib CORE_RL_tiff_.lib CORE_RL_ttf_.lib CORE_RL_wand_.lib CORE_RL_wmf_.lib CORE_RL_xlib_.lib CORE_RL_zlib_.lib X11.lib Xext.lib Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib exiv2.lib libavutil.a libavcodec.a libavformat.a libz.a libgcc.a libmingwex.a"
 				OutputFile="$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.10\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;;&quot;..\..\..\..\..\exiv2-0.16\msvc\exiv2lib\Release&quot;;c:\msys\1.0\local\lib;C:\msys\1.0\mingw\lib;c:\msys\1.0\mingw\lib\gcc\mingw32\3.4.5"
