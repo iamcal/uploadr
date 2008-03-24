@@ -189,7 +189,10 @@ Cc['@mozilla.org/consoleservice;1']
 		else if (null != photos.uploading[id]) {
 			photos.uploading[id].progress_bar.done(true);
 			upload.tickets[rsp.getElementsByTagName('ticketid')[0]
-				.firstChild.nodeValue] = id;
+				.firstChild.nodeValue] = {
+					'id': id,
+					'token': users.list[photos.uploading[id].nsid].token
+				};
 			++upload.tickets_count;
 			if (null != upload.tickets_handle) {
 				window.clearTimeout(upload.tickets_handle);
@@ -408,14 +411,19 @@ Cc['@mozilla.org/consoleservice;1']
 	},
 
 	// Check tickets exponentially
+	//   Couldn't two tokens collide here?  Wouldn't it continue to work
+	//   just fine if they did?
 	check_tickets: function() {
-		var tickets = [];
+		var tickets = {};
 		for (var t in upload.tickets) {
-			tickets.push(t);
+			if ('undefined' == typeof tickets[upload.tickets[t].token]) {
+				tickets[upload.tickets[t].token] = [t];
+			} else {
+				tickets[upload.tickets[t].token].push(t);
+			}
 		}
-		if (0 != tickets.length) {
-			// TODO: Use proper token here
-			wrap.photos.upload.checkTickets(users.token, tickets);
+		for (var token in tickets) {
+			wrap.photos.upload.checkTickets(token, tickets[token]);
 		}
 	},
 	_check_tickets: function() {

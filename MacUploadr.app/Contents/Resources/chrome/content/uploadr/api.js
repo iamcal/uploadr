@@ -189,7 +189,7 @@ var wrap = {
 							// Error'd photo
 							if (2 == complete) {
 								--upload.tickets_count;
-								upload._sync(false, upload.tickets[ticket_id]);
+								upload._sync(false, upload.tickets[ticket_id].id);
 								delete upload.tickets[ticket_id];
 							}
 
@@ -211,7 +211,7 @@ var wrap = {
 
 								upload._sync(parseInt(tickets[i]
 									.getAttribute('photoid')),
-									upload.tickets[ticket_id]);
+									upload.tickets[ticket_id].id);
 								delete upload.tickets[ticket_id];
 							}
 
