@@ -191,9 +191,11 @@ ThumbCallback.prototype = {
 						'IslBG' == desc ||
 						'SONY DSC' == desc ||
 						'Pentax Image' == desc ||
-						/^(?:OLYMPUS|(?:KONICA )?MINOLTA|SANYO) DIGITAL CAMERA$/.test(desc) ||
+						/^(?:OLYMPUS|(?:KONICA )?MINOLTA|SANYO) DIGITAL CAMERA$/
+						.test(desc) ||
 						/^\d{6}_\d{4}(?:\~\d+)?$/.test(desc) ||
-						/^Copyright \(c\) \d+ Hewlett-Packard Company$/.test(desc) ||
+						/^Copyright \(c\) \d+ Hewlett-Packard Company$/
+						.test(desc) ||
 						/^Autosave-File.*AgfaPhoto.*$/.test(desc)) {
 						photos.list[this.id].description = '';
 					}
@@ -205,8 +207,10 @@ ThumbCallback.prototype = {
 
 				}
 				if ('' == photos.list[this.id].tags) {
-					photos.list[this.id].tags = thumb[9] ? thumb[9].replace(/^\s+|\s+$/g,
-						'').replace(/\{---THREE---POUND---DELIM---\}/g, '###') : '';
+					photos.list[this.id].tags = thumb[9] ? thumb[9]
+						.replace(/^\s+|\s+$/g, '')
+						.replace(/\{---THREE---POUND---DELIM---\}/g, '###')
+						: '';
 				}
 
 				// Select newly added images if the user hasn't clicked
@@ -219,14 +223,17 @@ ThumbCallback.prototype = {
 					});
 				}
 
-				// If only one photo is selected, refresh the other thumbnail, too
-				if (1 == photos.selected.length && this.id == photos.selected[0] && !meta.first) {
-					document.getElementById('meta_div').getElementsByTagName('img')[0].src =
-						img.src;
+				// If only one photo is selected, refresh the other
+				// thumbnail, too
+				if (1 == photos.selected.length
+					&& this.id == photos.selected[0] && !meta.first) {
+					document.getElementById('meta_div')
+						.getElementsByTagName('img')[0].src = img.src;
 				}
 
 				// Calculate file size
-				photos.list[this.id].size = file.size(photos.list[this.id].path);
+				photos.list[this.id].size = file.size(
+					photos.list[this.id].path);
 				photos.batch_size += photos.list[this.id].size;
 				ui.bandwidth_updated();
 
@@ -234,7 +241,8 @@ ThumbCallback.prototype = {
 
 			// If unsuccessful, replace with the error image
 			else {
-				img.setAttribute('src', 'chrome://uploadr/skin/icon_alert.png');
+				img.setAttribute('src',
+					'chrome://uploadr/skin/icon_alert.png');
 				img.setAttribute('width', 16);
 				img.setAttribute('height', 16);
 				img.className = 'error';

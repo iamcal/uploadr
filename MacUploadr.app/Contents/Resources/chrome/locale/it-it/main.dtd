@@ -41,8 +41,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photostream.title "Il tuo book fotografico">
 <!ENTITY photos.sort.default "I tuoi elementi sono attualmente ordinati per data di scatto.  Trascinali per riordinarli.">
 <!ENTITY photos.sort.revert "Riordina elementi per data di scatto">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.text.1 "Oppure fai clic su ">
+<!ENTITY photos.init.text.2 " per trovare file sul tuo computer.">
 <!ENTITY photos.init.note "Nota:">
 <!ENTITY photos.new "Mentre il batch viene caricato, puoi iniziarne uno nuovo.">
 <!ENTITY settings "Impostazioni">
@@ -114,4 +114,3 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY help.drag "Il ^^drag-and-drop^^ è tuo amico.">
 <!ENTITY help.drag.text "Puoi trascinare gli elementi nell’ordine in cui desideri che vengano visualizzati sulla pagina del tuo book fotografico mentre li carichi.  All’occorrenza, puoi anche annullare qualsiasi impostazione applicata in modo che gli elementi tornino a essere ordinati per data di scatto.">
 <!ENTITY help.faq "Se hai altri dubbi, leggi le ^^FAQ su Uploadr^^">
-<!ENTITY photos.init.text.joined "Oppure fai clic su  per trovare file sul tuo computer.">

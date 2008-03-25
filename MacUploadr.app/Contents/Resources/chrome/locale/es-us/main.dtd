@@ -41,8 +41,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photostream.title "Tu fotosecuencia">
 <!ENTITY photos.sort.default "En este momento, tus elementos están ordenados por la fecha en que se tomaron.  Arrastra y coloca para reordenar.">
 <!ENTITY photos.sort.revert "Reordenar elementos por fecha en que se tomaron">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.text.1 "O bien, haz clic en ">
+<!ENTITY photos.init.text.2 " para buscar archivos en tu computadora.">
 <!ENTITY photos.init.note "Nota:">
 <!ENTITY photos.new "Mientras ese lote se carga, puedes comenzar uno nuevo.">
 <!ENTITY settings "Configuración">
@@ -114,4 +114,3 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY help.drag "^^Arrastrar y colocar^^ es tu amigo.">
 <!ENTITY help.drag.text "Puedes arrastrar elementos en el orden que desees que aparezcan en la página de tu fotosecuencia cuando estén cargados.  Si necesitas hacerlo, también puedes restablecer la organización de modo que los elementos vuelvan a estar ordenados por la fecha en que se tomaron.">
 <!ENTITY help.faq "Si tienes alguna duda más, visita nuestra ^^pregunta frecuente sobre Uploadr^^">
-<!ENTITY photos.init.text.joined "O bien, haz clic en  para buscar archivos en tu computadora.">

@@ -41,8 +41,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photostream.title "Sua galeria">
 <!ENTITY photos.sort.default "Atualmente seus itens estão ordenados pela data em que foram criados.  Arraste-os e solte-os para reordená-los.">
 <!ENTITY photos.sort.revert "Reclassificar itens pela data em que foram criados">
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.text.1 "Ou clique em ">
+<!ENTITY photos.init.text.2 " para procurar arquivos em seu computador.">
 <!ENTITY photos.init.note "Observe que:">
 <!ENTITY photos.new "Você pode iniciar um novo lote enquanto este lote está sendo enviado.">
 <!ENTITY settings "Configurações">
@@ -114,4 +114,3 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY help.drag "^^Arrastar e soltar^^ é muito útil.">
 <!ENTITY help.drag.text "Quando enviar seus itens, arraste-os na ordem em que deseja que apareçam na página da galeria.  Se for necessário, você também pode redefinir qualquer organização que tenha feito, para que os itens voltem a ser ordenados pela data em que foram criados.">
 <!ENTITY help.faq "Se houver mais alguma dúvida, por favor, visite as ^^Perguntas freqüentes sobre o Uploadr^^.">
-<!ENTITY photos.init.text.joined "Ou clique em  para procurar arquivos em seu computador.">
