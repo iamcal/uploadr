@@ -228,7 +228,8 @@ var meta = {
 				}
 
 				// Append tags, but then parse and remove duplicates
-				p.tags = meta.tags(p.tags + ' ' + document.getElementById('batch_tags').value);
+				p.tags = meta.tags(p.tags,
+					document.getElementById('batch_tags').value);
 
 				// Overwrite privacy, content type, hidden and safety level
 				var is_public = parseInt(document.getElementById('batch_is_public').value);
@@ -362,38 +363,43 @@ var meta = {
 	},
 
 	// Parse a string into an array of tags
-	tags: function(str) {
-		while (/".*?"/.test(str)) {
-			var match = /"(.*?)"/.exec(str);
-			str = str.replace(/".*?"/, meta.tags_transform(match[1]));
-		}
-		var arr;
-		var delim;
-		if (-1 == str.indexOf(',')) {
-			arr = str.split(/\s/);
-			delim = ' ';
-		} else {
-			arr = str.split(/,/);
-			delim = ', ';
-		}
-		var ii = arr.length;
-		var out = '';
+	tags: function() {
+		var out = [];
+		var out_delim = ' ';
+		var ii = arguments.length;
 		for (var i = 0; i < ii; ++i) {
-			if ('' != arr[i]) {
-				var tmp = delim + meta.tags_untransform(arr[i]);
-				if (-1 == out.indexOf(tmp)) {
-					out += tmp;
+			var str = arguments[i];
+			while (/".*?"/.test(str)) {
+				var match = /"(.*?)"/.exec(str);
+				str = str.replace(/".*?"/, meta.tags_transform(match[1]));
+			}
+			var arr;
+			var delim;
+			if (-1 == str.indexOf(',')) {
+				arr = str.split(/\s/); // \s+
+				delim = ' ';
+			} else {
+				arr = str.split(/,/);
+				delim = ', ';
+				out_delim = ', ';
+			}
+			var jj = arr.length;
+			for (var j = 0; j < jj; ++j) {
+				if (arr[j]) {//if ('' != arr[j]) {
+					var tmp = meta.tags_untransform(arr[j]);
+					if (-1 == out.indexOf(tmp)) { out.push(tmp); }
 				}
 			}
 		}
-		return out.slice(delim.length);
+		return out.join(out_delim);
 	},
 
 	// Transform and untransform tags for splitting
 	tags_transform: function(tag) {
-		while (/\s+/.test(tag)) {
-			var match = /(\s+)/.exec(tag);
-			tag = tag.replace(/\s+/, '{WHITESPACE-' + match[1].charCodeAt(0) + '}');
+		var match;
+		while (match = /(\s+)/.exec(tag)) {
+			tag = tag.replace(/\s+/,
+				'{WHITESPACE-' + match[1].charCodeAt(0) + '}');
 		}
 		while (/,/.test(tag)) {
 			var match = /(,)/.exec(tag);
@@ -402,9 +408,9 @@ var meta = {
 		return tag;
 	},
 	tags_untransform: function(tag) {
+		var match;
 		var quotes = false;
-		while (/\{WHITESPACE-[0-9]+\}/.test(tag)) {
-			var match = /\{WHITESPACE-([0-9]+)\}/.exec(tag);
+		while (match = /\{WHITESPACE-([0-9]+)\}/.exec(tag)) {
 			tag = tag.replace(/\{WHITESPACE-[0-9]+\}/,
 				String.fromCharCode(parseInt(match[1])));
 			quotes = true;
@@ -545,8 +551,8 @@ var meta = {
 				var node = document.getElementById(prefix + m);
 				var loop = true;
 				if ('menulist' == node.nodeName) {
-					node = node.getElementsByTagName('menupopup')[0].getElementsByTagName(
-						'menuitem');
+					node = node.getElementsByTagName('menupopup')[0]
+						.getElementsByTagName('menuitem');
 				} else if ('radiogroup' == node.nodeName) {
 					node = node.getElementsByTagName('radio');
 				} else if ('checkbox' == node.nodeName) {
@@ -650,9 +656,7 @@ var meta = {
 				if ('cancel' == result.result) {
 					var new_selected = [];
 					for each (var id in photos.selected) {
-						if (null == photos.list[id]) {
-							continue;
-						}
+						if (null == photos.list[id]) { continue; }
 
 						// Remove videos
 						if (photos.is_video(photos.list[id].path)) {
@@ -695,9 +699,7 @@ var meta = {
 					// will be called as it is unblocked
 					//   We're breaking the rules a bit here but the rules
 					//   are just for the UI
-					if (0 == _block_remove) {
-						photos.normalize();
-					}
+					if (0 == _block_remove) { photos.normalize(); }
 
 				}
 
@@ -708,11 +710,10 @@ var meta = {
 
 					// Update the safety level of only the videos
 					for each (var id in photos.selected) {
-						if (null == photos.list[id]) {
-							continue;
-						}
+						if (null == photos.list[id]) { continue; }
 						if (photos.is_video(photos.list[id].path)) {
-							photos.list[id].safety_level = result.safety_level;
+							photos.list[id].safety_level =
+								result.safety_level;
 						} else {
 							photos.list[id].safety_level = 3;
 						}
@@ -720,14 +721,15 @@ var meta = {
 
 					// If just one video is selected adjust the safety level
 					if (1 == photos.selected.length) {
-						document.getElementById('single_safety_level').value =
-							result.safety_level;
+						document.getElementById('single_safety_level')
+							.value = result.safety_level;
 					}
 
 					// If multiple photos are selected, indicate the safety
 					// level inconsistency in the display
 					else {
-						var safety_level = document.getElementById('batch_safety_level');
+						var safety_level = document.getElementById(
+							'batch_safety_level');
 						safety_level.value = 0;
 						safety_level.selectedItem.label =
 							locale.getString('video.safety_level.mixed');
@@ -741,8 +743,9 @@ var meta = {
 
 		// If they select something besides restricted, clean up
 		else {
-			document.getElementById('batch_safety_level').getElementsByTagName(
-				'menupopup')[0].getElementsByTagName('menuitem')[0].label = '';
+			document.getElementById('batch_safety_level')
+				.getElementsByTagName('menupopup')[0]
+				.getElementsByTagName('menuitem')[0].label = '';
 		}
 
 	}
