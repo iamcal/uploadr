@@ -859,21 +859,12 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 		(double)codec_ctx->time_base.num;
 	if (30000.0 == fps) { fps /= 1000.0; }
 
+	// Report the duration
+	ostringstream out;
+	out << (format_ctx->duration / 1000000) << "###";
+
 	// Play through 15% of the video
 	int64_t seek = (int64_t)(0.00000015 * (double)format_ctx->duration * fps);
-
-
-
-printf("time_base.den: %f, time_base.num: %f, fps: %f, duration: %f, seek: %d\n",
-(double)codec_ctx->time_base.den, (double)codec_ctx->time_base.num, fps,
-(double)format_ctx->duration, seek);
-printf("frame count: %f\n", 0.000001 * (double)format_ctx->duration * fps);
-printf("frame: %d\n", (int64_t)(0.00000015 * (double)format_ctx->duration * fps));
-//seek /= 2;
-
-
-
-
 	int i = 0;
 	AVPacket packet;
 	int have_frame;
@@ -882,7 +873,6 @@ printf("frame: %d\n", (int64_t)(0.00000015 * (double)format_ctx->duration * fps)
 			avcodec_decode_video(codec_ctx, video_frame, &have_frame,
 				 packet.data, packet.size);
 			if (have_frame && seek == ++i) {
-printf("%d\n", i);
 				img_convert((AVPicture *)img_frame, PIX_FMT_RGB24,
 					(AVPicture*)video_frame, codec_ctx->pix_fmt,
 					codec_ctx->width, codec_ctx->height);
@@ -913,8 +903,7 @@ printf("%d\n", i);
 					// Output the size of the video and the embedded
 					// timestamp
 					int bw = img.baseColumns(), bh = img.baseRows();
-					ostringstream out;
-					out << "###" << bw << "###" << bh << "###"
+					out << bw << "###" << bh << "###"
 						<< format_ctx->timestamp << "###";
 
 					// Resize the output as a thumbnail

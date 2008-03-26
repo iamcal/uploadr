@@ -776,8 +776,8 @@ window.setInterval(function() {
 // Photo properties
 var Photo = function(id, path) {
 	this.id = id;
-	this.date_taken = '';
 	this.path = path;
+	this.date_taken = '';
 	this.width = 0;
 	this.height = 0;
 	this.thumb = '';
@@ -789,6 +789,7 @@ var Photo = function(id, path) {
 	this.title = '';
 	this.description = '';
 	this.tags = '';
+	this.duration = 0;
 	this.is_public = settings.is_public;
 	this.is_friend = settings.is_friend;
 	this.is_family = settings.is_family;

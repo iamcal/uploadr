@@ -319,7 +319,7 @@ var launch_browser = function(url) {
 };
 
 // Now hack locale.getFormattedString to work like it should
-//   Apparently the docs were just wrong and it must be a capital S
+//   Apparently the docs were just wrong and it *must* be a capital S
 //   So, this function will go away eventually
 var locale = document.getElementById('locale');
 locale.getFormattedString = function(id, args) {

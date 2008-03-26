@@ -146,16 +146,28 @@ var meta = {
 				meta_img.setAttribute('height', h);
 				meta_img.src = img.src;
 				meta_div.appendChild(meta_img);
-			}
-			document.getElementById('meta_dim').value =
-				locale.getFormattedString('meta.dim', [p.width, p.height]);
-			if (1024 > p.size) {
-				document.getElementById('meta_size').value =
-					locale.getFormattedString('kb', [p.size]);
-			} else {
-				document.getElementById('meta_size').value =
-					locale.getFormattedString('mb',
-					[Math.round(p.size / 102.4) / 10]);
+				document.getElementById('meta_dim').value =
+					locale.getFormattedString('meta.dim', [p.width, p.height]);
+				if (1024 > p.size) {
+					document.getElementById('meta_size').value =
+						locale.getFormattedString('kb', [p.size]);
+				} else {
+					document.getElementById('meta_size').value =
+						locale.getFormattedString('mb',
+						[Math.round(p.size / 102.4) / 10]);
+				}
+				if (photos.is_video(p.path)) {
+					var min = 0, sec = p.duration;
+					if (60 <= sec) {
+						min = parseInt(sec / 60);
+						sec = sec % 60;
+						if (10 > sec) { sec = '0' + sec; }
+					}
+					document.getElementById('meta_duration').value =
+						locale.getFormattedString('meta.duration', [min, sec]);
+				} else {
+					document.getElementById('meta_duration').value = '';
+				}
 			}
 
 			// Pre-populate metadata
@@ -376,7 +388,7 @@ var meta = {
 			var arr;
 			var delim;
 			if (-1 == str.indexOf(',')) {
-				arr = str.split(/\s/); // \s+
+				arr = str.split(/\s/);
 				delim = ' ';
 			} else {
 				arr = str.split(/,/);
@@ -385,7 +397,7 @@ var meta = {
 			}
 			var jj = arr.length;
 			for (var j = 0; j < jj; ++j) {
-				if (arr[j]) {//if ('' != arr[j]) {
+				if (arr[j]) {
 					var tmp = meta.tags_untransform(arr[j]);
 					if (-1 == out.indexOf(tmp)) { out.push(tmp); }
 				}

@@ -89,6 +89,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							<spacer flex="1" />
 							<label id="meta_dim" value="" />
 							<label id="meta_size" value="" />
+							<label id="meta_duration" value="" />
 							<spacer flex="1" />
 						</vbox>
 					</hbox>

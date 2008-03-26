@@ -117,6 +117,12 @@ ThumbCallback.prototype = {
 					thumb[i] = thumb[i];
 				}
 
+				// Orientation (for photos) or duration (for videos)
+				//   Orientation is currently unused
+				if (photos.is_video(photos.list[this.id].path)) {
+					photos.list[this.id].duration = parseInt(thumb[0]);
+				}
+
 				// Width and height
 				photos.list[this.id].width = parseInt(thumb[1]);
 				photos.list[this.id].height = parseInt(thumb[2]);
