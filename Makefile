@@ -8,6 +8,9 @@
 # GPL for more details (http://www.gnu.org/licenses/gpl.html)
 #
 
+# Macs can build DMGs and MARs for all languages with `make`
+# Windows can build installers and MARs for all languages with `make win`
+
 INTL := $(filter de-de en-US es-us fr-fr it-it ko-kr pt-br zh-hk, $(MAKECMDGOALS))
 ifeq (de-de, $(INTL))
 INTL_SHORT := de
@@ -34,14 +37,26 @@ ifeq (zh-hk, $(INTL))
 INTL_SHORT := hk
 endif
 
+
+
+########################################################################
+########################################################################
+# Configuration
+
+# Version number for Uploadr
+VER := 3.1a5
+
+########################################################################
+# Windows configuration
+
+ifeq (win, $(filter win, $(MAKECMDGOALS)))
+PLATFORM := win
+
 # Location to output finished DMGs
 OUT := ~/Desktop
 
 # The base of this path must exist before running make
 PKG := ~/Desktop/build/$(INTL)
-
-# Version number for Uploadr
-VER := 3.1a5
 
 # Location of Mozilla tree for the MAR tools
 MOZILLA := ~/mozilla
@@ -51,27 +66,59 @@ APP := $(PKG)/Flickr\ Uploadr.app
 BUILD := $(APP)/Contents
 GM_VER := 1.1.10
 
+# End Windows configuration
+########################################################################
+
+########################################################################
+# Mac configuration
+
+else
+PLATFORM := mac
+
+# Location to output finished DMGs
+OUT := ~/Desktop
+
+# The base of this path must exist before running make
+PKG := ~/Desktop/build/$(INTL)
+
+# Location of Mozilla tree for the MAR tools
+MOZILLA := ~/mozilla
+
+SRC := MacUploadr.app/Contents
+APP := $(PKG)/Flickr\ Uploadr.app
+BUILD := $(APP)/Contents
+GM_VER := 1.1.10
+
+# End Mac configuration
+########################################################################
+
+endif
+
+# End configuration
+########################################################################
+########################################################################
+
 all: all-build all-mar
 
 all-build:
-	make de-de build
-	make en-US build
-	make es-us build
-	make fr-fr build
-	make it-it build
-	make ko-kr build
-	make pt-br build
-	make zh-hk build
+	make $(PLATFORM) de-de build
+	make $(PLATFORM) en-US build
+	make $(PLATFORM) es-us build
+	make $(PLATFORM) fr-fr build
+	make $(PLATFORM) it-it build
+	make $(PLATFORM) ko-kr build
+	make $(PLATFORM) pt-br build
+	make $(PLATFORM) zh-hk build
 
 all-mar:
-	@make de-de mar
-	@make en-US mar
-	@make es-us mar
-	@make fr-fr mar
-	@make it-it mar
-	@make ko-kr mar
-	@make pt-br mar
-	@make zh-hk mar
+	@make $(PLATFORM) de-de mar
+	@make $(PLATFORM) en-US mar
+	@make $(PLATFORM) es-us mar
+	@make $(PLATFORM) fr-fr mar
+	@make $(PLATFORM) it-it mar
+	@make $(PLATFORM) ko-kr mar
+	@make $(PLATFORM) pt-br mar
+	@make $(PLATFORM) zh-hk mar
 
 de-de:
 	@echo "Building German (de-de)"
