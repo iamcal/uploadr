@@ -35,7 +35,7 @@ INTL_SHORT := hk
 endif
 
 # Location to output finished DMGs
-OUT := ~/Desktop/
+OUT := ~/Desktop
 
 # The base of this path must exist before running make
 PKG := ~/Desktop/build/$(INTL)
@@ -64,51 +64,44 @@ all-build:
 	make zh-hk build
 
 all-mar:
-	make de-de mar
-	make en-US mar
-	make es-us mar
-	make fr-fr mar
-	make it-it mar
-	make ko-kr mar
-	make pt-br mar
-	make zh-hk mar
+	@make de-de mar
+	@make en-US mar
+	@make es-us mar
+	@make fr-fr mar
+	@make it-it mar
+	@make ko-kr mar
+	@make pt-br mar
+	@make zh-hk mar
 
 de-de:
 	@echo "Building German (de-de)"
-
 en-US:
 	@echo "Building English (en-US)"
-
 es-us:
 	@echo "Building Spanish (es-us)"
-
 fr-fr:
 	@echo "Building French (fr-fr)"
-
 it-it:
 	@echo "Building Italian (it-it)"
-
 ko-kr:
 	@echo "Building Korean (ko-kr)"
-
 pt-br:
 	@echo "Building Portuguese (pt-br)"
-
 zh-hk:
 	@echo "Building Chinese (zh-hk)"
 
 build:
 
-	# Make sure the package directory exists
+	@# Make sure the package directory exists
 	mkdir -p $(PKG)
 
-	# Saving the previous version for the partial MAR
+	@# Saving the previous version for the partial MAR
 #	rm -rf $(PKG)/old
 #	mv $(APP) $(PKG)/old
 	rm -rf $(APP)
 	rm -f $(PKG)/Applications
 
-	# Package structure
+	@# Package structure
 	mkdir $(APP)
 	mkdir $(BUILD)
 	mkdir $(BUILD)/lib
@@ -117,13 +110,13 @@ build:
 	mkdir $(BUILD)/Resources
 	cp $(SRC)/Info.plist $(BUILD)/
 
-	# GraphicsMagick config files
+	@# GraphicsMagick config files
 	mkdir $(BUILD)/lib/GraphicsMagick-$(GM_VER)
 	mkdir $(BUILD)/lib/GraphicsMagick-$(GM_VER)/config
 	cp $(SRC)/lib/GraphicsMagick-$(GM_VER)/config/*.mgk \
 		$(BUILD)/lib/GraphicsMagick-$(GM_VER)/config/
 
-	# XULRunner
+	@# XULRunner
 	cp -R $(SRC)/Frameworks/XUL.framework $(BUILD)/Frameworks/
 	cp $(BUILD)/Frameworks/XUL.framework/Versions/Current/xulrunner \
 		$(BUILD)/MacOS/xulrunner
@@ -131,20 +124,20 @@ build:
 	cp $(SRC)/Resources/LICENSE.txt $(BUILD)/Resources/
 	cp $(SRC)/Resources/icons.icns $(BUILD)/Resources/
 
-	# XULRunner preferences
+	@# XULRunner preferences
 	mkdir $(BUILD)/Resources/defaults
 	mkdir $(BUILD)/Resources/defaults/preferences
 	cp $(SRC)/Resources/defaults/preferences/*.js \
 		$(BUILD)/Resources/defaults/preferences/
 
-	# XULRunner locale
+	@# XULRunner locale
 	rm $(BUILD)/Frameworks/XUL.framework/Versions/Current/chrome/??-??.*
 	cp ./xulrunner_locales/$(INTL).* \
 		$(BUILD)/Frameworks/XUL.framework/Versions/Current/chrome/
 	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/defaults/preferences/prefs.js > \
 		$(BUILD)/Resources/defaults/preferences/prefs.js
 
-	# Chrome
+	@# Chrome
 	mkdir $(BUILD)/Resources/chrome
 	mkdir content
 	mkdir content/uploadr
@@ -182,16 +175,17 @@ build:
 	rm -rf content locale skin
 	mv uploadr.zip $(BUILD)/Resources/chrome/uploadr.jar
 
-	# XPCOM
+	@# XPCOM
 	mkdir $(BUILD)/Resources/components
 	cp $(SRC)/Resources/components/*.xpt $(BUILD)/Resources/components/
 	cp $(SRC)/Resources/components/*.dylib $(BUILD)/Resources/components/
 	cp $(SRC)/Resources/components/*.js $(BUILD)/Resources/components/
 
-	# Create DMG
+	@# Create DMG
 	ln -s /Applications $(PKG)/Applications
 	cp mac_installer/install-pane-$(INTL_SHORT).png $(PKG)/.i.png
 	cp mac_installer/DS_Store $(PKG)/.DS_Store
+	rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).dmg
 	hdiutil create -srcfolder $(PKG) -volname "Flickr Uploadr $(VER)" \
 		-format UDZO -imagekey zlib-level=9 \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).dmg
@@ -200,19 +194,21 @@ build:
 
 mar:
 
-	# Making MAR files
+	@# Making MAR files
 	@ln -s Flickr\ Uploadr.app $(PKG)/new
+	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar
 	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar \
-		$(PKG)/new > /dev/null
+		$(PKG)/new 2> /dev/null > /dev/null
+#	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar
 #	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 #		$(MOZILLA)/tools/update-packaging/make_incremental_update.sh \
 #		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar \
-#		$(PKG)/old $(PKG)/new > /dev/null
+#		$(PKG)/old $(PKG)/new 2> /dev/null > /dev/null
 	@rm $(PKG)/new
 
-	# Size and hash for the XML file
+	@# Size and hash for the XML file
 	@ls -l $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | \
 		awk '{print "$(INTL) complete size: ",$$5}'
 	@md5 $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | \
