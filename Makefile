@@ -120,7 +120,18 @@ endif
 
 
 
+dummy:
+	@echo "Nothing happens if you don't give some arguments!"
+	@echo "  win all, mac all:   Build the whole thing"
+	@echo "  build, mar: Build a single package or update but requires"
+	@echo "              de-de, en-US, es-us, fr-fr, it-it, ko-kr, pt-br, or zh-hk"
+
 all: all-build all-mar
+
+mac:
+	@echo "Building for Mac"
+win:
+	@echo "Building for Windows"
 
 all-build:
 	make $(PLATFORM) de-de build
@@ -317,7 +328,11 @@ endif
 mar:
 
 	@# Making MAR files
+ifeq (mac, $(PLATFORM))
 	@ln -s Flickr\ Uploadr.app $(BUILD)/new
+else
+	@ln -s Flickr\ Uploadr $(BUILD)/new
+endif
 	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar
 	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
