@@ -42,7 +42,10 @@ pref('extensions.dss.switchPending', false);
 pref('extensions.ignoreMTimeChanges', false);
 pref('extensions.logging.enabled', false);
 pref('general.skins.selectedSkin', 'uploadr');
-//pref('extensions.update.url', '???');
+
+// Don't know what to put here, this is Firefox's version
+//pref('extensions.update.url', 'https://addons.mozilla.org/update/VersionCheck.php?reqVersion=%REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=%ITEM_MAXAPPVERSION%&status=%ITEM_STATUS%&appID=%APP_ID%&appVersion=%APP_VERSION%&appOS=%APP_OS%&appABI=%APP_ABI%');
+
 pref('extensions.getMoreExtensionsURL', 'http://flickr.com/tools/uploadr/');
 pref('extensions.getMoreThemesURL', 'http://flickr.com/tools/uploadr/');
 pref('extensions.getMorePluginsURL', 'http://flickr.com/tools/uploadr/');

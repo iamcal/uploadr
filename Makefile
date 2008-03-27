@@ -34,13 +34,16 @@ ifeq (zh-hk, $(INTL))
 INTL_SHORT := hk
 endif
 
-# The base of this path (everything up to INTL) must exist before running make
+# Location to output finished DMGs
+OUT := ~/Desktop/
+
+# The base of this path must exist before running make
 PKG := ~/Desktop/build/$(INTL)
 
 # Version number for Uploadr
-VER := 3.1a4
+VER := 3.1a5
 
-# Location of Mozilla tree
+# Location of Mozilla tree for the MAR tools
 MOZILLA := ~/mozilla
 
 SRC := MacUploadr.app/Contents
@@ -48,7 +51,9 @@ APP := $(PKG)/Flickr\ Uploadr.app
 BUILD := $(APP)/Contents
 GM_VER := 1.1.10
 
-all:
+all: all-build all-mar
+
+all-build:
 	make de-de build
 	make en-US build
 	make es-us build
@@ -57,7 +62,8 @@ all:
 	make ko-kr build
 	make pt-br build
 	make zh-hk build
-ifeq (update, $(filter update, $(MAKECMDGOALS)))
+
+all-mar:
 	make de-de mar
 	make en-US mar
 	make es-us mar
@@ -66,7 +72,6 @@ ifeq (update, $(filter update, $(MAKECMDGOALS)))
 	make ko-kr mar
 	make pt-br mar
 	make zh-hk mar
-endif
 
 de-de:
 	@echo "Building German (de-de)"
@@ -94,9 +99,14 @@ zh-hk:
 
 build:
 
-	# Saving the previous version
-	rm -rf $(PKG)/old
-	mv $(APP) $(PKG)/old
+	# Make sure the package directory exists
+	mkdir -p $(PKG)
+
+	# Saving the previous version for the partial MAR
+#	rm -rf $(PKG)/old
+#	mv $(APP) $(PKG)/old
+	rm -rf $(APP)
+	rm -f $(PKG)/Applications
 
 	# Package structure
 	mkdir $(APP)
@@ -178,27 +188,36 @@ build:
 	cp $(SRC)/Resources/components/*.dylib $(BUILD)/Resources/components/
 	cp $(SRC)/Resources/components/*.js $(BUILD)/Resources/components/
 
-	# Copy to DMG
-	cp -R $(PKG)/Flickr\ Uploadr.app /Volumes/Flickr\ Uploadr\ $(VER)/
-	ln -s /Applications /Volumes/Flickr\ Uploadr\ $(VER)/Applications
-	cp mac_installer/install-pane-$(INTL).png \
-		/Volumes/Flickr\ Uploadr\ $(VER)/.i.png
-	ln -s .i.png /Volumes/Flickr\ Uploadr\ $(VER)/i.png
+	# Create DMG
+	ln -s /Applications $(PKG)/Applications
+	cp mac_installer/install-pane-$(INTL_SHORT).png $(PKG)/.i.png
+	cp mac_installer/DS_Store $(PKG)/.DS_Store
+	hdiutil create -srcfolder $(PKG) -volname "Flickr Uploadr $(VER)" \
+		-format UDZO -imagekey zlib-level=9 \
+		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).dmg
+
+
 
 mar:
 
 	# Making MAR files
-	ln -s Flickr\ Uploadr.app $(PKG)/new
-	PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
+	@ln -s Flickr\ Uploadr.app $(PKG)/new
+	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
-		$(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar $(PKG)/new
-#	PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
+		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar \
+		$(PKG)/new > /dev/null
+#	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 #		$(MOZILLA)/tools/update-packaging/make_incremental_update.sh \
-#		$(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar $(PKG)/old $(PKG)/new
-	rm $(PKG)/new
+#		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar \
+#		$(PKG)/old $(PKG)/new > /dev/null
+	@rm $(PKG)/new
 
 	# Size and hash for the XML file
-	@ls -l $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | awk '{print "Complete size: ",$$5}'
-	@md5 $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | awk '{print "Complete MD5:  ",$$4}'
-#	@ls -l $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | awk '{print "Partial size: ",$$5}'
-#	@md5 $(PKG)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | awk '{print "Partial MD5:  ",$$4}'
+	@ls -l $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | \
+		awk '{print "$(INTL) complete size: ",$$5}'
+	@md5 $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | \
+		awk '{print "$(INTL) complete MD5:  ",$$4}'
+#	@ls -l $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | \
+#		awk '{print "$(INTL) partial size: ",$$5}'
+#	@md5 $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | \
+#		awk '{print "$(INTL) partial MD5:  ",$$4}'

@@ -18,8 +18,8 @@ var extension = {
 	},
 
 	// Event handlers
-	//   Please don't call these on your own.  Instead, check out the
-	//   helloworld extension on http://code.flickr.com/ and play along.
+	//   Check out the helloworld extension on http://code.flickr.com/
+	//   and play along.
 	Handler: function() {
 		this.list = [];
 		this.add = function() { return extension._add.apply(this, arguments); };
