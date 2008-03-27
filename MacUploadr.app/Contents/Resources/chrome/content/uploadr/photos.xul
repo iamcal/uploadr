@@ -58,18 +58,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				</stack>
 				<vbox id="photos_init">
 					<html:h1 id="photos_init_prompt"> </html:h1>
-					<hbox flex="1">
-						<spacer flex="1" />
-						<box><html:h2>&photos.init.text.1;</html:h2></box>
-						<box><html:div class="button" onclick="photos.add_dialog();"
-						><html:div>&tools.add;</html:div></html:div></box>
-						<spacer flex="1" />
-					</hbox>
-					<hbox flex="1">
-						<spacer flex="1" />
-						<box><html:h2>&photos.init.text.2;</html:h2></box>
-						<spacer flex="1" />
-					</hbox>
+					<html:h2>&photos.init.text.1;
+					<html:div class="button" onclick="photos.add_dialog();"
+					style="display:-moz-inline-box; vertical-align: 7%;"
+					><html:div>&tools.add;</html:div></html:div>
+					&photos.init.text.2;</html:h2>
 					<vbox id="photos_init_note">
 						<html:h3>&photos.init.note;</html:h3>
 						<html:ul id="photos_init_notes"></html:ul>
