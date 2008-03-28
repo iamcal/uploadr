@@ -65,12 +65,15 @@ SRC := MacUploadr.app/Contents
 ifeq (win, $(filter win, $(MAKECMDGOALS)))
 PLATFORM := win
 
+# Dated version for the NSIS installer
+VER_DATE := 2008.03.28.01
+
 # Location of Mozilla tree for the MAR tools
 MOZILLA := /c/mozilla
 
 # Location for build staging
 #   The base of this path must exist before running make
-BUILD := /c/Documents\ and\ Settings/rcrowley/My\ Documents/Code/uploadr/build/$(INTL)
+BUILD := /c/code/uploadr/builds/$(INTL)
 
 # Location for application bundle staging
 APP := $(BUILD)/Flickr\ Uploadr
@@ -79,7 +82,7 @@ APP := $(BUILD)/Flickr\ Uploadr
 RES := $(APP)
 
 # Location to output finished DMGs
-OUT := /c/Documents\ and\ Settings/rcrowley/My\ Documents/Code/uploadr
+OUT := /c/code/uploadr
 
 # End Windows configuration
 ########################################################################
@@ -98,7 +101,7 @@ MOZILLA := ~/mozilla
 
 # Location for build staging
 #   The base of this path must exist before running make
-BUILD := ~/Desktop/build/$(INTL)
+BUILD := ~/Desktop/builds/$(INTL)
 
 # Location for application bundle staging
 APP := $(BUILD)/Flickr\ Uploadr.app
@@ -234,7 +237,7 @@ ifeq (mac, $(PLATFORM))
 		$(APP)/Contents/Frameworks/XUL.framework/Versions/Current/chrome/
 else
 	rm $(RES)/xulrunner/chrome/??-??.*
-	cp ./xulrunner_locales/$(INTL).* $(RES)/chrome/
+	cp ./xulrunner_locales/$(INTL).* $(RES)/xulrunner/chrome/
 endif
 	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/defaults/preferences/prefs.js > \
 		$(RES)/defaults/preferences/prefs.js
@@ -296,7 +299,15 @@ endif
 	@# XPCOM
 	mkdir $(RES)/components
 	cp $(SRC)/Resources/components/*.xpt $(RES)/components/
+ifeq (mac, $(PLATFORM))
 	cp $(SRC)/Resources/components/*.dylib $(RES)/components/
+endif
+ifeq (win, $(PLATFORM))
+	cp $(SRC)/Resources/components/*.dll $(RES)/components/
+endif
+ifeq (linux, $(PLATFORM))
+	cp $(SRC)/Resources/components/*.so $(RES)/components/
+endif
 	cp $(SRC)/Resources/components/*.js $(RES)/components/
 
 	@# Create DMG for Macs
@@ -314,8 +325,10 @@ endif
 ifeq (win, $(PLATFORM))
 	sed 's/English\.nsh/$(INTL_WIN)/g' windows_install_build.nsi > \
 		windows_install_build_real.nsi
-	/c/Program\ Files/NSISUnicode/makensis.exe /DVERSION=$(VER)
-	mv FlickrUploadr-$(VER)-XX.exe FlickrUploadr-$(VER)-$(INTL_SHORT).exe
+	/c/Program\ Files/NSISUnicode/makensis.exe -DVERSION=$(VER) \
+		-DVERSION_DATE=$(VER_DATE) windows_install_build_real.nsi
+	mv FlickrUploadr-$(VER)-XX.exe \
+		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).exe
 	rm windows_install_build_real.nsi
 endif
 
@@ -330,7 +343,12 @@ mar:
 	@# Making MAR files
 ifeq (mac, $(PLATFORM))
 	@ln -s Flickr\ Uploadr.app $(BUILD)/new
-else
+endif
+ifeq (win, $(PLATFORM))
+	@# In Windows, `ln -s ...` == `cp -R ...`
+	@ln -s $(BUILD)/Flickr\ Uploadr $(BUILD)/new
+endif
+ifeq (linux, $(PLATFORM))
 	@ln -s Flickr\ Uploadr $(BUILD)/new
 endif
 	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar
@@ -343,13 +361,17 @@ endif
 #		$(MOZILLA)/tools/update-packaging/make_incremental_update.sh \
 #		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar \
 #		$(BUILD)/old $(BUILD)/new 2> /dev/null > /dev/null
+ifeq (win, $(PLATFORM))
+	@rm -rf $(BUILD)/new
+else
 	@rm $(BUILD)/new
+endif
 
 	@# Size and hash for the XML file
-	@ls -l $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | \
-		awk '{print "$(INTL) complete size: ",$$5}'
-	@md5 $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | \
-		awk '{print "$(INTL) complete MD5:  ",$$4}'
+#	@ls -l $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | \
+#		awk '{print "$(INTL) complete size: ",$$5}'
+#	@md5 $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar | \
+#		awk '{print "$(INTL) complete MD5:  ",$$4}'
 #	@ls -l $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | \
 #		awk '{print "$(INTL) partial size: ",$$5}'
 #	@md5 $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar | \
