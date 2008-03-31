@@ -93,7 +93,7 @@ const conf = {
 
 	// Maximum size of a video upload (kilobytes)
 	//   This is used as a fallback if no one is logged in
-	videosize: 400 << 10,
+	videosize: 150 << 10,
 
 	// Upload mode
 	//   Must be 'sync' or 'async'

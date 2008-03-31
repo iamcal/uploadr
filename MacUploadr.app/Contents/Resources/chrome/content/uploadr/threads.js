@@ -381,15 +381,11 @@ SortCallback.prototype = {
 	run: function() {
 
 		// Allow blocking sorts during loading
-		if (0 != _block_sort) {
-			return;
-		}
+		if (0 != _block_sort) { return; }
 
 		// Perform the sort
 		if (1 >= photos.list.length) {
-			if (1 == photos.list.length) {
-				buttons.upload.enable();
-			}
+			if (1 == photos.list.length) { buttons.upload.enable(); }
 			unblock_normalize();
 			return;
 		}
@@ -403,13 +399,7 @@ SortCallback.prototype = {
 			}
 		}
 		p.sort(function(a, b) {
-			if (null == a) {
-				return false;
-			} else if (null == b) {
-				return true;
-			} else {
-				return a.date_taken > b.date_taken;
-			}
+			return a.date_taken > b.date_taken;
 		});
 
 		// Lazily do the UI refresh by appendChild'ing everything in the
@@ -545,7 +535,8 @@ RetryUpload.prototype = {
 	run: function() {
 
 		// As with Sort, the background job here is just for ordering
-		threads.main.dispatch(new RetryUploadCallback(this.from_ready), threads.main.DISPATCH_NORMAL);
+		threads.main.dispatch(new RetryUploadCallback(this.from_ready),
+			threads.main.DISPATCH_NORMAL);
 
 	},
 	QueryInterface: function(iid) {
@@ -562,16 +553,13 @@ RetryUploadCallback.prototype = {
 	run: function() {
 
 		// Take a batch from the ready queue
-		if (this.from_ready) {
-			if (0 != photos.ready.length) {
-				photos.upload(photos.ready.shift(), photos.ready_size.shift());
-			}
+		if (this.from_ready && 0 != photos.ready.length) {
+			photos.upload(photos.ready.shift(),
+				photos.ready_size.shift());
 		}
 
 		// Take the batch in the UI
-		else {
-			photos.upload();
-		}
+		else { photos.upload(); }
 
 	},
 	QueryInterface: function(iid) {

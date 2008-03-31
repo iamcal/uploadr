@@ -76,9 +76,6 @@ var upload = {
 
 		// EXPERIMENTAL: Pass the photo to the socket uploadr
 		if (conf.socket_uploadr) {
-Cc['@mozilla.org/consoleservice;1']
-	.getService(Ci.nsIConsoleService)
-	.logStringMessage('EXPERIMENTAL socket uploadr');
 
 			// Dispatch for health and non-blocking profit!
 			threads.uploadr.dispatch(new Upload({
@@ -143,7 +140,7 @@ Cc['@mozilla.org/consoleservice;1']
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 			if (conf.console.error) {
 				Components.utils.reportError('UPLOAD ERROR: ' +
-					rsp.toSource());
+					'object' == typeof rsp ? rsp.toSource() : rsp);
 			}
 
 			// Make sure this isn't a bandwidth error, as those are
@@ -539,9 +536,7 @@ Cc['@mozilla.org/consoleservice;1']
 		// Re-add photos we didn't get to
 		if (upload.cancel) {
 			for each (var p in photos.uploading) {
-				if (null != p) {
-					upload.try_again.push(p);
-				}
+				if (null != p && !p.photo_id) { upload.try_again.push(p); }
 			}
 
 			// Add back any queued batches

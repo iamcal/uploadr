@@ -288,6 +288,7 @@ var photos = {
 			// Photos can be passed as an object which already has metadata
 			if ('object' == typeof paths[i]) {
 				for (var k in paths[i]) {
+					if ('id' == k) { continue; }
 					photos.list[photos.list.length - 1][k] = paths[i][k];
 				}
 			}
