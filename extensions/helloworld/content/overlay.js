@@ -69,7 +69,7 @@ extension.after_edit.add(function(list) {
 
 // After reorder: called after the photo list is reordered for any reason.
 //   Callback argument: boolean, true if the user dragged photos around,
-//   false if the photos were sorted by date taken
+//     false if the photos were sorted by date taken
 //   See also: mouse.js, threads.js
 extension.after_reorder.add(function(from_user) {
 	Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService)
@@ -93,7 +93,7 @@ extension.before_one_upload.add(function(photo) {
 });
 
 // After one upload: called after an individual upload finishes.
-//   Callback argument: Photo object, success/failure boolean
+//   Callback arguments: Photo object, success/failure boolean
 //   See also: upload.js
 extension.after_one_upload.add(function(photo, success) {
 	Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService)
@@ -109,7 +109,7 @@ extension.on_upload_progress.add(function(kb) {
 
 // After upload: called after a batch of uploads finishes.
 //   Callback arguments: array of successful Photo objects, array of failed
-//   Photo objects
+//     Photo objects
 //   See also: photos.js, upload.js
 extension.after_upload.add(function(photo_ids, failed) {
 	Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService)

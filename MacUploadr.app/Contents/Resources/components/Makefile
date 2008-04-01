@@ -36,7 +36,7 @@ all:
 	@echo "Platform targets:"
 	@echo "  mac (Intel)"
 	@echo "  ppc"
-	@echo "  linux"
+	@echo "  linux - not implemented"
 	@echo "  universal (combines mac and ppc dylibs using lipo)"
 	@echo "Components:"
 	@echo "  gm"
