@@ -9,11 +9,11 @@
  */
 
 // Check the command line queue for arguments
-var clh = function(queue) {
+var clh = function(silent, queue) {
 	if (null == queue) {
 		var comp = Cc["@mozilla.org/commandlinehandler/general-startup;1?type=flcmdline"]
 			.getService(Ci.flICLH);
 		queue = comp.getQueue();
 	}
-	photos.add(queue.split('|||||'));
+	photos.add(queue.split('|||||'), silent);
 };

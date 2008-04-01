@@ -91,7 +91,7 @@ var users = {
 			meta.login();
 
 			// Check the command line
-			clh();
+			clh(false);
 
 			// Login is not *really* finished yet because API calls haven't
 			// returned but do extension stuff anyway
@@ -173,9 +173,9 @@ var users = {
 
 		// Force the bandwidth meter and command line handler if there's
 		// no one logged in
-		if (!users.nsid) {
+		if (!users.token) {
 			ui.users_updated();
-			clh();
+			clh(true);
 		}
 
 	},
