@@ -52,7 +52,8 @@ Install the Mac version of XULRunner, which will live in
 Install MacPorts if you haven't already:
   http://svn.macosforge.org/repository/macports/downloads/MacPorts-1.5.0/
 
-TODO: libIDL from MacPorts
+The Mozilla tools require the IDL library:
+  $ sudo port install libidl
 
 
 
@@ -145,7 +146,6 @@ Install prerequisites with MacPorts:
   $ sudo port install jpeg configure.flags=-O3
   $ sudo port install tiff configure.flags=-O3
   $ sudo port install libpng
-  $ sudo port install libidl # TODO: Move north?
 
 Download GraphicsMagick source:
   ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/

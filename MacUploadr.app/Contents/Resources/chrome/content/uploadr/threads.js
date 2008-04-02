@@ -570,15 +570,13 @@ RetryUploadCallback.prototype = {
 	}
 };
 
-// Job to force ordering of photo._add calls
-//   This is for dock.xul
-var PhotoAdd = function(path, obj) {
+// Job to force ordering of photo._add calls for dock.xul
+var PhotoAdd = function(path) {
 	this.path = path;
-	this.obj = obj;
 };
 PhotoAdd.prototype = {
 	run: function() {
-		threads.main.dispatch(new PhotoAddCallback(this.path, this.obj),
+		threads.main.dispatch(new PhotoAddCallback(this.path),
 			threads.main.DISPATCH_NORMAL);
 	},
 	QueryInterface: function(iid) {
@@ -588,17 +586,12 @@ PhotoAdd.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
-var PhotoAddCallback = function(path, obj) {
+var PhotoAddCallback = function(path) {
 	this.path = path;
-	this.obj = obj;
 };
 PhotoAddCallback.prototype = {
 	run: function() {
-		// TODO: Rewrite to submit whole object?
 		photos.add([this.path]);
-		if (null != this.obj) {
-			photos.list[photos.list.length - 1] = this.obj;
-		}
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {

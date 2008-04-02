@@ -271,14 +271,6 @@ var wrap = {
 			upload.finalize();
 		},
 
-		// Unused, done using a closure in upload.js
-		/*
-		create: function(token, title, description, primary_photo_id) {
-		},
-		_create: function(rsp) {
-		},
-		*/
-
 		getList: function(token, nsid) {
 			flickr.photosets.getList(wrap.photosets._getList, token, nsid);
 		},
