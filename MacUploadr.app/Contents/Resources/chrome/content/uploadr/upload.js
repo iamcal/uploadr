@@ -799,18 +799,40 @@ Upload.prototype = {
 			pump.init(_istream, -1, -1, 0, 0, false);
 			pump.asyncRead({
 				id: this.id,
-				raw: [],
+				content_length: null,
+				raw: '',
 				onStartRequest: function(request, context) {},
 				onStopRequest: function(request, context, status) {
 					istream.close();
 					ostream.close();
-					threads.main.dispatch(new UploadDoneCallback(
-						this.raw.join(''), this.id),
-						threads.main.DISPATCH_NORMAL);
 				},
 				onDataAvailable: function(request, context,
 					stream, offset, count) {
-					this.raw.push(istream.read(count));
+					this.raw += istream.read(count);
+
+					// If we've received all of the headers, grab the
+					// content length and drop the headers
+					if (!this.content_length
+						&& this.raw.match(/\r?\n\r?\n/)) {
+						var match = this.raw.match(
+							/^Content-Length:\s*([0-9]+)$/mi);
+						if (match) {
+							this.content_length = match[1];
+							this.raw = this.raw.split(/\r?\n\r?\n/)[1];
+						}
+					}
+
+					// Nothing left to do if we don't know the length
+					if (!this.content_length) { return; }
+
+					// Also nothing more to do if there's still data coming
+					if (this.raw.length != this.content_length) { return; }
+
+					// Dispatch to the UI as soon as we have the entire
+					// payload
+					threads.main.dispatch(new UploadDoneCallback(
+						this.raw, this.id), threads.main.DISPATCH_NORMAL);
+
 				},
 			}, null);
 		} catch (err) {
@@ -854,21 +876,15 @@ UploadDoneCallback.prototype = {
 				.logStringMessage('UPLOAD DONE: ' + this.raw);
 		}
 
-		// Parse HTTP
-		var http = this.raw.split(/\r?\n/);
+		// Try to parse the response but fail gracefully
 		var rsp = false;
-		if (http && http[0] &&
-			http[0].match(/^HTTP\/1\.[01] 200 OK/)) {
-			while ('' != http[0]) { http.shift(); }
-			try {
-				var parser =
-					Cc['@mozilla.org/xmlextras/domparser;1']
-					.createInstance(Ci.nsIDOMParser);
-				rsp = parser.parseFromString(http.join(''),
-					'text/xml').documentElement;
-			} catch (err) {
-				Components.utils.reportError(err);
-			}
+		try {
+			var parser = Cc['@mozilla.org/xmlextras/domparser;1']
+				.createInstance(Ci.nsIDOMParser);
+			rsp = parser.parseFromString(this.raw,
+				'text/xml').documentElement;
+		} catch (err) {
+			Components.utils.reportError(err);
 		}
 
 		upload._start(rsp, this.id);
