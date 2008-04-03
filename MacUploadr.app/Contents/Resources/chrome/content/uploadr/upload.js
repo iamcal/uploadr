@@ -806,6 +806,10 @@ Upload.prototype = {
 					istream.close();
 					ostream.close();
 				},
+
+				// Docs are slim so I'm not sure if this gets called only
+				// once per request or perhaps multiple times
+				//   The code can handle whatever
 				onDataAvailable: function(request, context,
 					stream, offset, count) {
 					this.raw += istream.read(count);
