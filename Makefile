@@ -355,12 +355,12 @@ endif
 	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar \
-		$(BUILD)/new 2> /dev/null > /dev/null
+		$(BUILD)/new &> /dev/null
 #	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar
 #	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 #		$(MOZILLA)/tools/update-packaging/make_incremental_update.sh \
 #		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar \
-#		$(BUILD)/old $(BUILD)/new 2> /dev/null > /dev/null
+#		$(BUILD)/old $(BUILD)/new &> /dev/null
 ifeq (win, $(PLATFORM))
 	@rm -rf $(BUILD)/new
 else

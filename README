@@ -351,6 +351,32 @@ If you do not want to create update files (see below):
 Mac
 ---
 
+The nice background image for the DMGs must be recreated each time you
+change version numbers.
+  o Start Disk Utility and create a new image called "Flickr Uploadr
+    $(VERSION)" (substitute your version)
+  o Create a folder there called "Flickr Uploadr.app" and a symbolic
+    link called "Applications"
+  o Copy one of the installer images from mac_installer/ in as ".i.png"
+  o Create a symbolic link to that image as "i.png"
+  o Open the image with Finder and press Command+J to set folder options
+      o Select "This window only"
+      o Set the "Icon size" to 128px
+      o Uncheck "Snap to grid"
+      o Set the background picture to your "i.png" symbolic link (this
+        is rather finicky)
+      o Close the settings window
+  o Delete the "i.png" symbolic link (the hidden file will remain)
+  o Arrange the icons appropriately
+  o Close the window
+
+After all of that, copy the .DS_Store file into your source tree, the
+Makefile will take care of everything else (substitute your version):
+  $ cp /Volumes/Flickr\ Uploadr\ $(VERSION)/.DS_Store \
+    UPLOADR/mac_installer/DS_Store
+
+Unmount and delete the disk image you created.
+
 One-command builds for all eight languages:
   $ make mac all
 
