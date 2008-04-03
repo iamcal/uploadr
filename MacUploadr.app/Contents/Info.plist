@@ -70,7 +70,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 		</dict>
 	</array>
 	<key>CFBundleGetInfoString</key>
-	<string>Flickr Uploadr 3.1a5, (c) Yahoo!, Inc.</string>
+	<string>Flickr Uploadr 3.1, (c) Yahoo!, Inc.</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.flickr.uploadr</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -80,7 +80,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.1a5</string>
+	<string>3.1</string>
 	<key>CFBundleSignature</key>
 	<string>FLUP</string>
 	<key>CFBundleIconFile</key>
@@ -97,6 +97,6 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3.1a5</string>
+	<string>3.1</string>
 </dict>
 </plist>

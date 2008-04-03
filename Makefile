@@ -52,7 +52,7 @@ endif
 # Configuration
 
 # Version number for Uploadr
-VER := 3.1a5
+VER := 3.1
 
 # Source files
 #   Even though this isn't a very Windows-y path, it makes life
@@ -66,7 +66,7 @@ ifeq (win, $(filter win, $(MAKECMDGOALS)))
 PLATFORM := win
 
 # Dated version for the NSIS installer
-VER_DATE := 2008.03.28.01
+VER_DATE := 2008.04.03.01
 
 # Location of Mozilla tree for the MAR tools
 MOZILLA := /c/mozilla
@@ -229,6 +229,8 @@ endif
 	mkdir -p $(RES)/defaults/preferences
 	cp $(SRC)/Resources/defaults/preferences/*.js \
 		$(RES)/defaults/preferences/
+	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/defaults/preferences/prefs.js > \
+		$(RES)/defaults/preferences/prefs.js
 
 	@# XULRunner locale
 ifeq (mac, $(PLATFORM))
@@ -239,8 +241,6 @@ else
 	rm $(RES)/xulrunner/chrome/??-??.*
 	cp ./xulrunner_locales/$(INTL).* $(RES)/xulrunner/chrome/
 endif
-	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/defaults/preferences/prefs.js > \
-		$(RES)/defaults/preferences/prefs.js
 
 	@# Chrome
 	mkdir $(RES)/chrome

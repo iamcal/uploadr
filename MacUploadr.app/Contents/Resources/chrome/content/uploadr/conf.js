@@ -28,7 +28,7 @@ var SITE_HOST = '', REST_HOST = '', UPLOAD_HOST = '';
 const conf = {
 
 	// What version am I?
-	version: '3.1a5',
+	version: '3.1',
 
 	// What types of API events should be written to the console?
 	console: {

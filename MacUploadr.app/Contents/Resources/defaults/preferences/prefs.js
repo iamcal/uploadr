@@ -21,10 +21,6 @@ pref('app.update.url.details', 'http://flickr.com/tools/uploadr/');
 // Locale
 pref('general.useragent.locale', 'en-US');
 
-// Can't do this because XMLHttpRequest obeys it
-//pref('network.protocol-handler.external.http', true);
-//pref('network.protocol-handler.external.https', true);
-
 // Allow nicely launching their browser
 pref('network.protocol-handler.warn-external.http', false);
 pref('network.protocol-handler.warn-external.https', false);
@@ -42,10 +38,7 @@ pref('extensions.dss.switchPending', false);
 pref('extensions.ignoreMTimeChanges', false);
 pref('extensions.logging.enabled', false);
 pref('general.skins.selectedSkin', 'uploadr');
-
-// Don't know what to put here, this is Firefox's version
-//pref('extensions.update.url', 'https://addons.mozilla.org/update/VersionCheck.php?reqVersion=%REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=%ITEM_MAXAPPVERSION%&status=%ITEM_STATUS%&appID=%APP_ID%&appVersion=%APP_VERSION%&appOS=%APP_OS%&appABI=%APP_ABI%');
-
+pref('extensions.update.url', 'https://secure.flickr.com/services/uploadr/extensions/?reqVersion=%REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=%ITEM_MAXAPPVERSION%&status=%ITEM_STATUS%&appID=%APP_ID%&appVersion=%APP_VERSION%&appOS=%APP_OS%&appABI=%APP_ABI%');
 pref('extensions.getMoreExtensionsURL', 'http://flickr.com/tools/uploadr/');
 pref('extensions.getMoreThemesURL', 'http://flickr.com/tools/uploadr/');
 pref('extensions.getMorePluginsURL', 'http://flickr.com/tools/uploadr/');
