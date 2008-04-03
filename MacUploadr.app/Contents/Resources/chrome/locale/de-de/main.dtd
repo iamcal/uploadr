@@ -109,7 +109,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY dialog.about.code "Quellcode verfügbar unter http://flickr.com/tools/uploadr/.">
 <!ENTITY help "Tipps &#38; Tricks">
 <!ENTITY help.offline "Sie können offline arbeiten.">
-<!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie bereit zum Hochladen auf Flickr sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche "Fotos hochladen".">
+<!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie bereit zum Hochladen auf Flickr sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche &#34;Fotos hochladen&#34;.">
 <!ENTITY help.offline.text.second "Wenn Sie möchten, können Sie die ganze Zeit angemeldet bleiben.  Wenn Sie angemeldet sind, können Sie Ihre Elemente in Serien organisieren.">
 <!ENTITY help.drag "Mit der Maus ziehen und ablegen ist einfach praktisch.">
 <!ENTITY help.drag.text "Sie können die Elemente in die Reihenfolge ziehen, in der sie nach dem Hochladen auf Ihrer Photostream-Seite angezeigt werden sollen.  Sie können jede Sortierung auch wieder rückgängig machen, sodass die Elemente wieder nach Aufnahmedatum sortiert werden.">
