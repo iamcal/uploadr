@@ -21,7 +21,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.tools.console "Konsole">
 <!ENTITY menu.help "Hilfe">
 <!ENTITY menu.help.about "Infos zu Flickr Uploadr">
-<!ENTITY menu.help.tips "Tipps &#38; Tricks">
+<!ENTITY menu.help.tips "Tipps und Tricks">
 <!ENTITY menu.help.faq "FAQ">
 <!ENTITY menu.help.update "Auf Updates prüfen...">
 <!ENTITY notloggedin "Sie arbeiten derzeit offline.">
@@ -107,7 +107,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick unterliegt Copyright  © 2007 GraphicsMagick Group.  Es ist im Rahmen der MIT/X11-Lizenz verfügbar.">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 unterliegt Copyright © 2004-2007 Andreas Huggel.  Es ist im Rahmen der GNU General Public License verfügbar.">
 <!ENTITY dialog.about.code "Quellcode verfügbar unter http://flickr.com/tools/uploadr/.">
-<!ENTITY help "Tipps &#38; Tricks">
+<!ENTITY help "Tipps und Tricks">
 <!ENTITY help.offline "Sie können offline arbeiten.">
 <!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie bereit zum Hochladen auf Flickr sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche &#34;Fotos hochladen&#34;.">
 <!ENTITY help.offline.text.second "Wenn Sie möchten, können Sie die ganze Zeit angemeldet bleiben.  Wenn Sie angemeldet sind, können Sie Ihre Elemente in Serien organisieren.">

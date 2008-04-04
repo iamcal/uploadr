@@ -145,8 +145,16 @@ var upload = {
 
 			// Make sure this isn't a bandwidth error, as those are
 			// unrecoverable
-			if (upload.bandwidth(rsp)) {
-				return;
+			if (upload.bandwidth(rsp)) { return; }
+
+			// If the result indicates that videos are disabled
+			if ('object' == typeof rsp &&
+				7 == parseInt(rsp.getElementsByTagName('err')[0]
+				.getAttribute('code'))) {
+				alert(locale.getString('video.disabled.text'),
+					locale.getString('video.disabled.title'),
+					locale.getString('video.disabled.ok'));
+				upload.cancel = true;
 			}
 
 			// Still have available retries
@@ -311,9 +319,7 @@ var upload = {
 			photos.uploading[id].progress_bar.done(false);
 			++photos.fail;
 			photos.failed.push(photos.uploading[id]);
-			if (upload.bandwidth(rsp)) {
-				return;
-			}
+			if (upload.bandwidth(rsp)) { return; }
 		}
 
 		// Let extensions have their say
@@ -322,7 +328,7 @@ var upload = {
 		photos.uploading[id] = null;
 
 		// For the last upload, we have some cleanup to do
-		if ((upload.cancel || photos.ok == photos.uploading.length) &&
+		if ((upload.cancel || photos.ok + photos.fail == photos.uploading.length) &&
 			0 == upload.tickets_count) {
 			upload.done();
 		}
@@ -559,7 +565,7 @@ var upload = {
 
 		// An upload must be done before it can be finalized
 		//   Uploads that are done might still have set calls outstanding
-		if (!upload.cancel && photos.ok != photos.uploading.length
+		if (!upload.cancel && photos.ok + photos.fail != photos.uploading.length
 			|| upload.tickets_count || photos.sets_out) {
 			return;
 		}
