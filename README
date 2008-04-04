@@ -6,15 +6,16 @@ the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
-
-
-Development environment
 ------------------------------------------------------------------------
 
 This guide uses UPLOADR to indicate the root of the Flickr Uploadr
 source tree on your filesystem.  It probably shouldn't contain spaces
 (C:\Documents and Settings\you\My Documents\Flickr Uploadr is probably
 a bad idea).
+
+On Windows, you must use the MSys bash shell to build Uploadr.  Cygwin
+is not supported.  Instructions for getting your MSys environment setup
+are included below.
 
 You can obtain the Flickr Uploadr source code from either a tarball or
 from Subversion.
@@ -24,6 +25,11 @@ Download tarball:
 
 Checkout from Subversion:
   $ svn co http://code.flickr.com/svn/trunk/uploadr UPLOADR
+
+
+
+XULRunner
+------------------------------------------------------------------------
 
 XULRunner trunk builds:
   ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
@@ -175,7 +181,7 @@ are included in the tarball/Subversion trees.
 
 
 
-EXIV2
+Exiv2
 ------------------------------------------------------------------------
 
 Download Exiv2 source from:
@@ -359,7 +365,7 @@ Studio 8 installed.  The installer references vcredist_x86.exe.  For
 controlled experimentation it is OK to omit this installation step by
 commenting line 110 in UPLOADR/windows_install_build.nsi.
 
-One-command builds for all eight languages:
+One-command builds in MSys for all eight languages:
   $ make win all
 
 If you do not want to create update files (see below):
