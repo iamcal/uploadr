@@ -38,7 +38,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY buttons.ok "OK">
 <!ENTITY bandwidth.remaining "Rimasto/i questo mese">
 <!ENTITY bandwidth.batch "Questo batch">
-<!ENTITY photostream.title "Il tuo book fotografico">
+<!ENTITY photostream.title "Il tuo album">
 <!ENTITY photos.sort.default "I tuoi elementi sono attualmente ordinati per data di scatto.  Trascinali per riordinarli.">
 <!ENTITY photos.sort.revert "Riordina elementi per data di scatto">
 <!ENTITY photos.init.text.1 "Oppure fai clic su ">
@@ -112,5 +112,5 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY help.offline.text.first "L’Uploadr è studiato per consentirti di effettuare la maggior parte delle operazioni di organizzazione e di inserimento dei tag offline.  Quando sei pronto per il caricamento su Flickr, accedi al tuo account e fai clic su Inserisci una foto.">
 <!ENTITY help.offline.text.second "Puoi restare connesso in permanenza, se lo desideri.  Una volta effettuato l'accesso, puoi organizzare i tuoi elementi in set.">
 <!ENTITY help.drag "Il ^^drag-and-drop^^ è tuo amico.">
-<!ENTITY help.drag.text "Puoi trascinare gli elementi nell’ordine in cui desideri che vengano visualizzati sulla pagina del tuo book fotografico mentre li carichi.  All’occorrenza, puoi anche annullare qualsiasi impostazione applicata in modo che gli elementi tornino a essere ordinati per data di scatto.">
+<!ENTITY help.drag.text "Puoi trascinare gli elementi nell’ordine in cui desideri che vengano visualizzati sulla pagina del tuo album  mentre li carichi.  All’occorrenza, puoi anche annullare qualsiasi impostazione applicata in modo che gli elementi tornino a essere ordinati per data di scatto.">
 <!ENTITY help.faq "Se hai altri dubbi, leggi le ^^FAQ su Uploadr^^">

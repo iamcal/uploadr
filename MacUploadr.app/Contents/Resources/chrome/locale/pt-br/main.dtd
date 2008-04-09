@@ -74,7 +74,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.resize.1280 "1280 pixels (adequado para pequenas impressões)">
 <!ENTITY settings.resize.1600 "1600 pixels (adequado para impressões maiores)">
 <!ENTITY settings.resize.2048 "2048 pixels (melhor para arquivamento)">
-<!ENTITY settings.note "Observação:">
+<!ENTITY settings.note "Nota:">
 <!ENTITY settings.note.text "Suas configurações de privacidade, segurança e tipo de conteúdo no Uploadr são separadas das configurações no flickr.com.">
 <!ENTITY meta.single.title "Título:">
 <!ENTITY meta.batch.title "Substituir títulos:">
@@ -84,7 +84,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY meta.batch.description.tooltip "Digite uma descrição aqui para anexá-la às descrições dos itens selecionados.">
 <!ENTITY meta.single.tags "Tags:">
 <!ENTITY meta.batch.tags "Adicionar às tags existentes:">
-<!ENTITY meta.tags.tooltip "Separar cada tag com um espaço: blog urbano celular. Ou use aspas para juntar duas palavras em uma tag: &#34;troca diária&#34;.">
+<!ENTITY meta.tags.tooltip "Separar cada tag com um espaço: blog urbano celular com câmera. Ou use aspas para juntar duas palavras em uma tag: &#34;troca diária&#34;.">
 <!ENTITY meta.content_type "Tipo de conteúdo:">
 <!ENTITY meta.safety_level "Nível de segurança:">
 <!ENTITY meta.first "Todos os itens estão selecionados">

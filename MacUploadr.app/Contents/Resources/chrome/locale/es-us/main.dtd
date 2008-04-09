@@ -7,7 +7,7 @@ distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
 -->
 <!ENTITY title "Uploadr de Flickr">
-<!ENTITY menu.upload "Cargar">
+<!ENTITY menu.upload "Subir fotos">
 <!ENTITY menu.upload.add "Agregar">
 <!ENTITY menu.upload.preferences "Preferencias">
 <!ENTITY menu.upload.exit "Salir">
@@ -32,13 +32,13 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY auth.alternate "Si tu explorador no se abre automáticamente, puedes visitar esta dirección URL y luego regresar y hacer clic en el botón ¡LISTO! grande.">
 <!ENTITY tools.add "+ Agregar">
 <!ENTITY tools.remove "- Quitar">
-<!ENTITY buttons.upload "Cargar">
+<!ENTITY buttons.upload "Subir fotos">
 <!ENTITY buttons.cancel "Cancelar">
 <!ENTITY buttons.auth "¡Listo!">
 <!ENTITY buttons.ok "ACEPTAR">
 <!ENTITY bandwidth.remaining "Disponible este mes">
 <!ENTITY bandwidth.batch "Este lote">
-<!ENTITY photostream.title "Tu fotosecuencia">
+<!ENTITY photostream.title "Tu galería">
 <!ENTITY photos.sort.default "En este momento, tus elementos están ordenados por la fecha en que se tomaron.  Arrastra y coloca para reordenar.">
 <!ENTITY photos.sort.revert "Reordenar elementos por fecha en que se tomaron">
 <!ENTITY photos.init.text.1 "O bien, haz clic en ">
@@ -112,5 +112,5 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY help.offline.text.first "El Uploadr está diseñado para permitirte realizar gran parte de tus actividades de organización y etiquetado de fotos sin conexión.  Cuando estés listo para cargar a Flickr, inicia sesión en tu cuenta y presiona el enorme botón Cargar fotos.">
 <!ENTITY help.offline.text.second "Si lo deseas, puedes mantener la sesión abierta todo el tiempo.  Cuando hayas iniciado sesión, puedes organizar tus elementos en álbumes.">
 <!ENTITY help.drag "^^Arrastrar y colocar^^ es tu amigo.">
-<!ENTITY help.drag.text "Puedes arrastrar elementos en el orden que desees que aparezcan en la página de tu fotosecuencia cuando estén cargados.  Si necesitas hacerlo, también puedes restablecer la organización de modo que los elementos vuelvan a estar ordenados por la fecha en que se tomaron.">
+<!ENTITY help.drag.text "Puedes arrastrar elementos en el orden que desees que aparezcan en la página de tu galería cuando estén cargados.  Si necesitas hacerlo, también puedes restablecer la organización de modo que los elementos vuelvan a estar ordenados por la fecha en que se tomaron.">
 <!ENTITY help.faq "Si tienes alguna duda más, visita nuestra ^^pregunta frecuente sobre Uploadr^^">

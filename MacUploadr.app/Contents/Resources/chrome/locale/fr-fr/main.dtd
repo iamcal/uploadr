@@ -38,7 +38,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY buttons.ok "OK">
 <!ENTITY bandwidth.remaining "Quitté ce mois">
 <!ENTITY bandwidth.batch "Ce lot">
-<!ENTITY photostream.title "Votre book">
+<!ENTITY photostream.title "Votre galerie">
 <!ENTITY photos.sort.default "Vos éléments sont classés dans l'ordre où vous les avez pris.  Glissez-déposez pour les reclasser.">
 <!ENTITY photos.sort.revert "Retrier les éléments dans l'ordre où vous les avez pris.">
 <!ENTITY photos.init.text.1 "Ou cliquez sur ">

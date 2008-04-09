@@ -73,7 +73,8 @@ foreach (array('de-de', 'es-us', 'fr-fr', 'it-it', 'ko-kr', 'pt-br', 'zh-hk') as
 			echo "[error] Opening $file\n";
 			continue;
 		}
-		if (false === fwrite($file_p, array_diff($lines, array('')))) {
+		if (false === fwrite($file_p, implode("\n",
+			array_diff($lines, array(''))))) {
 			echo "[error] Writing $file\n";
 		}
 		if (false === fclose($file_p)) {

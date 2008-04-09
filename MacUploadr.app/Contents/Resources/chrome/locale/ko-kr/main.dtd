@@ -7,7 +7,7 @@ distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
 -->
 <!ENTITY title "Flickr Uploadr">
-<!ENTITY menu.upload "업로드">
+<!ENTITY menu.upload "사진 업로드">
 <!ENTITY menu.upload.add "추가">
 <!ENTITY menu.upload.preferences "기본 설정">
 <!ENTITY menu.upload.exit "종료">
@@ -32,7 +32,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY auth.alternate "브라우저가 자동으로 열리지 않을 경우 이 URL을 방문한 다음 다시 돌아와서 커다란 준비! 단추를 클릭하세요.">
 <!ENTITY tools.add "+ 추가">
 <!ENTITY tools.remove "- 제거">
-<!ENTITY buttons.upload "업로드">
+<!ENTITY buttons.upload "사진 업로드">
 <!ENTITY buttons.cancel "취소">
 <!ENTITY buttons.auth "준비!">
 <!ENTITY buttons.ok "확인">
@@ -41,8 +41,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photostream.title "포토스트림">
 <!ENTITY photos.sort.default "아이템은 현재 촬영 날짜 순으로 정렬되어 있습니다.  끌어다 놓아서 재정렬하십시오.">
 <!ENTITY photos.sort.revert "촬영 날짜 순으로 아이템 재정렬">
-<!ENTITY photos.init.text.1 "또는 ">
-<!ENTITY photos.init.text.2 " 을 클릭하여 컴퓨터에서 파일을 찾습니다.">
+<!ENTITY photos.init.text.1 "Or, click ">
+<!ENTITY photos.init.text.2 " to find files on your computer.">
 <!ENTITY photos.init.note "참고하십시오.">
 <!ENTITY photos.new "그 배치를 업로드하는 중에 새로운 배치를 시작할 수 있습니다.">
 <!ENTITY settings "설정">
@@ -114,3 +114,4 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY help.drag "^^끌어서 놓기^^는 가장 많이 사용하는 방법입니다.">
 <!ENTITY help.drag.text "아이템을 업로드할 때 포토스트림 페이지에 표시되길 원하는 순서로 아이템을 끌어올 수 있습니다.  또한 필요하면 정렬 기준을 재설정하여 촬영 날짜 순으로 아이템이 정렬되도록 되돌릴 수도 있습니다.">
 <!ENTITY help.faq "그 밖의 궁금한 점은 ^^Uploadr FAQ^^를 방문해 주십시오.">
+<!ENTITY photos.init.text.joined "또는 을 클릭하여 컴퓨터에서 파일을 찾습니다.">
