@@ -323,13 +323,17 @@ endif
 
 	@# Create NSIS installer for Windows
 ifeq (win, $(PLATFORM))
-	sed 's/English\.nsh/$(INTL_WIN)/g' windows_install_build.nsi > \
-		windows_install_build_real.nsi
+
+	@# TODO: This is broken in Windows because the *.nsi and *.nsh files
+	@# are stored as Windows Unicode, which is UTF-16 or UCS-2
+	sed 's/English/$(INTL_WIN)/g' windows_install_build.nsi > \
+		windows_install_build-$(INTL_SHORT).nsi
+
 	/c/Program\ Files/NSISUnicode/makensis.exe -DVERSION=$(VER) \
-		-DVERSION_DATE=$(VER_DATE) windows_install_build_real.nsi
+		-DVERSION_DATE=$(VER_DATE) windows_install_build-$(INTL_SHORT).nsi
 	mv FlickrUploadr-$(VER)-XX.exe \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).exe
-	rm windows_install_build_real.nsi
+#	rm windows_install_build-$(INTL_SHORT).nsi
 endif
 
 	@# Create ??? for Linux
