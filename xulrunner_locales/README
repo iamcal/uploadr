@@ -1,0 +1,19 @@
+
+What the heck is up with these JARs?
+----------------------------------------
+
+The JARs in this directory are for XULRunner internal strings - stuff like the extension manager, the automatic update service, etc.
+
+When we first shipped Uploadr 3, XULRunner trunk didn't currently have locale JARs built, besides en-US. Firefox 3 will probably fix that, but for the moment we're stuck doing it the long way round.
+
+After identifying the strings we actually use, inside the en-US.jar, we downloaded copies of Firefox 2 in our target locales and located the same strings. We then copied and pasted those strings into the en-US.jar to make locale-specific JARs. As a result, these JARs mostly contain english strings, though hopefully none are currently exposed by the application. As we use more XULRunnr internal stuff, we might need to add translations for more of the strings inside these JARs.
+
+The following files inside the JARs are currently modified from the en-US base:
+
+/global/dialog.properties
+/global/wizard.dtd
+/mozapps/update/errors.dtd
+/mozapps/update/history.dtd
+/mozapps/update/incompatible.dtd
+/mozapps/update/updates.dtd
+/mozapps/update/updates.properties
