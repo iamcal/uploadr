@@ -1,0 +1,4 @@
+<!ENTITY errors.title "Errores">
+<!ENTITY errors.intro.title "Los siguientes componentes no se pudieron instalar por errores
+                                       (el fichero no se pudo descargar, estaba corrupto, o por alguna
+                                       otra razón).">

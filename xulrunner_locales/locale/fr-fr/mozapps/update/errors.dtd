@@ -1,0 +1,5 @@
+<!ENTITY  errors.title                "Erreurs">
+<!ENTITY  errors.intro.title          "Les éléments suivants n'ont pas pu être installés suite à des erreurs
+                                       (le fichier n'a pas pu être téléchargé, était corrompu, ou pour une
+                                       autre raison).">
+

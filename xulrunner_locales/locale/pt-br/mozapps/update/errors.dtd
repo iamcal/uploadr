@@ -1,0 +1,5 @@
+<!ENTITY  errors.title                "Erros">
+<!ENTITY  errors.intro.title          "Estes componentes não foram instalados devido a erros
+                                         (o arquivo não foi encontrado, estava corrompido ou algum
+                                         outro motivo).">
+

@@ -1,0 +1,75 @@
+<!ENTITY  updateWizard.title              "Atualização de programa">
+
+<!ENTITY  window.width                    "36em">
+<!ENTITY  window.macWidth                 "39em">
+
+<!ENTITY  checking.title                  "Verificando atualizações">
+<!ENTITY  checking.label                  "O &brandShortName; está verificando a existência de atualizações...">
+
+<!ENTITY  cancel.label                    "Cancelar">
+<!ENTITY  cancel.accesskey                "C">
+
+<!ENTITY  noupdatesfound.title            "Nenhuma atualização encontrada">
+<!ENTITY  noupdatesfound.intro            "Não há atualizações disponíveis. O &brandShortName; pode verificar periodicamente a disponibilidade de atualizações.">
+
+<!ENTITY  updatesfound.title              "Atualização disponível">
+
+<!ENTITY  moreDetails.label               "Mais detalhes »">
+<!ENTITY  moreDetails.accesskey           "m">
+<!ENTITY  clickHere.label                 "Mais informações sobre esta atualização">
+
+<!ENTITY  incompatible.warning            "A atualização desativará algumas de suas extensões e temas até que elas sejam atualizadas.">
+<!ENTITY  listIncompatible.label          "Exibir lista">
+<!ENTITY  listIncompatible.accesskey      "x">
+
+<!ENTITY  upgrade.evangelism              "É enfaticamente recomendado que você atualize o &brandShortName; assim que for possível.">
+
+<!ENTITY  license.title                   "Acordo de licença">
+<!ENTITY  license.intro                   "Para instalar esta atualização você deve concordar com o acordo de licença. Por favor, leia-o atentamente:">
+<!ENTITY  license.instructions            "Caso concorde com os termos deste acordo, clique abaixo em 'Eu concordo' para continuar com a instalação desta atualização.">
+
+<!ENTITY  license.titleText               "Acordo de licença de software">
+<!ENTITY  license.introText               "Termos e condições para o uso deste software.">
+<!ENTITY  license.instructionText         "Por favor, leia o acordo de licença. Use a barra de rolagem para examinar o restante do acordo.">
+<!ENTITY  license.accept                  "Eu aceito os termos do acordo de licença">
+<!ENTITY  license.accept.accesskey        "E">
+<!ENTITY  license.decline                 "Eu NÃO aceito os termos do acordo de licença">
+<!ENTITY  license.decline.accesskey       "N">
+
+<!ENTITY  downloading.title               "Recebendo a atualização">
+<!ENTITY  downloading.intro               "Recebendo a atualização...">
+<!ENTITY  connecting.label                "Conectando-se ao servidor de atualização...">
+<!ENTITY  verificationFailedText.label    "O &brandShortName; não pôde verificar a integridade da atualização incremental recebida. O pacote de atualização completo está sendo recebido.">
+
+<!ENTITY  details.link                    "Detalhes">
+<!ENTITY  pause.label                     "Pausa">
+<!ENTITY  pause.accesskey                 "u">
+<!ENTITY  close.label                     "Fechar">
+<!ENTITY  close.accesskey                 "F">
+
+<!ENTITY  error.label                     "Houve problemas ao verificar, receber ou instalar esta atualização. O &brandShortName; não pôde ser atualizado devido a:">
+                                           
+<!ENTITY  errorManual.label               "Você pode atualizar manualmente o &brandShortName; visitando este link e baixando a versão mais recente:">
+                                           
+<!ENTITY  errorpatching.title             "Falha na atualização">
+<!ENTITY  errorpatching.intro             "A atualização incremental não pôde ser aplicada. O &brandShortName; tentará de novo recebendo a atualização completa.">
+
+<!ENTITY  finished.title                  "Atualização recebida">
+<!ENTITY  finished.text                   "A atualização foi recebida e verificada com êxito.
+Será instalada quando o &brandShortName; for reiniciado.">
+
+<!ENTITY  finishedBackground.title        "Atualização pronta para instalar">
+<!ENTITY  finishedBackground.text         "O &brandShortName; recebeu e verificou uma importante atualização. Clique no link abaixo para mais detalhes.">
+<!ENTITY  finishedBackground.name         "Atualização:">
+<!ENTITY  finishedBackground.more1        "Clique em 'Reiniciar o &brandShortName; agora' para instalar a atualização.">
+<!ENTITY  finishedBackground.more2        "Clique em Depois para fechar esta janela e continuar navegando. O &brandShortName; instalará a atualização na próxima vez que iniciar.">
+
+<!ENTITY  installed.title                 "Atualização instalada">
+<!ENTITY  installed.intro                 "A atualização foi instalada com êxito.">
+<!ENTITY  whatsnew.label                  "Saiba mais sobre as novidades...">
+
+<!ENTITY  update.details.label            "Detalhes">
+<!ENTITY  update.installedOn.label        "Instalada em:">
+<!ENTITY  update.status.label             "Status:">
+
+<!ENTITY  incompatibleChecking.label      "Checking if this update will cause problems with your extensions and/or themes...">
