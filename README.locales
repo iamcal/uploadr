@@ -1,0 +1,59 @@
+The Flickr Uploadr has official builds for the following locales:
+
+	en-US	US English
+	de-de	German
+	es-us	Spanish
+	fr-fr	French
+	it-it	Italian
+	ko-kr	Korean
+	pt-br	Portuguese
+	zh-hk	Traditional Chinese
+
+
+
+If you want to translate the Uploadr into another language, there
+are several files that you'll need to edit. To customize the 
+Flickr-specific strings, you'll need to edit these files:
+
+/MacUploadr.app/Contents/Resources/chrome/locale/en-US/main.dtd
+/MacUploadr.app/Contents/Resources/chrome/locale/en-US/main.properties
+
+for an example, see the korean versions:
+
+/MacUploadr.app/Contents/Resources/chrome/locale/ko-kr/main.dtd
+/MacUploadr.app/Contents/Resources/chrome/locale/ko-kr/main.properties
+
+
+
+XULRunner also contains some non-flickr-specific strings which need 
+translating. The english versions can be found here:
+
+/xulrunner_locales/locale/en-US/
+
+However, not all files require translation. The only ones currently
+used by Uploadr are in the language specific directories, for
+example:
+
+/xulrunner_locales/locale/ko-kr/
+
+To avoid having to actually translate these strings, you can 
+probably find the same strings inn releases of Firefox 2, 
+assuming it's available in your language. You can check that on
+this page:
+
+http://www.mozilla.com/en-US/firefox/all.html
+
+
+
+After translating all of these files, post a link to them in the 
+Flickr Uploadr group to have these checked into SVN:
+
+http://flickr.com/groups/hackinguploadr/
+
+
+At this time, we're not making final builds available in other 
+locales, but this may change in the near future if we get 
+interest.
+
+
+--cal
