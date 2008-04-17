@@ -31,7 +31,7 @@ closedir DH;
 
 `rm $dir/??-??.*`;
 
-mkdir "$dir/build";
+`mkdir $dir/build`;
 `rm -r $dir/build/*`;
 
 for my $locale(keys %{$locales}){
@@ -41,11 +41,11 @@ for my $locale(keys %{$locales}){
 	mkdir "$dir/build/locale";
 	mkdir "$dir/build/locale/$locale";
 
-	`cp -r $dir/locale/en-US/* $dir/build/locale/$locale/`;
+	&copy_files_to("$dir/locale/en-US/", "$dir/build/locale/$locale/");
 
 	if ($locale ne 'en-US'){
 
-		`cp -r $dir/locale/$locale/* $dir/build/locale/$locale/`;
+		&copy_files_to("$dir/locale/$locale/", "$dir/build/locale/$locale/");
 	}
 
 	chdir "$dir/build";
@@ -82,3 +82,33 @@ for my $locale(keys %{$locales}){
 #
 
 print "ok, all done!\n";
+
+
+
+
+sub copy_files_to {
+
+	my ($src, $dst) = @_;
+
+	my @lines = split "\n", `find $src | grep -v .svn`;
+
+	my $src_q = quotemeta $src;
+
+	for my $file (@lines){
+
+		$file =~ s/^$src_q//;
+
+		if (length $file){
+
+			if (-f "$src$file"){
+
+				`cp $src$file $dst$file`;
+			}
+
+			if (-d "$src$file" && !-d "$dst$file"){
+
+				`mkdir $dst$file`;
+			}
+		}
+	}
+}
