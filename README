@@ -27,6 +27,35 @@ Checkout from Subversion:
   $ svn co http://code.flickr.com/svn/trunk/uploadr UPLOADR
 
 
+Windows Build Environment
+------------------------------------------------------------------------
+
+On Windows, you'll need to install MSYS to get a viable build 
+environment. Start by going here:
+
+http://sf.net/project/showfiles.php?group_id=2435
+
+Choose 'MSYS Base System', then find the file called something like
+'msysCORE-1.0.11-2007.01.19-1.tar.bz2'. Unzip this (get WinRaR if you
+can't open it) and put it somewhere like C:\msys
+
+Some of the build tools use Perl, so you'll also want to grab an MSYS
+compatible version of that. On the same download page, select
+'MSYS Supplementary Tools' and download these packages:
+
+	perl-5.6.1-MSYS-1.0.11-1.tar.bz2
+ 	crypt-1.1-1-MSYS-1.0.11-1.tar.bz2
+
+Version numbers may be higher. Unzip themn into the same folder as 
+MSYS. When you launch MSYS via the batch file in its root folder, you 
+should be able to type 'perl -v' and get a Perl banner.
+
+Next you'll need a zip utility. Go to http://www.7-zip.org/ and install
+the latest version. After installing, copy '7z.exe' and '7z.dll' from
+the install folder (usually C:\Program Files\7-Zip) into your MSYS/bin
+directory. If all went well, you should be able to type '7z' from your
+MSYS shell and get usage information.
+
 
 XULRunner
 ------------------------------------------------------------------------
@@ -34,17 +63,22 @@ XULRunner
 XULRunner trunk builds:
   ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
 
+Note: You want the version *without* 'sdk' in the name.
+
+
 Windows
 -------
 
 Download a version of XULRunner trunk and unzip it into:
   UPLOADR/MacUploadr.app/Contents/Resources/
 
-Under Windows, you'll also need bits from Mozilla's Wintools:
-  http://ftp.mozilla.org/pub/mozilla.org/mozilla/source/wintools.zip
+The XULRunner files (e.g. xulrunner.exe) should now be here:
+  UPLOADR/MacUploadr.app/Contents/Resources/xulrunner/
 
-Extract that and copy glib-1.2.dll and libIDL-0.6.dll from
-wintools/buildtools/windows/bin/x86/ to your gecko-sdk.win/bin/ directory.
+Make sure you unzip the file keeping directory paths intact. There should
+be several folders inside the 'xulrunner' folder, including 'chrome',
+'components', etc.
+
 
 Mac
 ---
@@ -81,6 +115,13 @@ Place the SDK(s) appropriately:
 These SDKs are from the Gecko 1.8 series and so are only safe to use
 if the XPCOM components use only frozen interfaces.  Fortunately,
 Uploadr currently falls into this category.
+
+
+Under Windows, you'll also need bits from Mozilla's Wintools:
+  http://ftp.mozilla.org/pub/mozilla.org/mozilla/source/wintools.zip
+
+Extract that and copy glib-1.2.dll and libIDL-0.6.dll from
+wintools/buildtools/windows/bin/x86/ to your gecko-sdk.win/bin/ directory.
 
 
 
