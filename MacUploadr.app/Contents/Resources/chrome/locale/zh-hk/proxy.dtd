@@ -1,0 +1,19 @@
+
+<!ENTITY  ProxyDialog.title             "連線設定">
+<!ENTITY  window.width                  "37em">
+<!ENTITY  window.macWidth               "39em">
+
+<!ENTITY  proxyTitle.label              "設定存取網路的代理伺服器 (Proxy)">
+<!ENTITY  directTypeRadio.label         "直接連線到網際網路">
+<!ENTITY  WPADTypeRadio.label           "自動偵測此網路的 Proxy 設定">
+<!ENTITY  manualTypeRadio.label         "手動設定 Proxy:">
+<!ENTITY  autoTypeRadio.label           "Proxy 自動設定網址 (URL):(若造成無法連線請改用手動設定)">
+<!ENTITY  configAutoconfigText.label    "配置網址 (URL):">
+<!ENTITY  reload.label                  "重新載入">
+<!ENTITY  http.label                    "HTTP Proxy:">
+<!ENTITY  ssl.label                     "SSL Proxy:">
+<!ENTITY  socks.label                   "SOCKS 主機:">
+<!ENTITY  socks4.label                  "SOCKS v4">
+<!ENTITY  socks5.label                  "SOCKS v5">
+<!ENTITY  port.label                    "Port:">
+<!ENTITY  shareproxy.label              "所有通訊協定都使用此 Proxy 代理伺服器">

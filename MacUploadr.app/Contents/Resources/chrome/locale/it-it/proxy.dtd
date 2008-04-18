@@ -1,0 +1,19 @@
+
+<!ENTITY  ProxyDialog.title             "Impostazioni di connessione">
+<!ENTITY  window.width                  "40.33em">
+<!ENTITY  window.macWidth               "41em">
+
+<!ENTITY  proxyTitle.label              "Configurazione dei proxy per l'accesso a Internet">
+<!ENTITY  directTypeRadio.label         "Connessione diretta a Internet">
+<!ENTITY  WPADTypeRadio.label           "Individua automaticamente le impostazioni proxy per questa rete">
+<!ENTITY  manualTypeRadio.label         "Configurazione manuale dei proxy">
+<!ENTITY  autoTypeRadio.label           "Configurazione automatica dei proxy (URL):">
+<!ENTITY  configAutoconfigText.label    "Indirizzo per la configurazione (URL):">
+<!ENTITY  reload.label                  "Ricarica">
+<!ENTITY  http.label                    "Proxy HTTP:">
+<!ENTITY  ssl.label                     "Proxy SSL:">
+<!ENTITY  socks.label                   "Host SOCKS:">
+<!ENTITY  socks4.label                  "SOCKS v4">
+<!ENTITY  socks5.label                  "SOCKS v5">
+<!ENTITY  port.label                    "Porta:">
+<!ENTITY  shareproxy.label              "Utilizzare lo stesso proxy per tutti i protocolli">

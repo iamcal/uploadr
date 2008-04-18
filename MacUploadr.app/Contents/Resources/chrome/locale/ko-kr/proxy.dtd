@@ -1,0 +1,19 @@
+
+<!ENTITY  ProxyDialog.title             "연결 설정">
+<!ENTITY  window.width                  "42em">
+<!ENTITY  window.macWidth               "39em">
+
+<!ENTITY  proxyTitle.label              "프록시 설정">
+<!ENTITY  directTypeRadio.label         "인터넷에 직접 연결">
+<!ENTITY  WPADTypeRadio.label           "프록시 설정 자동 감지">
+<!ENTITY  manualTypeRadio.label         "프록시 수동 설정:">
+<!ENTITY  autoTypeRadio.label           "프록시 자동 설정 주소 (URL):">
+<!ENTITY  configAutoconfigText.label    "설정 주소 (URL):">
+<!ENTITY  reload.label                  "새로 고침">
+<!ENTITY  http.label                    "HTTP 프록시:">
+<!ENTITY  ssl.label                     "SSL 프록시:">
+<!ENTITY  socks.label                   "SOCKS 호스트:">
+<!ENTITY  socks4.label                  "SOCKS v4">
+<!ENTITY  socks5.label                  "SOCKS v5">
+<!ENTITY  port.label                    "포트:">
+<!ENTITY  noproxy.label                 "프록시 사용 안 함: ">
