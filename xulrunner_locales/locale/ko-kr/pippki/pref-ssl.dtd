@@ -1,0 +1,28 @@
+<!ENTITY  SSLProtocolVersions.caption       "SSL 프로토콜 버전">
+<!ENTITY  SSLWarnings.caption               "SSL 보안 경고">
+<!ENTITY  SSLClientAuthMethod.caption       "클라이언트 인증서 선택">
+
+<!ENTITY pref.ssl.title                     "보안 소켓 레이어 (SSL)">
+<!ENTITY enable.ssl3.accesskey              "3">
+<!ENTITY enable.tls.accesskey               "T">
+<!ENTITY warn.enteringsecure.accesskey      "L">
+<!ENTITY warn.enteringweak.accesskey        "o">
+<!ENTITY warn.insecurepost.accesskey        "S">
+<!ENTITY warn.leavingsecure.accesskey       "a">
+<!ENTITY warn.viewmixed.accesskey           "V">
+<!ENTITY certselect.auto.accesskey          "A">
+<!ENTITY certselect.ask.accesskey           "E">
+
+<!ENTITY enable.ssl3 "SSL 버전 3 사용">
+<!ENTITY enable.tls "TLS 사용">
+<!ENTITY warn.description "&brandShortName;가 현재 웹 페이지에 대하여 보안 경고를 할 수 있습니다. 보안 경고에 대한 &brandShortName; 설정:">
+<!ENTITY warn.enteringsecure "암호 지원 페이지를 읽는 중…">
+<!ENTITY warn.enteringweak "낮은 수준의 암호화 페이지를 읽는 중…">
+<!ENTITY warn.insecurepost "암호화 되지 않은 페이지에서 암호화 되지 않은 페이지로 폼 전송">
+<!ENTITY warn.leavingsecure "암호화 지원 웹 페이지를 나가는 중…">
+<!ENTITY warn.secureredirect "암호화 된 페이지에서 다른 페이지로 재전송">
+<!ENTITY warn.secureredirecttoinsecure "암호화 된 페이지에서 암호화 되지 않은 페이지로 재전송">
+<!ENTITY warn.viewmixed "암호화 된 항목과 암호화 되지 않은 항목 같이 보기">
+<!ENTITY certselect.description "&brandShortName;가 웹 사이트에서 요청하는 인증서 선택:">
+<!ENTITY certselect.auto "자동으로 선택하기">
+<!ENTITY certselect.ask "항상 물어 보기">

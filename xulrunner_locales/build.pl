@@ -41,12 +41,7 @@ for my $locale(keys %{$locales}){
 	mkdir "$dir/build/locale";
 	mkdir "$dir/build/locale/$locale";
 
-	&copy_files_to("$dir/locale/en-US/", "$dir/build/locale/$locale/");
-
-	if ($locale ne 'en-US'){
-
-		&copy_files_to("$dir/locale/$locale/", "$dir/build/locale/$locale/");
-	}
+	&copy_files_to("$dir/locale/$locale/", "$dir/build/locale/$locale/");
 
 	chdir "$dir/build";
 

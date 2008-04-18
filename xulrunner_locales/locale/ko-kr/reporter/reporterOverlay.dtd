@@ -1,0 +1,4 @@
+<!ENTITY reporterMenu.title "웹 사이트 문제 보고">
+<!ENTITY reporterMenu.tooltip "웹 사이트 문제 보고">
+<!ENTITY reporterMenu.accesskey "R">
+<!ENTITY reporterToolBarButton.title "사이트 보고하기">

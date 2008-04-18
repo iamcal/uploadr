@@ -1,0 +1,5 @@
+<!ENTITY reporterMenu.title                         "Fehlerhafte Website melden">
+<!ENTITY reporterToolBarButton.title                "Website melden">
+<!ENTITY reporterMenu.tooltip                       "Fehlerhafte Website melden">
+<!ENTITY reporterMenu.accesskey                     "F">
+

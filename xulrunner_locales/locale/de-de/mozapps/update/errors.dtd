@@ -1,2 +1,1 @@
-<!ENTITY errors.intro.title "Die folgenden Komponenten konnten nicht installiert werden (die Datei konnte nicht heruntergeladen werden, war defekt oder ein anderer Fehler trat auf). ">
-<!ENTITY errors.title "Fehler">
+<!ENTITY  errors.title                "Fehler">

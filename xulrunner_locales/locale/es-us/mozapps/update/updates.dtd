@@ -2,23 +2,18 @@
 <!ENTITY window.width "36em">
 <!ENTITY window.macWidth "39em">
 <!ENTITY checking.title "Comprobando actualizaciones">
-<!ENTITY checking.label "&brandShortName; está comprobando ahora las actualizaciones...">
+<!ENTITY checking.label "&brandShortName; está comprobando ahora las actualizaciones…">
 <!ENTITY cancel.label "Cancelar">
 <!ENTITY cancel.accesskey "C">
 <!ENTITY noupdatesfound.title "No se encontraron actualizaciones">
 <!ENTITY noupdatesfound.intro "No hay nuevas actualizaciones disponibles. &brandShortName; puede comprobar                                            periódicamente si hay nuevas actualizaciones.">
-<!ENTITY updatesfound.title "Actualización disponible">
-<!ENTITY moreDetails.label "Más detalles »">
-<!ENTITY moreDetails.accesskey "M">
+<!ENTITY incompatibleChecking.label "Comprobando si esta actualización causará problemas en sus extensiones y/o temas…">
 <!ENTITY clickHere.label "Ver más información sobre esta actualización">
 <!ENTITY incompatible.warning "Esta actualización causará que algunas de las extensiones y/o temas                                            dejen de funcionar hasta que se actualicen.">
 <!ENTITY listIncompatible.label "Mostrar lista">
 <!ENTITY listIncompatible.accesskey "L">
 <!ENTITY upgrade.evangelism "Se recomienda que se actualice &brandShortName; 
                                            lo antes posible.">
-<!ENTITY license.title "Acuerdo de licencia">
-<!ENTITY license.intro "Para instalar esta actualización debe estar de acuerdo con este acuerdo de licencia.
-                                           Por favor, léalo detenidamente:">
 <!ENTITY license.instructions "Si se está de acuerdo con los términos de este acuerdo, pulsar 'Estoy de acuerdo'
                                            más abajo para continuar instalando esta actualización.">
 <!ENTITY license.titleText "Acuerdo de licencia de software">
@@ -29,8 +24,8 @@
 <!ENTITY license.decline "NO acepto los términos del Acuerdo de licencia">
 <!ENTITY license.decline.accesskey "T">
 <!ENTITY downloading.title "Descargando la actualización">
-<!ENTITY downloading.intro "Descargando la actualización...">
-<!ENTITY connecting.label "Conectando al servidor de actualización...">
+<!ENTITY downloading.intro "Descargando la actualización…">
+<!ENTITY connecting.label "Conectando al servidor de actualización…">
 <!ENTITY verificationFailedText.label "&brandShortName; no pudo verificar la integridad de la
                                            actualización incremental descargada, por lo que ahora está descargando
                                            el paquete de actualización completo.">
@@ -54,13 +49,12 @@
                                            Haga clic en el enlace inferior para más detalles.">
 <!ENTITY finishedBackground.name "Actualización:">
 <!ENTITY finishedBackground.more1 "Haga clic en Reiniciar &brandShortName; ahora para instalar la actualización ahora.">
-<!ENTITY finishedBackground.more2 "Haga clic en Más tarde para cerrar este diálogo y continuar trabajando.
-                                            &brandShortName; instalará la actualización la próxima vez que se inicie.">
+<!ENTITY finishedBackground.textNotNow "Pulse Ahora no para cerrar este diálogo y continuar trabajando. &brandShortName;
+                                            instalará la actualización la próxima vez que se inicie.
+">
 <!ENTITY installed.title "Actualización instalada">
 <!ENTITY installed.intro "La actualización se instaló correctamente.">
-<!ENTITY whatsnew.label "Leer más acerca de las novedades...">
+<!ENTITY whatsnew.label "Leer más acerca de las novedades…">
 <!ENTITY update.details.label "Detalles">
 <!ENTITY update.installedOn.label "Instalado en:">
 <!ENTITY update.status.label "Estado:">
-
-<!ENTITY  incompatibleChecking.label      "Checking if this update will cause problems with your extensions and/or themes...">

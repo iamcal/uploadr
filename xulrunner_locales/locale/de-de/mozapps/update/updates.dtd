@@ -4,7 +4,7 @@
 <!ENTITY  window.macWidth                 "39em">
 
 <!ENTITY  checking.title                  "Überprüfe auf verfügbare Updates">
-<!ENTITY  checking.label                  "Es wird nun überprüft, ob Updates für &brandShortName; zur Verfügung stehen...">
+<!ENTITY  checking.label                  "Es wird nun überprüft, ob Updates für &brandShortName; zur Verfügung stehen…">
 
 <!ENTITY  cancel.label                    "Abbrechen">
 <!ENTITY  cancel.accesskey                "A">
@@ -12,10 +12,7 @@
 <!ENTITY  noupdatesfound.title            "Keine Updates verfügbar">
 <!ENTITY  noupdatesfound.intro            "Es sind keine neuen Updates verfügbar. Je nach Einstellung wird automatisch überprüft, ob Updates für &brandShortName; zur Verfügung stehen.">
 
-<!ENTITY  updatesfound.title              "Update verfügbar">
-
-<!ENTITY  moreDetails.label               "Weitere Details &#0187;">
-<!ENTITY  moreDetails.accesskey           "W">
+<!ENTITY  incompatibleChecking.label      "Es wird überprüft, ob durch dieses Update Probleme mit Ihren Erweiterungen und/oder Themes entstehen…">
 <!ENTITY  clickHere.label                 "Weitere Informationen zu diesem Update ansehen">
 
 <!ENTITY  incompatible.warning            "Dieses Update führt dazu, dass einige Ihrer Erweiterungen und/oder Themes deaktiviert werden müssen, bis kompatible Versionen verfügbar sind.">
@@ -24,8 +21,6 @@
 
 <!ENTITY  upgrade.evangelism              "Es wird dringend empfohlen, dass Sie &brandShortName; schnellstmöglich aktualisieren.">
 
-<!ENTITY  license.title                   "Lizenzvereinbarung">
-<!ENTITY  license.intro                   "Um das Update zu installieren, müssen Sie dieser Lizenzvereinbarung zustimmen. Bitte lesen Sie diese aufmerksam durch:">
 <!ENTITY  license.instructions            "Falls Sie den Bedingungen der Lizenzvereinbarung zustimmen, klicken Sie unten auf Akzeptieren, um mit der Installation des Updates fortzufahren.">
 
 <!ENTITY  license.titleText               "Lizenzvereinbarung">
@@ -37,8 +32,8 @@
 <!ENTITY  license.decline.accesskey       "e">
 
 <!ENTITY  downloading.title               "Update herunterladen">
-<!ENTITY  downloading.intro               "Das Update wird heruntergeladen...">
-<!ENTITY  connecting.label                "Mit dem Update-Server verbinden...">
+<!ENTITY  downloading.intro               "Das Update wird heruntergeladen…">
+<!ENTITY  connecting.label                "Mit dem Update-Server verbinden…">
 <!ENTITY  verificationFailedText.label    "Die Integrität des heruntergeladenen, inkrementellen Updates für &brandShortName; konnte nicht sichergestellt werden. Daher wird nun das komplette Update-Paket heruntergeladen.">
 
 <!ENTITY  details.link                    "Details">
@@ -60,16 +55,15 @@
 <!ENTITY  finishedBackground.title        "Update bereit zur Installation">
 <!ENTITY  finishedBackground.text         "&brandShortName; hat ein wichtiges Update heruntergeladen und überprüft. Klicken Sie unten für weitere Details.">
 <!ENTITY  finishedBackground.name         "Update:">
+<!-- LOCALIZATION NOTE (finishedBackground.more1): This string describes the button label defined by restartButton in updates.properties. -->
 <!ENTITY  finishedBackground.more1        "Klicken Sie bitte auf '&brandShortName; jetzt neu starten', um das Update jetzt zu installieren.">
-
-<!ENTITY  finishedBackground.more2        "Klicken Sie auf 'Später', um zunächst weiterzuarbeiten. Das Update wird dann beim nächsten &brandShortName;-Start installiert.">
+<!-- LOCALIZATION NOTE (finishedBackground.textNotNow): This string describes the button label defined by notNowButton in updates.properties. -->
+<!ENTITY  finishedBackground.textNotNow   "Klicken Sie auf 'Nicht jetzt', um zunächst weiterzuarbeiten. Das Update wird dann beim nächsten &brandShortName;-Start installiert.">
 
 <!ENTITY  installed.title                 "Update installiert">
 <!ENTITY  installed.intro                 "Das Update wurde erfolgreich installiert.">
-<!ENTITY  whatsnew.label                  "Lesen Sie mehr über die Neuigkeiten...">
+<!ENTITY  whatsnew.label                  "Lesen Sie mehr über die Neuigkeiten…">
 
 <!ENTITY  update.details.label            "Details">
 <!ENTITY  update.installedOn.label        "Installiert am:">
 <!ENTITY  update.status.label             "Status:">
-
-<!ENTITY  incompatibleChecking.label      "Checking if this update will cause problems with your extensions and/or themes...">

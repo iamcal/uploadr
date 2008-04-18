@@ -1,0 +1,19 @@
+<!ENTITY pref.masterpass.title  "기본 암호">
+<!ENTITY managepassword.text "&brandShortName;가 기본 암호 입력을 요청하도록 합니다:">
+<!ENTITY managepassword.askfirsttime "처음 시도 시 필요">
+<!ENTITY managepassword.askeverytime "항상 필요함">
+<!ENTITY managepassword.asktimeout "더 이상 필요하지 않음">
+<!ENTITY managepassword.timeout.unit "분 이상">
+<!ENTITY changepassword.text "기본 암호는 다른 암호와 인증서 등의 기밀 정보를 보호합니다.">
+<!ENTITY changepassword.button "암호 변경...">
+<!ENTITY changepassword.accesskey "C">
+<!ENTITY resetpassword.text "만약 기본 암호를 재설정하면, 웹 페이지 및 메일 암호, 폼 데이터, 개인 인증서 및 개인 키 모두 사용할 수 없게 됩니다.">
+<!ENTITY resetpassword.button "암호 재설정">
+<!ENTITY resetpassword.accesskey "R">
+
+<!ENTITY  managepassword.caption                 "기본 암호 입력 시간 초과">
+<!ENTITY  managepassword.askfirsttime.accesskey  "T">
+<!ENTITY  managepassword.askeverytime.accesskey  "E">
+<!ENTITY  managepassword.asktimeout.accesskey    "n">
+<!ENTITY  changepassword.caption                 "기본 암호 변경">
+<!ENTITY  resetpassword.caption                  "기본 암호 재설정">

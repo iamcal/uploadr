@@ -1,0 +1,9 @@
+<!ENTITY setPassword.title                 "기본 암호 설정">
+<!ENTITY setPassword.tokenName.label       "보안 장치">
+<!ENTITY setPassword.oldPassword.label     "이전 암호:">
+<!ENTITY setPassword.newPassword.label     "새 암호:">
+<!ENTITY setPassword.reenterPassword.label "새 암호 확인:">
+<!ENTITY setPassword.meter.label           "암호 보호 수준">
+<!ENTITY setPassword.meter.loading         "읽는 중…">
+<!ENTITY masterPasswordDescription.label   "기본 암호는 로그인 암호와 같은 중요한 정보를 보호하는데 사용됩니다. 기본 암호가 설정된 후 보호된 정보에 &brandShortName;가 접근하면 각 세션마다 암호를 확인합니다.">
+<!ENTITY masterPasswordWarning.label       "저장된 기본 암호를 잘 보관하십시오. 기본 암호를 분실하면 저장된 정보에 접근할 수 없습니다.">

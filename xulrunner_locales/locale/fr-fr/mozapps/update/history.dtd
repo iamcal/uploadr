@@ -3,9 +3,6 @@
 <!ENTITY  history.intro             "Les mises à jour suivantes ont été installées :">
 <!ENTITY  closebutton.label         "Fermer">
                                      
-<!ENTITY  detailsButton.label       "Détails">
-<!ENTITY  detailsButton.accesskey   "D">
-
 <!ENTITY  noupdates.label           "Aucune mise à jour n'a encore été installée">
 
 <!ENTITY  name.header               "Nom de la mise à jour">

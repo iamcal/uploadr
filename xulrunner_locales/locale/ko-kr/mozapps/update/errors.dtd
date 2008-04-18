@@ -1,2 +1,1 @@
-<!ENTITY  errors.title                "에러">
-<!ENTITY  errors.intro.title          "다음 항목들은 다운로드 파일 오류 또는 기타 이유로 인해 설치되지 못했습니다:">
+<!ENTITY errors.title "에러">
