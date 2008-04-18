@@ -127,6 +127,8 @@ var settings = {
 	},
 	resize: function(value) {
 		settings.list[settings.nsid].settings.resize = parseInt(value);
+	},
+	config_proxy: function(){
+		window.openDialog('chrome://uploadr/content/proxy.xul', 'dialog_proxy', 'chrome,titlebar,toolbar,centerscreen,modal');
 	}
-
 };

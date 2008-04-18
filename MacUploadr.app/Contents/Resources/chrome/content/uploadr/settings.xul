@@ -12,7 +12,14 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 -->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/settings.css" type="text/css"?>
-<!DOCTYPE dialog SYSTEM "chrome://uploadr/locale/main.dtd">
+<!DOCTYPE dialog [
+<!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd" >
+%brandDTD;
+<!ENTITY % mainDTD SYSTEM "chrome://uploadr/locale/main.dtd">
+%mainDTD;
+<!ENTITY % proxyDTD SYSTEM "chrome://uploadr/locale/proxy.dtd">
+%proxyDTD;
+]>
 <dialog id="dialog_settings" title="&settings;" buttons="accept,cancel"
 ondialogaccept="settings.ok(); return true;"
 ondialogcancel="settings.cancel(); return true;" onload="settings.load();"
@@ -49,21 +56,32 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				oncommand="settings.add_user();" />
 			</hbox>
 		</groupbox>
-		<groupbox flex="1">
-			<caption label="&settings.resize;" />
-			<html:p id="resize_prompt"> </html:p>
-			<box>
-				<menulist id="resize" oncommand="settings.resize(this.value);">
-					<menupopup>
-						<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
-						<menuitem value="800" label="&settings.resize.800;" />
-						<menuitem value="1280" label="&settings.resize.1280;" />
-						<menuitem value="1600" label="&settings.resize.1600;" />
-						<menuitem value="2048" label="&settings.resize.2048;" />
-					</menupopup>
-				</menulist>
-			</box>
-		</groupbox>
+		<hbox flex="1">
+			<groupbox flex="1">
+				<caption label="&settings.resize;" />
+				<html:p id="resize_prompt"> </html:p>
+				<box>
+					<menulist id="resize" oncommand="settings.resize(this.value);">
+						<menupopup>
+							<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
+							<menuitem value="800" label="&settings.resize.800;" />
+							<menuitem value="1280" label="&settings.resize.1280;" />
+							<menuitem value="1600" label="&settings.resize.1600;" />
+							<menuitem value="2048" label="&settings.resize.2048;" />
+						</menupopup>
+					</menulist>
+				</box>
+			</groupbox>
+			<groupbox flex="1">
+				<caption label="&connection.label;" />
+				<html:p>&connectionDesc.label;</html:p>
+				<hbox>
+					<spacer flex="1" />
+					<button label="&connectionSettings.label;" oncommand="settings.config_proxy();" />
+					<spacer flex="1" />
+				</hbox>
+			</groupbox>
+		</hbox>
 		<hbox flex="1">
 			<groupbox flex="1">
 				<caption label="&settings.privacy;" />
