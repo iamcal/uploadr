@@ -25,13 +25,17 @@ for an example, see the Korean versions:
 /MacUploadr.app/Contents/Resources/chrome/locale/ko-kr/main.properties
 /MacUploadr.app/Contents/Resources/chrome/locale/ko-kr/proxy.dtd
 
-The proxy.dtd file is based on a file from the Firefox 2 locale bundle:
+The proxy.dtd file is based on two files from the Firefox 2 locale bundle:
 
 {$locale.jar}/locale/browser/preferences/connection.dtd
+{$locale.jar}/locale/browser/preferences/advanced.dtd
 
-You can get hold of this inside the language JAR of a Firefox 2 install
-(inside the 'chrome' folder) to avoid having to translate the strings 
-yourself.
+(Only the last 3 strings come from advanced.dtd, all the rest are from 
+conenction.dtd)
+
+You can get hold of this inside the language JAR of a Firefox 2 or 3
+install (inside the 'chrome' folder) to avoid having to translate the 
+strings yourself.
 
 
 
