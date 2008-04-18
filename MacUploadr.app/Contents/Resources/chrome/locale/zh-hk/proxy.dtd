@@ -13,3 +13,7 @@
 <!ENTITY  socks4.label                  "SOCKS v4">
 <!ENTITY  socks5.label                  "SOCKS v5">
 <!ENTITY  port.label                    "Port:">
+
+<!ENTITY  connection.label              "連線">
+<!ENTITY  connectionDesc.label          "設定 &brandShortName; 要如何連到網路">
+<!ENTITY  connectionSettings.label      "設定...">

@@ -13,3 +13,7 @@
 <!ENTITY  socks4.label                  "SOCKS v4">
 <!ENTITY  socks5.label                  "SOCKS v5">
 <!ENTITY  port.label                    "포트:">
+
+<!ENTITY  connection.label              "연결">
+<!ENTITY  connectionDesc.label          "&brandShortName;가 인터넷에 연결하는 방법을 선택합니다.">
+<!ENTITY  connectionSettings.label      "설정...">

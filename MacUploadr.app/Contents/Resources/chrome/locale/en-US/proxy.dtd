@@ -13,3 +13,7 @@
 <!ENTITY  socks4.label                  "SOCKS v4">
 <!ENTITY  socks5.label                  "SOCKS v5">
 <!ENTITY  port.label                    "Port:">
+
+<!ENTITY  connection.label              "Connection">
+<!ENTITY  connectionDesc.label          "Configure how &brandShortName; connects to the Internet">
+<!ENTITY  connectionSettings.label      "Settings...">
