@@ -1,143 +1,60 @@
+/*
+ * Flickr Uploadr
+ *
+ * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License (GPL), version 2 only.  This library is
+ * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+ * GPL for more details (http://www.gnu.org/licenses/gpl.html)
+ */
 
 var gProxyDialog = {
-  beforeAccept: function ()
-  {
-    var proxyTypePref = document.getElementById("network.proxy.type");
-    if (proxyTypePref.value == 2) {
-      this.doAutoconfigURLFixup();
-      return true;
-    }
 
-    if (proxyTypePref.value != 1)
-      return true;
+	beforeAccept: function (){
 
-    var httpProxyURLPref = document.getElementById("network.proxy.http");
-    var httpProxyPortPref = document.getElementById("network.proxy.http_port");
-    var shareProxiesPref = document.getElementById("network.proxy.share_proxy_settings");
-    if (shareProxiesPref.value) {
-      var proxyPrefs = ["ssl", "socks"];
-      for (var i = 0; i < proxyPrefs.length; ++i) {
-        var proxyServerURLPref = document.getElementById("network.proxy." + proxyPrefs[i]);
-        var proxyPortPref = document.getElementById("network.proxy." + proxyPrefs[i] + "_port");
-        var backupServerURLPref = document.getElementById("network.proxy.backup." + proxyPrefs[i]);
-        var backupPortPref = document.getElementById("network.proxy.backup." + proxyPrefs[i] + "_port");
-        backupServerURLPref.value = proxyServerURLPref.value;
-        backupPortPref.value = proxyPortPref.value;
-        proxyServerURLPref.value = httpProxyURLPref.value;
-        proxyPortPref.value = httpProxyPortPref.value;
-      }
-    }
-    
-    return true;
-  },
-  
-  proxyTypeChanged: function ()
-  {
-    var proxyTypePref = document.getElementById("network.proxy.type");
-    
-    // Update http
-    var httpProxyURLPref = document.getElementById("network.proxy.http");
-    httpProxyURLPref.disabled = proxyTypePref.value != 1;
-    var httpProxyPortPref = document.getElementById("network.proxy.http_port");
-    httpProxyPortPref.disabled = proxyTypePref.value != 1;
+		var proxyTypePref = document.getElementById("network.proxy.type");
 
-    // Now update the other protocols
-    this.updateProtocolPrefs();
+		if (proxyTypePref.value == 2) {
+			this.doAutoconfigURLFixup();
+			return true;
+    		}
 
-    var shareProxiesPref = document.getElementById("network.proxy.share_proxy_settings");
-    shareProxiesPref.disabled = proxyTypePref.value != 1;
-    
-    var autoconfigURLPref = document.getElementById("network.proxy.autoconfig_url");
-    autoconfigURLPref.disabled = proxyTypePref.value != 2;
-    
-    var disableReloadPref = document.getElementById("pref.advanced.proxies.disable_button.reload");
-    disableReloadPref.disabled = proxyTypePref.value != 2;
-  },
-  
-  readProxyType: function ()
-  {
-    this.proxyTypeChanged();
-    return undefined;
-  },
-  
-  updateProtocolPrefs: function ()
-  {
-    var proxyTypePref = document.getElementById("network.proxy.type");
-    var shareProxiesPref = document.getElementById("network.proxy.share_proxy_settings");
-    var proxyPrefs = ["ssl", "socks"];
-    for (var i = 0; i < proxyPrefs.length; ++i) {
-      var proxyServerURLPref = document.getElementById("network.proxy." + proxyPrefs[i]);
-      var proxyPortPref = document.getElementById("network.proxy." + proxyPrefs[i] + "_port");
-      
-      // Restore previous per-proxy custom settings, if present. 
-      if (!shareProxiesPref.value) {
-        var backupServerURLPref = document.getElementById("network.proxy.backup." + proxyPrefs[i]);
-        var backupPortPref = document.getElementById("network.proxy.backup." + proxyPrefs[i] + "_port");
-        if (backupServerURLPref.hasUserValue) {
-          proxyServerURLPref.value = backupServerURLPref.value;
-          backupServerURLPref.reset();
-        }
-        if (backupPortPref.hasUserValue) {
-          proxyPortPref.value = backupPortPref.value;
-          backupPortPref.reset();
-        }
-      }
+		return true;
+	},
 
-      proxyServerURLPref.updateElements();
-      proxyPortPref.updateElements();
-      proxyServerURLPref.disabled = proxyTypePref.value != 1 || shareProxiesPref.value;
-      proxyPortPref.disabled = proxyServerURLPref.disabled;
-    }
-    var socksVersionPref = document.getElementById("network.proxy.socks_version");
-    socksVersionPref.disabled = proxyTypePref.value != 1 || shareProxiesPref.value;
-    
-    return undefined;
-  },
-  
-  readProxyProtocolPref: function (aProtocol, aIsPort)
-  {
-    var shareProxiesPref = document.getElementById("network.proxy.share_proxy_settings");
-    if (shareProxiesPref.value) {
-      var pref = document.getElementById("network.proxy.http" + (aIsPort ? "_port" : ""));    
-      return pref.value;
-    }
-    
-    var backupPref = document.getElementById("network.proxy.backup." + aProtocol + (aIsPort ? "_port" : ""));
-    return backupPref.hasUserValue ? backupPref.value : undefined;
-  },
+	proxyTypeChanged: function (){
 
-  reloadPAC: function ()
-  {
-    var autoURL = document.getElementById("networkProxyAutoconfigURL");
-    var pps = Components.classes["@mozilla.org/network/protocol-proxy-service;1"]
-                        .getService(Components.interfaces.nsPIProtocolProxyService);
-    pps.configureFromPAC(autoURL.value);
-  },
+		var proxyTypePref = document.getElementById("network.proxy.type");
+
+		document.getElementById("network.proxy.socks").disabled			= proxyTypePref.value != 1;
+		document.getElementById("network.proxy.socks_port").disabled		= proxyTypePref.value != 1;
+		document.getElementById("network.proxy.socks_version").disabled		= proxyTypePref.value != 1;
+		document.getElementById("network.proxy.autoconfig_url").disabled	= proxyTypePref.value != 2;
+		document.getElementById("flickr.proxy.disable_reload_button").disabled	= proxyTypePref.value != 2;
+	},
   
-  doAutoconfigURLFixup: function ()
-  {
-    var autoURL = document.getElementById("networkProxyAutoconfigURL");
-    var autoURLPref = document.getElementById("network.proxy.autoconfig_url");
-    var URIFixup = Components.classes["@mozilla.org/docshell/urifixup;1"]
-                             .getService(Components.interfaces.nsIURIFixup);
-    try {
-      autoURLPref.value = autoURL.value = URIFixup.createFixupURI(autoURL.value, 0).spec;
-    } catch(ex) {}
-  },
-  
-  readHTTPProxyServer: function ()
-  {
-    var shareProxiesPref = document.getElementById("network.proxy.share_proxy_settings");
-    if (shareProxiesPref.value)
-      this.updateProtocolPrefs();
-    return undefined;
-  },
-  
-  readHTTPProxyPort: function ()
-  {
-    var shareProxiesPref = document.getElementById("network.proxy.share_proxy_settings");
-    if (shareProxiesPref.value)
-      this.updateProtocolPrefs();
-    return undefined;
-  }
+	readProxyType: function(){
+
+		this.proxyTypeChanged();
+		return undefined;
+	},
+
+	reloadPAC: function (){
+
+		var autoURL = document.getElementById("networkProxyAutoconfigURL");
+		var pps = Components.classes["@mozilla.org/network/protocol-proxy-service;1"].getService(Components.interfaces.nsPIProtocolProxyService);
+		pps.configureFromPAC(autoURL.value);
+	},
+
+	doAutoconfigURLFixup: function(){
+
+		var autoURL = document.getElementById("networkProxyAutoconfigURL");
+		var autoURLPref = document.getElementById("network.proxy.autoconfig_url");
+		var URIFixup = Components.classes["@mozilla.org/docshell/urifixup;1"].getService(Components.interfaces.nsIURIFixup);
+
+		try {
+			autoURLPref.value = autoURL.value = URIFixup.createFixupURI(autoURL.value, 0).spec;
+		} catch(ex) {}
+	}
+
 };

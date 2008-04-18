@@ -8,12 +8,8 @@
 <!ENTITY  WPADTypeRadio.label           "Auto-detect proxy settings for this network">
 <!ENTITY  manualTypeRadio.label         "Manual proxy configuration:">
 <!ENTITY  autoTypeRadio.label           "Automatic proxy configuration URL:">
-<!ENTITY  configAutoconfigText.label    "Configuration location (URL):">
 <!ENTITY  reload.label                  "Reload">
-<!ENTITY  http.label                    "HTTP Proxy:">
-<!ENTITY  ssl.label                     "SSL Proxy:">
 <!ENTITY  socks.label                   "SOCKS Host:">
 <!ENTITY  socks4.label                  "SOCKS v4">
 <!ENTITY  socks5.label                  "SOCKS v5">
 <!ENTITY  port.label                    "Port:">
-<!ENTITY  shareproxy.label              "Use this proxy server for all protocols">
