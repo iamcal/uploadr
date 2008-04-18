@@ -1,0 +1,11 @@
+<!ENTITY mozilla.quote
+'<style type="text/css">
+em {
+  font-weight: bold;
+  font-style: normal;
+}
+</style>
+<span style="font-style: normal;">邪神マモンは眠りに落ちた。<em>復活せし野獣</em>は大地を巡り、数を増やして軍勢をなした。新たな時の到来は広く告げられ、人々は狐の叡智をもって実りを炎の<em>供物</em>とした。そして<em><a href="http://www.mozilla.org/about/mozilla-manifesto.html">聖なる書</a></em>の約束の地、夢を紡いだ第二の世界を築いた人々は、その子らに野獣を<em><a href="http://wiki.mozilla.org/About:mozilla">語り継いだ</a></em>。マモンが目覚めた時、見よ！残されしはただ一人の<em>従者</em>のみ。</span>'>
+
+<!ENTITY mozilla.from
+'from <strong>The Book of Mozilla,</strong> 11:9<br/><small>(10th Edition)</small>'>

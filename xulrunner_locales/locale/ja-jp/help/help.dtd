@@ -1,0 +1,44 @@
+<!ENTITY printCmd.commandkey		"p">
+
+<!ENTITY findOnCmd.commandkey		"F">
+<!ENTITY findAgainCmd.commandkey	"G">
+<!ENTITY findAgainCmd.commandkey2	"VK_F3">
+
+<!ENTITY backButton.label		"戻る">
+<!ENTITY backButton.accesskey		"B">
+<!ENTITY backButton.tooltip		"前のページへ戻ります"><!-- 一つ前以外も -->
+<!ENTITY forwardButton.label		"進む">
+<!ENTITY forwardButton.accesskey	"F">
+<!ENTITY forwardButton.tooltip		"次のページへ進みます"><!-- 一つ次以外も -->
+<!ENTITY copyCmd.label			"コピー">
+<!ENTITY copyCmd.accesskey		"C">
+<!ENTITY selectAllCmd.label		"すべて選択">
+<!ENTITY selectAllCmd.accesskey		"A">
+<!ENTITY goBackCmd.commandkey		"[">
+<!ENTITY goForwardCmd.commandkey	"]">
+<!ENTITY homeButton.label		"ホーム">
+<!ENTITY homeButton.tooltip		"ヘルプの開始ページに移動します">
+<!ENTITY printButton.label		"印刷">
+<!ENTITY printButton.tooltip		"このページを印刷します">
+<!ENTITY closeWindow.commandkey		"W">
+
+<!ENTITY searchtab.label		"検索">
+<!ENTITY searchtab.accesskey		"S">
+<!ENTITY searchClose.tooltip		"検索結果を閉じる">
+<!ENTITY toctab.label			"目次">
+<!ENTITY toctab.accesskey		"C">
+
+<!ENTITY fullZoomReduceCmd.commandkey   "-">
+<!ENTITY fullZoomEnlargeCmd.commandkey  "+">
+<!ENTITY fullZoomEnlargeCmd.commandkey2 "="> <!-- + is above this key on many keyboards -->
+<!ENTITY fullZoomResetCmd.commandkey    "0">
+
+<!ENTITY helpSearch.commandkey		"k">
+
+<!ENTITY zLevel.label			"常に最前面に表示する">
+<!ENTITY zLevel.accesskey		"T">
+
+<!ENTITY fullZoomReduceBtn.label	"縮小">
+<!ENTITY fullZoomReduceBtn.accesskey	"O">
+<!ENTITY fullZoomEnlargeBtn.label	"拡大">
+<!ENTITY fullZoomEnlargeBtn.accesskey	"I">

@@ -1,0 +1,5 @@
+<!-- -*- Mode: Java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+-->
+
+<!ENTITY  settingsChangePreferences.label	"設定画面で設定変更できます。">
+<!ENTITY  settingsChangeOptions.label		"オプション画面で設定変更できます。">

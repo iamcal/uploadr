@@ -1,0 +1,124 @@
+<!ENTITY title "Flickr Uploadr">
+
+<!ENTITY menu.upload "アップロード">
+<!ENTITY menu.upload.add "追加">
+<!ENTITY menu.upload.preferences "設定">
+<!ENTITY menu.upload.exit "終了">
+<!ENTITY menu.edit "編集">
+<!ENTITY menu.edit.cut "切り取り">
+<!ENTITY menu.edit.copy "コピー">
+<!ENTITY menu.edit.paste "貼り付け">
+<!ENTITY menu.edit.select_all "すべて選択">
+<!ENTITY menu.tools "Tools">
+<!ENTITY menu.tools.addons "Add-ons">
+<!ENTITY menu.tools.console "コンソール">
+<!ENTITY menu.help "ヘルプ">
+<!ENTITY menu.help.about "Flickr Uploadrについて">
+<!ENTITY menu.help.tips "ヒントと攻略法">
+<!ENTITY menu.help.faq "FAQ">
+<!ENTITY menu.help.update "更新をチェック...">
+
+<!ENTITY notloggedin "オフラインでの作業">
+<!ENTITY login "サインイン">
+<!ENTITY switch "ユーザの変更?">
+
+<!ENTITY auth.confirm "Flickr Uploadrがあなたのアカウントに接続出来る様、ウェブサイトにて権限を付与します。了承ボタンを押下して下さい。">
+<!ENTITY auth.confirm.oops "再度権限を付与しますか?">
+<!ENTITY auth.alternate "If your browser doesn't open automatically, you can visit this URL, then come back and click the big READY! button.">
+
+<!ENTITY tools.add "+ 追加">
+<!ENTITY tools.remove "- 削除">
+
+<!ENTITY buttons.upload "画像をアップロード">
+<!ENTITY buttons.cancel "キャンセル">
+<!ENTITY buttons.auth "了承!">
+<!ENTITY buttons.ok "OK">
+
+<!ENTITY bandwidth.remaining "月間残容量">
+<!ENTITY bandwidth.batch "今回分">
+
+<!ENTITY photostream.title "あなたの画像">
+
+<!ENTITY photos.sort.default "現在日付で並び替えられています。ドラッグアンドドロップで並び替えられます。">
+<!ENTITY photos.sort.revert "再度日付で並び替える">
+<!ENTITY photos.init "まずここに画像をドラッグします。">
+<!ENTITY photos.init.text.1 "もしくはコンピュータからの画像を">
+<!ENTITY photos.init.text.2 "をクリックして選択します。">
+<!ENTITY photos.new "アップロードの最中でも新たなアップロードを開始出来ます。">
+
+<!ENTITY photos.new "While that batch is uploading, you can start a new one.">
+
+<!ENTITY settings "設定">
+<!ENTITY settings.notloggedin "設定の変更を行うには、まずサインインする必要があります。">
+<!ENTITY settings.users "認証:">
+<!ENTITY settings.users.user "次のアカウントでサインイン:">
+<!ENTITY settings.users.remove "選択中のユーザを削除">
+<!ENTITY settings.users.add "新しいユーザを追加">
+<!ENTITY settings.privacy "デフォルトの公開:">
+<!ENTITY settings.privacy.who "誰が画像を閲覧出来ますか?">
+<!ENTITY settings.privacy.private "あなただけ">
+<!ENTITY settings.privacy.friend "あなたの友達">
+<!ENTITY settings.privacy.family "あなたの家族">
+<!ENTITY settings.privacy.public "誰でも">
+<!ENTITY settings.content_type "デフォルトの種類:">
+<!ENTITY settings.content_type.photo "画像">
+<!ENTITY settings.content_type.screenshot "スクリーンショット">
+<!ENTITY settings.content_type.other "その他">
+<!ENTITY settings.safety_level "デフォルトの安全:">
+<!ENTITY settings.safety_level.safe "安全">
+<!ENTITY settings.safety_level.moderate "若干安全">
+<!ENTITY settings.safety_level.restricted "要制限">
+<!ENTITY settings.hidden "公開サイトから見えないようにしますか?">
+<!ENTITY settings.hidden.no "いいえ、隠しません">
+<!ENTITY settings.hidden.yes "はい、隠します">
+<!ENTITY settings.resize "自動リサイズ:">
+<!ENTITY settings.resize.dont "画像のリサイズはしません">
+<!ENTITY settings.resize.800 "800ピクセル(画面で見るのに適したサイズ)">
+<!ENTITY settings.resize.1280 "1280ピクセル (小さめの印刷に適したサイズ)">
+<!ENTITY settings.resize.1600 "1600ピクセル (大き目の印刷に適したサイズ)">
+<!ENTITY settings.resize.2048 "2048ピクセル (保管に最適)">
+<!ENTITY settings.note "注意:">
+<!ENTITY settings.note.text "Uploadrでの公開設定、安全レベル設定、および内容の種類設定はflickr.comでの設定とは別々に設定されます。">
+
+<!ENTITY meta.single.title "タイトル:">
+<!ENTITY meta.batch.title "タイトルを入れ替える:">
+<!ENTITY meta.batch.title.tooltip "ここにタイトルを入力すると選択されている画像のタイトルは上書きされます。">
+<!ENTITY meta.single.description "詳細:">
+<!ENTITY meta.batch.description "現状の詳細に追加:">
+<!ENTITY meta.batch.description.tooltip "詳細を入力すると選択されている画像の詳細に追加されます。">
+<!ENTITY meta.single.tags "タグ:">
+<!ENTITY meta.batch.tags "現状のタグに追加:">
+<!ENTITY meta.tags.tooltip "タグは次の様に空白で区切られます: 「携帯画像 都会 モブログ」複数の単語を一つのタグにするにはダブルクォートを使用します。:「&#34;繰り返される 日々&#34;」">
+<!ENTITY meta.content_type "画像の種類:">
+<!ENTITY meta.safety_level "安全レベル:">
+<!ENTITY meta.first "全ての画像が選択されています">
+<!ENTITY meta.single.sets.add "セットに追加:">
+<!ENTITY meta.batch.sets.add "さらにセットへ追加:">
+<!ENTITY meta.sets.add.none "セットはありません">
+<!ENTITY meta.sets.create "セットを作成する...">
+<!ENTITY meta.single.sets.added "この画像は以下に追加されます:">
+<!ENTITY meta.batch.sets.added "この画像は以下に追加されます:">
+<!ENTITY meta.sets.added.none "セットは選択されていません">
+<!ENTITY meta.hidden "セットを閲覧するにはサインインして下さい">
+
+<!ENTITY meta.no.prompt "タイトル、タグ、詳細の編集、およびセットへの追加を行うには画像を選択して下さい">
+<!ENTITY meta.batch.prompt "全てのタイトルを別の物に入れ替えられます。現状の詳細やタグ、セットの状態に追加されます。">
+
+<!ENTITY dialog.set.title "セットを作成する">
+<!ENTITY dialog.set.name "新しいセットの名前:">
+<!ENTITY dialog.set.description "および詳細 (オプショナル):">
+
+<!ENTITY dialog.about "Flickr Uploadrについて">
+<!ENTITY dialog.about.copyright.yahoo "Copyright c 2007 Yahoo! Inc.  All rights reserved.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License (GPL), version 2 only.">
+<!ENTITY dialog.about.copyright.xulrunner "XULRunner is copyright c 2007 Mozilla Foundation.  It is available under the Mozilla Public License, the GNU General Public License, or the GNU Lesser General Public License.">
+<!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick is copyright c 2007 GraphicsMagick Group.  It is available under the MIT/X11 License.">
+<!ENTITY dialog.about.copyright.exiv2 "Exiv2 is copyright c 2004-2007 Andreas Huggel.  It is available under the GNU General Public License.">
+<!ENTITY dialog.about.code "Source code available at http://flickr.com/tools/uploadr/.">
+
+<!ENTITY help "ヒントと攻略法">
+<!ENTITY help.offline "^^オフラインで作業^^する事が出来ます。">
+<!ENTITY help.offline.text.first "Uploadrはオフラインで写真編成やタグ付け等が出来る様に設計されています。 Flickrへのアップロードする準備が出来たら、アカウントにサインインして大きな「画像をアップロード」ボタンを押しましょう。">
+<!ENTITY help.offline.text.second "何時でもサインインできます。 サインインすれば写真をセットへまとめることができます。">
+<!ENTITY help.drag "^^ドラッグアンドドロップ^^はあなたの味方です。">
+<!ENTITY help.drag.text "アップロードされたページで掲載したい順番になる様にドラッグアンドドロップして画像の順番を入れ替えられます。またお望みならば、画像の順番をアレンジした後でも画像の日付通りの順番に戻す事が出来ます。">
+<!ENTITY help.faq "さらにご質問がある方は^^Uploadr FAQ^^へお越し下さい。">

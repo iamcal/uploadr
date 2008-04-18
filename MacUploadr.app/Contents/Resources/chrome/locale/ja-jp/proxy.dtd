@@ -1,0 +1,19 @@
+
+<!ENTITY  ProxyDialog.title             "インターネット接続">
+<!ENTITY  window.width                  "42em">
+<!ENTITY  window.macWidth               "41em">
+
+<!ENTITY  proxyTitle.label              "インターネット接続に使用するプロキシの設定">
+<!ENTITY  noProxyTypeRadio.label        "プロキシを使用しない"><!-- prev: インターネットに直接接続する -->
+<!ENTITY  systemTypeRadio.label         "システムのプロキシ設定を利用する">
+<!ENTITY  WPADTypeRadio.label           "このネットワークのプロキシ設定を自動検出する">
+<!ENTITY  manualTypeRadio.label         "手動でプロキシを設定する:">
+<!ENTITY  reload.label                  "再読み込み">
+<!ENTITY  socks.label                   "SOCKS ホスト:">
+<!ENTITY  socks4.label                  "SOCKS v4">
+<!ENTITY  socks5.label                  "SOCKS v5">
+<!ENTITY  port.label                    "ポート:">
+
+<!ENTITY  connection.label              "接続">
+<!ENTITY  connectionDesc.label          "インターネット接続に使用するプロキシを設定します。">
+<!ENTITY  connectionSettings.label      "接続設定...">

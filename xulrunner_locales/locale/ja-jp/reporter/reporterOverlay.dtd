@@ -1,0 +1,5 @@
+<!ENTITY reporterMenu.title		"不具合のあるサイトを報告">
+<!ENTITY reporterToolBarButton.title	"サイトを報告">
+<!ENTITY reporterMenu.tooltip		"表示や動作などに問題のある Web サイトについて報告します">
+<!ENTITY reporterMenu.accesskey		"R">
+
