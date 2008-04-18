@@ -32,3 +32,10 @@ textbox, textbox * {
 radiogroup checkbox {
 	margin-left: 16px;
 }
+
+p {
+	margin-left: 6px;
+	margin-right: 5px;
+	margin-top: 1px;
+	margin-bottom: 1em;
+}
