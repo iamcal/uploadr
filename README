@@ -250,30 +250,45 @@ Windows
 Download and install Expat for Windows:
   http://sourceforge.net/project/showfiles.php?group_id=10127
 
-Just like GraphicsMagick, let Visual Studio 8 eat the 7.1 project files.
-Edit the project configuration:
+Open up the solution file at 'msvc\exiv2.sln'. Just like GraphicsMagick, 
+let Visual Studio 8 eat the 7.1 project files. Edit the project 
+configuration:
+
   o Disable every project in the Exiv2 solution except exiv2lib and xmpsdk
+    (Use the configuration manager and uncheck the boxes)
   o Change the Runtime Library for remaining projects under
     Configuration Properties > C/C++ > Code Generation to
     "Multi-threaded DLL (/MD)"
   o Set remaining projects to their Release state
-      o But in the steps below, pull base values from Debug and  make
-        changes in All Configurations
-  o Add Expat to the xmpsdk project
+  o Modify the xmpsdk project:
       o Change Configuration Properties > C/C++ > General >
-        Additional Include Directories to
-        "C:\Program Files\Expat 2.0.1\Source\lib" (or your equivalent),
+        Additional Include Directories to (all one line):
+        "..\..\..\expat-2.0.1\lib;..\..\xmpsdk\src;..\..\xmpsdk\include;"
+        "C:\Program Files\Expat 2.0.1\Source\lib"
+        (the last path portion might be different, depending on where
+        you install expat).
       o Change Configuration Properties > Librarian > General >
         Additional Dependencies to "libexpat.lib"
       o Change Configuration Properties > Librarian > General >
-        Additional Library Directories to "C:\Program Files\Expat 2.0.1\Bin"
-  o Set the exiv2lib project's Configuration Properties > Librarian >
-    General > Link Library Dependencies to "Yes"
+        Additional Library Directories to:
+        "$(SolutionDir)/lib";"C:\Program Files\Expat 2.0.1\Bin"
+  o Modify the exiv2lib project:
+      o Change Configuration Properties > Librarian > General >
+        Link Library Dependencies to "Yes" (VC7 doesn't seem to have 
+        this option - just skip it)
+      o Change Configuration Properties > C/C++ > General >
+        Additional Include Directories to:
+        "..\..\src;..\..;..\..\xmpsdk\include"
+
+You should now be able to build the solution. It should produce the
+following files:
+
+        msvc\exiv2lib\Release\exiv2.lib
+        msvc\xmpsdk\Release\xmpsdk.lib
 
 Copy libexpat.dll from "C:\Program Files\Expat 2.0.1\Bin" to
 "UPLOADR\MacUploadr.app\Contents\Resources".
 
-Ignore the rest of the Exiv2 README.
 
 Mac
 ---
