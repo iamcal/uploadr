@@ -30,31 +30,81 @@ Checkout from Subversion:
 Windows Build Environment
 ------------------------------------------------------------------------
 
-On Windows, you'll need to install MSYS to get a viable build 
-environment. Start by going here:
+If you're planning on building the third party libraries on windows 
+(graphics magick, exiv2, ffmepg) then you'll need to have MS Visual C++
+version or greater installed.
+
+To build the installers and such, you'll need to install MSYS. Start 
+by going here:
 
 http://sf.net/project/showfiles.php?group_id=2435
 
 Choose 'MSYS Base System', then find the file called something like
 'msysCORE-1.0.11-2007.01.19-1.tar.bz2'. Unzip this (get WinRaR if you
-can't open it) and put it somewhere like C:\msys
+can't open it) and put it at C:\msys
 
-Some of the build tools use Perl, so you'll also want to grab an MSYS
-compatible version of that. On the same download page, select
-'MSYS Supplementary Tools' and download these packages:
+Download the following files from the 'MSYS Base System' page:
 
-	perl-5.6.1-MSYS-1.0.11-1.tar.bz2
- 	crypt-1.1-1-MSYS-1.0.11-1.tar.bz2
+    MSYS-1.0.11-20071204.tar.bz2
+    bash-3.1-MSYS-1.0.11-1.tar.bz2
+    coreutils-5.97-MSYS-1.0.11-snapshot.tar.bz2
 
-Version numbers may be higher. Unzip themn into the same folder as 
-MSYS. When you launch MSYS via the batch file in its root folder, you 
-should be able to type 'perl -v' and get a Perl banner.
+And download these file from the 'MSYS Supplementary Tools' page:
 
-Next you'll need a zip utility. Go to http://www.7-zip.org/ and install
-the latest version. After installing, copy '7z.exe' and '7z.dll' from
-the install folder (usually C:\Program Files\7-Zip) into your MSYS/bin
-directory. If all went well, you should be able to type '7z' from your
-MSYS shell and get usage information.
+    perl-5.6.1-MSYS-1.0.11-1.tar.bz2
+    crypt-1.1-1-MSYS-1.0.11-1.tar.bz2
+
+Version numbers may be higher. Unzip them into the same folder as 
+MSYS, overwriting any existing duplicate files.
+
+When you launch MSYS via the batch file in its root folder, you should 
+be able to type 'perl -v' and get a Perl banner if all went well.
+
+Follow these steps to get MSYS working with Visual Studio:
+
+http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php?page=Fixing+msys
+
+From the same download page, download the following packages:
+
+  From the MinGW Runtime section:
+      mingw-runtime-3.14.tar.gz
+
+  From the GNU Binutils section:
+      binutils-2.18.50-20080109-2.tar.gz
+
+  From the MinGW API for MS-Windows section:
+      w32api-3.11.tar.gz
+
+  From the GCC Version 4 / Technology Preview: gcc-4.2.1-sjlj-2 section:
+      gcc-core-4.2.1-sjlj-2.tar.gz
+      gcc-g++-4.2.1-sjlj-2.tar.gz
+
+Unpack each package into C:\msys\mingw then go to C:\msys\mingw\bin\ and 
+rename:
+
+  c++-sjlj.exe to c++.exe
+  cpp-sjlj.exe to cpp.exe
+  g++-sjlj.exe to g++.exe
+  gcc-sjlj.exe to gcc.exe
+
+Follow these instructions to make mingw work with msys:
+
+http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php?page=Integrating+MinGW+with+MSys
+
+You probably already have an SVN client, but if not, you can grab the
+commandline one from here:
+
+  http://subversion.tigris.org/servlets/ProjectDocumentList?folderID=91
+  svn-1.4.6-setup.exe (or a more recent version)
+
+Once installed, typing 'svn --version' from a fresh MSYS shell should give 
+you a version banner.
+
+Next you'll need a zip utility. Grab this zip file:
+
+  ftp://ftp.info-zip.org/pub/infozip/WIN32/zip232xN.zip
+
+And copy zip.exe into msys/bin. Ok, all ready!
 
 
 XULRunner
@@ -324,6 +374,8 @@ Additionally add in dependencies like zlib:
   http://wiki.videolan.org/Win32CompileMSYS
 
 Check out and build the magic version of FFmpeg:
+(handy hint: Shift+Insert pastes into the MSYS shell)
+
   $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
   $ cd ffmpeg
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
