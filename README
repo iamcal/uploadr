@@ -32,7 +32,9 @@ Windows Build Environment
 
 If you're planning on building the third party libraries on windows 
 (graphics magick, exiv2, ffmepg) then you'll need to have MS Visual C++
-version or greater installed.
+version 8 or greater installed. Version 7 will work for the third party
+libraries themselves, but version 8 is required for building the final
+DLLs.
 
 To build the installers and such, you'll need to install MSYS. Start 
 by going here:
@@ -365,13 +367,12 @@ Windows
 -------
 
 FFmpeg will not build in Visual Studio but can be linked by Visual
-Studio.  This means we need a full MSys environment.  My apologies.
+Studio, so we'll need to use MSys/WinGW.
 
-Do all of the MSys/MinGW stuff to get up and running:
-  http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php
-
-Additionally add in dependencies like zlib:
-  http://wiki.videolan.org/Win32CompileMSYS
+--- I'm dubious that we need to install anything extra here [CAL]
+--- But i need to wait until i actually get gm.dll linking
+--- Additionally add in dependencies like zlib:
+---   http://wiki.videolan.org/Win32CompileMSYS
 
 Check out and build the magic version of FFmpeg:
 (handy hint: Shift+Insert pastes into the MSYS shell)
@@ -385,6 +386,7 @@ Check out and build the magic version of FFmpeg:
 
 The Uploadr Visual Studio project is setup to expect the MinGW bits for
 linking FFmpeg into the flGM XPCOM object.
+
 
 Mac
 ---
