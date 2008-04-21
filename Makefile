@@ -51,13 +51,13 @@ endif
 ########################################################################
 # Configuration
 
-# Version number for Uploadr
-VER := 3.1
-
 # Source files
 #   Even though this isn't a very Windows-y path, it makes life
 #   simpler to use it on all platforms
 SRC := MacUploadr.app/Contents
+
+# Version number for Uploadr - this comes from application.ini
+VER := `grep ^Version= $(SRC)/Resources/application.ini | sed 's/Version=\(.*\)/\1/'`
 
 ########################################################################
 # Windows configuration
@@ -65,24 +65,28 @@ SRC := MacUploadr.app/Contents
 ifeq (win, $(filter win, $(MAKECMDGOALS)))
 PLATFORM := win
 
-# Dated version for the NSIS installer
-VER_DATE := 2008.04.03.01
-
 # Location of Mozilla tree for the MAR tools
 MOZILLA := /c/mozilla
 
-# Location for build staging
-#   The base of this path must exist before running make
-BUILD := /c/code/uploadr/builds/$(INTL)
-
 # Location for application bundle staging
-APP := $(BUILD)/Flickr\ Uploadr
-
-# Location for resource file (chrome, components, etc) staging
-RES := $(APP)
+APPNAME := Flickr\ Uploadr
 
 # Location to output finished DMGs
 OUT := /c/code/uploadr
+
+# below here, don't modify anything
+
+# Dated version for the NSIS installer - this comes from application.ini
+VER_DATE := `grep ^BuildID= $(SRC)/Resources/application.ini | sed 's/BuildID=\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1.\2.\3.\4/'`;
+
+# Location for build staging
+BUILD := $(OUT)/builds/$(INTL)
+
+# Location for application bundle staging
+APP := $(BUILD)/$(APPNAME)
+
+# Location for resource file (chrome, components, etc) staging
+RES := $(APP)
 
 # End Windows configuration
 ########################################################################
@@ -244,57 +248,58 @@ endif
 
 	@# Chrome
 	mkdir $(RES)/chrome
-	mkdir content
-	mkdir content/uploadr
-	cp $(SRC)/Resources/chrome/content/uploadr/*.* content/uploadr/
-	mkdir content/hacks
+	mkdir $(BUILD)/jar
+	mkdir $(BUILD)/jar/content
+	mkdir $(BUILD)/jar/content/uploadr
+	cp $(SRC)/Resources/chrome/content/uploadr/*.* $(BUILD)/jar/content/uploadr/
+	mkdir $(BUILD)/jar/content/hacks
 ifeq (mac, $(PLATFORM))
-	mkdir content/hacks/mac
-	cp $(SRC)/Resources/chrome/content/hacks/mac/*.xul content/hacks/mac/
-#	cp $(SRC)/Resources/chrome/content/hacks/mac/*.js content/hacks/mac/
+	mkdir $(BUILD)/jar/content/hacks/mac
+	cp $(SRC)/Resources/chrome/content/hacks/mac/*.xul $(BUILD)/jar/content/hacks/mac/
+#	cp $(SRC)/Resources/chrome/content/hacks/mac/*.js $(BUILD)/jar/content/hacks/mac/
 endif
 ifeq (win, $(PLATFORM))
-	mkdir content/hacks/win
-	cp $(SRC)/Resources/chrome/content/hacks/win/*.xul content/hacks/win/
-#	cp $(SRC)/Resources/chrome/content/hacks/win/*.js content/hacks/win/
+	mkdir $(BUILD)/jar/content/hacks/win
+	cp $(SRC)/Resources/chrome/content/hacks/win/*.xul $(BUILD)/jar/content/hacks/win/
+#	cp $(SRC)/Resources/chrome/content/hacks/win/*.js $(BUILD)/jar/content/hacks/win/
 endif
 ifeq (linux, $(PLATFORM))
 	mkdir content/hacks/unix
-	cp $(SRC)/Resources/chrome/content/hacks/unix/*.xul content/hacks/unix/
-#	cp $(SRC)/Resources/chrome/content/hacks/unix/*.js content/hacks/unix/
+	cp $(SRC)/Resources/chrome/content/hacks/unix/*.xul $(BUILD)/jar/content/hacks/unix/
+#	cp $(SRC)/Resources/chrome/content/hacks/unix/*.js $(BUILD)/jar/content/hacks/unix/
 endif
-	mkdir locale
-	mkdir locale/branding
-	cp $(SRC)/Resources/chrome/locale/branding/*.* locale/branding/
-	mkdir locale/$(INTL)
-	cp $(SRC)/Resources/chrome/locale/$(INTL)/*.* locale/$(INTL)/
+	mkdir $(BUILD)/jar/locale
+	mkdir $(BUILD)/jar/locale/branding
+	cp $(SRC)/Resources/chrome/locale/branding/*.* $(BUILD)/jar/locale/branding/
+	mkdir $(BUILD)/jar/locale/$(INTL)
+	cp $(SRC)/Resources/chrome/locale/$(INTL)/*.* $(BUILD)/jar/locale/$(INTL)/
 	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/chrome/chrome.manifest.prod > \
 		$(RES)/chrome/chrome.manifest
-	mkdir skin
+	mkdir $(BUILD)/jar/skin
 #ifeq (mac, $(PLATFORM))
-#	mkdir skin/hacks
-#	mkdir skin/hacks/mac
-#	cp $(SRC)/Resources/chrome/skin/hacks/mac/hacks.css skin/hacks/mac/
+#	mkdir $(BUILD)/jar/skin/hacks
+#	mkdir $(BUILD)/jar/skin/hacks/mac
+#	cp $(SRC)/Resources/chrome/skin/hacks/mac/hacks.css $(BUILD)/jar/skin/hacks/mac/
 #endif
 #ifeq (win, $(PLATFORM))
-#	mkdir skin/hacks/win
-#	cp $(SRC)/Resources/chrome/skin/hacks/win/hacks.css skin/hacks/win/
+#	mkdir $(BUILD)/jar/skin/hacks/win
+#	cp $(SRC)/Resources/chrome/skin/hacks/win/hacks.css $(BUILD)/jar/skin/hacks/win/
 #endif
 #ifeq (linux, $(PLATFORM))
-#	mkdir skin/hacks/unix
-#	cp $(SRC)/Resources/chrome/skin/hacks/unix/hacks.css skin/hacks/unix/
+#	mkdir $(BUILD)/jar/skin/hacks/unix
+#	cp $(SRC)/Resources/chrome/skin/hacks/unix/hacks.css $(BUILD)/jar/skin/hacks/unix/
 #endif
-	mkdir skin/uploadr
-	cp $(SRC)/Resources/chrome/skin/uploadr/*.css skin/uploadr/
-	cp $(SRC)/Resources/chrome/skin/uploadr/*.gif skin/uploadr/
-	cp $(SRC)/Resources/chrome/skin/uploadr/*.png skin/uploadr/
+	mkdir $(BUILD)/jar/skin/uploadr
+	cp $(SRC)/Resources/chrome/skin/uploadr/*.css $(BUILD)/jar/skin/uploadr/
+	cp $(SRC)/Resources/chrome/skin/uploadr/*.gif $(BUILD)/jar/skin/uploadr/
+	cp $(SRC)/Resources/chrome/skin/uploadr/*.png $(BUILD)/jar/skin/uploadr/
 ifeq (win, $(PLATFORM))
-	/c/Program\ Files/7-Zip/7z.exe a -r uploadr.zip content locale skin
+	cd $(BUILD)/jar/ && zip uploadr.zip -r content locale skin
 else
-	zip uploadr -r content locale skin
+	cd $(BUILD)/jar/ && zip uploadr -r content locale skin
 endif
-	rm -rf content locale skin
-	mv uploadr.zip $(RES)/chrome/uploadr.jar
+	mv $(BUILD)/jar/uploadr.zip $(RES)/chrome/uploadr.jar
+	rm -rf $(BUILD)/jar
 
 	@# XPCOM
 	mkdir $(RES)/components
