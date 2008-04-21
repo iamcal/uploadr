@@ -151,25 +151,35 @@ Windows
 Download GraphicsMagick Windows SOURCE:
   ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/windows/
 
+You'll need MS Visual C++ to build GraphicsMagick. We've built it 
+sucessfully using VC++ 7 and 8, but other versions may work fine.
+
 Go to the VisualMagick/configure directory of the GraphicsMagick Windows
-source directory.  Edit the project configuration:
+source directory.  Open configure.vcproj in Visual Studio and edit the 
+project configuration:
+
   o Set the active configuration to "Release"
   o Change the Use of MFC under Configuration Properties > General to
     "Use MFC in a Static Library"
   o Change the Runtime Library under Configuration Properties > C/C++ >
     Code Generation to "Multi-threaded (/MT)"
 
-Build and run the configuration program, selecting "Static
-Multi-threaded runtimes" and otherwise accepting defaults.  This will
-create your solution for Visual Studio.
+Build the project and then run the configuration program (called 
+configure.exe, in the same folder as the .vcproj file). Select "Static
+Multi-threaded runtimes" and otherwise accept the defaults.  This will
+create your solution (project file) for Visual Studio in the root
+GraphicsMagick folder. It should be called 'VisualStaticMT.sln'.
 
 Open the solution and let Visual Studio 8 have its way with the Visual
 Studio 7 solution file.  Edit the project configuration:
+
+  o Set the active configuration to "Release" for 'All'
   o Change the Runtime Library for the CORE_Magick++ project under
     Configuration Properties > C/C++ > Code Generation to
     "Multi-threaded DLL (/MD)"
   o Tell all of the CORE_* projects to optimize for speed under
     Configuration Properties > C/C++ > Optimization
+    (Optimization: "Maximize Speed /O2")
 
 Build it to see where the problems are.  As of 1.1.8, 18 out of 20
 projects build properly.  The two that do not are utilities that are
@@ -178,13 +188,19 @@ try/catch block can be fixed by changing "exception" to "std::exception"
 and adding "&" to make all of the catches happen by reference.  The
 official builds are build with 1.1.10 and will soon move to 1.1.11.
 
+You can verify that enough of it built correctly by checking in the 
+VisualMagick\lib directory. There should be a .lib file for each 
+CORE_* project.
+
 Add the path to your GraphicsMagick build's VisualMagick\lib directory
 to your library path.  Add the path to VisualMagick\include to your
 include path.
 
 The magic.mgk, modules.mgk and delegates.mgk files must be in the root of
 the application (next to application.ini).  These files are included in
-the tarball and Subversion checkouts, so you shouldn't have to worry.
+the tarball and Subversion checkouts, so you shouldn't have to worry. You
+can otherwise find them in the VisualMagick\bin directory.
+
 
 Mac
 ---
