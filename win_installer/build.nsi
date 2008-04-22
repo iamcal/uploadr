@@ -9,8 +9,9 @@
 ;
 
 ; Compile-Time Variables:
-; VERSION - #.#.# (whatever, really)
-; VERSION_DATE YYYY.MM.DD.## (strictly now)
+; VERSION	#.#.#		(whatever, really)
+; VERSION_DATE	YYYY.MM.DD.nn	(strictly now)
+; LANG_NAME	English		(bleh)
 
 !include "MUI.nsh"
 !include "LogicLib.nsh"
@@ -35,23 +36,12 @@ Page custom CustomPageA
 ; Strings and intl and burritos
 ;
 
-!macro LANG_LOAD LANGLOAD
-	!insertmacro MUI_LANGUAGE "${LANGLOAD}"
-	!include "strings-${LANGLOAD}.nsh"
-!macroend
 !macro LANG_STRING NAME VALUE
 	LangString "${NAME}" "${LANG_${LANG}}" "${VALUE}"
 !macroend
 
-;!insertmacro LANG_LOAD "German"
-!insertmacro LANG_LOAD "English"
-;!insertmacro LANG_LOAD "Spanish"
-;!insertmacro LANG_LOAD "French"
-;!insertmacro LANG_LOAD "Italian"
-;!insertmacro LANG_LOAD "Korean"
-;!insertmacro LANG_LOAD "PortugueseBR"
-;!insertmacro LANG_LOAD "TradChinese"
-
+!insertmacro MUI_LANGUAGE "${LANG_NAME}"
+!include "strings-${LANG_NAME}.nsh"
 
 
 ;
@@ -76,7 +66,7 @@ VIAddVersionKey "FileVersion" "${VERSION}"
 
 
 
-ReserveFile "io-${LANG}.ini"
+ReserveFile "config-${LANG_name}.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 Var INI_VALUE
@@ -91,10 +81,10 @@ Section "Install" SecInstall
 	CreateDirectory "$INSTDIR\chrome"
 	CreateDirectory "$INSTDIR\chrome\icons"
 	CreateDirectory "$INSTDIR\chrome\icons\default"
-	File /oname=chrome\icons\default\main.ico MacUploadr.app\Contents\Resources\chrome\icons\default\main.ico
-	File /oname=chrome\icons\default\updates.ico MacUploadr.app\Contents\Resources\chrome\icons\default\updates.ico
-	File /oname=chrome\uploadr.jar MacUploadr.app\Contents\Resources\chrome\uploadr.jar
-	File /oname=chrome\chrome.manifest MacUploadr.app\Contents\Resources\chrome\chrome.manifest.prod
+	File /oname=chrome\icons\default\main.ico	"Flickr Uploadr\chrome\icons\default\main.ico"
+	File /oname=chrome\icons\default\updates.ico	"Flickr Uploadr\chrome\icons\default\updates.ico"
+	File /oname=chrome\uploadr.jar			"Flickr Uploadr\Resources\chrome\uploadr.jar"
+	File /oname=chrome\chrome.manifest		"Flickr Uploadr\Resources\chrome\chrome.manifest.prod"
 
 	; XPCOM components
 	CreateDirectory "$INSTDIR\components"
@@ -140,18 +130,18 @@ SectionEnd
 
 Section "Start Menu Shortcuts"
 	CreateShortCut "$SMPROGRAMS\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.exe" "" "$INSTDIR\Flickr Uploadr.exe" 0
-	!insertmacro MUI_INSTALLOPTIONS_READ $INI_VALUE "io-${LANG}.ini" "Field 1" "State"
+	!insertmacro MUI_INSTALLOPTIONS_READ $INI_VALUE "config-${LANG_name}.ini" "Field 1" "State"
 	StrCmp $INI_VALUE "1" "" +2    
 		CreateShortCut "$DESKTOP\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.exe" "" "$INSTDIR\Flickr Uploadr.exe" 0
 SectionEnd
 
 Function .onInit
-	!insertmacro MUI_INSTALLOPTIONS_EXTRACT "io-${LANG}.ini"
+	!insertmacro MUI_INSTALLOPTIONS_EXTRACT "config-${LANG_name}.ini"
 FunctionEnd
 
 Function CustomPageA
 	!insertmacro MUI_HEADER_TEXT "$(integ_title)" "$(integ_text)"
-	!insertmacro MUI_INSTALLOPTIONS_DISPLAY "io-${LANG}.ini"
+	!insertmacro MUI_INSTALLOPTIONS_DISPLAY "config-${LANG_name}.ini"
 FunctionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN

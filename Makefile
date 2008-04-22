@@ -305,6 +305,11 @@ endif
 	mv $(BUILD)/jar/uploadr.zip $(RES)/chrome/uploadr.jar
 	rm -rf $(BUILD)/jar
 
+	@# Non-JAR'd Chrome
+	mkdir $(RES)/chrome/icons
+	mkdir $(RES)/chrome/icons/default
+	cp $(SRC)/Resources/chrome/icons/default/*.ico $(RES)/chrome/icons/default/
+
 	@# XPCOM
 	mkdir $(RES)/components
 	cp $(SRC)/Resources/components/*.xpt $(RES)/components/
@@ -337,25 +342,25 @@ ifeq (win, $(PLATFORM))
 	# build the NSIS config file. convert it to UCS-2
 	#
 
-	sed 's/English/$(INTL_WIN)/g' win_installer/build.nsi > \
-		$(BUILD)/windows_install.temp
 	perl -e 'print chr(255).chr(254)' > \
 		$(BUILD)/windows_install_build-$(INTL_SHORT).nsi
-
-	perl -pe 's/(.)/$$1\0/sg' $(BUILD)/windows_install.temp >> \
+	perl -pe 's/(.)/$$1\0/sg' win_installer/build.nsi >> \
 		$(BUILD)/windows_install_build-$(INTL_SHORT).nsi
-	rm $(BUILD)/windows_install.temp
 
 	cp win_installer/strings-$(INTL_WIN).nsh $(BUILD)/strings-$(INTL_WIN).nsh
+	cp win_installer/config-$(INTL_WIN).ini $(BUILD)/config-$(INTL_WIN).ini
 
 	$(MAKE_NSIS) -DVERSION=$(VER) \
-		-DVERSION_DATE=$(VER_DATE) $(BUILD)/windows_install_build-$(INTL_SHORT).nsi
+		-DVERSION_DATE=$(VER_DATE) \
+		-DLANG_NAME=$(INTL_WIN) \
+		$(BUILD)/windows_install_build-$(INTL_SHORT).nsi
 
 	mv $(BUILD)/FlickrUploadr-$(VER)-XX.exe \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).exe
 
 	rm $(BUILD)/windows_install_build-$(INTL_SHORT).nsi
 	rm $(BUILD)/strings-$(INTL_WIN).nsh
+	rm $(BUILD)/config-$(INTL_WIN).ini
 endif
 
 	@# Create ??? for Linux

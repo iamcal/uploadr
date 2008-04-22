@@ -483,8 +483,8 @@ Windows
 -------
 
 Windows installers are created using NSIS, specifically the Unicode
-version built from their CVS:
-  http://forums.winamp.com/showthread.php?threadid=277381
+version available here:
+  http://www.scratchpaper.com/
 
 Building the NSIS package will likely fail if you do not have Visual
 Studio 8 installed.  The installer references vcredist_x86.exe.  For
