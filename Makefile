@@ -71,13 +71,17 @@ MOZILLA := /c/mozilla
 # Location for application bundle staging
 APPNAME := Flickr\ Uploadr
 
-# Location to output finished DMGs
+# Location to output finished NSIS installers
 OUT := /c/code/uploadr
+
+# Location of the makensis.exe binary
+MAKE_NSIS := /c/Program\ Files/NSIS/Unicode/makensis.exe
+
 
 # below here, don't modify anything
 
 # Dated version for the NSIS installer - this comes from application.ini
-VER_DATE := `grep ^BuildID= $(SRC)/Resources/application.ini | sed 's/BuildID=\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1.\2.\3.\4/'`;
+VER_DATE := `grep ^BuildID= $(SRC)/Resources/application.ini | sed 's/BuildID=\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1.\2.\3.\4/'`
 
 # Location for build staging
 BUILD := $(OUT)/builds/$(INTL)
@@ -329,16 +333,29 @@ endif
 	@# Create NSIS installer for Windows
 ifeq (win, $(PLATFORM))
 
-	@# TODO: This is broken in Windows because the *.nsi and *.nsh files
-	@# are stored as Windows Unicode, which is UTF-16 or UCS-2
-	sed 's/English/$(INTL_WIN)/g' windows_install_build.nsi > \
-		windows_install_build-$(INTL_SHORT).nsi
+	#
+	# build the NSIS config file. convert it to UCS-2
+	#
 
-	/c/Program\ Files/NSISUnicode/makensis.exe -DVERSION=$(VER) \
-		-DVERSION_DATE=$(VER_DATE) windows_install_build-$(INTL_SHORT).nsi
-	mv FlickrUploadr-$(VER)-XX.exe \
+	sed 's/English/$(INTL_WIN)/g' win_installer/build.nsi > \
+		$(BUILD)/windows_install.temp
+	perl -e 'print chr(255).chr(254)' > \
+		$(BUILD)/windows_install_build-$(INTL_SHORT).nsi
+
+	perl -pe 's/(.)/$$1\0/sg' $(BUILD)/windows_install.temp >> \
+		$(BUILD)/windows_install_build-$(INTL_SHORT).nsi
+	rm $(BUILD)/windows_install.temp
+
+	cp win_installer/strings-$(INTL_WIN).nsh $(BUILD)/strings-$(INTL_WIN).nsh
+
+	$(MAKE_NSIS) -DVERSION=$(VER) \
+		-DVERSION_DATE=$(VER_DATE) $(BUILD)/windows_install_build-$(INTL_SHORT).nsi
+
+	mv $(BUILD)/FlickrUploadr-$(VER)-XX.exe \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).exe
-#	rm windows_install_build-$(INTL_SHORT).nsi
+
+	rm $(BUILD)/windows_install_build-$(INTL_SHORT).nsi
+	rm $(BUILD)/strings-$(INTL_WIN).nsh
 endif
 
 	@# Create ??? for Linux

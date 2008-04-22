@@ -37,7 +37,7 @@ Page custom CustomPageA
 
 !macro LANG_LOAD LANGLOAD
 	!insertmacro MUI_LANGUAGE "${LANGLOAD}"
-	!include "${LANGLOAD}.nsh"
+	!include "strings-${LANGLOAD}.nsh"
 !macroend
 !macro LANG_STRING NAME VALUE
 	LangString "${NAME}" "${LANG_${LANG}}" "${VALUE}"
