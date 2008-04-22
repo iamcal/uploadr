@@ -11,7 +11,7 @@
 ; Compile-Time Variables:
 ; VERSION	#.#.#		(whatever, really)
 ; VERSION_DATE	YYYY.MM.DD.nn	(strictly now)
-; LANG_NAME	English		(bleh)
+; LANG_NAME	English		(???)
 
 !include "MUI.nsh"
 !include "LogicLib.nsh"
@@ -41,7 +41,7 @@ Page custom CustomPageA
 !macroend
 
 !insertmacro MUI_LANGUAGE "${LANG_NAME}"
-!include "strings-${LANG_NAME}.nsh"
+!include "strings.nsh"
 
 
 ;
@@ -66,7 +66,7 @@ VIAddVersionKey "FileVersion" "${VERSION}"
 
 
 
-ReserveFile "config-${LANG_name}.ini"
+ReserveFile "config.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 Var INI_VALUE
@@ -130,25 +130,25 @@ SectionEnd
 
 Section "Start Menu Shortcuts"
 	CreateShortCut "$SMPROGRAMS\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.exe" "" "$INSTDIR\Flickr Uploadr.exe" 0
-	!insertmacro MUI_INSTALLOPTIONS_READ $INI_VALUE "config-${LANG_name}.ini" "Field 1" "State"
+	!insertmacro MUI_INSTALLOPTIONS_READ $INI_VALUE "config.ini" "Field 1" "State"
 	StrCmp $INI_VALUE "1" "" +2    
 		CreateShortCut "$DESKTOP\Flickr Uploadr.lnk" "$INSTDIR\Flickr Uploadr.exe" "" "$INSTDIR\Flickr Uploadr.exe" 0
 SectionEnd
 
 Function .onInit
-	!insertmacro MUI_INSTALLOPTIONS_EXTRACT "config-${LANG_name}.ini"
+	!insertmacro MUI_INSTALLOPTIONS_EXTRACT "config.ini"
 FunctionEnd
 
 Function CustomPageA
 	!insertmacro MUI_HEADER_TEXT "$(integ_title)" "$(integ_text)"
-	!insertmacro MUI_INSTALLOPTIONS_DISPLAY "config-${LANG_name}.ini"
+	!insertmacro MUI_INSTALLOPTIONS_DISPLAY "config.ini"
 FunctionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 !insertmacro MUI_DESCRIPTION_TEXT ${SecInstall} $(inst)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
-UninstallIcon ".\MacUploadr.app\Contents\Resources\icons.ico"
+UninstallIcon "Flickr Uploadr\icons.ico"
 
 Section "Uninstall"
 	DeleteRegKey /ifempty HKCU "Software\Flickr Uploadr"
@@ -163,4 +163,4 @@ Section "Uninstall"
 	RMDir /r "$INSTDIR"
 SectionEnd
 
-Icon ".\MacUploadr.app\Contents\Resources\icons.ico"
+Icon "Flickr Uploadr\icons.ico"

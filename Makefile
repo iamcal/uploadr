@@ -11,7 +11,7 @@
 # Macs can build DMGs and MARs for all languages with `make`
 # Windows can build installers and MARs for all languages with `make win`
 
-INTL := $(filter de-de en-US es-us fr-fr it-it ko-kr pt-br zh-hk, $(MAKECMDGOALS))
+INTL := $(filter de-de en-US es-us fr-fr it-it ko-kr pt-br zh-hk ja-jp, $(MAKECMDGOALS))
 ifeq (de-de, $(INTL))
 INTL_SHORT := de
 INTL_WIN := German
@@ -43,6 +43,10 @@ endif
 ifeq (zh-hk, $(INTL))
 INTL_SHORT := hk
 INTL_WIN := TradChinese
+endif
+ifeq (ja-jp, $(INTL))
+INTL_SHORT := ja
+INTL_WIN := Japanese
 endif
 
 
@@ -346,24 +350,24 @@ ifeq (win, $(PLATFORM))
 	#
 
 	perl -e 'print chr(255).chr(254)' > \
-		$(BUILD)/windows_install_build-$(INTL_SHORT).nsi
+		$(BUILD)/build.nsi
 	perl -pe 's/(.)/$$1\0/sg' win_installer/build.nsi >> \
-		$(BUILD)/windows_install_build-$(INTL_SHORT).nsi
+		$(BUILD)/build.nsi
 
-	cp win_installer/strings-$(INTL_WIN).nsh $(BUILD)/strings-$(INTL_WIN).nsh
-	cp win_installer/config-$(INTL_WIN).ini $(BUILD)/config-$(INTL_WIN).ini
+	cp win_installer/strings-$(INTL).nsh $(BUILD)/strings.nsh
+	cp win_installer/config-$(INTL).ini $(BUILD)/config.ini
 
 	$(MAKE_NSIS) -DVERSION=$(VER) \
 		-DVERSION_DATE=$(VER_DATE) \
 		-DLANG_NAME=$(INTL_WIN) \
-		$(BUILD)/windows_install_build-$(INTL_SHORT).nsi
+		$(BUILD)/build.nsi
 
 	mv $(BUILD)/FlickrUploadr-$(VER)-XX.exe \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).exe
 
-	rm $(BUILD)/windows_install_build-$(INTL_SHORT).nsi
-	rm $(BUILD)/strings-$(INTL_WIN).nsh
-	rm $(BUILD)/config-$(INTL_WIN).ini
+	rm $(BUILD)/build.nsi
+	rm $(BUILD)/strings.nsh
+	rm $(BUILD)/config.ini
 endif
 
 	@# Create ??? for Linux
