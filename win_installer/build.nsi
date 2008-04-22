@@ -83,18 +83,17 @@ Section "Install" SecInstall
 	CreateDirectory "$INSTDIR\chrome\icons\default"
 	File /oname=chrome\icons\default\main.ico	"Flickr Uploadr\chrome\icons\default\main.ico"
 	File /oname=chrome\icons\default\updates.ico	"Flickr Uploadr\chrome\icons\default\updates.ico"
-	File /oname=chrome\uploadr.jar			"Flickr Uploadr\Resources\chrome\uploadr.jar"
-	File /oname=chrome\chrome.manifest		"Flickr Uploadr\Resources\chrome\chrome.manifest.prod"
+	File /oname=chrome\uploadr.jar			"Flickr Uploadr\chrome\uploadr.jar"
+	File /oname=chrome\chrome.manifest		"Flickr Uploadr\chrome\chrome.manifest"
 
 	; XPCOM components
 	CreateDirectory "$INSTDIR\components"
-	File /oname=components\gm.dll MacUploadr.app\Contents\Resources\components\gm.dll
-	File /oname=components\flIGM.xpt MacUploadr.app\Contents\Resources\components\flIGM.xpt
-	File /oname=components\key.dll MacUploadr.app\Contents\Resources\components\key.dll
-	File /oname=components\flIKey.xpt MacUploadr.app\Contents\Resources\components\flIKey.xpt
-	File /oname=components\clh.js MacUploadr.app\Contents\Resources\components\clh.js
-	File /oname=components\flICLH.xpt MacUploadr.app\Contents\Resources\components\flICLH.xpt
-	File /oname=libexpat.dll MacUploadr.app\Contents\Resources\libexpat.dll
+	File /oname=components\gm.dll			"Flickr Uploadr\components\gm.dll"
+	File /oname=components\flIGM.xpt		"Flickr Uploadr\components\flIGM.xpt"
+	File /oname=components\key.dll			"Flickr Uploadr\components\key.dll"
+	File /oname=components\flIKey.xpt		"Flickr Uploadr\components\flIKey.xpt"
+	File /oname=components\clh.js			"Flickr Uploadr\components\clh.js"
+	File /oname=components\flICLH.xpt		"Flickr Uploadr\components\flICLH.xpt"
 
 	; CRT
 	File "C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\BootStrapper\Packages\vcredist_x86\vcredist_x86.exe"
@@ -102,15 +101,16 @@ Section "Install" SecInstall
 	Delete "$INSTDIR\vcredist_x86.exe"
 
 	; XULRunner and friends
-	File /r /x .svn MacUploadr.app\Contents\Resources\defaults
-	File /r /x .svn MacUploadr.app\Contents\Resources\xulrunner
-	File MacUploadr.app\Contents\Resources\application.ini
-	File MacUploadr.app\Contents\Resources\LICENSE.txt
-	File MacUploadr.app\Contents\Resources\icons.ico
-	File MacUploadr.app\Contents\Resources\magic.mgk
-	File MacUploadr.app\Contents\Resources\modules.mgk
-	File MacUploadr.app\Contents\Resources\delegates.mgk
-	File "MacUploadr.app\Contents\Resources\Flickr Uploadr.exe"
+	File /r /x .svn "Flickr Uploadr\defaults"
+	File /r /x .svn "Flickr Uploadr\xulrunner"
+	File "Flickr Uploadr\application.ini"
+	File "Flickr Uploadr\LICENSE.txt"
+	File "Flickr Uploadr\icons.ico"
+	File "Flickr Uploadr\magic.mgk"
+	File "Flickr Uploadr\modules.mgk"
+	File "Flickr Uploadr\delegates.mgk"
+	File "Flickr Uploadr\libexpat.dll"
+	File "Flickr Uploadr\Flickr Uploadr.exe"
 
 	; Uninstaller
 	WriteRegStr HKCU "Software\Flickr Uploadr" "" $INSTDIR

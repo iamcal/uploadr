@@ -221,16 +221,19 @@ else
 endif
 
 	@# XULRunner
+	cp $(SRC)/Resources/application.ini $(RES)/
+	cp $(SRC)/Resources/LICENSE.txt $(RES)/
 ifeq (mac, $(PLATFORM))
 	cp -R $(SRC)/Frameworks/XUL.framework $(APP)/Contents/Frameworks/
 	cp $(APP)/Contents/Frameworks/XUL.framework/Versions/Current/xulrunner \
 		$(APP)/Contents/MacOS/xulrunner
-	cp $(SRC)/Resources/application.ini $(RES)/
-	cp $(SRC)/Resources/LICENSE.txt $(RES)/
 	cp $(SRC)/Resources/icons.icns $(RES)/
-else
+endif
+ifeq (win, $(PLATFORM))
 	cp -R $(SRC)/Resources/xulrunner $(RES)/
 	cp $(SRC)/Resources/Flickr\ Uploadr.exe $(RES)/
+	cp $(SRC)/Resources/libexpat.dll $(RES)/
+	cp $(SRC)/Resources/icons.ico $(RES)/
 endif
 
 	@# XULRunner preferences
