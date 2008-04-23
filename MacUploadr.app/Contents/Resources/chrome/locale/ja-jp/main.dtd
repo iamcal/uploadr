@@ -41,12 +41,12 @@
 
 <!ENTITY photos.sort.default "現在日付で並び替えられています。ドラッグアンドドロップで並び替えられます。">
 <!ENTITY photos.sort.revert "再度日付で並び替える">
-<!ENTITY photos.init "まずここに画像をドラッグします。">
+
 <!ENTITY photos.init.text.1 "もしくはコンピュータからの画像を">
 <!ENTITY photos.init.text.2 "をクリックして選択します。">
-<!ENTITY photos.new "アップロードの最中でも新たなアップロードを開始出来ます。">
+<!ENTITY photos.init.note "Please note:">
 
-<!ENTITY photos.new "While that batch is uploading, you can start a new one.">
+<!ENTITY photos.new "アップロードの最中でも新たなアップロードを開始出来ます。">
 
 <!ENTITY settings "設定">
 <!ENTITY settings.notloggedin "設定の変更を行うには、まずサインインする必要があります。">
