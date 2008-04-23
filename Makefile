@@ -12,43 +12,34 @@
 # Windows can build installers and MARs for all languages with `make win`
 
 INTL := $(filter de-de en-US es-us fr-fr it-it ko-kr pt-br zh-hk ja-jp, $(MAKECMDGOALS))
+
 ifeq (de-de, $(INTL))
 INTL_SHORT := de
-INTL_WIN := German
 endif
 ifeq (en-US, $(INTL))
 INTL_SHORT := en
-INTL_WIN := English
 endif
 ifeq (es-us, $(INTL))
 INTL_SHORT := es
-INTL_WIN := Spanish
 endif
 ifeq (fr-fr, $(INTL))
 INTL_SHORT := fr
-INTL_WIN := French
 endif
 ifeq (it-it, $(INTL))
 INTL_SHORT := it
-INTL_WIN := Italian
 endif
 ifeq (ko-kr, $(INTL))
 INTL_SHORT := kr
-INTL_WIN := Korean
 endif
 ifeq (pt-br, $(INTL))
 INTL_SHORT := br
-INTL_WIN := PortugueseBR
 endif
 ifeq (zh-hk, $(INTL))
 INTL_SHORT := hk
-INTL_WIN := TradChinese
 endif
 ifeq (ja-jp, $(INTL))
 INTL_SHORT := ja
-INTL_WIN := Japanese
 endif
-
 
 
 ########################################################################
@@ -345,10 +336,6 @@ endif
 	@# Create NSIS installer for Windows
 ifeq (win, $(PLATFORM))
 
-	#
-	# build the NSIS config file. convert it to UCS-2
-	#
-
 	perl -e 'print chr(255).chr(254)' > \
 		$(BUILD)/build.nsi
 	perl -pe 's/(.)/$$1\0/sg' win_installer/build.nsi >> \
@@ -356,10 +343,10 @@ ifeq (win, $(PLATFORM))
 
 	cp win_installer/strings-$(INTL).nsh $(BUILD)/strings.nsh
 	cp win_installer/config-$(INTL).ini $(BUILD)/config.ini
+	cp win_installer/vcredist_x86.exe $(BUILD)/vcredist_x86.exe
 
 	$(MAKE_NSIS) -DVERSION=$(VER) \
 		-DVERSION_DATE=$(VER_DATE) \
-		-DLANG_NAME=$(INTL_WIN) \
 		$(BUILD)/build.nsi
 
 	mv $(BUILD)/FlickrUploadr-$(VER)-XX.exe \
@@ -368,6 +355,7 @@ ifeq (win, $(PLATFORM))
 	rm $(BUILD)/build.nsi
 	rm $(BUILD)/strings.nsh
 	rm $(BUILD)/config.ini
+	rm $(BUILD)/vcredist_x86.exe
 endif
 
 	@# Create ??? for Linux

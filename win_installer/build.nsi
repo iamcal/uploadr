@@ -11,7 +11,6 @@
 ; Compile-Time Variables:
 ; VERSION	#.#.#		(whatever, really)
 ; VERSION_DATE	YYYY.MM.DD.nn	(strictly now)
-; LANG_NAME	English		(???)
 
 !include "MUI.nsh"
 !include "LogicLib.nsh"
@@ -40,9 +39,16 @@ Page custom CustomPageA
 	LangString "${NAME}" "${LANG_${LANG}}" "${VALUE}"
 !macroend
 
-!insertmacro MUI_LANGUAGE "${LANG_NAME}"
 !include "strings.nsh"
+!insertmacro MUI_LANGUAGE "${LANG_NAME}"
 
+!insertmacro LANG_STRING title_version		"${LANG_STR_TITLE_VERSION}"
+!insertmacro LANG_STRING title_version_inst	"${LANG_STR_TITLE_VERSION_INST}"
+!insertmacro LANG_STRING copyright		"${LANG_STR_COPYRIGHT}"
+!insertmacro LANG_STRING inst			"${LANG_STR_INST}"
+!insertmacro LANG_STRING integ_title		"${LANG_STR_INTEG_TITLE}"
+!insertmacro LANG_STRING integ_text		"${LANG_STR_INTEG_TEXT}"
+!insertmacro LANG_STRING send			"${LANG_STR_SEND}"
 
 ;
 ; Version-y bits
@@ -96,7 +102,7 @@ Section "Install" SecInstall
 	File /oname=components\flICLH.xpt		"Flickr Uploadr\components\flICLH.xpt"
 
 	; CRT
-	File "C:\Program Files\Microsoft Visual Studio 8\SDK\v2.0\BootStrapper\Packages\vcredist_x86\vcredist_x86.exe"
+	File "vcredist_x86.exe"
 	ExecWait '"$INSTDIR\vcredist_x86.exe" /q:a /c:"VCREDI~1.EXE /q:a /c:""msiexec /i vcredist.msi /qb!"" "'
 	Delete "$INSTDIR\vcredist_x86.exe"
 
