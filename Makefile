@@ -148,6 +148,7 @@ all-build:
 	make $(PLATFORM) ko-kr build
 	make $(PLATFORM) pt-br build
 	make $(PLATFORM) zh-hk build
+	make $(PLATFORM) ja-jp build
 
 all-mar:
 	@make $(PLATFORM) de-de mar
@@ -158,7 +159,7 @@ all-mar:
 	@make $(PLATFORM) ko-kr mar
 	@make $(PLATFORM) pt-br mar
 	@make $(PLATFORM) zh-hk mar
-
+	@make $(PLATFORM) ja-jp mar
 
 
 de-de:
@@ -177,6 +178,8 @@ pt-br:
 	@echo "Building Portuguese (pt-br)"
 zh-hk:
 	@echo "Building Chinese (zh-hk)"
+ja-jp:
+	@echo "Building Japanese (ja-jp)"
 
 
 
@@ -336,13 +339,26 @@ endif
 	@# Create NSIS installer for Windows
 ifeq (win, $(PLATFORM))
 
-	perl -e 'print chr(255).chr(254)' > \
-		$(BUILD)/build.nsi
-	perl -pe 's/(.)/$$1\0/sg' win_installer/build.nsi >> \
+	perl win_installer/strsub.pl win_installer/strings.nsh \
+		$(SRC)/Resources/chrome/locale/$(INTL)/installer.properties > \
+		$(BUILD)/strings-temp.nsh
+	perl win_installer/utf16.pl \
+		$(BUILD)/strings-temp.nsh > \
+		$(BUILD)/strings.nsh
+	rm $(BUILD)/strings-temp.nsh
+
+	perl win_installer/strsub.pl win_installer/config.ini \
+		$(SRC)/Resources/chrome/locale/$(INTL)/installer.properties > \
+		$(BUILD)/config-temp.ini
+	perl win_installer/utf16.pl \
+		$(BUILD)/config-temp.ini > \
+		$(BUILD)/config.ini
+	rm $(BUILD)/config-temp.ini
+
+	perl win_installer/utf16.pl \
+		win_installer/build.nsi > \
 		$(BUILD)/build.nsi
 
-	cp win_installer/strings-$(INTL).nsh $(BUILD)/strings.nsh
-	cp win_installer/config-$(INTL).ini $(BUILD)/config.ini
 	cp win_installer/vcredist_x86.exe $(BUILD)/vcredist_x86.exe
 
 	$(MAKE_NSIS) -DVERSION=$(VER) \
