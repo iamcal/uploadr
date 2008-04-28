@@ -1,12 +1,17 @@
 <!--
+
 Flickr Uploadr
+
 Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
 free software; you can redistribute it and/or modify it under the terms of
 the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
 -->
+
 <!ENTITY title "Uploadr de Flickr">
+
 <!ENTITY menu.upload "Subir fotos">
 <!ENTITY menu.upload.add "Agregar">
 <!ENTITY menu.upload.preferences "Preferencias">
@@ -24,27 +29,37 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.help.tips "Trucos y sugerencias">
 <!ENTITY menu.help.faq "Preguntas frecuentes">
 <!ENTITY menu.help.update "Busca actualizaciones...">
+
 <!ENTITY notloggedin "Estás trabajando sin conexión.">
 <!ENTITY login "Iniciar sesión">
 <!ENTITY switch "¿Deseas cambiar usuarios?">
+
 <!ENTITY auth.confirm "Cuando le hayas dado permiso al Uploadr de Flickr para conectarse a tu cuenta en el sitio Web de Flickr, haz clic en el gran botón ¡LISTO!">
 <!ENTITY auth.confirm.oops "¿Deseas dar permiso otra vez?">
 <!ENTITY auth.alternate "Si tu explorador no se abre automáticamente, puedes visitar esta dirección URL y luego regresar y hacer clic en el botón ¡LISTO! grande.">
+
 <!ENTITY tools.add "+ Agregar">
 <!ENTITY tools.remove "- Quitar">
+
 <!ENTITY buttons.upload "Subir fotos">
 <!ENTITY buttons.cancel "Cancelar">
 <!ENTITY buttons.auth "¡Listo!">
 <!ENTITY buttons.ok "ACEPTAR">
+
 <!ENTITY bandwidth.remaining "Disponible este mes">
 <!ENTITY bandwidth.batch "Este lote">
+
 <!ENTITY photostream.title "Tu galería">
+
 <!ENTITY photos.sort.default "En este momento, tus elementos están ordenados por la fecha en que se tomaron.  Arrastra y coloca para reordenar.">
 <!ENTITY photos.sort.revert "Reordenar elementos por fecha en que se tomaron">
+
 <!ENTITY photos.init.text.1 "O bien, haz clic en ">
 <!ENTITY photos.init.text.2 " para buscar archivos en tu computadora.">
 <!ENTITY photos.init.note "Nota:">
+
 <!ENTITY photos.new "Mientras ese lote se carga, puedes comenzar uno nuevo.">
+
 <!ENTITY settings "Configuración">
 <!ENTITY settings.notloggedin "Debes iniciar sesión para ajustar tus preferencias">
 <!ENTITY settings.users "Autorización:">
@@ -76,6 +91,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.resize.2048 "2048 píxeles (óptimo para almacenamiento)">
 <!ENTITY settings.note "Atención:">
 <!ENTITY settings.note.text "Tu configuración de privacidad, seguridad y tipo de contenido en el Uploadr es independiente de tu configuración de flickr.com.">
+
 <!ENTITY meta.single.title "Título:">
 <!ENTITY meta.batch.title "Reemplazar títulos:">
 <!ENTITY meta.batch.title.tooltip "Si ingresas un título aquí, se sobrescribirán los títulos de los elementos seleccionados.">
@@ -96,17 +112,21 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY meta.batch.sets.added "Se agregarán a:">
 <!ENTITY meta.sets.added.none "No has seleccionado ningún álbum">
 <!ENTITY meta.hidden "Inicia sesión para ver tus álbumes">
+
 <!ENTITY meta.no.prompt "Selecciona un elemento (o varios) para agregar títulos, etiquetas y descripciones o agregar tus elementos a álbumes">
 <!ENTITY meta.batch.prompt "Ahora puedes reemplazar todos los títulos con uno nuevo, agregar a descripciones existentes, agregar más etiquetas o más álbumes.">
+
 <!ENTITY dialog.set.title "Crear un álbum">
 <!ENTITY dialog.set.name "Dale un nombre a tu álbum nuevo:">
 <!ENTITY dialog.set.description "Y una descripción (opcional):">
+
 <!ENTITY dialog.about "Acerca del Uploadr de Flickr">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc. Todos los derechos reservados.  Este programa es un software gratuito, puedes redistribuirlo y/o modificarlo según los términos de la Licencia Pública General (GPL) de GNU, solamente versión 2.">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner es propiedad de © 2007 Mozilla Foundation.  Está disponible según la Licencia Pública de Mozilla, la Licencia Pública General de GNU, o la Licencia Pública General Menor de GNU.">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick es propiedad de © 2007 GraphicsMagick Group.  Está disponible según la Licencia MIT/X11.">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 es propiedad de © 2004-2007 Andreas Huggel. Está disponible según la Licencia Pública General de GNU">
 <!ENTITY dialog.about.code "Código fuente disponible en http://flickr.com/tools/uploadr/.">
+
 <!ENTITY help "Trucos y sugerencias">
 <!ENTITY help.offline "Puedes ^^trabajar sin conexión^^.">
 <!ENTITY help.offline.text.first "El Uploadr está diseñado para permitirte realizar gran parte de tus actividades de organización y etiquetado de fotos sin conexión.  Cuando estés listo para cargar a Flickr, inicia sesión en tu cuenta y presiona el enorme botón Cargar fotos.">
@@ -114,3 +134,4 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY help.drag "^^Arrastrar y colocar^^ es tu amigo.">
 <!ENTITY help.drag.text "Puedes arrastrar elementos en el orden que desees que aparezcan en la página de tu galería cuando estén cargados.  Si necesitas hacerlo, también puedes restablecer la organización de modo que los elementos vuelvan a estar ordenados por la fecha en que se tomaron.">
 <!ENTITY help.faq "Si tienes alguna duda más, visita nuestra ^^pregunta frecuente sobre Uploadr^^">
+
