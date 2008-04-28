@@ -4,6 +4,12 @@
 
 $locale = dirname(__FILE__) . '/MacUploadr.app/Contents/Resources/chrome/locale';
 
+if (count($_GET)){
+	$argv = array_keys($_GET);
+	array_unshift($argv, 'foo.php');
+}
+
+
 # Gotta have a source folder for all those other languages
 if (!isset($argv[1])) {
 	die("Usage: $argv[0] <intl-directory>\n");
@@ -12,6 +18,7 @@ if (!isset($argv[1])) {
 # Clean each directory's files
 foreach (array('de-de', 'es-us', 'fr-fr', 'it-it', 'ko-kr', 'pt-br', 'zh-hk') as $l) {
 	$dir = opendir("$argv[1]/$l");
+	if (!$dir) die;
 	while (false !== $file = readdir($dir)) {
 
 		# Only act on DTD and PROPERTIES files
@@ -31,7 +38,7 @@ foreach (array('de-de', 'es-us', 'fr-fr', 'it-it', 'ko-kr', 'pt-br', 'zh-hk') as
 			echo "[error] Reading $file\n";
 			continue;
 		}
-		$text = trim(str_replace("\n\n", "\n", preg_replace('/^<\?php.*\?>$/ms', '', $text)));
+		$text = trim(preg_replace('/^<\?php.*\?>$/ms', '', $text));
 
 		# Process each string
 		$lines = explode("\n", $text);
@@ -73,14 +80,14 @@ foreach (array('de-de', 'es-us', 'fr-fr', 'it-it', 'ko-kr', 'pt-br', 'zh-hk') as
 			echo "[error] Opening $file\n";
 			continue;
 		}
-		if (false === fwrite($file_p, implode("\n",
-			array_diff($lines, array(''))))) {
+		if (false === fwrite($file_p, implode("\n", $lines))) {
 			echo "[error] Writing $file\n";
 		}
 		if (false === fclose($file_p)) {
 			echo "[error] Closing $file\n";
 		}
 
+		echo "[ok] finished writing $l/$file\n";
 	}
 	closedir($dir);
 }
