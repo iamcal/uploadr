@@ -20,7 +20,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml"
-onload="threads.init(); users.load(); photos.load(); ui.init(); ui.users_updated();"
+onload="conf.load_ini(); threads.init(); users.load(); photos.load(); ui.init(); ui.users_updated();"
 onclose="return exit();" persist="screenX screenY width height sizemode">
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />

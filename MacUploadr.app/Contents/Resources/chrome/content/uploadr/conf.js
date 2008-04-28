@@ -25,10 +25,12 @@ var SITE_HOST = '', REST_HOST = '', UPLOAD_HOST = '';
 	catch(err) { UPLOAD_HOST = 'up.flickr.com'; }
 })();
 
-const conf = {
+var conf = {
 
 	// What version am I?
-	version: '3.1',
+	version: '3.x',
+
+	app_ini: {},
 
 	// What types of API events should be written to the console?
 	console: {
@@ -103,4 +105,53 @@ const conf = {
 	// Scrollbar width (pixels)
 	scrollbar_width: 14,
 
+	// Load are parse the application.ini file
+	load_ini: function(){
+
+		var f = Components.classes["@mozilla.org/file/directory_service;1"]
+			.getService(Components.interfaces.nsIProperties)
+			.get('resource:app', Components.interfaces.nsILocalFile);
+
+		f.append('application.ini');
+
+		var data = '';
+		var fstream = Cc['@mozilla.org/network/file-input-stream;1']
+			.createInstance(Ci.nsIFileInputStream);
+		var sstream = Cc['@mozilla.org/scriptableinputstream;1']
+			.createInstance(Ci.nsIScriptableInputStream);
+		fstream.init(f, -1, 0, 0);
+		sstream.init(fstream); 
+		var str = sstream.read(4096);
+		while (str.length > 0) {
+			data += str;
+			str = sstream.read(4096);
+		}
+		sstream.close();
+		fstream.close();
+
+		var lines = data.split("\n");
+		var section = 'UNKNOWN';
+
+		for (var i=0; i<lines.length; i++){
+
+			if (/^[;#]/.test(lines[i])) continue;
+
+			var ret = null;
+
+			if (ret = /^([a-zA-Z]+)=(.*)$/.exec(lines[i])){
+				if (!this.app_ini[section]){
+					this.app_ini[section] = {};
+				}
+				this.app_ini[section][ret[1]] = ret[2];
+			}
+			if (ret = /^\[(.*)\]$/.exec(lines[i])){
+				section = ret[1];
+			}
+		}
+
+
+		// use some of the parsed options
+
+		this.version = this.app_ini.App.Version.replace(/a/, ' alpha ').replace(/b/, ' beta ');
+	},
 };
