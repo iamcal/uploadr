@@ -345,5 +345,5 @@ One-command builds in MSys for all eight languages:
 Or to build a single language:
   $ make win build en-US
 
-If you do not want to create update files (see README.mar):
+If you do not want to create update files (see README.updates):
   $ make win all-build
