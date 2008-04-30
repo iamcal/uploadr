@@ -1,0 +1,215 @@
+Flickr Uploadr
+
+Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+free software; you can redistribute it and/or modify it under the terms of
+the GNU General Public License (GPL), version 2 only.  This library is
+distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
+------------------------------------------------------------------------
+
+This guide uses UPLOADR to indicate the root of the Flickr Uploadr
+source tree on your filesystem.  It probably shouldn't contain spaces.
+
+You can obtain the Flickr Uploadr source code from either a tarball or
+from Subversion.
+
+Download tarball:
+  http://flickr.com/tools/uploadr/
+
+Checkout from Subversion:
+  $ svn co http://code.flickr.com/svn/trunk/uploadr UPLOADR
+
+
+XULRunner
+------------------------------------------------------------------------
+
+XULRunner trunk builds:
+  ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
+
+Note: You want the version *without* 'sdk' in the name.
+
+Install the Mac version of XULRunner, which will live in
+/Library/Frameworks.  Then pull it into your fake Uploadr distribution:
+  $ mkdir UPLOADR/MacUplaodr.app/Contents/Frameworks
+  $ sudo mv /Library/Frameworks/XUL.framework \
+    UPLOADR/MacUploadr.app/Contents/Frameworks
+
+Install MacPorts if you haven't already:
+  http://svn.macosforge.org/repository/macports/downloads/MacPorts-1.5.0/
+
+The Mozilla tools require the IDL library:
+  $ sudo port install libidl
+
+
+Gecko SDK
+------------------------------------------------------------------------
+
+To build the XPCOM components you will need the Gecko SDK. For PPC Mac:
+  http://developer.mozilla.org/en/docs/Gecko_SDK#Downloading
+
+For Intel Mac:
+  http://www.oxymoronical.com/view/1114
+
+Place the SDK(s) appropriately:
+  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.mac (Intel Mac)
+  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.ppc (PPC Mac)
+
+These SDKs are from the Gecko 1.8 series and so are only safe to use
+if the XPCOM components use only frozen interfaces.  Fortunately,
+Uploadr currently falls into this category.
+
+
+API Keys
+------------------------------------------------------------------------
+
+You'll need your own API key and secret from Flickr to build Uploadr.
+These can be obtained at http://flickr.com/services/api/.  The key
+and secret must be placed in flKey.cpp as indicated:
+  UPLOADR/MacUploadr.app/Contents/Resources/components/flKey.cpp
+
+The API key is stored as a string.  The secret is stored as individual
+characters so it is not easily readable from the binary.
+
+There are blocks to keep both a Windows and Mac key/secret in the same
+source file (you certainly don't have to, though).  This is mainly
+important for the official builds.
+
+
+
+GraphicsMagick
+------------------------------------------------------------------------
+
+Install prerequisites with MacPorts:
+  $ sudo port install jpeg configure.flags=-O3
+  $ sudo port install tiff configure.flags=-O3
+  $ sudo port install libpng
+
+Download GraphicsMagick source:
+  ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/
+
+Configure and install GraphicsMagick:
+  $ ./configure \
+    CFLAGS="-O3" \
+    CXXFLAGS="-O3" \
+    CPPFLAGS="-I/opt/local/include -I/usr/local/include" \
+    LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
+    --without-x --without-perl \
+    --disable-installed \
+    --without-dps --without-fpx --without-jbig --without-jp2 \
+    --without-lcms --without-trio --without-ttf --without-wmf \
+    --with-quantum-depth=16
+  $ make && sudo make install
+
+Because of dynamic/static linker weirdness, after building GraphicsMagick,
+move libjpeg.dylib, libtiff.dylib and libpng.dylib out of the way:
+  $ sudo mv /opt/local/lib/libjpeg.dylib /opt/local/lib/libjpeg.dylib.sav
+  $ sudo mv /opt/local/lib/libtiff.dylib /opt/local/lib/libtiff.dylib.sav
+  $ sudo mv /opt/local/lib/libpng.dylib /opt/local/lib/libpng.dylib.sav
+
+For Mac, the magic.mgk, modules.mgk and delegates.mgk files must be in
+Contents/lib/GraphicsMagick-<version>/config/.  Like on Windows, these
+are included in the tarball/Subversion trees.
+
+
+
+Exiv2
+------------------------------------------------------------------------
+
+Download Exiv2 source from:
+  http://exiv2.org/download.html
+
+In Unix-land, it's easy!
+  $ sudo port install libiconv
+  $ sudo port install expat
+  $ sudo port install xml2
+  $ ./configure --disable-shared --with-expat=/opt/local
+  $ make && sudo make install
+
+Again because of static linker weirdness, after building Exiv2, move the
+dynamic libraries out of the way:
+  $ sudo mv /opt/local/lib/libiconv.dylib /opt/local/lib/libiconv.dylib.sav
+  $ sudo mv /opt/local/lib/libexpat.dylib /opt/local/lib/libexpat.dylib.sav
+  $ sudo mv /opt/local/lib/libxml2.dylib /opt/local/lib/libxml2.dylib.sav
+
+
+FFmpeg
+------------------------------------------------------------------------
+
+Check out the magic version of FFmpeg:
+  $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
+  $ cd ffmpeg
+
+Then build:
+  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
+    --disable-vhook --disable-mmx --enable-static --disable-shared \
+    --extra-cflags=-fno-common --disable-debug
+  $ make && sudo make install
+
+
+
+Building XPCOM components
+------------------------------------------------------------------------
+
+If you make any changes to the IDL files defining the XPCOM interfaces,
+you must increment the BuildID defined in:
+  UPLOADR/MacUploadr.app/Contents/Resources/application.ini
+
+Use the Makefile in:
+  UPLOADR/MacUploadr.app/Contents/Resources/components/
+
+Running `make ppc gm ; make ppc key` will build the PPC binaries as
+gm.dylib.ppc and key.dylib.ppc.  `make mac gm ; make mac key` will
+build gm.dylib.mac and key.dylib.mac.  These architecture-dependent
+files can be combined on an Intel Mac to leave gm.dylib and key.dylib
+by running `make universal gm ; make universal key`.
+
+
+
+Running Flickr Uploadr
+------------------------------------------------------------------------
+
+The app can be launched by double-clicking on MacUploadr.app in Finder.
+
+Launch Uploadr from Terminal to get debug windows:
+  $ MacUploadr.app/Contents/MacOS/xulrunner -jsconsole
+
+
+Packaging
+------------------------------------------------------------------------
+
+The nice background image for the DMGs must be recreated each time you
+change version numbers.
+  o Start Disk Utility and create a new image called "Flickr Uploadr
+    $(VERSION)" (substitute your version)
+  o Create a folder there called "Flickr Uploadr.app" and a symbolic
+    link called "Applications"
+  o Copy one of the installer images from mac_installer/ in as ".i.png"
+  o Create a symbolic link to that image as "i.png"
+  o Open the image with Finder and press Command+J to set folder options
+      o Select "This window only"
+      o Set the "Icon size" to 128px
+      o Uncheck "Snap to grid"
+      o Set the background picture to your "i.png" symbolic link (this
+        is rather finicky)
+      o Close the settings window
+  o Delete the "i.png" symbolic link (the hidden file will remain)
+  o Arrange the icons appropriately
+  o Close the window
+
+After all of that, copy the .DS_Store file into your source tree, the
+Makefile will take care of everything else (substitute your version):
+  $ cp /Volumes/Flickr\ Uploadr\ $(VERSION)/.DS_Store \
+    UPLOADR/mac_installer/DS_Store
+
+Unmount and delete the disk image you created.
+
+One-command builds for all eight languages:
+  $ make mac all
+
+Or to build a single language:
+  $ make mac build en-US
+
+If you do not want to create update files (see README.mar):
+  $ make mac all-build
+

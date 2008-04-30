@@ -1,0 +1,105 @@
+Flickr Uploadr
+
+Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+free software; you can redistribute it and/or modify it under the terms of
+the GNU General Public License (GPL), version 2 only.  This library is
+distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+GPL for more details (http://www.gnu.org/licenses/gpl.html)
+
+------------------------------------------------------------------------
+
+This guide uses UPLOADR to indicate the root of the Flickr Uploadr
+source tree on your filesystem.  It probably shouldn't contain spaces.
+
+You can obtain the Flickr Uploadr source code from either a tarball or
+from Subversion.
+
+Download tarball:
+  http://flickr.com/tools/uploadr/
+
+Checkout from Subversion:
+  $ svn co http://code.flickr.com/svn/trunk/uploadr UPLOADR
+
+
+XULRunner
+------------------------------------------------------------------------
+
+XULRunner trunk builds:
+  ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
+
+Note: You want the version *without* 'sdk' in the name.
+
+TODO
+
+
+Gecko SDK
+------------------------------------------------------------------------
+
+To build the XPCOM components you will need the Gecko SDK:
+  http://developer.mozilla.org/en/docs/Gecko_SDK#Downloading
+
+Place the SDK here:
+  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.lin
+
+These SDKs are from the Gecko 1.8 series and so are only safe to use
+if the XPCOM components use only frozen interfaces.  Fortunately,
+Uploadr currently falls into this category.
+
+
+API Keys
+------------------------------------------------------------------------
+
+You'll need your own API key and secret from Flickr to build Uploadr.
+These can be obtained at http://flickr.com/services/api/.  The key
+and secret must be placed in flKey.cpp as indicated:
+  UPLOADR/MacUploadr.app/Contents/Resources/components/flKey.cpp
+
+The API key is stored as a string.  The secret is stored as individual
+characters so it is not easily readable from the binary.
+
+There are blocks to keep both a Windows and Mac key/secret in the same
+source file (you certainly don't have to, though).  This is mainly
+important for the official builds.
+
+
+GraphicsMagick
+------------------------------------------------------------------------
+
+TODO
+
+
+Exiv2
+------------------------------------------------------------------------
+
+Download Exiv2 source from:
+  http://exiv2.org/download.html
+
+TODO
+
+
+FFmpeg
+------------------------------------------------------------------------
+
+TODO
+
+
+Building XPCOM components
+------------------------------------------------------------------------
+
+If you make any changes to the IDL files defining the XPCOM interfaces,
+you must increment the BuildID defined in:
+  UPLOADR/MacUploadr.app/Contents/Resources/application.ini
+
+TODO
+
+
+Running Flickr Uploadr
+------------------------------------------------------------------------
+
+TODO
+
+
+Packaging
+------------------------------------------------------------------------
+
+TODO

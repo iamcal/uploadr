@@ -118,9 +118,6 @@ XULRunner trunk builds:
 Note: You want the version *without* 'sdk' in the name.
 
 
-Windows
--------
-
 Download a version of XULRunner trunk and unzip it into:
   UPLOADR/MacUploadr.app/Contents/Resources/
 
@@ -132,44 +129,21 @@ be several folders inside the 'xulrunner' folder, including 'chrome',
 'components', etc.
 
 
-Mac
----
-
-Install the Mac version of XULRunner, which will live in
-/Library/Frameworks.  Then pull it into your fake Uploadr distribution:
-  $ mkdir UPLOADR/MacUplaodr.app/Contents/Frameworks
-  $ sudo mv /Library/Frameworks/XUL.framework \
-    UPLOADR/MacUploadr.app/Contents/Frameworks
-
-Install MacPorts if you haven't already:
-  http://svn.macosforge.org/repository/macports/downloads/MacPorts-1.5.0/
-
-The Mozilla tools require the IDL library:
-  $ sudo port install libidl
-
-
-
 Gecko SDK
 ------------------------------------------------------------------------
 
-To build the XPCOM components you will need the Gecko SDK.  For PPC Mac
-and Windows:
+To build the XPCOM components you will need the Gecko SDK:
   http://developer.mozilla.org/en/docs/Gecko_SDK#Downloading
 
-For Intel Mac:
-  http://www.oxymoronical.com/view/1114
-
-Place the SDK(s) appropriately:
-  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.mac (Intel Mac)
-  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.ppc (PPC Mac)
-  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.win (Windows)
+Place the SDK here:
+  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.win
 
 These SDKs are from the Gecko 1.8 series and so are only safe to use
 if the XPCOM components use only frozen interfaces.  Fortunately,
 Uploadr currently falls into this category.
 
 
-Under Windows, you'll also need bits from Mozilla's Wintools:
+You'll also need bits from Mozilla's Wintools:
   http://ftp.mozilla.org/pub/mozilla.org/mozilla/source/wintools.zip
 
 Extract that and copy glib-1.2.dll and libIDL-0.6.dll from
@@ -196,9 +170,6 @@ important for the official builds.
 
 GraphicsMagick
 ------------------------------------------------------------------------
-
-Windows
--------
 
 Download GraphicsMagick Windows SOURCE:
   ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/windows/
@@ -254,50 +225,11 @@ the tarball and Subversion checkouts, so you shouldn't have to worry. You
 can otherwise find them in the VisualMagick\bin directory.
 
 
-Mac
----
-
-Install prerequisites with MacPorts:
-  $ sudo port install jpeg configure.flags=-O3
-  $ sudo port install tiff configure.flags=-O3
-  $ sudo port install libpng
-
-Download GraphicsMagick source:
-  ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/
-
-Configure and install GraphicsMagick:
-  $ ./configure \
-    CFLAGS="-O3" \
-    CXXFLAGS="-O3" \
-    CPPFLAGS="-I/opt/local/include -I/usr/local/include" \
-    LDFLAGS="-L/opt/local/lib -L/usr/local/lib" \
-    --without-x --without-perl \
-    --disable-installed \
-    --without-dps --without-fpx --without-jbig --without-jp2 \
-    --without-lcms --without-trio --without-ttf --without-wmf \
-    --with-quantum-depth=16
-  $ make && sudo make install
-
-Because of dynamic/static linker weirdness, after building GraphicsMagick,
-move libjpeg.dylib, libtiff.dylib and libpng.dylib out of the way:
-  $ sudo mv /opt/local/lib/libjpeg.dylib /opt/local/lib/libjpeg.dylib.sav
-  $ sudo mv /opt/local/lib/libtiff.dylib /opt/local/lib/libtiff.dylib.sav
-  $ sudo mv /opt/local/lib/libpng.dylib /opt/local/lib/libpng.dylib.sav
-
-For Mac, the magic.mgk, modules.mgk and delegates.mgk files must be in
-Contents/lib/GraphicsMagick-<version>/config/.  Like on Windows, these
-are included in the tarball/Subversion trees.
-
-
-
 Exiv2
 ------------------------------------------------------------------------
 
 Download Exiv2 source from:
   http://exiv2.org/download.html
-
-Windows
--------
 
 Download and install Expat for Windows:
   http://sourceforge.net/project/showfiles.php?group_id=10127
@@ -342,29 +274,8 @@ Copy libexpat.dll from "C:\Program Files\Expat 2.0.1\Bin" to
 "UPLOADR\MacUploadr.app\Contents\Resources".
 
 
-Mac
----
-
-In Unix-land, it's easy!
-  $ sudo port install libiconv
-  $ sudo port install expat
-  $ sudo port install xml2
-  $ ./configure --disable-shared --with-expat=/opt/local
-  $ make && sudo make install
-
-Again because of static linker weirdness, after building Exiv2, move the
-dynamic libraries out of the way:
-  $ sudo mv /opt/local/lib/libiconv.dylib /opt/local/lib/libiconv.dylib.sav
-  $ sudo mv /opt/local/lib/libexpat.dylib /opt/local/lib/libexpat.dylib.sav
-  $ sudo mv /opt/local/lib/libxml2.dylib /opt/local/lib/libxml2.dylib.sav
-
-
-
 FFmpeg
 ------------------------------------------------------------------------
-
-Windows
--------
 
 FFmpeg will not build in Visual Studio but can be linked by Visual
 Studio, so we'll need to use MSys/WinGW.
@@ -388,21 +299,6 @@ The Uploadr Visual Studio project is setup to expect the MinGW bits for
 linking FFmpeg into the flGM XPCOM object.
 
 
-Mac
----
-
-Check out the magic version of FFmpeg:
-  $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
-  $ cd ffmpeg
-
-Then build:
-  $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --disable-vhook --disable-mmx --enable-static --disable-shared \
-    --extra-cflags=-fno-common --disable-debug
-  $ make && sudo make install
-
-
-
 Building XPCOM components
 ------------------------------------------------------------------------
 
@@ -410,33 +306,14 @@ If you make any changes to the IDL files defining the XPCOM interfaces,
 you must increment the BuildID defined in:
   UPLOADR/MacUploadr.app/Contents/Resources/application.ini
 
-Windows
--------
-
 Use the Visual Studio projects in:
   UPLOADR/MacUploadr.app/Contents/Resources/components/*.vcproj
 
 The two projects will generate gm.dll and key.dll.
 
-Mac
----
-
-Use the Makefile in:
-  UPLOADR/MacUploadr.app/Contents/Resources/components/
-
-Running `make ppc gm ; make ppc key` will build the PPC binaries as
-gm.dylib.ppc and key.dylib.ppc.  `make mac gm ; make mac key` will
-build gm.dylib.mac and key.dylib.mac.  These architecture-dependent
-files can be combined on an Intel Mac to leave gm.dylib and key.dylib
-by running `make universal gm ; make universal key`.
-
-
 
 Running Flickr Uploadr
 ------------------------------------------------------------------------
-
-Windows
--------
 
 Copy xulrunner-stub.exe from the xulrunner/ directory into the root
 of your app, UPLOADR/MacUploadr.app/Contents/Resources/, rename it to
@@ -449,38 +326,9 @@ Hacker:
 Create a shortcut to this executable and append the "-console
 -jsconsole" parameters to launch Uploadr with both debug windows open.
 
-Mac
----
-
-The app can be launched by double-clicking on MacUploadr.app in Finder.
-
-Launch Uploadr from Terminal to get debug windows:
-  $ MacUploadr.app/Contents/MacOS/xulrunner -jsconsole
-
-
-
-Translations
-------------------------------------------------------------------------
-
-I've just been pulling the translated DTD and PROPERTIES files from a
-production WWW server and running them through strings_import.php.
-
-Note that in the German translation, the help page is messed up because
-they insist on removing the ^^ wrappers around some sections of the
-text.  Replace these or you'll see "undefined" in several places in the
-UI.
-
-Also note that " must be escaped with &#34;.  This led me to believe
-that & could be escaped with &#38; but this is not the case.  Don't
-use & in the main.dtd files - spell out "and" instead.
-
-
 
 Packaging
 ------------------------------------------------------------------------
-
-Windows
--------
 
 Windows installers are created using NSIS, specifically the Unicode
 version available here:
@@ -494,74 +342,8 @@ commenting line 110 in UPLOADR/windows_install_build.nsi.
 One-command builds in MSys for all eight languages:
   $ make win all
 
-If you do not want to create update files (see below):
+Or to build a single language:
+  $ make win build en-US
+
+If you do not want to create update files (see README.mar):
   $ make win all-build
-
-Mac
----
-
-The nice background image for the DMGs must be recreated each time you
-change version numbers.
-  o Start Disk Utility and create a new image called "Flickr Uploadr
-    $(VERSION)" (substitute your version)
-  o Create a folder there called "Flickr Uploadr.app" and a symbolic
-    link called "Applications"
-  o Copy one of the installer images from mac_installer/ in as ".i.png"
-  o Create a symbolic link to that image as "i.png"
-  o Open the image with Finder and press Command+J to set folder options
-      o Select "This window only"
-      o Set the "Icon size" to 128px
-      o Uncheck "Snap to grid"
-      o Set the background picture to your "i.png" symbolic link (this
-        is rather finicky)
-      o Close the settings window
-  o Delete the "i.png" symbolic link (the hidden file will remain)
-  o Arrange the icons appropriately
-  o Close the window
-
-After all of that, copy the .DS_Store file into your source tree, the
-Makefile will take care of everything else (substitute your version):
-  $ cp /Volumes/Flickr\ Uploadr\ $(VERSION)/.DS_Store \
-    UPLOADR/mac_installer/DS_Store
-
-Unmount and delete the disk image you created.
-
-One-command builds for all eight languages:
-  $ make mac all
-
-If you do not want to create update files (see below):
-  $ make mac all-build
-
-
-
-Software Update
-------------------------------------------------------------------------
-
-Uploadr phones home to Flickr about once a day to check for updates,
-available as MAR files.  Details:
-  http://wiki.mozilla.org/Software_Update
-
-Actually creating software updates means actually building Mozilla.
-This is not for the faint of heart.
-
-Start by satisfying prerequisites for your platform:
-  http://developer.mozilla.org/en/docs/Windows_Build_Prerequisites
-  http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prerequisites
-
-Configure your build, using the UPLOADR/mozconfig file.  Make sure to
-comment the Mac-specific line if you're on Windows:
-  http://developer.mozilla.org/en/docs/Configuring_Build_Options
-
-Now checkout and build Mozilla:
-  $ cvs -d :pserver:anonymous:anonymous@cvs-mirror.mozilla.org:/cvsroot \
-    co mozilla/client.mk
-  $ cd mozilla
-  $ make -f client.mk checkout
-  $ make -f client.mk build
-
-Once you have your Mozilla tree built, the Packaging section above can
-complete properly.  Alternatively, if you just want to build the MAR
-files:
-  $ make win all-mar
-  --OR--
-  $ make mac all-mar

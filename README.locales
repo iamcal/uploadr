@@ -1,3 +1,7 @@
+
+Locale handling
+------------------------------------------------------------------------
+
 The Flickr Uploadr has official builds for the following locales:
 
 	en-US	US English
@@ -62,4 +66,18 @@ To submit community translations, start a topic in the forum:
 http://flickr.com/groups/hackinguploadr/
 
 
---cal
+
+Translations (by richard)
+------------------------------------------------------------------------
+
+I've just been pulling the translated DTD and PROPERTIES files from a
+production WWW server and running them through strings_import.php.
+
+Note that in the German translation, the help page is messed up because
+they insist on removing the ^^ wrappers around some sections of the
+text.  Replace these or you'll see "undefined" in several places in the
+UI.
+
+Also note that " must be escaped with &#34;.  This led me to believe
+that & could be escaped with &#38; but this is not the case.  Don't
+use & in the main.dtd files - spell out "and" instead.

@@ -1,0 +1,32 @@
+
+Software Update
+------------------------------------------------------------------------
+
+Uploadr phones home to Flickr about once a day to check for updates,
+available as MAR files.  Details:
+  http://wiki.mozilla.org/Software_Update
+
+Actually creating software updates means actually building Mozilla.
+This is not for the faint of heart.
+
+Start by satisfying prerequisites for your platform:
+  http://developer.mozilla.org/en/docs/Windows_Build_Prerequisites
+  http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prerequisites
+
+Configure your build, using the UPLOADR/mozconfig file.  Make sure to
+comment the Mac-specific line if you're on Windows:
+  http://developer.mozilla.org/en/docs/Configuring_Build_Options
+
+Now checkout and build Mozilla:
+  $ cvs -d :pserver:anonymous:anonymous@cvs-mirror.mozilla.org:/cvsroot \
+    co mozilla/client.mk
+  $ cd mozilla
+  $ make -f client.mk checkout
+  $ make -f client.mk build
+
+Once you have your Mozilla tree built, the Packaging section in the \
+platform-specific README files can complete properly.  Alternatively, 
+if you just want to build the MAR files:
+  $ make win all-mar
+  $ make mac all-mar
+  $ make lin all-mar
