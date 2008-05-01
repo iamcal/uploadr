@@ -18,10 +18,11 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <?xul-overlay href="chrome://hacks/content/keyboard.xul"?>
 <!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
-xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-xmlns:html="http://www.w3.org/1999/xhtml"
-onload="conf.load_ini(); threads.init(); users.load(); photos.load(); ui.init(); ui.users_updated();"
-onclose="return exit();" persist="screenX screenY width height sizemode">
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	onload="conf.load_ini(); threads.init(); users.load(); photos.load(); ui.init(); ui.users_updated();"
+	onclose="return exit();" persist="screenX screenY width height sizemode"
+>
 	<stringbundleset>
 		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
 	</stringbundleset>
@@ -48,101 +49,60 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 	<script src="chrome://uploadr/content/buttons.js" />
 	<script src="chrome://uploadr/content/extension.js" />
 	<keyset id="key">
-		<key id="key_add" modifiers="accel" key="o"
-			oncommand="photos.add_dialog();" />
-		<key id="key_upload" modifiers="shift accel" key="u"
-			oncommand="photos.upload();" />
-		<key id="key_back" keycode="VK_BACK"
-			oncommand="photos.remove();" />
-		<key id="key_delete" keycode="VK_DELETE"
-			oncommand="photos.remove();" />
-		<key id="key_cut" modifiers="accel" key="x"
-			oncommand="goDoCommand('cmd_cut');" />
-		<key id="key_copy" modifiers="accel" key="c"
-			oncommand="goDoCommand('cmd_copy');" />
-		<key id="key_paste" modifiers="accel" key="v"
-			oncommand="goDoCommand('cmd_paste');" />
-		<key id="key_all" modifiers="accel" key="a"
-			oncommand="keyboard.select_all();" />
-		<key id="key_up" keycode="VK_UP"
-			oncommand="keyboard.arrows.up(event);" />
-		<key id="key_right" keycode="VK_RIGHT"
-			oncommand="keyboard.arrows.right(event);" />
-		<key id="key_down" keycode="VK_DOWN"
-			oncommand="keyboard.arrows.down(event);" />
-		<key id="key_left" keycode="VK_LEFT"
-			oncommand="keyboard.arrows.left(event);" />
-		<key id="key_up" modifiers="shift" keycode="VK_UP"
-			oncommand="keyboard.arrows.up(event);" />
-		<key id="key_right" modifiers="shift" keycode="VK_RIGHT"
-			oncommand="keyboard.arrows.right(event);" />
-		<key id="key_down" modifiers="shift" keycode="VK_DOWN"
-			oncommand="keyboard.arrows.down(event);" />
-		<key id="key_left" modifiers="shift" keycode="VK_LEFT"
-			oncommand="keyboard.arrows.left(event);" />
-		<key id="key_up" modifiers="accel" keycode="VK_UP"
-			oncommand="keyboard.arrows.up(event);" />
-		<key id="key_right" modifiers="accel" keycode="VK_RIGHT"
-			oncommand="keyboard.arrows.right(event);" />
-		<key id="key_down" modifiers="accel" keycode="VK_DOWN"
-			oncommand="keyboard.arrows.down(event);" />
-		<key id="key_left" modifiers="accel" keycode="VK_LEFT"
-			oncommand="keyboard.arrows.left(event);" />
+		<key id="key_add"	modifiers="accel" key="o" oncommand="photos.add_dialog();" />
+		<key id="key_upload"	modifiers="shift accel" key="u" oncommand="photos.upload();" />
+		<key id="key_back"	keycode="VK_BACK" oncommand="photos.remove();" />
+		<key id="key_delete"	keycode="VK_DELETE" oncommand="photos.remove();" />
+		<key id="key_cut"	modifiers="accel" key="x" oncommand="goDoCommand('cmd_cut');" />
+		<key id="key_copy"	modifiers="accel" key="c" oncommand="goDoCommand('cmd_copy');" />
+		<key id="key_paste"	modifiers="accel" key="v" oncommand="goDoCommand('cmd_paste');" />
+		<key id="key_all"	modifiers="accel" key="a" oncommand="keyboard.select_all();" />
+		<key id="key_up"	keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right"	keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down"	keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left"	keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
+		<key id="key_up"	modifiers="shift" keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right"	modifiers="shift" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down"	modifiers="shift" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left"	modifiers="shift" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
+		<key id="key_up"	modifiers="accel" keycode="VK_UP" oncommand="keyboard.arrows.up(event);" />
+		<key id="key_right"	modifiers="accel" keycode="VK_RIGHT" oncommand="keyboard.arrows.right(event);" />
+		<key id="key_down"	modifiers="accel" keycode="VK_DOWN" oncommand="keyboard.arrows.down(event);" />
+		<key id="key_left"	modifiers="accel" keycode="VK_LEFT" oncommand="keyboard.arrows.left(event);" />
 	</keyset>
 	<toolbox id="menu">
 		<menubar>
 			<menu label="&menu.upload;" accesskey="U">
 				<menupopup>
-					<menuitem label="&menu.upload.add;" key="key_add"
-						accesskey="A" oncommand="photos.add_dialog();" />
-					<menuitem id="menu_upload" label="&menu.upload;"
-						key="key_upload" accesskey="U"
-						oncommand="photos.upload();" />
-					<menuitem id="menu_FileQuitItem"
-						label="&menu.upload.exit;" key="key_quit"
-						accesskey="Q" oncommand="exit();" />
+					<menuitem label="&menu.upload.add;" key="key_add" accesskey="A" oncommand="photos.add_dialog();" />
+					<menuitem id="menu_upload" label="&menu.upload;" key="key_upload" accesskey="U" oncommand="photos.upload();" />
+					<menuitem id="menu_FileQuitItem" label="&menu.upload.exit;" key="key_quit" accesskey="Q" oncommand="exit();" />
 				</menupopup>
 			</menu>
 			<menu label="&menu.edit;" accesskey="E">
 				<menupopup>
-					<menuitem id="menu_cut" label="&menu.edit.cut;"
-						key="key_cut" accesskey="t"
-						oncommand="goDoCommand('cmd_cut');" />
-					<menuitem id="menu_copy" label="&menu.edit.copy;"
-						key="key_copy" accesskey="C"
-						oncommand="goDoCommand('cmd_copy');" />
-					<menuitem id="menu_paste" label="&menu.edit.paste;"
-						key="key_paste" accesskey="P"
-						oncommand="goDoCommand('cmd_paste');" />
+					<menuitem id="menu_cut" label="&menu.edit.cut;" key="key_cut" accesskey="t" oncommand="goDoCommand('cmd_cut');" />
+					<menuitem id="menu_copy" label="&menu.edit.copy;" key="key_copy" accesskey="C" oncommand="goDoCommand('cmd_copy');" />
+					<menuitem id="menu_paste" label="&menu.edit.paste;" key="key_paste" accesskey="P" oncommand="goDoCommand('cmd_paste');" />
 					<menuseparator />
-					<menuitem label="&menu.edit.select_all;" key="key_all"
-						accesskey="A" oncommand="keyboard.select_all();" />
+					<menuitem label="&menu.edit.select_all;" key="key_all" accesskey="A" oncommand="keyboard.select_all();" />
 				</menupopup>
 			</menu>
 			<menu label="&menu.tools;" accesskey="T">
 				<menupopup id="menu_ToolsPopup">
-					<menuitem label="&menu.tools.addons;" accesskey="A"
-						oncommand="menus.tools.addons();" />
-					<menuitem label="&menu.tools.console;" accesskey="C"
-						oncommand="menus.tools.console();" />
+					<menuitem label="&menu.tools.addons;" accesskey="A" oncommand="menus.tools.addons();" />
+					<menuitem label="&menu.tools.console;" accesskey="C" oncommand="menus.tools.console();" />
 					<menuseparator />
-					<menuitem label="&menu.upload.preferences;"
-						id="menu_preferences" key="key_prefs" accesskey="P"
-						oncommand="settings.show();" />
+					<menuitem label="&menu.upload.preferences;" id="menu_preferences" key="key_prefs" accesskey="P" oncommand="settings.show();" />
 				</menupopup>
 			</menu>
 			<menu label="&menu.help;" accesskey="H">
 				<menupopup onpopupshowing="upgrade.build_menu();">
-					<menuitem id="aboutName" label="&menu.help.about;"
-						accesskey="A" oncommand="menus.help.about();" />
-					<menuitem label="&menu.help.tips;" key="key_help"
-						accesskey="T" oncommand="menus.help.tips();" />
-					<menuitem label="&menu.help.faq;" accesskey="F"
-						oncommand="menus.help.faq();" />
+					<menuitem id="aboutName" label="&menu.help.about;" accesskey="A" oncommand="menus.help.about();" />
+					<menuitem label="&menu.help.tips;" key="key_help" accesskey="T" oncommand="menus.help.tips();" />
+					<menuitem label="&menu.help.faq;" accesskey="F" oncommand="menus.help.faq();" />
 					<menuseparator />
-					<menuitem id="menu_updates" label="&menu.help.update;"
-						class="menuitem-iconic" accesskey="U"
-						oncommand="upgrade.check();"/>
+					<menuitem id="menu_updates" label="&menu.help.update;" class="menuitem-iconic" accesskey="U" oncommand="upgrade.check();"/>
 				</menupopup>
 			</menu>
 		</menubar>
@@ -154,24 +114,20 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 			<hbox id="tools">
 				<vbox>
 					<spacer flex="1" />
-					<html:div id="t_add" class="button" onclick="photos.add_dialog();"
-					><html:div>&tools.add;</html:div></html:div>
+					<html:div id="t_add" class="button" onclick="photos.add_dialog();"><html:div>&tools.add;</html:div></html:div>
 					<spacer flex="1" />
 				</vbox>
 				<vbox>
 					<spacer flex="1" />
-					<html:div id="t_remove" class="disabled_button" onclick="photos.remove();"
-					><html:div>&tools.remove;</html:div></html:div>
+					<html:div id="t_remove" class="disabled_button" onclick="photos.remove();"><html:div>&tools.remove;</html:div></html:div>
 					<spacer flex="1" />
 				</vbox>
 					<html:div class="toolbarseparator" />
 				<vbox>
-					<html:div id="t_rotate_l" class="disabled"
-					onclick="photos.rotate(-90);" />
+					<html:div id="t_rotate_l" class="disabled" onclick="photos.rotate(-90);" />
 				</vbox>
 				<vbox>
-					<html:div id="t_rotate_r" class="disabled"
-					onclick="photos.rotate(90);" />
+					<html:div id="t_rotate_r" class="disabled" onclick="photos.rotate(90);" />
 				</vbox>
 			</hbox>
 			<box><html:p id="free"> </html:p></box>
@@ -194,9 +150,11 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 		<vbox id="page_auth" flex="1">
 			<spacer flex="1" />
 			<html:h1>&auth.confirm;</html:h1>
-			<hbox><spacer flex="1" /><html:div id="button_auth" class="button"
-			onclick="buttons.auth.click();"
-			><html:div>&buttons.auth;</html:div></html:div><spacer flex="1" /></hbox>
+			<hbox>
+				<spacer flex="1" />
+				<html:div id="button_auth" class="button" onclick="buttons.auth.click();"><html:div>&buttons.auth;</html:div></html:div>
+				<spacer flex="1" />
+			</hbox>
 			<spacer flex="1" />
 			<html:h2>&auth.alternate;</html:h2>
 			<textbox id="auth_url" onclick="this.select();" />
@@ -214,9 +172,9 @@ onclose="return exit();" persist="screenX screenY width height sizemode">
 					<box flex="1"><box id="progress_bar" /></box>
 					<label id="progress_text" />
 				</stack>
-				<vbox><html:div id="button_cancel" class="small button"
-				onclick="buttons.cancel.click();"
-				><html:div>&buttons.cancel;</html:div></html:div></vbox>
+				<vbox>
+					<html:div id="button_cancel" class="small button" onclick="buttons.cancel.click();"><html:div>&buttons.cancel;</html:div></html:div>
+				</vbox>
 			</hbox>
 		</hbox>
 		<vbox id="page_queue" flex="1"><html:ul id="queue_list" /></vbox>
