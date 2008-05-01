@@ -212,7 +212,7 @@ var menus = {
 
 		about: function() {
 			window.openDialog('chrome://uploadr/content/about.xul',
-				'about-dialog', 'chrome,modal',
+				'about-dialog', 'chrome,modal,centerscreen',
 				locale.getFormattedString('dialog.about.version',
 				[conf.version]));
 		},

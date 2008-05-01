@@ -15,18 +15,18 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <?xml-stylesheet href="chrome://uploadr/skin/about.css" type="text/css"?>
 <!DOCTYPE dialog SYSTEM "chrome://uploadr/locale/main.dtd">
 <dialog id="about-dialog" title="&dialog.about;" buttons="accept"
-onload="document.getElementById('version').firstChild.nodeValue = window.arguments[0];"
-xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-xmlns:html="http://www.w3.org/1999/xhtml">
+	onload="document.getElementById('about-version').firstChild.nodeValue = window.arguments[0];"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+>
 	<hbox id="about-outerbox">
 		<box id="about-logo" />
 		<vbox flex="1" id="about-textbox">
-			<html:h3>&dialog.about;</html:h3>
-			<html:p id="version"> </html:p>
-			<html:p>&dialog.about.copyright.yahoo;</html:p>
-			<html:p>&dialog.about.copyright.xulrunner; &dialog.about.copyright.graphicsmagick;
-			&dialog.about.copyright.exiv2;</html:p>
-			<html:p>&dialog.about.code;</html:p>
+			<html:h3 id="about-title">&dialog.about;</html:h3>
+			<html:p id="about-version"> </html:p>
+			<html:p id="about-copyright-yahoo">&dialog.about.copyright.yahoo;</html:p>
+			<html:p id="about-copyright-other">&dialog.about.copyright.xulrunner; &dialog.about.copyright.graphicsmagick; &dialog.about.copyright.exiv2;</html:p>
+			<html:p id="about-download_source">&dialog.about.code;</html:p>
 		</vbox>
 	</hbox>
 </dialog>
