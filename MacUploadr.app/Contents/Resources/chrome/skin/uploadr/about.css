@@ -8,37 +8,13 @@
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
 
-/*
- * Cursor fixing (this really should be done by default in XULRunner)
- */
 
-* {
-	cursor: default;
-}
-textbox, textbox * {
-	cursor: text;
-}
-
-
-
-/* Normal dialogs */
-dialog {
-	width: 300px;
-}
-
-
-/*
- * Special video dialogs are wider
- */
-
-#dialog_video_offline, #dialog_video_restricted {
+#about-dialog {
 	width: 500px;
 }
 
-
-
-.link {
-	color: #0063dc;
-	text-decoration: underline;
-	cursor: pointer;
+#about-logo {
+	width: 120px;
+	margin: 15px 0 0 0;
+	background: url(logo_flickr.png) no-repeat;
 }
