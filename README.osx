@@ -209,11 +209,12 @@ Unmount and delete the disk image you created.
 One-command builds for all eight languages:
   $ make mac all
 
-Or to build a single language:
-  $ make mac build en-US
-
-NOTE: These will fail at the MAR build steps, unless you have the Mozilla
+NOTE: This will fail at the MAR build steps, unless you have the Mozilla
 tools built and installed. See README.updates for this, or you can
 skip the MAR build step (recommended for outside developers):
   $ make mac all-build
+
+Or to build a single language:
+  $ make mac build en-US
+
 
