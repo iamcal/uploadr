@@ -31,7 +31,7 @@ Note: You want the version *without* 'sdk' in the name.
 
 Install the Mac version of XULRunner, which will live in
 /Library/Frameworks.  Then pull it into your fake Uploadr distribution:
-  $ mkdir UPLOADR/MacUplaodr.app/Contents/Frameworks
+  $ mkdir UPLOADR/MacUploadr.app/Contents/Frameworks
   $ sudo mv /Library/Frameworks/XUL.framework \
     UPLOADR/MacUploadr.app/Contents/Frameworks
 
@@ -85,8 +85,8 @@ Install prerequisites with MacPorts:
   $ sudo port install tiff configure.flags=-O3
   $ sudo port install libpng
 
-Download GraphicsMagick source:
-  ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/
+Download GraphicsMagick source (try and stick with 1.1.10):
+  ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/1.1/GraphicsMagick-1.1.10.tar.bz2
 
 Configure and install GraphicsMagick:
   $ ./configure \
@@ -123,7 +123,7 @@ In Unix-land, it's easy!
   $ sudo port install libiconv
   $ sudo port install expat
   $ sudo port install xml2
-  $ ./configure --disable-shared --with-expat=/opt/local
+  $ ./configure --prefix=/opt/local --disable-shared --with-expat=/opt/local
   $ make && sudo make install
 
 Again because of static linker weirdness, after building Exiv2, move the
@@ -139,6 +139,7 @@ FFmpeg
 Check out the magic version of FFmpeg:
   $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
   $ cd ffmpeg
+  $ cp common.mak subdir.mak
 
 Then build:
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
@@ -172,6 +173,7 @@ Running Flickr Uploadr
 The app can be launched by double-clicking on MacUploadr.app in Finder.
 
 Launch Uploadr from Terminal to get debug windows:
+  $ chmod a+w MacUploadr.app/Contents/MacOS/xulrunner
   $ MacUploadr.app/Contents/MacOS/xulrunner -jsconsole
 
 
@@ -210,6 +212,8 @@ One-command builds for all eight languages:
 Or to build a single language:
   $ make mac build en-US
 
-If you do not want to create update files (see README.updates):
+NOTE: These will fail at the MAR build steps, unless you have the Mozilla
+tools built and installed. See README.updates for this, or you can
+skip the MAR build step (recommended for outside developers):
   $ make mac all-build
 

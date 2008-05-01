@@ -100,7 +100,7 @@ PLATFORM := mac
 GM_VER := 1.1.10
 
 # Location of Mozilla tree for the MAR tools
-MOZILLA := ~/mozilla
+MOZILLA := ~/devel/mozilla
 
 # Location for build staging
 #   The base of this path must exist before running make
@@ -185,6 +185,7 @@ ja-jp:
 
 build:
 
+	@echo "Build step"
 	@# Make sure the package directory exists
 	mkdir -p $(BUILD)
 
@@ -382,6 +383,7 @@ endif
 
 mar:
 
+	@echo "MAR step"
 	@# Making MAR files
 ifeq (mac, $(PLATFORM))
 	@ln -s Flickr\ Uploadr.app $(BUILD)/new
