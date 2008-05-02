@@ -156,7 +156,10 @@ API Keys
 
 You'll need your own API key and secret from Flickr to build Uploadr.
 These can be obtained at http://flickr.com/services/api/.  The key
-and secret must be placed in flKey.cpp as indicated:
+and secret must be placed in flKey.cpp in the spaces provided. Copy
+flKey.cpp.template to flKey.cpp and insert your keys:
+
+  UPLOADR/MacUploadr.app/Contents/Resources/components/flKey.cpp.template
   UPLOADR/MacUploadr.app/Contents/Resources/components/flKey.cpp
 
 The API key is stored as a string.  The secret is stored as individual
