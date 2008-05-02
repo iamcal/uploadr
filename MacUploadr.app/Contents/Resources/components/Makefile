@@ -16,7 +16,7 @@ GM_INCLUDE := -I/usr/local/include/GraphicsMagick
 GM_LIB := -L/usr/local/lib
 EXIV_INCLUDE := -I/usr/local/include/exiv2
 EXIV_LIB := -L/usr/local/lib -L/usr/lib
-FF_INCLUDE := -I/usr/local/include/ffmpeg
+FF_INCLUDE := -I/usr/local/include
 FF_LIB := -L/usr/local/lib
 X11_LIB := -L/usr/X11R6/lib
 PORTS_LIB := -L/opt/local/lib
@@ -106,7 +106,7 @@ endif
 		-lz -lbz2 \
 		-lxml2 \
 		-ljpeg -lpng -ltiff \
-		-lavformat -lavcodec -lavutil \
+		-lavformat -lavcodec -lavutil -lswscale \
 		-Wl,-read_only_relocs,suppress
 else
 	@echo "Not building the GraphicsMagick/FFmpeg XPCOM component"

@@ -22,8 +22,9 @@
 
 // Goofy FFmpeg requires C linkage
 extern "C" {
-#include <avcodec.h>
-#include <avformat.h>
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libswscale/swscale.h>
 }
 
 #include <stdlib.h>
@@ -46,6 +47,7 @@ extern "C" {
 #endif
 
 #define round(n) (int)(0 <= (n) ? (n) + 0.5 : (n) - 0.5)
+static int sws_flags = SWS_BICUBIC;
 
 using namespace std;
 
@@ -450,7 +452,7 @@ flGM::flGM() {
 flGM::~flGM() {
 }
 
-// Initialize our GraphicsMagick setup
+// Initialize our GraphicsMagick/ffmpeg setup
 NS_IMETHODIMP flGM::Init(const nsAString & pwd) {
 
 	//Mac needs to setup GraphicsMagick
@@ -468,6 +470,9 @@ NS_IMETHODIMP flGM::Init(const nsAString & pwd) {
 	SetCurrentDirectoryA(pwd_s->c_str());
 	delete pwd_s;
 #endif
+
+	// Register all video codecs
+	av_register_all();
 
 	return NS_OK;
 }
@@ -825,12 +830,13 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	if (!path_s) { return NS_ERROR_INVALID_ARG; }
 
 	// Open the video file and decode it
-	av_register_all();
 	AVFormatContext *format_ctx;
 	if (av_open_input_file(&format_ctx, path_s->c_str(), 0, 0, 0)) {
 		return NS_ERROR_NULL_POINTER;
 	}
 	if (0 > av_find_stream_info(format_ctx)) { return NS_ERROR_NULL_POINTER; }
+	//dump_format(format_ctx, 0, path_s->c_str(), false);
+	
 	int stream = -1;
 	for (int i = 0; i < format_ctx->nb_streams; ++i) {
 		if (CODEC_TYPE_VIDEO == format_ctx->streams[i]->codec->codec_type) {
@@ -840,12 +846,14 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	}
 	if (-1 == stream) { return NS_ERROR_NULL_POINTER; }
 	AVCodecContext * codec_ctx = format_ctx->streams[stream]->codec;
+	
+	// Load the actual codec we found and open the video stream
 	AVCodec * codec = avcodec_find_decoder(codec_ctx->codec_id);
 	if (!codec) { return NS_ERROR_NULL_POINTER; }
 	if (0 > avcodec_open(codec_ctx, codec)) { return NS_ERROR_NULL_POINTER; }
 	AVFrame * video_frame = avcodec_alloc_frame();
 	AVFrame * img_frame = avcodec_alloc_frame();
-	if (!video_frame || !img_frame) { eturn NS_ERROR_NULL_POINTER; }
+	if (!video_frame || !img_frame) { return NS_ERROR_NULL_POINTER; }
 	int bytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
 		codec_ctx->height);
 	uint8_t * buffer = (uint8_t *)av_malloc(bytes * sizeof(uint8_t));
@@ -868,15 +876,33 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	int i = 0;
 	AVPacket packet;
 	int have_frame;
+	struct SwsContext *toRGB_convert_ctx;
 	while (0 <= av_read_frame(format_ctx, &packet)) {
 		if (packet.stream_index == stream) {
 			avcodec_decode_video(codec_ctx, video_frame, &have_frame,
 				 packet.data, packet.size);
+			
 			if (have_frame && seek == ++i) {
-				img_convert((AVPicture *)img_frame, PIX_FMT_RGB24,
-					(AVPicture*)video_frame, codec_ctx->pix_fmt,
-					codec_ctx->width, codec_ctx->height);
+				//img_convert((AVPicture *)img_frame, PIX_FMT_RGB24,
+				//	(AVPicture*)video_frame, codec_ctx->pix_fmt,
+				//	codec_ctx->width, codec_ctx->height);
+				
+				toRGB_convert_ctx = sws_getContext(
+					codec_ctx->width, codec_ctx->height, codec_ctx->pix_fmt,
+					codec_ctx->width, codec_ctx->height, PIX_FMT_RGB24,
+					sws_flags, NULL, NULL, NULL);
+				if (toRGB_convert_ctx == NULL) {
+					av_log(NULL, AV_LOG_ERROR,
+						"Cannot initialize the toRGB conversion context\n");
+					exit(1);
+				}
 
+				// img_convert parameters are          2 first destination, then 4 source
+				// sws_scale   parameters are context, 4 first source,      then 2 destination
+				sws_scale(toRGB_convert_ctx,
+					video_frame->data, video_frame->linesize, 0, codec_ctx->height,
+					img_frame->data, img_frame->linesize);
+				
 				// Convert the keyframe to a PPM in a byte array
 				char header[32];
 				sprintf(header, "P6\n%d %d\n255\n", codec_ctx->width,
@@ -894,7 +920,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 						img_frame->linesize[0], b);
 					bytes_p += b;
 				}
-
+				
 				// Convert the PPM array to a JPEG on disk
 				string * thumb_s = 0;
 				try {
@@ -945,7 +971,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 					char * o = (char *)e.what();
 					while (*o) { _retval.Append(*o++); }
 				}
-
+				
 				free(bytes);
 				av_free_packet(&packet);
 				break;
@@ -960,6 +986,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	av_free(video_frame);
 	avcodec_close(codec_ctx);
 	av_close_input_file(format_ctx);
+	sws_freeContext(toRGB_convert_ctx);
 
 	return NS_OK;
 }

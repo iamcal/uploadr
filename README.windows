@@ -285,14 +285,14 @@ Studio, so we'll need to use MSys/WinGW.
 --- Additionally add in dependencies like zlib:
 ---   http://wiki.videolan.org/Win32CompileMSYS
 
-Check out and build the magic version of FFmpeg:
+Check out and build the most recent version of FFmpeg:
 (handy hint: Shift+Insert pastes into the MSYS shell)
 
-  $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
+  $ svn co svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
   $ cd ffmpeg
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
     --enable-memalign-hack --enable-static --disable-shared \
-    --disable-debug
+    --disable-debug --enable-swscale
   $ make && make install
 
 The Uploadr Visual Studio project is setup to expect the MinGW bits for

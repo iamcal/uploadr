@@ -136,15 +136,14 @@ dynamic libraries out of the way:
 FFmpeg
 ------------------------------------------------------------------------
 
-Check out the magic version of FFmpeg:
-  $ svn co -r 10885 svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
+Check out the most recent version of FFmpeg:
+  $ svn co svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
   $ cd ffmpeg
-  $ cp common.mak subdir.mak
 
 Then build:
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --disable-vhook --disable-mmx --enable-static --disable-shared \
-    --extra-cflags=-fno-common --disable-debug
+    --disable-vhook --disable-mmx --enable-static --disable-shared  \
+    --extra-cflags=-fno-common --disable-debug --enable-swscale
   $ make && sudo make install
 
 
