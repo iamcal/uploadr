@@ -293,7 +293,19 @@ Check out and build the most recent version of FFmpeg:
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
     --enable-memalign-hack --enable-static --disable-shared \
     --disable-debug --enable-swscale
-  $ make && make install
+
+The lastest version of FFmpeg is kinda broken on windows and needs
+to be built one library at a time,. This should do the trick:
+
+  $ cd libswscale && make && cd ..
+  $ cd libavdevice && make && cd ..
+  $ cd libavformat && make && cd ..
+  $ cd libavcodec && make && cd ..
+  $ cd libavutil && make && cd ..
+  $ make
+
+make install on windows doesn't work for FFmpeg trunk at the moment.
+that may or may not be a problem...
 
 The Uploadr Visual Studio project is setup to expect the MinGW bits for
 linking FFmpeg into the flGM XPCOM object.
