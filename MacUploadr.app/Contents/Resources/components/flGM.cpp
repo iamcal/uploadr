@@ -873,16 +873,19 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 
 	// Play through 15% of the video
 	int64_t seek = (int64_t)(0.00000015 * (double)format_ctx->duration * fps);
-	int i = 0;
 	AVPacket packet;
 	int have_frame;
 	struct SwsContext *toRGB_convert_ctx;
+	
+	// Seek to the exact frame we want
+	av_seek_frame(format_ctx, stream, seek, 0);
+	
 	while (0 <= av_read_frame(format_ctx, &packet)) {
 		if (packet.stream_index == stream) {
 			avcodec_decode_video(codec_ctx, video_frame, &have_frame,
 				 packet.data, packet.size);
 			
-			if (have_frame && seek == ++i) {
+			if (have_frame) {
 				//img_convert((AVPicture *)img_frame, PIX_FMT_RGB24,
 				//	(AVPicture*)video_frame, codec_ctx->pix_fmt,
 				//	codec_ctx->width, codec_ctx->height);
@@ -892,9 +895,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 					codec_ctx->width, codec_ctx->height, PIX_FMT_RGB24,
 					sws_flags, NULL, NULL, NULL);
 				if (toRGB_convert_ctx == NULL) {
-					av_log(NULL, AV_LOG_ERROR,
-						"Cannot initialize the toRGB conversion context\n");
-					exit(1);
+					return NS_ERROR_NULL_POINTER;
 				}
 
 				// img_convert parameters are          2 first destination, then 4 source
