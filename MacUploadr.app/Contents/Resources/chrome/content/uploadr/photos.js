@@ -590,6 +590,7 @@ var photos = {
 					document.getElementById('no_meta_prompt')
 						.style.visibility = 'hidden';
 					meta.disable();
+					photos.sets[users.nsid] = meta.sets;
 				}
 
 				return;

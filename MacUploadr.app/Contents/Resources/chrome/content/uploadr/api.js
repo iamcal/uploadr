@@ -148,8 +148,7 @@ var wrap = {
 					users.videosize = parseInt(videosize[0]
 						.getAttribute('maxkb'));
 				} else { users.videosize = conf.videosize; }
-				sets = user.getElementsByTagName('sets')[0]
-					.getAttribute('remaining');
+				var sets = user.getElementsByTagName('sets')[0].getAttribute('remaining');
 				if ('lots' == sets) {
 					users.sets = -1;
 				} else {
