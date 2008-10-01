@@ -27,7 +27,6 @@ const myAppHandler = {
 	},
 
 	handle : function(cl){
-
 		var start = 0;
 
 		if (1 == cl.state){ // STATE_REMOTE_AUTO
@@ -58,7 +57,7 @@ const myAppHandler = {
 
 		// If we found a window, we need to send the queue
 		if (0 < send_queue.length) {
-			win.clh(send_queue.join('|||||'));
+			win.clh(true, send_queue.join('|||||'));
 		}
 
 		if (1 == cl.state) { // STATE_REMOTE_AUTO
