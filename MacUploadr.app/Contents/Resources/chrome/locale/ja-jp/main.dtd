@@ -61,8 +61,8 @@
 <!ENTITY settings.privacy.family "あなたの家族">
 <!ENTITY settings.privacy.public "誰でも">
 <!ENTITY settings.content_type "デフォルトの種類:">
-<!ENTITY settings.content_type.photo "画像">
-<!ENTITY settings.content_type.screenshot "スクリーンショット">
+<!ENTITY settings.content_type.photo "画像"><!-- needs to be translated as Photos/Videos -->
+<!ENTITY settings.content_type.screenshot "スクリーンショット"><!-- needs to be translated as Screenshot/ Screencast -->
 <!ENTITY settings.content_type.other "その他">
 <!ENTITY settings.safety_level "デフォルトの安全:">
 <!ENTITY settings.safety_level.safe "安全">

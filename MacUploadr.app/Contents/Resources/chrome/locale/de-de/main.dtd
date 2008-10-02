@@ -73,8 +73,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.privacy.family "Ihre Familie">
 <!ENTITY settings.privacy.public "Jeder">
 <!ENTITY settings.content_type "Standardinhaltstyp:">
-<!ENTITY settings.content_type.photo "Foto">
-<!ENTITY settings.content_type.screenshot "Screenshot">
+<!ENTITY settings.content_type.photo "Foto/Video">
+<!ENTITY settings.content_type.screenshot "Screenshot/Screencast">
 <!ENTITY settings.content_type.other "Sonstige">
 <!ENTITY settings.safety_level "Standardsicherheitsstufe:">
 <!ENTITY settings.safety_level.safe "Unbedenklich">

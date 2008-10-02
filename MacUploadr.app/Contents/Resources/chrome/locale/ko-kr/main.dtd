@@ -73,8 +73,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.privacy.family "내 가족">
 <!ENTITY settings.privacy.public "모두">
 <!ENTITY settings.content_type "기본 컨텐츠 유형:">
-<!ENTITY settings.content_type.photo "사진">
-<!ENTITY settings.content_type.screenshot "스크린샷">
+<!ENTITY settings.content_type.photo "사진/동영상">
+<!ENTITY settings.content_type.screenshot "스크린샷/스크린캐스트">
 <!ENTITY settings.content_type.other "기타">
 <!ENTITY settings.safety_level "기본 안전 수준:">
 <!ENTITY settings.safety_level.safe "안전함(safe) ">

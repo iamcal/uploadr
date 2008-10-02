@@ -24,6 +24,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.tools "Tools">
 <!ENTITY menu.tools.addons "Add-ons">
 <!ENTITY menu.tools.console "Console">
+<!ENTITY menu.tools.venkman "Venkman">
 <!ENTITY menu.help "Help">
 <!ENTITY menu.help.about "About Flickr Uploadr">
 <!ENTITY menu.help.tips "Tips and Tricks">
@@ -73,9 +74,9 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.privacy.family "Your family">
 <!ENTITY settings.privacy.public "Anyone">
 <!ENTITY settings.content_type "Default content type:">
-<!ENTITY settings.content_type.photo "Photo">
-<!ENTITY settings.content_type.screenshot "Screenshot">
-<!ENTITY settings.content_type.other "Other">
+<!ENTITY settings.content_type.photo "Photo / Video">
+<!ENTITY settings.content_type.screenshot "Screenshot/Screencast">
+<!ENTITY settings.content_type.other "Other - art, illustration, CGI, etc.">
 <!ENTITY settings.safety_level "Default safety level:">
 <!ENTITY settings.safety_level.safe "Safe">
 <!ENTITY settings.safety_level.moderate "Moderate">
@@ -129,7 +130,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY help "Tips and Tricks">
 <!ENTITY help.offline "You can ^^work offline^^.">
-<!ENTITY help.offline.text.first "The Uploadr is designed to let you do much of your photo organization and tagging offline.  Once you're ready to upload to Flickr, sign in to your account, and press the enormous Upload Photos button.">
+<!ENTITY help.offline.text.first "The Uploadr is designed to let you do much of your photo organization and tagging offline.  Once you're ready to upload to Flickr, sign in to your account, and press the enormous Upload button.">
 <!ENTITY help.offline.text.second "You can be signed in all the time, if you like.  When you're signed in, you can organize your items into sets.">
 <!ENTITY help.drag "^^Drag and drop^^ is your friend.">
 <!ENTITY help.drag.text "You can drag items into the order that you'd like them to appear on your photostream page when they're uploaded.  If you need to, you can also reset any arrangement you make so the items go back to being ordered by the date they were taken.">

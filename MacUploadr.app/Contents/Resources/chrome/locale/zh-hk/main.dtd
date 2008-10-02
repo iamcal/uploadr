@@ -73,8 +73,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.privacy.family "你的家人">
 <!ENTITY settings.privacy.public "任何人">
 <!ENTITY settings.content_type "預設內容類型︰">
-<!ENTITY settings.content_type.photo "相片">
-<!ENTITY settings.content_type.screenshot "螢幕截圖">
+<!ENTITY settings.content_type.photo "相片/視訊">
+<!ENTITY settings.content_type.screenshot "螢幕截圖/螢幕場景">
 <!ENTITY settings.content_type.other "其他">
 <!ENTITY settings.safety_level "預設安全層級：">
 <!ENTITY settings.safety_level.safe "安全">
