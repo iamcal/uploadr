@@ -20,6 +20,7 @@ extern "C" __declspec(dllexport) __checkReturn int     __cdecl strcasecmp(__in_z
 
 #include <Windows.h>
 extern "C" __declspec(dllimport) UINT ___lc_codepage_func(void);
+
 extern "C" unsigned int __lc_codepage = ___lc_codepage_func(); //I can't link without that !?????????????????
 #endif
 
@@ -445,6 +446,13 @@ void quote(string & s) {
 	}
 }
 
+// cf. http://www.metadataworkinggroup.com/pdf/mwg_guidance.pdf p.30 for non-XMP metadata container open encoding
+void AttemptUTF8ASCIIGuess(const string & s, nsAString & ns) {
+	ns = NS_ConvertUTF8toUTF16(s.c_str());
+	if(ns.IsEmpty())
+		ns = NS_ConvertASCIItoUTF16(s.c_str());
+}
+
 // Extract a metadata key if it exists in the collection given
 template<class D, class K>
 bool extract(D & data, const char * k, nsAString & ns, bool q) {
@@ -458,12 +466,6 @@ bool extract(D & data, const char * k, nsAString & ns, bool q) {
 	}
 }
 
-// cf. http://www.metadataworkinggroup.com/pdf/mwg_guidance.pdf p.30 for non-XMP metadata container open encoding
-void AttemptUTF8ASCIIGuess(const string & s, nsAString & ns) {
-	ns = NS_ConvertUTF8toUTF16(s.c_str());
-	if(ns.IsEmpty())
-		ns = NS_ConvertASCIItoUTF16(s.c_str());
-}
 
 NS_IMPL_ISUPPORTS1(flGM, flIGM)
 
@@ -559,7 +561,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			tags.Append(city);
 			tags.Append(NS_LITERAL_STRING(" ").get());
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
-				iptc, "Iptc.Application2.ProvinceState", state, true);
+		        iptc, "Iptc.Application2.ProvinceState", state, true);
 			tags.Append(state);
 			tags.Append(NS_LITERAL_STRING(" ").get());
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
@@ -613,7 +615,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		outTemp << "###";
 
 		// Hide ### strings within the IPTC data
-		size_t pos = title.Find("###", 0);
+		PRInt32 pos = title.Find("###", 0);
 		while (string::npos != pos) {
 			title.Replace(pos, 3, NS_LITERAL_STRING("{---THREE---POUND---DELIM---}"));
 			pos = title.Find("###", pos);
