@@ -10,6 +10,19 @@
 
 #include <stdio.h>
 
+// link hack for MinGW
+#ifdef WIN32
+
+#include <string.h>
+extern "C" __declspec(dllexport) __checkReturn int     __cdecl strcasecmp(__in_z  const char * _Str1, __in_z  const char * _Str2) {
+	return _stricmp(_Str1, _Str2);
+}
+
+#include <Windows.h>
+extern "C" __declspec(dllimport) UINT ___lc_codepage_func(void);
+extern "C" unsigned int __lc_codepage = ___lc_codepage_func(); //I can't link without that !?????????????????
+#endif
+
 #include "flGM.h"
 
 // GraphicsMagick
@@ -434,14 +447,22 @@ void quote(string & s) {
 
 // Extract a metadata key if it exists in the collection given
 template<class D, class K>
-bool extract(D & data, const char * k, string & s, bool q) {
+bool extract(D & data, const char * k, nsAString & ns, bool q) {
 	typename D::iterator it = data.findKey(K(string(k)));
 	if (data.end() == it) { return false; }
 	else {
-		s = it->toString();
+		string s = it->toString();
 		if (q) { quote(s); }
+		AttemptUTF8ASCIIGuess(s, ns);		
 		return true;
 	}
+}
+
+// cf. http://www.metadataworkinggroup.com/pdf/mwg_guidance.pdf p.30 for non-XMP metadata container open encoding
+void AttemptUTF8ASCIIGuess(const string & s, nsAString & ns) {
+	ns = NS_ConvertUTF8toUTF16(s.c_str());
+	if(ns.IsEmpty())
+		ns = NS_ConvertASCIItoUTF16(s.c_str());
 }
 
 NS_IMPL_ISUPPORTS1(flGM, flIGM)
@@ -492,7 +513,8 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 		// Extract EXIF and IPTC data that we care about
 		int orient = 1;
-		string title = "", description = "", tags = "", date_taken = "";
+		nsString title, description, date_taken;
+		wstring tags;
 		try {
 			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
@@ -521,23 +543,28 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			string key("Iptc.Application2.Keywords");
 			Exiv2::IptcKey k = Exiv2::IptcKey(key);
 			Exiv2::IptcData::iterator i, ii = iptc.end();
+			nsString tmpString;
 			for (i = iptc.begin(); i != ii; ++i) {
 				if (i->key() == key) {
 					string val = i->toString();
 					quote(val);
-					tags += val + " ";
+					AttemptUTF8ASCIIGuess(val, tmpString); 
+					tags += tmpString.get();
+					tags += NS_LITERAL_STRING(" ").get();
 				}
 			}
-			string city = "", state = "", country = "";
+			nsString city, state, country;
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.City", city, true);
-			tags += city + " ";
+			tags += city.get();
+			tags += NS_LITERAL_STRING(" ").get();
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.ProvinceState", state, true);
-			tags += state + " ";
+			tags += state.get();
+			tags += NS_LITERAL_STRING(" ").get();
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.CountryName", country, true);
-			tags += country;
+			tags += country.get();
 
 			// XMP and EXIF date taken
 			extract<Exiv2::XmpData, Exiv2::XmpKey>(
@@ -554,6 +581,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 				exif, "Exif.Image.DateTime", date_taken, false);
 
 		} catch (Exiv2::Error &) {}
+		
 		ostringstream out1;
 		out1 << orient << "###";
 
@@ -569,41 +597,38 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		int base = bw > bh ? bw : bh;
 		out1 << bw << "###" << bh << "###";
 
-		// Output date taken
-		out1 << date_taken << "###";
 
 		// Thumbnail width and height
 		ostringstream dim;
+		ostringstream outTemp;
 		if (bw > bh) {
 			float r = (float)bh * (float)square / (float)bw;
-			out1 << square << "###" << round(r);
+			outTemp << square << "###" << round(r);
 			dim << square << "x" << round(r);
 		} else {
 			float r = (float)bw * (float)square / (float)bh;
-			out1 << round(r) << "###" << square;
+			outTemp << round(r) << "###" << square;
 			dim << round(r) << "x" << square;
 		}
-		out1 << "###";
+		outTemp << "###";
 
 		// Hide ### strings within the IPTC data
-		size_t pos = title.find("###", 0);
+		size_t pos = title.Find("###", 0);
 		while (string::npos != pos) {
-			title.replace(pos, 3, "{---THREE---POUND---DELIM---}");
-			pos = title.find("###", pos);
+			title.Replace(pos, 3, NS_LITERAL_STRING("{---THREE---POUND---DELIM---}"));
+			pos = title.Find("###", pos);
 		}
-		pos = description.find("###", 0);
+		pos = description.Find("###", 0);
 		while (string::npos != pos) {
-			description.replace(pos, 3, "{---THREE---POUND---DELIM---}");
-			pos = description.find("###", pos);
+			description.Replace(pos, 3, NS_LITERAL_STRING("{---THREE---POUND---DELIM---}"));
+			pos = description.Find("###", pos);
 		}
-		pos = tags.find("###", 0);
+		pos = tags.find(NS_LITERAL_STRING("###").get(), 0);
 		while (string::npos != pos) {
-			tags.replace(pos, 3, "{---THREE---POUND---DELIM---}");
-			pos = tags.find("###", pos);
+			tags.replace(pos, 3, NS_LITERAL_STRING("{---THREE---POUND---DELIM---}").get());
+			pos = tags.find(NS_LITERAL_STRING("###").get(), pos);
 		}
-		ostringstream out2;
-		out2 << "###" << title << "###" << description << "###" << tags;
-
+		
 		// Create a new path
 		thumb_s = find_path(path_s, "-thumb");
 		if (!thumb_s) { return NS_ERROR_NULL_POINTER; }
@@ -627,26 +652,41 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		img.write(*thumb_s);
 
 		// If all went well, return stuff
-		string out1_s = out1.str();
-		char * o = (char *)out1_s.c_str();
-		nsCString utf8;
-		while (*o) { utf8.Append(*o++); }
-		_retval.Append(NS_ConvertUTF8toUTF16(utf8));
+//<orient>###<width>###<height>
+		_retval.Append(NS_ConvertUTF8toUTF16(out1.str().c_str()));
+//###<date_taken>###
+		_retval.Append(date_taken);
+		_retval.Append(NS_LITERAL_STRING("###"));
+//<thumb_width>###<thumb_height>###
+		_retval.Append(NS_ConvertUTF8toUTF16(outTemp.str().c_str()));
+//<thumb_path>
 		unconv_path(*thumb_s, _retval);
 		delete thumb_s; thumb_s = 0;
-		string out2_s = out2.str();
-		o = (char *)out2_s.c_str();
-		utf8.Assign(NS_LITERAL_CSTRING(""));
-		while (*o) { utf8.Append(*o++); }
-		_retval.Append(NS_ConvertUTF8toUTF16(utf8));
+//###<title>###<description>###<tags>				
+		_retval.Append(NS_LITERAL_STRING("###"));
+		_retval.Append(title);
+		_retval.Append(NS_LITERAL_STRING("###"));
+		_retval.Append(description);
+		_retval.Append(NS_LITERAL_STRING("###"));
+		_retval.Append(tags.c_str());
+
+//debug
+		nsString nsTestString(_retval);
+		wstring blabla = nsTestString.get();
 
 		return NS_OK;
 	}
 
 	// Otherwise yell about it
 	catch (Magick::Exception & e) {
-		delete path_s;
-		delete thumb_s;
+		if(path_s) {
+			delete path_s;
+			path_s = NULL;
+		}
+		if(thumb_s) {
+			delete thumb_s;
+			thumb_s = NULL;
+		}
 		char * o = (char *)e.what();
 		while (*o) { _retval.Append(*o++); }
 	}
@@ -715,8 +755,14 @@ NS_IMETHODIMP flGM::Rotate(PRInt32 degrees, const nsAString & path, nsAString & 
 
 	// Otherwise yell about it
 	catch (Magick::Exception & e) {
-		delete path_s;
-		delete rotate_s;
+		if(path_s) {
+			delete path_s;
+			path_s = 0;
+		}
+		if (rotate_s) {
+			delete rotate_s;
+			rotate_s = 0;
+		}
 		char * o = (char *)e.what();
 		while (*o) { _retval.Append(*o++); }
 	}
@@ -814,8 +860,14 @@ NS_IMETHODIMP flGM::Resize(PRInt32 square, const nsAString & path, nsAString & _
 
 	// Otherwise yell about it
 	catch (Magick::Exception & e) {
-		delete path_s;
-		delete resize_s;
+		if (path_s) {
+			delete path_s;
+			path_s = 0;
+		}
+		if (resize_s) {
+			delete resize_s;
+			resize_s = 0;
+		}
 		char * o = (char *)e.what();
 		while (*o) {
 			_retval.Append(*o++);
@@ -967,8 +1019,14 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 					delete thumb_s; thumb_s = 0;
 
 				} catch (Magick::Exception & e) {
-					delete path_s;
-					delete thumb_s;
+					if (path_s) {
+						delete path_s;
+						path_s = 0;
+					}
+					if (thumb_s) {
+						delete thumb_s;
+						thumb_s = 0;
+					}
 					char * o = (char *)e.what();
 					while (*o) { _retval.Append(*o++); }
 				}
