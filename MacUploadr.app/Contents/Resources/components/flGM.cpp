@@ -514,7 +514,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		// Extract EXIF and IPTC data that we care about
 		int orient = 1;
 		nsString title, description, date_taken;
-		wstring tags;
+		nsString tags;
 		try {
 			Exiv2::Image::AutoPtr meta_r = Exiv2::ImageFactory::open(*path_s);
 			meta_r->readMetadata();
@@ -549,22 +549,22 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 					string val = i->toString();
 					quote(val);
 					AttemptUTF8ASCIIGuess(val, tmpString); 
-					tags += tmpString.get();
-					tags += NS_LITERAL_STRING(" ").get();
+					tags.Append(tmpString);
+					tags.Append(NS_LITERAL_STRING(" ").get());
 				}
 			}
 			nsString city, state, country;
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.City", city, true);
-			tags += city.get();
-			tags += NS_LITERAL_STRING(" ").get();
+			tags.Append(city);
+			tags.Append(NS_LITERAL_STRING(" ").get());
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.ProvinceState", state, true);
-			tags += state.get();
-			tags += NS_LITERAL_STRING(" ").get();
+			tags.Append(state);
+			tags.Append(NS_LITERAL_STRING(" ").get());
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
 				iptc, "Iptc.Application2.CountryName", country, true);
-			tags += country.get();
+			tags.Append(country);
 
 			// XMP and EXIF date taken
 			extract<Exiv2::XmpData, Exiv2::XmpKey>(
@@ -623,10 +623,10 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			description.Replace(pos, 3, NS_LITERAL_STRING("{---THREE---POUND---DELIM---}"));
 			pos = description.Find("###", pos);
 		}
-		pos = tags.find(NS_LITERAL_STRING("###").get(), 0);
+		pos = tags.Find("###", 0);
 		while (string::npos != pos) {
-			tags.replace(pos, 3, NS_LITERAL_STRING("{---THREE---POUND---DELIM---}").get());
-			pos = tags.find(NS_LITERAL_STRING("###").get(), pos);
+			tags.Replace(pos, 3, NS_LITERAL_STRING("{---THREE---POUND---DELIM---}").get());
+			pos = tags.Find("###", pos);
 		}
 		
 		// Create a new path
@@ -668,11 +668,11 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		_retval.Append(NS_LITERAL_STRING("###"));
 		_retval.Append(description);
 		_retval.Append(NS_LITERAL_STRING("###"));
-		_retval.Append(tags.c_str());
+		_retval.Append(tags);
 
 //debug
 		nsString nsTestString(_retval);
-		wstring blabla = nsTestString.get();
+		basic_string<PRUnichar, char_traits<PRUnichar>,	allocator<PRUnichar> > blabla = nsTestString.get();
 
 		return NS_OK;
 	}
