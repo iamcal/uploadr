@@ -204,6 +204,10 @@ var menus = {
 		console: function() {
 			window.open('chrome://global/content/console.xul', '_blank',
 			'chrome,extrachrome,menubar,resizable,scrollbars,status,toolbar');
+		},
+		
+		venkman: function() {
+		    start_venkman();
 		}
 
 	},
@@ -416,6 +420,7 @@ var exit = function(force) {
 	}
 
 	// Shutdown threads
+	photos.thumb_cancel = true;
 	threads.worker.shutdown();
 	threads.uploadr.shutdown();
 

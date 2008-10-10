@@ -70,6 +70,17 @@ var file = {
 			Components.utils.reportError(err);
 			return 0;
 		}
-	}
+	},
 
+    // Delete
+    remove: function(name) {
+        try {
+            var file = Cc['@mozilla.org/file/directory_service;1']
+				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile);
+			file.append(name);
+			file.remove(false);
+        } catch (err) {
+            Components.utils.reportError(err);
+        }
+    }
 };

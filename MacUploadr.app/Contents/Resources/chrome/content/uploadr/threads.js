@@ -50,9 +50,11 @@ var Thumb = function(id, thumb_size, path, auto_select) {
 };
 Thumb.prototype = {
 	run: function() {
+	    if(photos.thumb_cancel === true)
+	        return;
 		var result = '';
-		try {
 
+		try {
 			// Thumbnail your photos
 			if (photos.is_photo(this.path)) {
 				result = threads.gm.thumb(this.thumb_size, this.path);
@@ -89,6 +91,8 @@ var ThumbCallback = function(id, result, auto_select) {
 };
 ThumbCallback.prototype = {
 	run: function() {
+	if (photos.thumb_cancel === true)
+	    return;
 		try {
 			unblock_normalize();
 			if (conf.console.thumb) {

@@ -18,6 +18,7 @@ var photos = {
 	last: null,
 	sort: true,
 	batch_size: 0,
+	thumb_cancel: false,
 
 	// Upload tracking
 	uploading: [],
@@ -31,7 +32,7 @@ var photos = {
 	sets_out: 0,
 	kb: {
 		sent: 0,
-		total: 0,
+		total: 0
 	},
 
 	// Queue batches of photos
@@ -48,7 +49,7 @@ var photos = {
 		var path = nsPreferences.getLocalizedUnicharPref(
 			'flickr.add_directory', '');
 		if ('' == path) {
-			var path = Cc['@mozilla.org/file/directory_service;1']
+			path = Cc['@mozilla.org/file/directory_service;1']
 				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
 			if (path.match(/^\//)) {
 				path += '/../../../../../Pictures';
@@ -302,6 +303,7 @@ var photos = {
 		// Update the UI
 		photos.normalize();
 		if (photos.count + photos.errors) {
+		    document.getElementById('t_clear').className = 'button';
 			if (photos.sort) {
 				threads.worker.dispatch(new Sort(),
 					threads.worker.DISPATCH_NORMAL);
@@ -357,6 +359,7 @@ var photos = {
 		list.insertBefore(li, list.firstChild);
 
 		// Create and show the thumbnail
+        photos.thumb_cancel = false;
 		threads.worker.dispatch(new Thumb(id, conf.thumb_size, path),
 			threads.worker.DISPATCH_NORMAL);
 
@@ -380,7 +383,9 @@ var photos = {
 		for (var i = 0; i < ii; ++i) {
 			var id = photos.selected[i];
 			var li = document.getElementById('photo' + id);
-			li.parentNode.removeChild(li);
+			if(li) {
+			    li.parentNode.removeChild(li);
+			}
 
 			// Free the size of this file
 			photos.batch_size -= photos.list[id].size;
@@ -408,6 +413,7 @@ var photos = {
 		if (photos.count) {
 			buttons.upload.enable();
 		} else {
+		    document.getElementById('t_clear').className = 'disabled_button';
 			photos.sort = true;
 			buttons.upload.disable();
 			document.getElementById('photos_sort_default')
@@ -744,6 +750,35 @@ var photos = {
 
 	},
 
+    // clear photos.json
+    // this is desperate move when the uploadr is in unusable state
+    removeAll: function() {
+        if (document.getElementById('t_clear').className == 'disabled_button')
+            return;
+    	document.getElementById('t_clear').className = 'disabled_button';
+    	photos.thumb_cancel = true;
+    	if (conf.console.thumb) {
+				Cc['@mozilla.org/consoleservice;1']
+					.getService(Ci.nsIConsoleService)
+					.logStringMessage('clearing');
+			}
+        photos.list = [];
+        photos.selected = [];
+        photos.count = 0;
+        photos.errors = 0;
+        photos.batch_size = 0;
+        file.remove('photos.json');
+        // Remove photos from UI
+        var list = document.getElementById('photos_list');
+		while (list.hasChildNodes()) {
+		    list.removeChild(list.firstChild);
+        }
+        document.getElementById('photos_init').style.display = '-moz-box';
+        ui.bandwidth_updated();
+        meta.disable();
+        buttons.upload.disable();
+    },
+    
 	// Save all metadata to disk
 	save: function() {
 		if (0 != _block_exit) { return; }

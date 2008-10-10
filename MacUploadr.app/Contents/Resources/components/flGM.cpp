@@ -673,9 +673,9 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		_retval.Append(tags);
 
 //debug
-		nsString nsTestString(_retval);
+/*		nsString nsTestString(_retval);
 		basic_string<PRUnichar, char_traits<PRUnichar>,	allocator<PRUnichar> > blabla = nsTestString.get();
-
+*/
 		return NS_OK;
 	}
 

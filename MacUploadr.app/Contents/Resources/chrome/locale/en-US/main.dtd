@@ -41,6 +41,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY tools.add "+ Add">
 <!ENTITY tools.remove "− Remove">
+<!ENTITY tools.clear "Remove all">
 
 <!ENTITY buttons.upload "Upload">
 <!ENTITY buttons.cancel "Cancel">

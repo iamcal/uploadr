@@ -268,7 +268,7 @@ div.toolbarseparator {
 	margin: 0 15px;
 	background: #eee;
 }
-#t_add, #t_remove {
+#t_add, #t_remove, #t_clear{
 	margin: 0 5px 0 0;
 }
 #t_rotate_l, #t_rotate_r {
