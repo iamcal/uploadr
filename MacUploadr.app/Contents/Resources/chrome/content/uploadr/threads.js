@@ -159,8 +159,10 @@ ThumbCallback.prototype = {
 				photos.list[this.id].thumb_height = parseInt(thumb[5]);
 				img.setAttribute('width', thumb[4]);
 				img.setAttribute('height', thumb[5]);
-				img.src = 'file://' + thumb[6];
-				photos.list[this.id].thumb = thumb[6];
+				var thumbPath = thumb[6].replace(/^\s+|\s+$/g, '')
+				        .replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				img.src = 'file:///' + escape(thumbPath);
+				photos.list[this.id].thumb = thumbPath;
 
 				// Make video icons for videos
 				//   This will look funny for a portrait-oriented video

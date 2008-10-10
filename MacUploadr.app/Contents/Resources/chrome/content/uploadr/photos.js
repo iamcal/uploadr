@@ -643,7 +643,7 @@ var photos = {
 
 				// Setup progress bar for this photo and show it in the queue
 				var img = document.createElementNS(NS_HTML, 'img');
-				img.src = 'file://' + p.thumb;
+				img.src = 'file:///' + escape(p.thumb);
 				img.width = p.thumb_width;
 				img.height = p.thumb_height;
 				var stack = document.createElement('stack');
