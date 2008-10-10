@@ -32,6 +32,7 @@ var wrap = {
 
 			}
 			buttons.login.enable();
+			buttons.upload.disable();
 		},
 
 		getFrob: function(fresh) {
@@ -53,6 +54,7 @@ var wrap = {
 					locale.getString('auth.prompt.ok'),
 					locale.getString('auth.prompt.cancel'))) {
 					buttons.login.enable();
+					buttons.upload.disable();
 					return;
 				}
 				var url = api.start({
@@ -64,6 +66,7 @@ var wrap = {
 				pages.go('auth');
 			}
 			buttons.login.enable();
+			buttons.upload.disable();
 		},
 
 		getToken: function(frob) {
