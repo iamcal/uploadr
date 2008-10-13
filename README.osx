@@ -39,7 +39,7 @@ Install MacPorts if you haven't already:
   http://svn.macosforge.org/repository/macports/downloads/MacPorts-1.5.0/
 
 The Mozilla tools require the IDL library:
-  $ sudo port install libidl
+  $ sudo port install libidl (sudo /opt/local/bin/port install libidl)
 
 
 Gecko SDK
@@ -49,13 +49,14 @@ To build the XPCOM components you will need the Gecko SDK. For PPC Mac:
   http://developer.mozilla.org/en/docs/Gecko_SDK#Downloading
 
 For Intel Mac:
-  http://www.oxymoronical.com/view/1114
+http://developer.mozilla.org/en/docs/Gecko_SDK#Downloading
+was http://www.oxymoronical.com/view/1114
 
 Place the SDK(s) appropriately:
   UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.mac (Intel Mac)
   UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.ppc (PPC Mac)
 
-These SDKs are from the Gecko 1.8 series and so are only safe to use
+These SDKs are from the Gecko 1.8/1.9 series and so are only safe to use
 if the XPCOM components use only frozen interfaces.  Fortunately,
 Uploadr currently falls into this category.
 
@@ -91,6 +92,8 @@ Install prerequisites with MacPorts:
 Download GraphicsMagick source (try and stick with 1.1.10):
   ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/1.1/GraphicsMagick-1.1.10.tar.bz2
 
+jde - trying 1.2.5 (ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/1.2/GraphicsMagick-1.2.5.tar.bz2) to match WINDOWS
+
 Configure and install GraphicsMagick:
   $ ./configure \
     CFLAGS="-O3" \
@@ -125,7 +128,7 @@ Download Exiv2 source from:
 In Unix-land, it's easy!
   $ sudo port install libiconv
   $ sudo port install expat
-  $ sudo port install xml2
+  $ sudo port install xml2 (jde - does not exist: so libxml2?)
   $ ./configure --prefix=/opt/local --disable-shared --with-expat=/opt/local
   $ make && sudo make install
 
@@ -149,6 +152,26 @@ Then build:
     --extra-cflags=-fno-common --disable-debug --enable-swscale
   $ make && sudo make install
 
+jde : encountered:
+> make(6189) malloc: *** vm_allocate(size=4272951296) failed (error
+> code=3)
+> make(6189) malloc: *** error: can't allocate region
+> make(6189) malloc: *** set a breakpoint in szone_error to debug
+> make: *** virtual memory exhausted.  Stop.
+>
+
+$ which make
+/usr/bin/make
+$ make --version
+GNU Make 3.80
+
+port install gmake
+$ which gmake
+/opt/local/bin/gmake
+$ gmake --version
+GNU Make 3.81
+
+and used gmake instead of make
 
 
 Building XPCOM components
@@ -160,6 +183,8 @@ you must increment the BuildID defined in:
 
 Use the Makefile in:
   UPLOADR/MacUploadr.app/Contents/Resources/components/
+
+http://developer.mozilla.org/en/docs/Gecko_SDK#Issues_with_the_OS_X_SDK
 
 Running `make ppc gm ; make ppc key` will build the PPC binaries as
 gm.dylib.ppc and key.dylib.ppc.  `make mac gm ; make mac key` will
@@ -176,6 +201,7 @@ The app can be launched by double-clicking on MacUploadr.app in Finder.
 
 Launch Uploadr from Terminal to get debug windows:
   $ chmod a+w MacUploadr.app/Contents/MacOS/xulrunner
+  $ chmod a+x MacUploadr.app/Contents/MacOS/xulrunner
   $ MacUploadr.app/Contents/MacOS/xulrunner -jsconsole
 
 
