@@ -328,6 +328,7 @@ var photos = {
 			mouse.show_photos();
 		} else {
 			unblock_normalize();
+			document.getElementById('t_clear').className = 'disabled_button';
 			document.getElementById('photos_init').style.display = '-moz-box';
 			document.getElementById('photos_new').style.display = 'none';
 		}
@@ -413,7 +414,6 @@ var photos = {
 		if (photos.count) {
 			buttons.upload.enable();
 		} else {
-		    document.getElementById('t_clear').className = 'disabled_button';
 			photos.sort = true;
 			buttons.upload.disable();
 			document.getElementById('photos_sort_default')
@@ -421,6 +421,7 @@ var photos = {
 			document.getElementById('photos_sort_revert')
 				.style.display = 'none';
 			if (!photos.errors) {
+				document.getElementById('t_clear').className = 'disabled_button';
 				document.getElementById('photos_init')
 					.style.display = '-moz-box';
 			}
@@ -767,6 +768,7 @@ var photos = {
         photos.count = 0;
         photos.errors = 0;
         photos.batch_size = 0;
+        _block_sort = _block_remove = _block_normalize = _block_exit = 0;
         file.remove('photos.json');
         // Remove photos from UI
         var list = document.getElementById('photos_list');
