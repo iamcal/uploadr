@@ -22,51 +22,53 @@
   {0x0e0d0b74, 0x2c06, 0x11dc, \
     { 0x83, 0x14, 0x08, 0x00, 0x20, 0x0c, 0x9a, 0x66 }}
 
-class NS_NO_VTABLE flIGM : public nsISupports {
+class NS_NO_VTABLE NS_SCRIPTABLE flIGM : public nsISupports {
  public: 
 
-  NS_DEFINE_STATIC_IID_ACCESSOR(FLIGM_IID)
+  NS_DECLARE_STATIC_IID_ACCESSOR(FLIGM_IID)
 
   /* void init (in AString pwd); */
-  NS_IMETHOD Init(const nsAString & pwd) = 0;
+  NS_SCRIPTABLE NS_IMETHOD Init(const nsAString & pwd) = 0;
 
   /* AString thumb (in long square, in AString path); */
-  NS_IMETHOD Thumb(PRInt32 square, const nsAString & path, nsAString & _retval) = 0;
+  NS_SCRIPTABLE NS_IMETHOD Thumb(PRInt32 square, const nsAString & path, nsAString & _retval) = 0;
 
   /* AString rotate (in long degrees, in AString path); */
-  NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) = 0;
+  NS_SCRIPTABLE NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) = 0;
 
   /* AString resize (in long square, in AString path); */
-  NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval) = 0;
+  NS_SCRIPTABLE NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval) = 0;
 
   /* AString keyframe (in long square, in AString path); */
-  NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) = 0;
+  NS_SCRIPTABLE NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) = 0;
 
 };
 
+  NS_DEFINE_STATIC_IID_ACCESSOR(flIGM, FLIGM_IID)
+
 /* Use this macro when declaring classes that implement this interface. */
 #define NS_DECL_FLIGM \
-  NS_IMETHOD Init(const nsAString & pwd); \
-  NS_IMETHOD Thumb(PRInt32 square, const nsAString & path, nsAString & _retval); \
-  NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval); \
-  NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval); \
-  NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval); 
+  NS_SCRIPTABLE NS_IMETHOD Init(const nsAString & pwd); \
+  NS_SCRIPTABLE NS_IMETHOD Thumb(PRInt32 square, const nsAString & path, nsAString & _retval); \
+  NS_SCRIPTABLE NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval); \
+  NS_SCRIPTABLE NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval); \
+  NS_SCRIPTABLE NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval); 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
 #define NS_FORWARD_FLIGM(_to) \
-  NS_IMETHOD Init(const nsAString & pwd) { return _to Init(pwd); } \
-  NS_IMETHOD Thumb(PRInt32 square, const nsAString & path, nsAString & _retval) { return _to Thumb(square, path, _retval); } \
-  NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) { return _to Rotate(degrees, path, _retval); } \
-  NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval) { return _to Resize(square, path, _retval); } \
-  NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) { return _to Keyframe(square, path, _retval); } 
+  NS_SCRIPTABLE NS_IMETHOD Init(const nsAString & pwd) { return _to Init(pwd); } \
+  NS_SCRIPTABLE NS_IMETHOD Thumb(PRInt32 square, const nsAString & path, nsAString & _retval) { return _to Thumb(square, path, _retval); } \
+  NS_SCRIPTABLE NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) { return _to Rotate(degrees, path, _retval); } \
+  NS_SCRIPTABLE NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval) { return _to Resize(square, path, _retval); } \
+  NS_SCRIPTABLE NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) { return _to Keyframe(square, path, _retval); } 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
 #define NS_FORWARD_SAFE_FLIGM(_to) \
-  NS_IMETHOD Init(const nsAString & pwd) { return !_to ? NS_ERROR_NULL_POINTER : _to->Init(pwd); } \
-  NS_IMETHOD Thumb(PRInt32 square, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Thumb(square, path, _retval); } \
-  NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Rotate(degrees, path, _retval); } \
-  NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Resize(square, path, _retval); } \
-  NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Keyframe(square, path, _retval); } 
+  NS_SCRIPTABLE NS_IMETHOD Init(const nsAString & pwd) { return !_to ? NS_ERROR_NULL_POINTER : _to->Init(pwd); } \
+  NS_SCRIPTABLE NS_IMETHOD Thumb(PRInt32 square, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Thumb(square, path, _retval); } \
+  NS_SCRIPTABLE NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Rotate(degrees, path, _retval); } \
+  NS_SCRIPTABLE NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Resize(square, path, _retval); } \
+  NS_SCRIPTABLE NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Keyframe(square, path, _retval); } 
 
 #if 0
 /* Use the code below as a template for the implementation class for this interface. */

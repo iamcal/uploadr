@@ -22,33 +22,35 @@
   {0x30d5eeac, 0x87fa, 0x11dc, \
     { 0x83, 0x14, 0x08, 0x00, 0x20, 0x0c, 0x9a, 0x66 }}
 
-class NS_NO_VTABLE flIKey : public nsISupports {
+class NS_NO_VTABLE NS_SCRIPTABLE flIKey : public nsISupports {
  public: 
 
-  NS_DEFINE_STATIC_IID_ACCESSOR(FLIKEY_IID)
+  NS_DECLARE_STATIC_IID_ACCESSOR(FLIKEY_IID)
 
   /* AString key (); */
-  NS_IMETHOD Key(nsAString & _retval) = 0;
+  NS_SCRIPTABLE NS_IMETHOD Key(nsAString & _retval) = 0;
 
   /* AString sign (in AString args); */
-  NS_IMETHOD Sign(const nsAString & args, nsAString & _retval) = 0;
+  NS_SCRIPTABLE NS_IMETHOD Sign(const nsAString & args, nsAString & _retval) = 0;
 
 };
 
+  NS_DEFINE_STATIC_IID_ACCESSOR(flIKey, FLIKEY_IID)
+
 /* Use this macro when declaring classes that implement this interface. */
 #define NS_DECL_FLIKEY \
-  NS_IMETHOD Key(nsAString & _retval); \
-  NS_IMETHOD Sign(const nsAString & args, nsAString & _retval); 
+  NS_SCRIPTABLE NS_IMETHOD Key(nsAString & _retval); \
+  NS_SCRIPTABLE NS_IMETHOD Sign(const nsAString & args, nsAString & _retval); 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
 #define NS_FORWARD_FLIKEY(_to) \
-  NS_IMETHOD Key(nsAString & _retval) { return _to Key(_retval); } \
-  NS_IMETHOD Sign(const nsAString & args, nsAString & _retval) { return _to Sign(args, _retval); } 
+  NS_SCRIPTABLE NS_IMETHOD Key(nsAString & _retval) { return _to Key(_retval); } \
+  NS_SCRIPTABLE NS_IMETHOD Sign(const nsAString & args, nsAString & _retval) { return _to Sign(args, _retval); } 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
 #define NS_FORWARD_SAFE_FLIKEY(_to) \
-  NS_IMETHOD Key(nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Key(_retval); } \
-  NS_IMETHOD Sign(const nsAString & args, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Sign(args, _retval); } 
+  NS_SCRIPTABLE NS_IMETHOD Key(nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Key(_retval); } \
+  NS_SCRIPTABLE NS_IMETHOD Sign(const nsAString & args, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Sign(args, _retval); } 
 
 #if 0
 /* Use the code below as a template for the implementation class for this interface. */

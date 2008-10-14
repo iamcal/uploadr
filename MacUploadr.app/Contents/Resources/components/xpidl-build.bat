@@ -8,5 +8,5 @@ REM  library is distributed WITHOUT ANY WARRANTY, whether express or implied.
 REM  See the GNU GPL for more details (http://www.gnu.org/licenses/gpl.html)
 REM
 
-"..\gecko-sdk.win\bin\xpidl.exe" -m header -I"..\gecko-sdk.win\idl" %1
-"..\gecko-sdk.win\bin\xpidl.exe" -m typelib -I"..\gecko-sdk.win\idl" %1
+"..\xulrunner-sdk\sdk\bin\xpidl.exe" -m header -I"..\xulrunner-sdk\sdk\idl" %1
+"..\xulrunner-sdk\sdk\bin\xpidl.exe" -m typelib -I"..\xulrunner-sdk\sdk\idl" %1
