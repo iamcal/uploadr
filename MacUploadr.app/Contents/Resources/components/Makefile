@@ -11,7 +11,7 @@
 PLATFORM := $(filter mac ppc linux universal, $(MAKECMDGOALS))
 COMPONENT := $(filter gm key clh, $(MAKECMDGOALS))
 
-GECKO_SDK := ../gecko-sdk.$(PLATFORM)
+GECKO_SDK := ../gecko-sdk.$(PLATFORM)/sdk
 GM_INCLUDE := -I/usr/local/include/GraphicsMagick
 GM_LIB := -L/usr/local/lib
 EXIV_INCLUDE := -I/usr/local/include/exiv2
@@ -80,7 +80,7 @@ ifeq (mac, $(PLATFORM))
 		-I$(GECKO_SDK)/idl \
 		flIGM.idl
 endif
-	g++ -w -c -O2 \
+	g++ -w -c -O2 -fshort-wchar\
 		-o flGM.o \
 		-I$(GECKO_SDK)/include \
 		$(GM_INCLUDE) \
@@ -88,7 +88,7 @@ endif
 		$(FF_INCLUDE) \
 		$(DEFINE) \
 		flGM.cpp
-	g++ -w -c -O2 \
+	g++ -w -c -O2 -fshort-wchar\
 		-o flGMModule.o \
 		-I$(GECKO_SDK)/include \
 		$(DEFINE) \
