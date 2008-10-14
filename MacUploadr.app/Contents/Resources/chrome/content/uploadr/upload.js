@@ -136,7 +136,7 @@ var upload = {
 		}
 		upload.progress_zero = 0;
 
-		// If no ticket came back, fail this photo
+        // If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 			if (conf.console.error) {
 				Components.utils.reportError('UPLOAD ERROR: ' +
@@ -148,7 +148,7 @@ var upload = {
 			if (upload.bandwidth(rsp)) { return; }
 
 			// If the result indicates that videos are disabled
-			if ('object' == typeof rsp &&
+			if ('object' == typeof rsp && rsp.getElementsByTagName('err')[0] &&
 				7 == parseInt(rsp.getElementsByTagName('err')[0]
 				.getAttribute('code'))) {
 				alert(locale.getString('video.disabled.text'),
@@ -442,7 +442,7 @@ var upload = {
 
 	// Check a response for out-of-bandwidth error
 	bandwidth: function(rsp) {
-		if ('object' == typeof rsp &&
+		if ('object' == typeof rsp && rsp.getElementsByTagName('err')[0] &&
 			6 == parseInt(rsp.getElementsByTagName('err')[0]
 			.getAttribute('code'))) {
 			document.getElementById('progress').style.display = 'none';
@@ -847,6 +847,8 @@ Upload.prototype = {
 			}, null);
 		} catch (err) {
 			Components.utils.reportError(err);
+			threads.main.dispatch(new UploadDoneCallback(
+			    false, this.id), threads.main.DISPATCH_NORMAL);
 		}
 
 	},
