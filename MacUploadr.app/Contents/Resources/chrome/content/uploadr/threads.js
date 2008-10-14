@@ -267,6 +267,7 @@ ThumbCallback.prototype = {
 					photos.normalize();
 					--photos.errors;
 					if (0 == photos.count + photos.errors) {
+						document.getElementById('t_clear').className = 'disabled_button';
 						document.getElementById('photos_init')
 							.style.display = '-moz-box';
 					}
