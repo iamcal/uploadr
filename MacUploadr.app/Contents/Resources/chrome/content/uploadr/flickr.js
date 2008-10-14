@@ -15,6 +15,11 @@ try {
 	Components.utils.reportError(err);
 }
 
+function toOpenWindowByType(inType, uri) {
+  var winopts = "chrome,extrachrome,menubar,resizable,scrollbars,status,toolbar";
+  window.open(uri, "_blank", winopts);
+}
+
 // The standard API
 var flickr = {
 
@@ -284,6 +289,11 @@ var api = {
 			// Callback
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function() {
+			    if (4 == xhr.readyState && 200 != xhr.status) {
+			        if (conf.console.error){
+			                Components.utils.reportError('STATUS: ' + xhr.status + ', calling: ' + params.method);
+			            }
+			    }
 				if (4 == xhr.readyState && 200 == xhr.status
 					&& xhr.responseXML) {
 					try {
@@ -353,7 +363,7 @@ var api = {
 					}
 					if ('function' == typeof callback) {
 						if (id) { callback(false, id); }
-						else { callback(rsp); }
+						else {callback('undefined' === typeof rsp ? false : rsp); }
 					}
 				}, conf.timeout);
 			}
