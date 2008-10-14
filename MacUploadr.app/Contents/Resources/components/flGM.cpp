@@ -312,19 +312,21 @@ int base_orient(Exiv2::ExifData & exif, Magick::Image & img) {
 		if (exif.end() != it) {
 			orient = it->toLong();
 		} else {
-			it = exif.findKey(Exiv2::ExifKey(string(
-				"Exif.Panasonic.Orientation")));
+			Exiv2::ExifKey orientationKey(string("Exif.Panasonic.Rotation"));
+			it = exif.findKey(Exiv2::ExifKey(orientationKey));
 			if (exif.end() != it) {
 				orient = it->toLong();
 			} else {
 				it = exif.findKey(Exiv2::ExifKey(string(
-					"Exif.MinoltaCs5D.Orientation")));
+					"Exif.MinoltaCs5D.Rotation")));
 				if (exif.end() != it) {
 					orient = it->toLong();
 				}
 			}
 		}
-	} catch (Exiv2::Error &) {}
+	} catch (Exiv2::Error & e) {
+		cerr << e.what();
+	}
 	if (1 > orient || 8 < orient) {
 		orient = 1;
 	}
