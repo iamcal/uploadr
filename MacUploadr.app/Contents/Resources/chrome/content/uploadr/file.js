@@ -78,7 +78,9 @@ var file = {
             var file = Cc['@mozilla.org/file/directory_service;1']
 				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile);
 			file.append(name);
-			file.remove(false);
+			if (file.exists()) {
+			    file.remove(false);
+			}
         } catch (err) {
             Components.utils.reportError(err);
         }
