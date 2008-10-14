@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="key"
-	ProjectGUID="{575D254B-9B3B-4CBD-891E-22D3A870E4D9}"
+	ProjectGUID="{F53783EC-1288-478F-A730-8EA3F375A026}"
 	RootNamespace="flKey"
 	Keyword="Win32Proj"
 	>
@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;"
+				AdditionalIncludeDirectories="&quot;..\xulrunner-sdk\sdk\include&quot;"
 				PreprocessorDefinitions="XP_WIN;XP_WIN32;NDEBUG;WIN32;_CONSOLE;_VISUALC_;NeedFunctionPrototypes;_MAGICKMOD_;_LIB;NEED_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -69,7 +69,7 @@
 				AdditionalDependencies="Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib"
 				OutputFile="$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\gecko-sdk.win\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\xulrunner-sdk\sdk\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -126,9 +126,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;"
+				AdditionalIncludeDirectories="&quot;..\xulrunner-sdk\sdk\include&quot;"
 				PreprocessorDefinitions="XP_WIN;XP_WIN32;NDEBUG;WIN32;_CONSOLE;_VISUALC_;NeedFunctionPrototypes;_MAGICKMOD_;_LIB;NEED_SOCKETS"
 				RuntimeLibrary="2"
+				TreatWChar_tAsBuiltInType="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -150,7 +151,7 @@
 				AdditionalDependencies="Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib"
 				OutputFile="$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\gecko-sdk.win\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\xulrunner-sdk\sdk\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

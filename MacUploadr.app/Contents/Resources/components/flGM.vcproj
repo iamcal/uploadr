@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10\Magick++\lib&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10&quot;;&quot;..\..\..\..\..\exiv2-0.15\src&quot;"
+				AdditionalIncludeDirectories="&quot;..\xulrunner-sdk\sdk\include&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10\Magick++\lib&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10&quot;;&quot;..\..\..\..\..\exiv2-0.15\src&quot;"
 				PreprocessorDefinitions="XP_WIN;XP_WIN32;NDEBUG;WIN32;_CONSOLE;_VISUALC_;NeedFunctionPrototypes;_MAGICKMOD_;_LIB;NEED_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -69,7 +69,7 @@
 				AdditionalDependencies="CORE_RL_Magick++_.lib CORE_RL_bzlib_.lib CORE_RL_coders_.lib CORE_RL_filters_.lib CORE_RL_jbig_.lib CORE_RL_jp2_.lib CORE_RL_jpeg_.lib CORE_RL_lcms_.lib CORE_RL_libxml_.lib CORE_RL_magick_.lib CORE_RL_png_.lib CORE_RL_tiff_.lib CORE_RL_ttf_.lib CORE_RL_wand_.lib CORE_RL_wmf_.lib CORE_RL_xlib_.lib CORE_RL_zlib_.lib X11.lib Xext.lib Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib exiv2.lib"
 				OutputFile="$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.10\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;;&quot;..\..\..\..\..\exiv2-0.15\msvc\exiv2lib\Release&quot;"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.10\VisualMagick\lib&quot;;&quot;..\xulrunner-sdk\sdk\lib&quot;;&quot;..\..\..\..\..\exiv2-0.15\msvc\exiv2lib\Release&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -126,9 +126,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;..\gecko-sdk.win\include&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10\Magick++\lib&quot;;&quot;..\..\..\..\..\GraphicsMagick-1.1.10&quot;;&quot;..\..\..\..\..\exiv2-0.16\src&quot;;c:\msys\1.0\local\include\ffmpeg;c:\msys\1.0\local\include"
+				AdditionalIncludeDirectories="&quot;..\xulrunner-sdk\sdk\include&quot;;&quot;..\..\..\..\GraphicsMagick-1.2.5\Magick++\lib&quot;;&quot;..\..\..\..\GraphicsMagick-1.2.5&quot;;&quot;..\..\..\..\exiv2-0.17.1\src&quot;;C:\msys\home\jdecq\ffmpeg;c:\msys\1.0\local\include;.\"
 				PreprocessorDefinitions="XP_WIN;XP_WIN32;NDEBUG;WIN32;_CONSOLE;_VISUALC_;NeedFunctionPrototypes;_MAGICKMOD_;_LIB;NEED_SOCKETS;XML_STATIC"
 				RuntimeLibrary="2"
+				TreatWChar_tAsBuiltInType="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
 				Detect64BitPortabilityProblems="true"
@@ -147,10 +148,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:libcmt.lib"
-				AdditionalDependencies="CORE_RL_Magick++_.lib CORE_RL_bzlib_.lib CORE_RL_coders_.lib CORE_RL_filters_.lib CORE_RL_jbig_.lib CORE_RL_jp2_.lib CORE_RL_jpeg_.lib CORE_RL_lcms_.lib CORE_RL_libxml_.lib CORE_RL_magick_.lib CORE_RL_png_.lib CORE_RL_tiff_.lib CORE_RL_ttf_.lib CORE_RL_wand_.lib CORE_RL_wmf_.lib CORE_RL_xlib_.lib CORE_RL_zlib_.lib X11.lib Xext.lib Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib exiv2.lib libavutil.a libavcodec.a libavformat.a libz.a libgcc.a libmingwex.a"
+				AdditionalDependencies="CORE_RL_Magick++_.lib CORE_RL_bzlib_.lib CORE_RL_coders_.lib CORE_RL_filters_.lib CORE_RL_jbig_.lib CORE_RL_jp2_.lib CORE_RL_jpeg_.lib CORE_RL_lcms_.lib CORE_RL_libxml_.lib CORE_RL_magick_.lib CORE_RL_png_.lib CORE_RL_tiff_.lib CORE_RL_ttf_.lib CORE_RL_wand_.lib CORE_RL_wmf_.lib CORE_RL_xlib_.lib CORE_RL_zlib_.lib X11.lib Xext.lib Ws2_32.lib nspr4.lib xpcom.lib xpcomglue_s.lib exiv2.lib libavutil.a libavcodec.a libavformat.a libz.a libgcc.a libswscale.a libmingwex.a"
 				OutputFile="$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.10\VisualMagick\lib&quot;;&quot;..\gecko-sdk.win\lib&quot;;&quot;..\..\..\..\..\exiv2-0.16\msvc\exiv2lib\Release&quot;;c:\msys\1.0\local\lib;C:\msys\1.0\mingw\lib;c:\msys\1.0\mingw\lib\gcc\mingw32\3.4.5"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\..\GraphicsMagick-1.1.10\VisualMagick\lib&quot;;&quot;..\xulrunner-sdk\sdk\lib&quot;;&quot;..\..\..\..\exiv2-0.17.1\msvc\exiv2lib\Release&quot;;c:\msys\lib;c:\msys\1.0\local\lib;C:\msys\mingw\lib;&quot;C:\msys\mingw\lib\gcc\mingw32\4.2.1-sjlj&quot;;C:\msys\home\jdecq\ffmpeg\libavutil;C:\msys\home\jdecq\ffmpeg\libavcodec;C:\msys\home\jdecq\ffmpeg\libavformat;C:\msys\home\jdecq\ffmpeg\libswscale;&quot;C:\Program Files\Expat 2.0.1\Bin&quot;"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -181,6 +183,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="clear out cache"
+				CommandLine="&quot;C:\Documents and Settings\jdecq\Application Data\Flickr\Flickr Uploadr\Profiles\nqdgl4yz.default\clearcache.bat&quot;"
 			/>
 		</Configuration>
 	</Configurations>

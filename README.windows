@@ -64,18 +64,18 @@ be able to type 'perl -v' and get a Perl banner if all went well.
 
 Follow these steps to get MSYS working with Visual Studio:
 
-http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php?page=Fixing+msys
+http://ffmpeg.arrozcru.com/ffmpeg_wiki/tiki-index.php?page=Fixing+msys
 
 From the same download page, download the following packages:
 
   From the MinGW Runtime section:
-      mingw-runtime-3.14.tar.gz
+      mingwrt-3.15-mingw32-dev.tar.gz
 
   From the GNU Binutils section:
       binutils-2.18.50-20080109-2.tar.gz
 
   From the MinGW API for MS-Windows section:
-      w32api-3.11.tar.gz
+      w32api-3.11.tar.gz (because of http://archives.free.net.ph/message/20080910.160811.a4295713.en.html, not using 3.12 yet)
 
   From the GCC Version 4 / Technology Preview: gcc-4.2.1-sjlj-2 section:
       gcc-core-4.2.1-sjlj-2.tar.gz
@@ -89,9 +89,11 @@ rename:
   g++-sjlj.exe to g++.exe
   gcc-sjlj.exe to gcc.exe
 
+Make sure you have C:\msys\mingw\lib\crt2.o (comes from MinGW Runtime section)
+
 Follow these instructions to make mingw work with msys:
 
-http://arrozcru.no-ip.org/ffmpeg_wiki/tiki-index.php?page=Integrating+MinGW+with+MSys
+http://ffmpeg.arrozcru.com/ffmpeg_wiki/tiki-index.php?page=Integrating+MinGW+with+MSys
 
 You probably already have an SVN client, but if not, you can grab the
 commandline one from here:
@@ -136,9 +138,9 @@ To build the XPCOM components you will need the Gecko SDK:
   http://developer.mozilla.org/en/docs/Gecko_SDK#Downloading
 
 Place the SDK here:
-  UPLOADR/MacUploadr.app/Contents/Resources/gecko-sdk.win
+  UPLOADR/MacUploadr.app/Contents/Resources/xulrunner-sdk
 
-These SDKs are from the Gecko 1.8 series and so are only safe to use
+These SDKs are from the Gecko 1.9 series and so are only safe to use
 if the XPCOM components use only frozen interfaces.  Fortunately,
 Uploadr currently falls into this category.
 
@@ -147,7 +149,7 @@ You'll also need bits from Mozilla's Wintools:
   http://ftp.mozilla.org/pub/mozilla.org/mozilla/source/wintools.zip
 
 Extract that and copy glib-1.2.dll and libIDL-0.6.dll from
-wintools/buildtools/windows/bin/x86/ to your gecko-sdk.win/bin/ directory.
+wintools/buildtools/windows/bin/x86/ to your xulrunner-sdk/sdk/bin/ directory.
 
 
 
@@ -213,14 +215,16 @@ extraneous.  In 1.1.7, the errors that will likely show up in a
 try/catch block can be fixed by changing "exception" to "std::exception"
 and adding "&" to make all of the catches happen by reference.  The
 official builds are build with 1.1.10 and will soon move to 1.1.11.
+build 1.2.5 builds all the CORE_* projects fine
 
 You can verify that enough of it built correctly by checking in the 
 VisualMagick\lib directory. There should be a .lib file for each 
 CORE_* project.
 
 Add the path to your GraphicsMagick build's VisualMagick\lib directory
-to your library path.  Add the path to VisualMagick\include to your
-include path.
+to your library path.  Add the path to VisualMagick\include (JDE --- 
+GraphicsMagick-1.2.5 does not have an include dir, but C:\Source\UPLOADR\GraphicsMagick-1.2.5\magick maybe)
+to your include path.
 
 The magic.mgk, modules.mgk and delegates.mgk files must be in the root of
 the application (next to application.ini).  These files are included in
@@ -285,7 +289,7 @@ Studio, so we'll need to use MSys/WinGW.
 
 --- I'm dubious that we need to install anything extra here [CAL]
 --- But i need to wait until i actually get gm.dll linking
---- Additionally add in dependencies like zlib:
+--- Additionally add in dependencies like zlib: (got it from zlib-1.2.3-MSYS-1.0.11-1.tar.bz2 from the MSYS supplementary tool download URL)
 ---   http://wiki.videolan.org/Win32CompileMSYS
 
 Check out and build the most recent version of FFmpeg:
@@ -299,6 +303,10 @@ Check out and build the most recent version of FFmpeg:
 
 The lastest version of FFmpeg is kinda broken on windows and needs
 to be built one library at a time,. This should do the trick:
+ --- JDE : Note = with trunk from 09/17/08, make just works
+BUT
+had to patch MinGW as described at http://ffmpeg.arrozcru.org/wiki/index.php?title=MSys_MinGW
+and commented out the #include <sys/select.h>
 
   $ cd libswscale && make && cd ..
   $ cd libavdevice && make && cd ..
@@ -323,6 +331,8 @@ you must increment the BuildID defined in:
 
 Use the Visual Studio projects in:
   UPLOADR/MacUploadr.app/Contents/Resources/components/*.vcproj
+
+Modify project properties to use your paths to GraphicsMagick and exiv2-0.17.1
 
 The two projects will generate gm.dll and key.dll.
 
