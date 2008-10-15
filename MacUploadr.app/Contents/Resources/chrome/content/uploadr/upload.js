@@ -615,38 +615,40 @@ var upload = {
 		// Decide which message to show
 		var go_to_flickr = false;
 		var try_again = false;
-		if (0 == photos.fail && 0 < photos.ok && !photos.sets_fail) {
-			go_to_flickr = confirm(locale.getString('upload.success.text'),
-				locale.getString('upload.success.title'),
-				locale.getString('upload.success.ok'),
-				locale.getString('upload.success.cancel'));
-		} else if (0 < photos.fail && 0 < photos.ok) {
-			var c = confirm(locale.getFormattedString(
-				'upload.error.some.text', [
-					photos.uploading.length - photos.ok,
-					photos.uploading.length
-				]),
-				locale.getString('upload.error.some.title'),
-				locale.getString('upload.error.some.ok'),
-				locale.getString('upload.error.some.cancel'));
-			if (c) { try_again = true; }
-			else { go_to_flickr = true; }
-		} else if (0 == photos.fail && 0 < photos.ok && photos.sets_fail) {
-			go_to_flickr = confirm([
-					locale.getString('upload.error.sets.text'),
-					locale.getString('upload.error.sets.text.more')
-				],
-				locale.getString('upload.error.sets.title'),
-				locale.getString('upload.error.sets.ok'),
-				locale.getString('upload.error.sets.cancel'));
-		} else {
-			try_again = confirm([locale.getString('upload.error.all.text'),
-				locale.getString('upload.error.all.more')],
-				locale.getString('upload.error.all.title'),
-				locale.getString('upload.error.all.ok'),
-				locale.getString('upload.error.all.cancel'));
-		}
-
+		if(!ui.cancel) {
+		    if (0 == photos.fail && 0 < photos.ok && !photos.sets_fail) {
+			    go_to_flickr = confirm(locale.getString('upload.success.text'),
+				    locale.getString('upload.success.title'),
+				    locale.getString('upload.success.ok'),
+				    locale.getString('upload.success.cancel'));
+		    } else if (0 < photos.fail && 0 < photos.ok) {
+			    var c = confirm(locale.getFormattedString(
+				    'upload.error.some.text', [
+					    photos.uploading.length - photos.ok,
+					    photos.uploading.length
+				    ]),
+				    locale.getString('upload.error.some.title'),
+				    locale.getString('upload.error.some.ok'),
+				    locale.getString('upload.error.some.cancel'));
+			    if (c) { try_again = true; }
+			    else { go_to_flickr = true; }
+		    } else if (0 == photos.fail && 0 < photos.ok && photos.sets_fail) {
+			    go_to_flickr = confirm([
+					    locale.getString('upload.error.sets.text'),
+					    locale.getString('upload.error.sets.text.more')
+				    ],
+				    locale.getString('upload.error.sets.title'),
+				    locale.getString('upload.error.sets.ok'),
+				    locale.getString('upload.error.sets.cancel'));
+		    } else {
+			    try_again = confirm([locale.getString('upload.error.all.text'),
+				    locale.getString('upload.error.all.more')],
+				    locale.getString('upload.error.all.title'),
+				    locale.getString('upload.error.all.ok'),
+				    locale.getString('upload.error.all.cancel'));
+		    }
+        }
+        
 		// Hide the progress bar now that the user has realized we're done
 		document.getElementById('progress_bar').style.width = '0';
 		document.getElementById('footer').style.display = 'none';
@@ -685,7 +687,7 @@ var upload = {
 		if (try_again) {
 
 			// Queue 'em up
-			ii = upload.try_again.length;
+			var ii = upload.try_again.length;
 			photos.ready = [[]];
 			photos.ready_size = [0];
 			for (var i = 0; i < ii; ++i) {
@@ -717,71 +719,71 @@ Upload.prototype = {
 				.logStringMessage('UPLOAD: ' + this.params.toSource());
 		}
 		var esc_params = api.escape_and_sign(this.params, true);
+        try {
+		    // Stream containing the entire HTTP POST payload
+		    var boundary = '------deadbeef---deadbeef---' + Math.random();
+		    var mstream = Cc['@mozilla.org/io/multiplex-input-stream;1']
+			    .createInstance(Ci.nsIMultiplexInputStream);
+		    var sstream;
+		    for (var p in esc_params) {
+			    sstream = Cc['@mozilla.org/io/string-input-stream;1']
+				    .createInstance(Ci.nsIStringInputStream);
+			    sstream.setData('--' + boundary +
+				    '\r\nContent-Disposition: form-data; name="' + p + '"',
+				    -1);
+			    mstream.appendStream(sstream);
+			    if ('object' == typeof esc_params[p] &&
+				    null != esc_params[p]) {
+				    sstream = Cc['@mozilla.org/io/string-input-stream;1']
+					    .createInstance(Ci.nsIStringInputStream);
+				    sstream.setData('; filename="' + esc_params[p].filename +
+					    '"\r\nContent-Type: application/octet-stream\r\n\r\n',
+					    -1);
+				    mstream.appendStream(sstream);
+				    var file = Cc['@mozilla.org/file/local;1']
+					    .createInstance(Ci.nsILocalFile);
+				    file.initWithPath(esc_params[p].path);
+				    var fstream =
+					    Cc['@mozilla.org/network/file-input-stream;1']
+					    .createInstance(Ci.nsIFileInputStream);
+				    fstream.init(file, 1, 1,
+					    Ci.nsIFileInputStream.CLOSE_ON_EOF);
+				    var bstream =
+					    Cc['@mozilla.org/network/buffered-input-stream;1']
+					    .createInstance(Ci.nsIBufferedInputStream);
+				    bstream.init(fstream, 4096);
+				    mstream.appendStream(bstream);
+				    sstream = Cc['@mozilla.org/io/string-input-stream;1']
+					    .createInstance(Ci.nsIStringInputStream);
+				    sstream.setData('\r\n', -1);
+				    mstream.appendStream(sstream);
+			    } else {
+				    sstream = Cc['@mozilla.org/io/string-input-stream;1']
+					    .createInstance(Ci.nsIStringInputStream);
+				    sstream.setData('\r\n\r\n' + esc_params[p] + '\r\n', -1);
+				    mstream.appendStream(sstream);
+			    }
+		    }
+		    sstream = Cc['@mozilla.org/io/string-input-stream;1']
+			    .createInstance(Ci.nsIStringInputStream);
+		    sstream.setData('--' + boundary + '--\r\n', -1);
+		    mstream.appendStream(sstream);
+		    upload.progress_total = mstream.available() >> 10;
 
-		// Stream containing the entire HTTP POST payload
-		var boundary = '------deadbeef---deadbeef---' + Math.random();
-		var mstream = Cc['@mozilla.org/io/multiplex-input-stream;1']
-			.createInstance(Ci.nsIMultiplexInputStream);
-		var sstream;
-		for (var p in esc_params) {
-			sstream = Cc['@mozilla.org/io/string-input-stream;1']
-				.createInstance(Ci.nsIStringInputStream);
-			sstream.setData('--' + boundary +
-				'\r\nContent-Disposition: form-data; name="' + p + '"',
-				-1);
-			mstream.appendStream(sstream);
-			if ('object' == typeof esc_params[p] &&
-				null != esc_params[p]) {
-				sstream = Cc['@mozilla.org/io/string-input-stream;1']
-					.createInstance(Ci.nsIStringInputStream);
-				sstream.setData('; filename="' + esc_params[p].filename +
-					'"\r\nContent-Type: application/octet-stream\r\n\r\n',
-					-1);
-				mstream.appendStream(sstream);
-				var file = Cc['@mozilla.org/file/local;1']
-					.createInstance(Ci.nsILocalFile);
-				file.initWithPath(esc_params[p].path);
-				var fstream =
-					Cc['@mozilla.org/network/file-input-stream;1']
-					.createInstance(Ci.nsIFileInputStream);
-				fstream.init(file, 1, 1,
-					Ci.nsIFileInputStream.CLOSE_ON_EOF);
-				var bstream =
-					Cc['@mozilla.org/network/buffered-input-stream;1']
-					.createInstance(Ci.nsIBufferedInputStream);
-				bstream.init(fstream, 4096);
-				mstream.appendStream(bstream);
-				sstream = Cc['@mozilla.org/io/string-input-stream;1']
-					.createInstance(Ci.nsIStringInputStream);
-				sstream.setData('\r\n', -1);
-				mstream.appendStream(sstream);
-			} else {
-				sstream = Cc['@mozilla.org/io/string-input-stream;1']
-					.createInstance(Ci.nsIStringInputStream);
-				sstream.setData('\r\n\r\n' + esc_params[p] + '\r\n', -1);
-				mstream.appendStream(sstream);
-			}
-		}
-		sstream = Cc['@mozilla.org/io/string-input-stream;1']
-			.createInstance(Ci.nsIStringInputStream);
-		sstream.setData('--' + boundary + '--\r\n', -1);
-		mstream.appendStream(sstream);
-		upload.progress_total = mstream.available() >> 10;
+		    // Headers!
+		    sstream = Cc['@mozilla.org/io/string-input-stream;1']
+			    .createInstance(Ci.nsIStringInputStream);
+		    sstream.setData('POST /services/upload/ HTTP/1.1\r\n' +
+			    'Host: ' + UPLOAD_HOST + '\r\n' +
+			    'User-Agent: Flickr Uploadr ' + conf.version + '\r\n' +
+			    'Content-Length: ' + mstream.available() + '\r\n' +
+			    'Content-Type: multipart/form-data; boundary=' + boundary +
+			    '\r\n\r\n', -1);
+		    mstream.insertStream(sstream, 0);
 
-		// Headers!
-		sstream = Cc['@mozilla.org/io/string-input-stream;1']
-			.createInstance(Ci.nsIStringInputStream);
-		sstream.setData('POST /services/upload/ HTTP/1.1\r\n' +
-			'Host: ' + UPLOAD_HOST + '\r\n' +
-			'User-Agent: Flickr Uploadr ' + conf.version + '\r\n' +
-			'Content-Length: ' + mstream.available() + '\r\n' +
-			'Content-Type: multipart/form-data; boundary=' + boundary +
-			'\r\n\r\n', -1);
-		mstream.insertStream(sstream, 0);
-
-		// POST over a raw socket connection
-		//   http://www.xulplanet.com/tutorials/mozsdk/sockets.php
-		try {
+		    // POST over a raw socket connection
+		    //   http://www.xulplanet.com/tutorials/mozsdk/sockets.php
+    		
 			var service =
 				Cc['@mozilla.org/network/socket-transport-service;1']
 				.getService(Ci.nsISocketTransportService);
@@ -789,13 +791,19 @@ Upload.prototype = {
 				UPLOAD_HOST, 80, null);
 			var ostream = transport.openOutputStream(
 				Ci.nsITransport.OPEN_BLOCKING, 0, 0);
-			while (mstream.available()) {
+			while (!upload.cancel && mstream.available()) {
 				var a = mstream.available();
 				ostream.writeFrom(mstream,
 					Math.min(a, 8192));
 				threads.main.dispatch(new UploadProgressCallback(a, this.id),
 					threads.main.DISPATCH_NORMAL);
 			}
+			if(upload.cancel) {
+			    ostream.close();
+			    threads.main.dispatch(new UploadDoneCallback(
+			       false, this.id), threads.main.DISPATCH_NORMAL);
+			       return; // we are done
+			 }
 			var _istream = transport.openInputStream(0,0,0);
 			var istream = Cc['@mozilla.org/scriptableinputstream;1']
 				.createInstance(Ci.nsIScriptableInputStream);
@@ -890,13 +898,15 @@ UploadDoneCallback.prototype = {
 
 		// Try to parse the response but fail gracefully
 		var rsp = false;
-		try {
-			var parser = Cc['@mozilla.org/xmlextras/domparser;1']
-				.createInstance(Ci.nsIDOMParser);
-			rsp = parser.parseFromString(this.raw,
-				'text/xml').documentElement;
-		} catch (err) {
-			Components.utils.reportError(err);
+		if(this.raw) {
+		    try {
+			    var parser = Cc['@mozilla.org/xmlextras/domparser;1']
+				    .createInstance(Ci.nsIDOMParser);
+			    rsp = parser.parseFromString(this.raw,
+				    'text/xml').documentElement;
+		    } catch (err) {
+			    Components.utils.reportError(err);
+		    }
 		}
 
 		upload._start(rsp, this.id);

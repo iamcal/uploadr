@@ -11,6 +11,8 @@
 // A bit of a catch-all, but better than it was before
 var ui = {
 
+    cancel: false,
+    
 	// Called at app startup
 	init: function() {
 
@@ -421,6 +423,8 @@ var exit = function(force) {
 
 	// Shutdown threads
 	photos.thumb_cancel = true;
+	ui.cancel = true;
+	upload.cancel = true;
 	threads.worker.shutdown();
 	threads.uploadr.shutdown();
 

@@ -61,7 +61,7 @@ var buttons = {
 
 			// Save the selected photo before uploading
 			mouse.click({target: {}});
-
+            ui.cancel = false;
 			photos.upload();
 		}
 	},
@@ -72,6 +72,7 @@ var buttons = {
 				locale.getString('upload.cancel.title'),
 				locale.getString('upload.cancel.ok'),
 				locale.getString('upload.cancel.cancel'))) {
+				ui.cancel = true;
 				upload.cancel = true;
 				upload._start(false, upload.progress_id);
 			}
