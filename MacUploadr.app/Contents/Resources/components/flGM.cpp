@@ -922,11 +922,13 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	out << format_ctx->duration / AV_TIME_BASE << "###";
 
 	// Play through 15% of the video
-	int64_t seek = (int64_t)(0.15 * (double)(format_ctx->start_time + format_ctx->duration) * format_ctx->streams[stream]->time_base.num / format_ctx->streams[stream]->time_base.den / AV_TIME_BASE);
+	double dSeekInSec = (format_ctx->start_time + 0.15 * format_ctx->duration) / AV_TIME_BASE;
+	int64_t seek = dSeekInSec * (double)format_ctx->streams[stream]->time_base.den / format_ctx->streams[stream]->time_base.num;
+
 	AVPacket packet;
 	int have_frame;
 	struct SwsContext *toRGB_convert_ctx = NULL;
-	
+
 	// Seek to the exact frame we want
 	if (0 < av_seek_frame(format_ctx, stream, seek, 0))
 		return NS_ERROR_FILE_UNKNOWN_TYPE;
