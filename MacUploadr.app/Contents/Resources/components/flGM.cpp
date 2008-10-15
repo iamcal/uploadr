@@ -917,24 +917,19 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
 		codec_ctx->width, codec_ctx->height);
 
-	// Correct the frame rate if FFmpeg reports something stupid-high
-	//   Nokia N95 and N82 report 30000fps
-	double fps = (double)codec_ctx->time_base.den /
-		(double)codec_ctx->time_base.num;
-	if (30000.0 == fps) { fps /= 1000.0; }
-
 	// Report the duration
 	ostringstream out;
-	out << (format_ctx->duration / 1000000) << "###";
+	out << format_ctx->duration / AV_TIME_BASE << "###";
 
 	// Play through 15% of the video
-	int64_t seek = (int64_t)(0.00000015 * (double)format_ctx->duration * fps);
+	int64_t seek = (int64_t)(0.15 * (double)(format_ctx->start_time + format_ctx->duration) * format_ctx->streams[stream]->time_base.num / format_ctx->streams[stream]->time_base.den / AV_TIME_BASE);
 	AVPacket packet;
 	int have_frame;
-	struct SwsContext *toRGB_convert_ctx;
+	struct SwsContext *toRGB_convert_ctx = NULL;
 	
 	// Seek to the exact frame we want
-	av_seek_frame(format_ctx, stream, seek, 0);
+	if (0 < av_seek_frame(format_ctx, stream, seek, 0))
+		return NS_ERROR_FILE_UNKNOWN_TYPE;
 	
 	while (0 <= av_read_frame(format_ctx, &packet)) {
 		if (packet.stream_index == stream) {
@@ -1049,7 +1044,9 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	av_free(video_frame);
 	avcodec_close(codec_ctx);
 	av_close_input_file(format_ctx);
-	sws_freeContext(toRGB_convert_ctx);
+	if(toRGB_convert_ctx) {
+		sws_freeContext(toRGB_convert_ctx);
+	}
 
 	return NS_OK;
 }
