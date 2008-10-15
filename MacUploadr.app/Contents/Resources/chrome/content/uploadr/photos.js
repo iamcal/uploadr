@@ -275,6 +275,8 @@ var photos = {
 		var ii = paths.length;
 		block_normalize();
 		var ext_list = [];
+		var currentPathsLists = photos.list.map(function(x) {return x.path;});
+		
 		for (var i = 0; i < ii; ++i) {
 			var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
 
@@ -284,16 +286,17 @@ var photos = {
 					.getService(Ci.nsIFileProtocolHandler)
 					.getFileFromURLSpec(p).path;
 			}
-			ext_list.push(photos._add(p));
+			if(currentPathsLists.indexOf(p) === -1) {
+			    ext_list.push(photos._add(p));
 
-			// Photos can be passed as an object which already has metadata
-			if ('object' == typeof paths[i]) {
-				for (var k in paths[i]) {
-					if ('id' == k) { continue; }
-					photos.list[photos.list.length - 1][k] = paths[i][k];
-				}
-			}
-
+			    // Photos can be passed as an object which already has metadata
+			    if ('object' == typeof paths[i]) {
+				    for (var k in paths[i]) {
+					    if ('id' == k) { continue; }
+					    photos.list[photos.list.length - 1][k] = paths[i][k];
+				    }
+			    }
+            }
 		}
 
 		// Do extension stuff after we've added all of the photos but
