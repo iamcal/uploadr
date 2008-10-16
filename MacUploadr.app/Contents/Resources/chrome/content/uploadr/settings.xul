@@ -13,109 +13,111 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/settings.css" type="text/css"?>
 <!DOCTYPE dialog [
-<!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd" >
-%brandDTD;
-<!ENTITY % mainDTD SYSTEM "chrome://uploadr/locale/main.dtd">
-%mainDTD;
-<!ENTITY % proxyDTD SYSTEM "chrome://uploadr/locale/proxy.dtd">
-%proxyDTD;
+  <!ENTITY % brandDTD SYSTEM "chrome://branding/locale/brand.dtd" >
+  %brandDTD;
+  <!ENTITY % mainDTD SYSTEM "chrome://uploadr/locale/main.dtd">
+  %mainDTD;
+  <!ENTITY % proxyDTD SYSTEM "chrome://uploadr/locale/proxy.dtd">
+  %proxyDTD;
 ]>
 <dialog id="dialog_settings" title="&settings;" buttons="accept,cancel"
 ondialogaccept="settings.ok(); return true;"
 ondialogcancel="settings.cancel(); return true;" onload="settings.load();"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml">
-	<stringbundleset>
-		<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
-	</stringbundleset>
-	<script src="chrome://uploadr/content/settings_dialog.js" />
-	<vbox flex="1" id="notloggedin">
-		<html:h3>&settings.notloggedin;</html:h3>
-		<box align="center"><button label="&login;"
-		oncommand="settings.add_user();" /></box>
-	</vbox>
-	<vbox flex="1" id="loggedin">
-		<groupbox flex="1">
-			<caption label="&settings.users;" />
-			<hbox id="user_settings">
-				<vbox>
-					<spacer flex="1" />
-					<label value="&settings.users.user;" />
-					<spacer flex="1" />
-				</vbox>
-				<vbox flex="1">
-					<spacer flex="1" />
-					<menulist id="user" flex="1" oncommand="settings.change_user();">
-						<menupopup />
-					</menulist>
-					<spacer flex="1" />
-				</vbox>
-				<button label="&settings.users.remove;"
+  <stringbundleset>
+    <stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
+  </stringbundleset>
+  <script src="chrome://uploadr/content/settings_dialog.js" />
+  <vbox flex="1" id="notloggedin">
+    <html:h3>&settings.notloggedin;</html:h3>
+    <box align="center">
+      <button label="&login;"
+		oncommand="settings.add_user();" />
+    </box>
+  </vbox>
+  <vbox flex="1" id="loggedin">
+    <groupbox flex="1">
+      <caption label="&settings.users;" />
+      <hbox id="user_settings">
+        <vbox>
+          <spacer flex="1" />
+          <label value="&settings.users.user;" />
+          <spacer flex="1" />
+        </vbox>
+        <vbox flex="1">
+          <spacer flex="1" />
+          <menulist id="user" flex="1" oncommand="settings.change_user();">
+            <menupopup />
+          </menulist>
+          <spacer flex="1" />
+        </vbox>
+        <button label="&settings.users.remove;"
 				oncommand="settings.remove_user();" />
-				<button label="&settings.users.add;"
+        <button label="&settings.users.add;"
 				oncommand="settings.add_user();" />
-			</hbox>
-		</groupbox>
-		<hbox flex="1">
-			<groupbox id="sizing_settings" flex="1">
-				<caption label="&settings.resize;" />
-				<html:p id="resize_prompt"> </html:p>
-				<box>
-					<menulist id="resize" oncommand="settings.resize(this.value);">
-						<menupopup>
-							<menuitem value="-1" label="&settings.resize.dont;" selected="true" />
-							<menuitem value="800" label="&settings.resize.800;" />
-							<menuitem value="1280" label="&settings.resize.1280;" />
-							<menuitem value="1600" label="&settings.resize.1600;" />
-							<menuitem value="2048" label="&settings.resize.2048;" />
-						</menupopup>
-					</menulist>
-				</box>
-			</groupbox>
-			<groupbox id="connection_settings" flex="1">
-				<caption label="&connection.label;" />
-				<html:p>&connectionDesc.label;</html:p>
-				<hbox>
-					<spacer flex="1" />
-					<button label="&connectionSettings.label;" oncommand="settings.config_proxy();" />
-					<spacer flex="1" />
-				</hbox>
-			</groupbox>
-		</hbox>
-		<hbox flex="1">
-			<groupbox id="privacy_settings" flex="1">
-				<caption label="&settings.privacy;" />
-				<label control="is_public" value="&settings.privacy.who;" />
-				<radiogroup id="is_public" value="1"
+      </hbox>
+    </groupbox>
+    <hbox id="local_sttings" flex="1">
+      <groupbox id="sizing_settings" flex="1">
+        <caption label="&settings.resize;" />
+        <html:p id="resize_prompt"> </html:p>
+        <box>
+          <menulist id="resize" oncommand="settings.resize(this.value);">
+            <menupopup>
+              <menuitem value="-1" label="&settings.resize.dont;" selected="true" />
+              <menuitem value="800" label="&settings.resize.800;" />
+              <menuitem value="1280" label="&settings.resize.1280;" />
+              <menuitem value="1600" label="&settings.resize.1600;" />
+              <menuitem value="2048" label="&settings.resize.2048;" />
+            </menupopup>
+          </menulist>
+        </box>
+      </groupbox>
+      <groupbox id="connection_settings" flex="1">
+        <caption label="&connection.label;" />
+        <html:p>&connectionDesc.label;</html:p>
+        <hbox>
+          <spacer flex="1" />
+          <button label="&connectionSettings.label;" oncommand="settings.config_proxy();" />
+          <spacer flex="1" />
+        </hbox>
+      </groupbox>
+    </hbox>
+    <hbox id="flickr_settings" flex="1">
+      <groupbox id="privacy_settings" flex="1">
+        <caption label="&settings.privacy;" />
+        <label control="is_public" value="&settings.privacy.who;" />
+        <radiogroup id="is_public" value="1"
 				oncommand="settings.is_public(this.value);">
-					<radio value="0" label="&settings.privacy.private;" />
-						<checkbox id="is_friend" label="&settings.privacy.friend;"
-						disabled="true" oncommand="settings.is_friend(this.checked);" />
-						<checkbox id="is_family" label="&settings.privacy.family;"
-						disabled="true" oncommand="settings.is_family(this.checked);" />
-					<radio value="1" label="&settings.privacy.public;" />
-				</radiogroup>
-				<checkbox id="hidden" label="&settings.hidden;"
+          <radio value="0" label="&settings.privacy.private;" />
+          <checkbox id="is_friend" label="&settings.privacy.friend;"
+          disabled="true" oncommand="settings.is_friend(this.checked);" />
+          <checkbox id="is_family" label="&settings.privacy.family;"
+          disabled="true" oncommand="settings.is_family(this.checked);" />
+          <radio value="1" label="&settings.privacy.public;" />
+        </radiogroup>
+        <checkbox id="hidden" label="&settings.hidden;"
 				oncommand="settings.hidden(this.checked);" />
-			</groupbox>
-			<groupbox id="safety_settings" flex="1">
-				<caption label="&settings.safety_level;" />
-				<radiogroup id="safety_level" value="1"
+      </groupbox>
+      <groupbox id="safety_settings" flex="1">
+        <caption label="&settings.safety_level;" />
+        <radiogroup id="safety_level" value="1"
 				oncommand="settings.safety_level(this.value);">
-					<radio value="1" label="&settings.safety_level.safe;" />
-					<radio value="2" label="&settings.safety_level.moderate;" />
-					<radio value="3" label="&settings.safety_level.restricted;" />
-				</radiogroup>
-			</groupbox>
-			<groupbox id="content_type_settings" flex="1">
-				<caption label="&settings.content_type;" />
-				<radiogroup id="content_type" value="1"
+          <radio value="1" label="&settings.safety_level.safe;" />
+          <radio value="2" label="&settings.safety_level.moderate;" />
+          <radio value="3" label="&settings.safety_level.restricted;" />
+        </radiogroup>
+      </groupbox>
+      <groupbox id="content_type_settings" flex="1">
+        <caption label="&settings.content_type;" />
+        <radiogroup id="content_type" value="1"
 				oncommand="settings.content_type(this.value);">
-					<radio value="1" label="&settings.content_type.photo;" />
-					<radio value="2" label="&settings.content_type.screenshot;" />
-					<radio value="3" label="&settings.content_type.other;" />
-				</radiogroup>
-			</groupbox>
-		</hbox>
-	</vbox>
+          <radio value="1" label="&settings.content_type.photo;" />
+          <radio value="2" label="&settings.content_type.screenshot;" />
+          <radio value="3" label="&settings.content_type.other;" />
+        </radiogroup>
+      </groupbox>
+    </hbox>
+  </vbox>
 </dialog>
