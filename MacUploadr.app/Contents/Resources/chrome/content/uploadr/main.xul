@@ -48,7 +48,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
   <script src="chrome://uploadr/content/keyboard.js" />
   <script src="chrome://uploadr/content/buttons.js" />
   <script src="chrome://uploadr/content/extension.js" />
-  <!--<script src="chrome://venkman/content/venkman-overlay.js"/>-->
+  <script src="chrome://venkman/content/venkman-overlay.js"/>
   <keyset id="key">
     <key id="key_add"	modifiers="accel" key="o" oncommand="photos.add_dialog();" />
     <key id="key_upload"	modifiers="shift accel" key="u" oncommand="photos.upload();" />
@@ -74,14 +74,14 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
   <toolbox id="menu">
     <menubar>
       <menu label="&menu.upload;" accesskey="U">
-        <menupopup>
+        <menupopup id="menu_UploadPopup">
           <menuitem label="&menu.upload.add;" key="key_add" accesskey="A" oncommand="photos.add_dialog();" />
           <menuitem id="menu_upload" label="&menu.upload;" key="key_upload" accesskey="U" oncommand="photos.upload();" />
           <menuitem id="menu_FileQuitItem" label="&menu.upload.exit;" key="key_quit" accesskey="Q" oncommand="exit();" />
         </menupopup>
       </menu>
       <menu label="&menu.edit;" accesskey="E">
-        <menupopup>
+        <menupopup id="menu_EditPopup">
           <menuitem id="menu_cut" label="&menu.edit.cut;" key="key_cut" accesskey="t" oncommand="goDoCommand('cmd_cut');" />
           <menuitem id="menu_copy" label="&menu.edit.copy;" key="key_copy" accesskey="C" oncommand="goDoCommand('cmd_copy');" />
           <menuitem id="menu_paste" label="&menu.edit.paste;" key="key_paste" accesskey="P" oncommand="goDoCommand('cmd_paste');" />
@@ -99,7 +99,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
         </menupopup>
       </menu>
       <menu label="&menu.help;" accesskey="H">
-        <menupopup onpopupshowing="upgrade.build_menu();">
+        <menupopup id="menu_HelpPopup" onpopupshowing="upgrade.build_menu();">
           <menuitem id="aboutName" label="&menu.help.about;" accesskey="A" oncommand="menus.help.about();" />
           <menuitem label="&menu.help.tips;" key="key_help" accesskey="T" oncommand="menus.help.tips();" />
           <menuitem label="&menu.help.faq;" accesskey="F" oncommand="menus.help.faq();" />

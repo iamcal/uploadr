@@ -37,7 +37,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 	<vbox flex="1" id="loggedin">
 		<groupbox flex="1">
 			<caption label="&settings.users;" />
-			<hbox>
+			<hbox id="user_settings">
 				<vbox>
 					<spacer flex="1" />
 					<label value="&settings.users.user;" />
@@ -57,7 +57,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			</hbox>
 		</groupbox>
 		<hbox flex="1">
-			<groupbox flex="1">
+			<groupbox id="sizing_settings" flex="1">
 				<caption label="&settings.resize;" />
 				<html:p id="resize_prompt"> </html:p>
 				<box>
@@ -72,7 +72,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					</menulist>
 				</box>
 			</groupbox>
-			<groupbox flex="1">
+			<groupbox id="connection_settings" flex="1">
 				<caption label="&connection.label;" />
 				<html:p>&connectionDesc.label;</html:p>
 				<hbox>
@@ -83,7 +83,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			</groupbox>
 		</hbox>
 		<hbox flex="1">
-			<groupbox flex="1">
+			<groupbox id="privacy_settings" flex="1">
 				<caption label="&settings.privacy;" />
 				<label control="is_public" value="&settings.privacy.who;" />
 				<radiogroup id="is_public" value="1"
@@ -98,7 +98,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 				<checkbox id="hidden" label="&settings.hidden;"
 				oncommand="settings.hidden(this.checked);" />
 			</groupbox>
-			<groupbox flex="1">
+			<groupbox id="safety_settings" flex="1">
 				<caption label="&settings.safety_level;" />
 				<radiogroup id="safety_level" value="1"
 				oncommand="settings.safety_level(this.value);">
@@ -107,7 +107,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 					<radio value="3" label="&settings.safety_level.restricted;" />
 				</radiogroup>
 			</groupbox>
-			<groupbox flex="1">
+			<groupbox id="content_type_settings" flex="1">
 				<caption label="&settings.content_type;" />
 				<radiogroup id="content_type" value="1"
 				oncommand="settings.content_type(this.value);">

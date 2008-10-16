@@ -16,9 +16,9 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <overlay id="overlay_photos"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml">
-	<vbox id="page_photos" flex="1">
-		<hbox flex="1">
-			<scrollbox id="photos" class="no_drag" flex="1" orient="vertical"
+  <vbox id="page_photos" flex="1">
+    <hbox flex="1">
+      <scrollbox id="photos" class="no_drag" flex="1" orient="vertical"
 			onclick="mouse.click(event);"
 			onmousedown="mouse.mousedown(event);"
 			onmousemove="mouse.mousemove(event);"
@@ -27,298 +27,331 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			ondragover="nsDragAndDrop.dragOver(event, drag.observer); event.stopPropagation();"
 			ondragexit="nsDragAndDrop.dragExit(event, drag.observer); event.stopPropagation();"
 			ondragdrop="nsDragAndDrop.drop(event, drag.observer); event.stopPropagation();">
-				<html:table id="photostream" width="100%">
-					<html:tr>
-						<html:td rowspan="2"><html:img src="http://flickr.com/images/buddyicon.jpg"
-						id="buddyicon" width="48" height="48" /></html:td>
-						<html:td nowrap="nowrap">
-							<html:h1>&photostream.title; <html:img id="photostream_pro"
-							src="chrome://uploadr/skin/badge_pro.gif" width="20" height="12"
-							/></html:h1>
-							<html:p id="username">&notloggedin; <html:span id="switch"
-							class="link" onclick="settings.show();">&switch;</html:span></html:p>
-						</html:td>
-						<html:td id="photostream_tools" width="100%">
-							<vbox align="right">
-								<box><html:div id="login" class="small button"
-								onclick="buttons.login.click();"
-								><html:div id="login_inner">&login;</html:div></html:div></box>
-							</vbox>
-						</html:td>
-					</html:tr>
-				</html:table>
-				<html:div>
-					<html:p id="photos_sort_default">&photos.sort.default;</html:p>
-					<html:p id="photos_sort_revert" class="link">&photos.sort.revert;</html:p>
-				</html:div>
-				<stack id="photos_stack">
-					<html:ul id="photos_list"></html:ul>
-					<html:div id="drag_select" />
-					<html:p id="drag_follower"> </html:p>
-				</stack>
-				<vbox id="photos_init">
-					<html:h1 id="photos_init_prompt"> </html:h1>
-					<html:h2>&photos.init.text.1;
-					<html:div class="button" onclick="photos.add_dialog();"
-					style="display:-moz-inline-box; vertical-align: 7%;"
-					><html:div>&tools.add;</html:div></html:div>
-					&photos.init.text.2;</html:h2>
-					<vbox id="photos_init_note">
-						<html:h3>&photos.init.note;</html:h3>
-						<html:ul id="photos_init_notes"></html:ul>
-					</vbox>
-				</vbox>
-				<vbox id="photos_new">
-					<html:h1>&photos.new;</html:h1>
-				</vbox>
-			</scrollbox>
-			<vbox>
-				<vbox id="meta" flex="1">
-					<vbox id="single_prompt" class="status thumb_height"
-					><html:h3>&meta.first;</html:h3><html:p>&meta.batch.prompt;</html:p></vbox>
-					<hbox id="single_preview">
-						<html:div id="meta_div"></html:div>
-						<vbox>
-							<spacer flex="1" />
-							<label id="meta_dim" value="" />
-							<label id="meta_size" value="" />
-							<label id="meta_duration" value="" />
-							<spacer flex="1" />
-						</vbox>
-					</hbox>
-					<hbox>
-						<vbox class="column">
-							<html:p>&meta.single.title;</html:p>
-							<textbox id="single_title" tabindex="1"
+        <html:table id="photostream" width="100%">
+          <html:tr id="photostream_header">
+            <html:td id="buddy_icon" rowspan="2">
+              <html:img src="http://flickr.com/images/buddyicon.jpg"
+						id="buddyicon" width="48" height="48" />
+            </html:td>
+            <html:td id="photostream_title" nowrap="nowrap">
+              <html:h1>
+                &photostream.title; <html:img id="photostream_pro"
+							src="chrome://uploadr/skin/badge_pro.gif" width="20" height="12"/>
+              </html:h1>
+              <html:p id="username">
+                &notloggedin; <html:span id="switch" class="link" onclick="settings.show();">&switch;</html:span>
+              </html:p>
+            </html:td>
+            <html:td id="photostream_tools" width="100%">
+              <vbox align="right">
+                <box>
+                  <html:div id="login" class="small button" onclick="buttons.login.click();">
+                    <html:div id="login_inner">&login;</html:div>
+                  </html:div>
+                </box>
+              </vbox>
+            </html:td>
+          </html:tr>
+        </html:table>
+        <html:div id="photos_sorting_controls">
+          <html:p id="photos_sort_default">&photos.sort.default;</html:p>
+          <html:p id="photos_sort_revert" class="link">&photos.sort.revert;</html:p>
+        </html:div>
+        <stack id="photos_stack">
+          <html:ul id="photos_list"></html:ul>
+          <html:div id="drag_select" />
+          <html:p id="drag_follower"> </html:p>
+        </stack>
+        <vbox id="photos_init">
+          <html:h1 id="photos_init_prompt"> </html:h1>
+          <html:h2>
+            &photos.init.text.1;
+            <html:div class="button" onclick="photos.add_dialog();"
+            style="display:-moz-inline-box; vertical-align: 7%;">
+              <html:div>&tools.add;</html:div>
+            </html:div>
+            &photos.init.text.2;
+          </html:h2>
+          <vbox id="photos_init_note">
+            <html:h3>&photos.init.note;</html:h3>
+            <html:ul id="photos_init_notes"></html:ul>
+          </vbox>
+        </vbox>
+        <vbox id="photos_new">
+          <html:h1>&photos.new;</html:h1>
+        </vbox>
+      </scrollbox>
+      <vbox>
+        <vbox id="meta" flex="1">
+          <vbox id="single_prompt" class="status thumb_height">
+            <html:h3>&meta.first;</html:h3>
+            <html:p>&meta.batch.prompt;</html:p>
+          </vbox>
+          <hbox id="single_preview">
+            <html:div id="meta_div"></html:div>
+            <vbox>
+              <spacer flex="1" />
+              <label id="meta_dim" value="" />
+              <label id="meta_size" value="" />
+              <label id="meta_duration" value="" />
+              <spacer flex="1" />
+            </vbox>
+          </hbox>
+          <hbox>
+            <vbox id="single_meta_column_top_left" class="column">
+              <html:p>&meta.single.title;</html:p>
+              <textbox id="single_title" tabindex="1"
 							onfocus="keyboard.select_all_text(this);"
 							onblur="keyboard.select_all_photos();" />
-							<html:p>&meta.single.description;</html:p>
-							<textbox id="single_description" multiline="true" rows="3" tabindex="2"
+              <html:p>&meta.single.description;</html:p>
+              <textbox id="single_description" multiline="true" rows="3" tabindex="2"
 							onfocus="keyboard.select_all_text(this);"
 							onblur="keyboard.select_all_photos();" />
-							<html:p title="&meta.tags.tooltip;">&meta.single.tags;</html:p>
-							<textbox id="single_tags" multiline="true" rows="2" tabindex="3"
+              <html:p title="&meta.tags.tooltip;">&meta.single.tags;</html:p>
+              <textbox id="single_tags" multiline="true" rows="2" tabindex="3"
 							onfocus="keyboard.select_all_text(this);"
 							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.tags.tooltip;" />
-						</vbox>
-						<vbox class="column">
-							<html:p id="single_who"> </html:p>
-							<radiogroup id="single_is_public" value="1" tabindex="5"
+            </vbox>
+            <vbox id="single_meta_column_top_right" class="column">
+              <html:p id="single_who"> </html:p>
+              <radiogroup id="single_is_public" value="1" tabindex="5"
 							oncommand="meta.is_public(this.value);">
-								<radio value="0" label="&settings.privacy.private;" />
-									<checkbox id="single_is_friend"
-									label="&settings.privacy.friend;" tabindex="6" />
-									<checkbox id="single_is_family"
-									label="&settings.privacy.family;" tabindex="7" />
-								<radio value="1" label="&settings.privacy.public;" />
-							</radiogroup>
-							<html:p style="margin: 16px 0 0 0;"> </html:p>
-							<html:p>&settings.hidden;</html:p>
-							<menulist id="single_hidden" tabindex="8">
-								<menupopup>
-									<menuitem value="1" label="&settings.hidden.no;" />
-									<menuitem value="2" label="&settings.hidden.yes;" />
-								</menupopup>
-							</menulist>
-						</vbox>
-					</hbox>
-					<hbox>
-						<vbox class="column">
-							<html:p>&meta.safety_level;</html:p>
-							<menulist id="single_safety_level" tabindex="4"
+                <radio value="0" label="&settings.privacy.private;" />
+                <checkbox id="single_is_friend"
+                label="&settings.privacy.friend;" tabindex="6" />
+                <checkbox id="single_is_family"
+                label="&settings.privacy.family;" tabindex="7" />
+                <radio value="1" label="&settings.privacy.public;" />
+              </radiogroup>
+              <html:p style="margin: 16px 0 0 0;"> </html:p>
+              <html:p>&settings.hidden;</html:p>
+              <menulist id="single_hidden" tabindex="8">
+                <menupopup>
+                  <menuitem value="1" label="&settings.hidden.no;" />
+                  <menuitem value="2" label="&settings.hidden.yes;" />
+                </menupopup>
+              </menulist>
+            </vbox>
+          </hbox>
+          <hbox>
+            <vbox id="single_meta_column_bottom_left" class="column">
+              <html:p>&meta.safety_level;</html:p>
+              <menulist id="single_safety_level" tabindex="4"
 							oncommand="meta.restricted(this.value);">
-								<menupopup>
-									<menuitem value="1" label="&settings.safety_level.safe;"
+                <menupopup>
+                  <menuitem value="1" label="&settings.safety_level.safe;"
 									selected="true" />
-									<menuitem value="2"
+                  <menuitem value="2"
 									label="&settings.safety_level.moderate;" />
-									<menuitem value="3"
+                  <menuitem value="3"
 									label="&settings.safety_level.restricted;" />
-								</menupopup>
-							</menulist>
-						</vbox>
-						<vbox class="column">
-							<html:p>&meta.content_type;</html:p>
-							<menulist id="single_content_type" tabindex="9">
-								<menupopup>
-									<menuitem value="1" label="&settings.content_type.photo;"
+                </menupopup>
+              </menulist>
+            </vbox>
+            <vbox id="single_meta_column_bottom_right" class="column">
+              <html:p>&meta.content_type;</html:p>
+              <menulist id="single_content_type" tabindex="9">
+                <menupopup>
+                  <menuitem value="1" label="&settings.content_type.photo;"
 									selected="true" />
-									<menuitem value="2"
+                  <menuitem value="2"
 									label="&settings.content_type.screenshot;" />
-									<menuitem value="3" label="&settings.content_type.other;" />
-								</menupopup>
-							</menulist>
-						</vbox>
-					</hbox>
-					<hbox id="hide_single_explain" class="status"
-					><html:p>&meta.hidden;</html:p></hbox>
-					<hbox id="hide_single_sets">
-						<vbox>
-							<html:p>&meta.single.sets.add;</html:p>
-							<html:ul id="single_sets_add" onclick="meta.add_to_set(event);"
+                  <menuitem value="3" label="&settings.content_type.other;" />
+                </menupopup>
+              </menulist>
+            </vbox>
+          </hbox>
+          <hbox id="hide_single_explain" class="status"	>
+            <html:p>&meta.hidden;</html:p>
+          </hbox>
+          <hbox id="hide_single_sets">
+            <vbox>
+              <html:p>&meta.single.sets.add;</html:p>
+              <html:ul id="single_sets_add" onclick="meta.add_to_set(event);"
 							></html:ul>
-							<box><html:div id="single_sets_create" onclick="meta.create_set();"
-							class="button"><html:div>&meta.sets.create;</html:div></html:div></box>
-						</vbox>
-						<vbox>
-							<html:p>&meta.single.sets.added;</html:p>
-							<html:ul id="single_sets_added" onclick="meta.remove_from_set(event);">
-								<html:li class="sets_none">&meta.sets.added.none;</html:li>
-							</html:ul>
-						</vbox>
-					</hbox>
-				</vbox>
-				<vbox id="batch_meta" flex="1">
-					<vbox class="status thumb_height"><html:h3
-					id="batch_prompt"> </html:h3><html:p>&meta.batch.prompt;</html:p></vbox>
-					<hbox>
-						<vbox class="column">
-							<html:p title="&meta.batch.title.tooltip;">&meta.batch.title;</html:p>
-							<textbox id="batch_title" tabindex="1"
+              <box>
+                <html:div id="single_sets_create" onclick="meta.create_set();"
+           class="button">
+                  <html:div>&meta.sets.create;</html:div>
+                </html:div>
+              </box>
+            </vbox>
+            <vbox>
+              <html:p>&meta.single.sets.added;</html:p>
+              <html:ul id="single_sets_added" onclick="meta.remove_from_set(event);">
+                <html:li class="sets_none">&meta.sets.added.none;</html:li>
+              </html:ul>
+            </vbox>
+          </hbox>
+        </vbox>
+        <vbox id="batch_meta" flex="1">
+          <vbox class="status thumb_height">
+            <html:h3 id="batch_prompt"> </html:h3>
+            <html:p>&meta.batch.prompt;</html:p>
+          </vbox>
+          <hbox>
+            <vbox id="batch_meta_column_top_left" class="column">
+              <html:p title="&meta.batch.title.tooltip;">&meta.batch.title;</html:p>
+              <textbox id="batch_title" tabindex="1"
 							onfocus="keyboard.select_all_text(this);"
 							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.batch.title.tooltip;" />
-							<html:p title="&meta.batch.description.tooltip;"
+              <html:p title="&meta.batch.description.tooltip;"
 							>&meta.batch.description;</html:p>
-							<textbox id="batch_description" multiline="true" rows="3" tabindex="2"
+              <textbox id="batch_description" multiline="true" rows="3" tabindex="2"
 							onfocus="keyboard.select_all_text(this);"
 							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.batch.description.tooltip;" />
-							<html:p title="&meta.tags.tooltip;">&meta.batch.tags;</html:p>
-							<textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
+              <html:p title="&meta.tags.tooltip;">&meta.batch.tags;</html:p>
+              <textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
 							onfocus="keyboard.select_all_text(this);"
 							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.tags.tooltip;" />
-						</vbox>
-						<vbox class="column">
-							<html:p id="batch_who"> </html:p>
-							<radiogroup id="batch_is_public" value="2" tabindex="5"
+            </vbox>
+            <vbox id="batch_meta_column_top_right" class="column">
+              <html:p id="batch_who"> </html:p>
+              <radiogroup id="batch_is_public" value="2" tabindex="5"
 							oncommand="meta.is_public(this.value);">
-								<radio value="0" label="&settings.privacy.private;" />
-									<checkbox id="batch_is_friend"
-									label="&settings.privacy.friend;" tabindex="6" />
-									<checkbox id="batch_is_family"
-									label="&settings.privacy.family;" tabindex="7" />
-								<radio value="1" label="&settings.privacy.public;" />
-								<radio value="2" label="" style="display: none;" />
-							</radiogroup>
-							<html:p style="margin: 16px 0 0 0;"> </html:p>
-							<html:p>&settings.hidden;</html:p>
-							<menulist id="batch_hidden" tabindex="8">
-								<menupopup>
-									<menuitem value="0" label="" selected="true" />
-									<menuitem value="1" label="&settings.hidden.no;" />
-									<menuitem value="2" label="&settings.hidden.yes;" />
-								</menupopup>
-							</menulist>
-						</vbox>
-					</hbox>
-					<hbox>
-						<vbox class="column">
-							<html:p>&meta.safety_level;</html:p>
-							<menulist id="batch_safety_level" tabindex="4"
+                <radio value="0" label="&settings.privacy.private;" />
+                <checkbox id="batch_is_friend"
+                label="&settings.privacy.friend;" tabindex="6" />
+                <checkbox id="batch_is_family"
+                label="&settings.privacy.family;" tabindex="7" />
+                <radio value="1" label="&settings.privacy.public;" />
+                <radio value="2" label="" style="display: none;" />
+              </radiogroup>
+              <html:p style="margin: 16px 0 0 0;"> </html:p>
+              <html:p>&settings.hidden;</html:p>
+              <menulist id="batch_hidden" tabindex="8">
+                <menupopup>
+                  <menuitem value="0" label="" selected="true" />
+                  <menuitem value="1" label="&settings.hidden.no;" />
+                  <menuitem value="2" label="&settings.hidden.yes;" />
+                </menupopup>
+              </menulist>
+            </vbox>
+          </hbox>
+          <hbox>
+            <vbox id="batch_meta_column_bottom_left" class="column">
+              <html:p>&meta.safety_level;</html:p>
+              <menulist id="batch_safety_level" tabindex="4"
 							oncommand="meta.restricted(this.value);">
-								<menupopup>
-									<menuitem value="0" label="" selected="true" />
-									<menuitem value="1" label="&settings.safety_level.safe;" />
-									<menuitem value="2"
+                <menupopup>
+                  <menuitem value="0" label="" selected="true" />
+                  <menuitem value="1" label="&settings.safety_level.safe;" />
+                  <menuitem value="2"
 									label="&settings.safety_level.moderate;" />
-									<menuitem value="3"
+                  <menuitem value="3"
 									label="&settings.safety_level.restricted;" />
-								</menupopup>
-							</menulist>
-						</vbox>
-						<vbox class="column">
-							<html:p>&meta.content_type;</html:p>
-							<menulist id="batch_content_type" tabindex="9">
-								<menupopup>
-									<menuitem value="0" label="" selected="true" />
-									<menuitem value="1" label="&settings.content_type.photo;" />
-									<menuitem value="2"
+                </menupopup>
+              </menulist>
+            </vbox>
+            <vbox id="batch_meta_column_bottom_right" class="column">
+              <html:p>&meta.content_type;</html:p>
+              <menulist id="batch_content_type" tabindex="9">
+                <menupopup>
+                  <menuitem value="0" label="" selected="true" />
+                  <menuitem value="1" label="&settings.content_type.photo;" />
+                  <menuitem value="2"
 									label="&settings.content_type.screenshot;" />
-									<menuitem value="3" label="&settings.content_type.other;" />
-								</menupopup>
-							</menulist>
-						</vbox>
-					</hbox>
-					<hbox id="hide_batch_explain" class="status"
-					><html:p>&meta.hidden;</html:p></hbox>
-					<hbox id="hide_batch_sets">
-						<vbox>
-							<html:p>&meta.batch.sets.add;</html:p>
-							<html:ul id="batch_sets_add" onclick="meta.add_to_set(event);"
+                  <menuitem value="3" label="&settings.content_type.other;" />
+                </menupopup>
+              </menulist>
+            </vbox>
+          </hbox>
+          <hbox id="hide_batch_explain" class="status" >
+            <html:p>&meta.hidden;</html:p>
+          </hbox>
+          <hbox id="hide_batch_sets">
+            <vbox>
+              <html:p>&meta.batch.sets.add;</html:p>
+              <html:ul id="batch_sets_add" onclick="meta.add_to_set(event);"
 							></html:ul>
-							<box><html:div id="batch_sets_create" onclick="meta.create_set();"
-							class="button"><html:div>&meta.sets.create;</html:div></html:div></box>
-						</vbox>
-						<vbox>
-							<html:p>&meta.batch.sets.added;</html:p>
-							<html:ul id="batch_sets_added" onclick="meta.remove_from_set(event);">
-								<html:li class="sets_none">&meta.sets.added.none;</html:li>
-							</html:ul>
-						</vbox>
-					</hbox>
-				</vbox>
-				<vbox id="no_meta" flex="1">
-					<vbox id="no_meta_prompt" class="status thumb_height"
-					><html:h3>&meta.no.prompt;</html:h3></vbox>
-					<hbox>
-						<vbox class="column">
-							<html:p>&meta.single.title;</html:p>
-							<textbox disabled="true" />
-							<html:p>&meta.single.description;</html:p>
-							<textbox multiline="true" rows="3" disabled="true" />
-							<html:p>&meta.single.tags;</html:p>
-							<textbox multiline="true" rows="2" disabled="true" />
-						</vbox>
-						<vbox class="column">
-							<html:p id="no_who"> </html:p>
-							<radiogroup id="no_is_public" value="2" disabled="true">
-								<radio value="0" label="&settings.privacy.private;" />
-									<checkbox label="&settings.privacy.friend;" disabled="true" />
-									<checkbox label="&settings.privacy.family;" disabled="true" />
-								<radio value="1" label="&settings.privacy.public;" />
-								<radio value="2" label="" style="display: none;" />
-							</radiogroup>
-							<html:p style="margin: 16px 0 0 0;"> </html:p>
-							<html:p>&settings.hidden;</html:p>
-							<menulist disabled="true">
-								<menupopup />
-							</menulist>
-						</vbox>
-					</hbox>
-					<hbox>
-						<vbox class="column">
-							<html:p>&meta.safety_level;</html:p>
-							<menulist disabled="true">
-								<menupopup />
-							</menulist>
-						</vbox>
-						<vbox class="column">
-							<html:p>&meta.content_type;</html:p>
-							<menulist disabled="true">
-								<menupopup />
-							</menulist>
-						</vbox>
-					</hbox>
-					<hbox id="no_meta_sets">
-						<vbox>
-							<html:p>&meta.single.sets.add;</html:p>
-							<html:ul></html:ul>
-							<box><html:div id="no_sets_create" class="disabled_button"><html:div
-							>&meta.sets.create;</html:div></html:div></box>
-						</vbox>
-						<vbox>
-							<html:p>&meta.single.sets.added;</html:p>
-							<html:ul></html:ul>
-						</vbox>
-					</hbox>
-				</vbox>
-				<hbox id="meta_button"><spacer flex="1" /><html:div id="button_upload"
-				class="disabled_button" onclick="buttons.upload.click();"
-				><html:div>&buttons.upload;</html:div></html:div><spacer flex="1" /></hbox>
-			</vbox>
-		</hbox>
-	</vbox>
+              <box>
+                <html:div id="batch_sets_create" onclick="meta.create_set();"
+           class="button">
+                  <html:div>&meta.sets.create;</html:div>
+                </html:div>
+              </box>
+            </vbox>
+            <vbox>
+              <html:p>&meta.batch.sets.added;</html:p>
+              <html:ul id="batch_sets_added" onclick="meta.remove_from_set(event);">
+                <html:li class="sets_none">&meta.sets.added.none;</html:li>
+              </html:ul>
+            </vbox>
+          </hbox>
+        </vbox>
+        <vbox id="no_meta" flex="1">
+          <vbox id="no_meta_prompt" class="status thumb_height"	>
+            <html:h3>&meta.no.prompt;</html:h3>
+          </vbox>
+          <hbox>
+            <vbox class="column">
+              <html:p>&meta.single.title;</html:p>
+              <textbox disabled="true" />
+              <html:p>&meta.single.description;</html:p>
+              <textbox multiline="true" rows="3" disabled="true" />
+              <html:p>&meta.single.tags;</html:p>
+              <textbox multiline="true" rows="2" disabled="true" />
+            </vbox>
+            <vbox class="column">
+              <html:p id="no_who"> </html:p>
+              <radiogroup id="no_is_public" value="2" disabled="true">
+                <radio value="0" label="&settings.privacy.private;" />
+                <checkbox label="&settings.privacy.friend;" disabled="true" />
+                <checkbox label="&settings.privacy.family;" disabled="true" />
+                <radio value="1" label="&settings.privacy.public;" />
+                <radio value="2" label="" style="display: none;" />
+              </radiogroup>
+              <html:p style="margin: 16px 0 0 0;"> </html:p>
+              <html:p>&settings.hidden;</html:p>
+              <menulist disabled="true">
+                <menupopup />
+              </menulist>
+            </vbox>
+          </hbox>
+          <hbox>
+            <vbox class="column">
+              <html:p>&meta.safety_level;</html:p>
+              <menulist disabled="true">
+                <menupopup />
+              </menulist>
+            </vbox>
+            <vbox class="column">
+              <html:p>&meta.content_type;</html:p>
+              <menulist disabled="true">
+                <menupopup />
+              </menulist>
+            </vbox>
+          </hbox>
+          <hbox id="no_meta_sets">
+            <vbox>
+              <html:p>&meta.single.sets.add;</html:p>
+              <html:ul></html:ul>
+              <box>
+                <html:div id="no_sets_create" class="disabled_button">
+                  <html:div
+							>&meta.sets.create;</html:div>
+                </html:div>
+              </box>
+            </vbox>
+            <vbox>
+              <html:p>&meta.single.sets.added;</html:p>
+              <html:ul></html:ul>
+            </vbox>
+          </hbox>
+        </vbox>
+        <hbox id="meta_button">
+          <spacer flex="1" />
+          <html:div id="button_upload"
+				class="disabled_button" onclick="buttons.upload.click();">
+            <html:div>&buttons.upload;</html:div>
+          </html:div>
+          <spacer flex="1" />
+        </hbox>
+      </vbox>
+    </hbox>
+  </vbox>
 </overlay>
