@@ -57,8 +57,13 @@ var upload = {
 	// Holding pen for photos we may try again
 	try_again: [],
 
+    startTime : 0,
+    
 	// Upload a photo
 	start: function(id) {
+	    
+	    //reset upload progress
+	    upload.progress_id = -1;
 
 		// Update the UI
 		if (null == upload.progress_bar) {
@@ -95,7 +100,6 @@ var upload = {
 					'path': photo.path
 				}
 			}, id), threads.uploadr.DISPATCH_NORMAL);
-
 		}
 
 		// Pass the photo to the regular API
@@ -191,7 +195,7 @@ var upload = {
 		}
 
 		// Otherwise, spin for a ticket
-		else if (null != photos.uploading[id]) {
+		if (null != photos.uploading[id]) {
 			photos.uploading[id].progress_bar.done(true);
 			upload.tickets[rsp.getElementsByTagName('ticketid')[0]
 				.firstChild.nodeValue] = {
@@ -208,14 +212,16 @@ var upload = {
 			upload.check_tickets();
 		}
 
-		// Start the next one or quit if we're cancelling
-		if (!upload.cancel) {
-			++id;
-			if (id < photos.uploading.length) {
-				upload.retry_count = 0;
-				upload.start(id);
-			}
-		}
+        // Start the next one or quit if we're cancelling
+        if (!upload.cancel) {
+            ++id;
+            if (id < photos.uploading.length) {
+                upload.retry_count = 0;
+		        upload.start(id);
+            }
+        }
+
+		
 
 	},
 
@@ -375,11 +381,15 @@ var upload = {
 		if (0 != upload.progress_last) {
 			photos.kb.sent += kb;
 		}
+
 		upload.progress_last = a;
 
 		// Update the UI
 		if (null != photos.uploading[id]) {
-			photos.uploading[id].progress_bar.update(1 -
+		    var currentTime = new Date().getTime();
+		    status.set(locale.getString('status.uploading') + ' ' + 
+		        (1000 * photos.kb.sent / (currentTime-upload.startTime)).toFixed(1) + ' KB/s');
+        	photos.uploading[id].progress_bar.update(1 -
 				a / upload.progress_total);
 		}
 		var percent = Math.max(0, Math.min(1,
@@ -514,7 +524,9 @@ var upload = {
 		upload.progress_zero = 0;
 
 		// Update the UI
-		upload.progress_bar.update(1);
+		if (null != upload.progress_bar) {
+		    upload.progress_bar.update(1);
+		}
 		var text = document.getElementById('progress_text');
 		if (0 == photos.fail) {
 			text.className = 'done';
@@ -670,7 +682,15 @@ var upload = {
 		photos.sets_fail = false;
 		photos.kb.sent = 0;
 		photos.kb.total = 0;
+		try {
+		    threads.uploadr.shutdown();
+		    }
+		    catch(ex){}
 		upload.progress_bar = null;
+		Cc['@mozilla.org/consoleservice;1']
+				.getService(Ci.nsIConsoleService)
+				.logStringMessage('finalize end');
+		threads.uploadr = Cc['@mozilla.org/thread-manager;1'].getService().newThread(0);
 		upload.cancel = false;
 		upload.tickets = {};
 		upload.tickets_count = 0;
@@ -791,12 +811,11 @@ Upload.prototype = {
 				UPLOAD_HOST, 80, null);
 			var ostream = transport.openOutputStream(
 				Ci.nsITransport.OPEN_BLOCKING, 0, 0);
-			while (!upload.cancel && mstream.available()) {
-				var a = mstream.available();
-				ostream.writeFrom(mstream,
-					Math.min(a, 8192));
+			var a = 0;
+			while (!upload.cancel && (a = mstream.available())) {
+				ostream.writeFrom(mstream, Math.min(a, 8192));
 				threads.main.dispatch(new UploadProgressCallback(a, this.id),
-					threads.main.DISPATCH_NORMAL);
+				    threads.main.DISPATCH_NORMAL);
 			}
 			if(upload.cancel) {
 			    ostream.close();
@@ -874,7 +893,9 @@ var UploadProgressCallback = function(available, id) {
 }
 UploadProgressCallback.prototype = {
 	run: function() {
-		upload.progress2(this.available, this.id);
+	    if(!threads.main.hasPendingEvents()) { // if the thread is already doing something no need to overload it for progress
+		    upload.progress2(this.available, this.id);
+		}
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
@@ -893,9 +914,9 @@ UploadDoneCallback.prototype = {
 		if (conf.console.upload) {
 			Cc['@mozilla.org/consoleservice;1']
 				.getService(Ci.nsIConsoleService)
-				.logStringMessage('UPLOAD DONE: ' + this.raw);
+				.logStringMessage('UPLOAD DONE: ' + this.raw 
+				+ ' upload cancelled : ' + upload.cancel + ' ui cancel :  ' + ui.cancel);
 		}
-
 		// Try to parse the response but fail gracefully
 		var rsp = false;
 		if(this.raw) {

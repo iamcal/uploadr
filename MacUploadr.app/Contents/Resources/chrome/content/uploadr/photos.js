@@ -687,6 +687,8 @@ var photos = {
 			ui.bandwidth_updated();
 		}
 
+        upload.startTime = new Date().getTime();
+        
 		// Kick off the first batch job if we haven't started
 		if (not_started && !upload.processing) {
 			ii = photos.uploading.length;
