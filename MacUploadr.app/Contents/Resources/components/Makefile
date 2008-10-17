@@ -14,7 +14,7 @@ COMPONENT := $(filter gm key clh, $(MAKECMDGOALS))
 GECKO_SDK := ../gecko-sdk.$(PLATFORM)/sdk
 GM_INCLUDE := -I/usr/local/include/GraphicsMagick
 GM_LIB := -L/usr/local/lib
-EXIV_INCLUDE := -I/usr/local/include/exiv2
+EXIV_INCLUDE := -I/opt/local/include/exiv2
 EXIV_LIB := -L/usr/local/lib -L/usr/lib
 FF_INCLUDE := -I/usr/local/include
 FF_LIB := -L/usr/local/lib
@@ -107,6 +107,7 @@ endif
 		-lxml2 \
 		-ljpeg -lpng -ltiff \
 		-lavformat -lavcodec -lavutil -lswscale \
+		-lintl \
 		-Wl,-read_only_relocs,suppress
 else
 	@echo "Not building the GraphicsMagick/FFmpeg XPCOM component"
@@ -128,12 +129,12 @@ ifeq (mac, $(PLATFORM))
 		-I$(GECKO_SDK)/idl \
 		flIKey.idl
 endif
-	g++ -w -c -O2 \
+	g++ -w -c -O2 -fshort-wchar\
 		-o flKey.o \
 		-I$(GECKO_SDK)/include \
 		$(DEFINE) \
 		flKey.cpp
-	g++ -w -c -O2 \
+	g++ -w -c -O2 -fshort-wchar\
 		-o flKeyModule.o \
 		-I$(GECKO_SDK)/include \
 		$(DEFINE) \
