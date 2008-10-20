@@ -69,6 +69,7 @@ using namespace std;
 string * conv_path(const nsAString &, bool);
 string * find_path(string *, const char *);
 int base_orient(Exiv2::ExifData &, Magick::Image &);
+bool exif_get_last_value_of_key(const Exiv2::ExifData & exif, const string & sKey, long & value);
 void exif_update_dim(Exiv2::ExifData &, int, int);
 void unconv_path(string &, nsAString &);
 
@@ -305,25 +306,13 @@ string * find_path(string * path_s, const char * extra) {
 
 // Orient an image's pixels as EXIF instructs
 int base_orient(Exiv2::ExifData & exif, Magick::Image & img) {
-	int orient = -1;
+	long orient = -1;
+
 	try {
-		Exiv2::ExifData::iterator it = exif.findKey(Exiv2::ExifKey(string(
-			"Exif.Image.Orientation")));
-		if (exif.end() != it) {
-			orient = it->toLong();
-		} else {
-			Exiv2::ExifKey orientationKey(string("Exif.Panasonic.Rotation"));
-			it = exif.findKey(Exiv2::ExifKey(orientationKey));
-			if (exif.end() != it) {
-				orient = it->toLong();
-			} else {
-				it = exif.findKey(Exiv2::ExifKey(string(
-					"Exif.MinoltaCs5D.Rotation")));
-				if (exif.end() != it) {
-					orient = it->toLong();
-				}
-			}
-		}
+		std::stable_sort(exif.begin(), exif.end(), Exiv2::cmpMetadataByKey); // this is the same as ExifData::sortByKey(), but stable
+		exif_get_last_value_of_key(exif, "Exif.Image.Orientation", orient) ||
+		exif_get_last_value_of_key(exif, "Exif.Panasonic.Rotation", orient) ||
+		exif_get_last_value_of_key(exif, "Exif.MinoltaCs5D.Rotation", orient);
 	} catch (Exiv2::Error & e) {
 		cerr << e.what();
 	}
@@ -360,6 +349,19 @@ int base_orient(Exiv2::ExifData & exif, Magick::Image & img) {
 	return orient;
 }
 
+// returns true if the key is present and value is the "last" value found
+// hack for http://cvs.flickr.com/b2/4584
+bool exif_get_last_value_of_key(const Exiv2::ExifData & exif, const string & sKey, long & value) {
+	Exiv2::ExifData::const_iterator it = std::find_if(exif.begin(), exif.end(),
+		Exiv2::FindMetadatumByKey(sKey)); // same as ExifData::findKey but with specific start point
+	if(it == exif.end())
+		return false;
+	while(it != exif.end()) {
+		value = it->toLong();
+		it = std::find_if(it+1, exif.end(), Exiv2::FindMetadatumByKey(sKey));
+	}
+	return true;
+}
 // Update the image width and height in EXIF
 void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 
