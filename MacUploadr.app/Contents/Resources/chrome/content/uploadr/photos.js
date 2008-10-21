@@ -399,6 +399,7 @@ var photos = {
 			}
 
 			photos.list[id] = null;
+			photos.list.splice(id, 1);
 			--photos.count;
 		}
 		ui.bandwidth_updated();

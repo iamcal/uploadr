@@ -283,6 +283,7 @@ var settings = {
 									status.clear();
 								}
 								photos.list[i] = null;
+								photos.list.splice(i, 1);
 								--photos.count;
 							}
 						}
