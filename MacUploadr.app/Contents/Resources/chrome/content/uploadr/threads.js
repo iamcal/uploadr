@@ -106,10 +106,12 @@ ThumbCallback.prototype = {
 			var thumb = this.result.split('###');
 
 			// Get this photo from the DOM and remove its loading class
-			var img = document.getElementById('photo' + this.id)
-				.getElementsByTagName('img')[0];
-			img.style.visibility = 'hidden';
-			img.className = '';
+			
+			
+			var li = document.getElementById('photo' + this.id);
+			var oldImg = li.getElementsByTagName('img')[0];
+			var img = document.createElementNS(NS_HTML, 'img');
+			li.replaceChild(img, oldImg);
 
 			// If successful, replace with the thumb and update the
 			// Photo object

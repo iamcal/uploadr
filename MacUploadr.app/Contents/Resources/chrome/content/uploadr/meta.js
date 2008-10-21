@@ -682,7 +682,6 @@ var meta = {
 								status.clear();
 							}
 							photos.list[id] = null;
-							photos.list.splice(id, 1);
 							--photos.count;
 						}
 
