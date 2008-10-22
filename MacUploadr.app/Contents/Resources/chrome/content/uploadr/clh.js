@@ -10,6 +10,10 @@
 
 // Check the command line queue for arguments
 var clh = function(silent, queue) {
+	if(!threads.initialized) {
+	    window.setTimeout(clh, 100, silent, queue);
+	    return;
+	}
 	if (null == queue) {
 		var comp = Cc["@mozilla.org/commandlinehandler/general-startup;1?type=flcmdline"]
 			.getService(Ci.flICLH);

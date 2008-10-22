@@ -10,6 +10,7 @@
 
 var threads = {
 
+    initialized: false,
 	// Hooks to threads
 	worker: null,
 	uploadr: null,
@@ -21,7 +22,6 @@ var threads = {
 	// Create thread hooks and instantiate GraphicsMagick
 	init: function() {
 		try {
-
 			// Threads themselves
 			var t = Cc['@mozilla.org/thread-manager;1'].getService();
 			threads.worker = t.newThread(0);
@@ -33,7 +33,7 @@ var threads = {
 			threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
 				.getService(Ci.nsIProperties)
 				.get('resource:app', Ci.nsIFile).path);
-
+            threads.initialized = true;
 		} catch (err) {
 			Components.utils.reportError(err);
 		}
