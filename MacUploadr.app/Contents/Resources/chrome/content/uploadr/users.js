@@ -88,6 +88,7 @@ var users = {
 				locale.getFormattedString('username', [users.username]) + '  ';
 			document.getElementById('switch').style.display = 'inline';
 			document.getElementById('login').style.display = 'none';
+			document.getElementById('big_login').style.display = 'none';
 			buttons.upload.enable();
 			status.set(locale.getString('status.ready'));
 			meta.login();
@@ -124,6 +125,7 @@ var users = {
 			locale.getString('notloggedin') + '  ';
 		document.getElementById('switch').style.display = 'none';
 		document.getElementById('login').style.display = 'block';
+		document.getElementById('big_login').style.display = 'block';
 		buttons.upload.disable();
 		document.getElementById('bw_remaining').style.display = 'none';
 		status.set(locale.getString('status.disconnected'));

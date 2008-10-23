@@ -687,9 +687,6 @@ var upload = {
 		    }
 		    catch(ex){}
 		upload.progress_bar = null;
-		Cc['@mozilla.org/consoleservice;1']
-				.getService(Ci.nsIConsoleService)
-				.logStringMessage('finalize end');
 		threads.uploadr = Cc['@mozilla.org/thread-manager;1'].getService().newThread(0);
 		upload.cancel = false;
 		upload.tickets = {};

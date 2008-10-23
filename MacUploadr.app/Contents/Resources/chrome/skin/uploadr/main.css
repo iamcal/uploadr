@@ -196,15 +196,15 @@ div.small.button:active {
 }
 
 /* Make the upload, OK and Ready buttons extra gaudy */
-#button_upload, #button_ok, #button_auth {
+#button_upload, #button_ok, #button_auth, #big_login {
 	width: 193px;
 	height: 37px;
 	background: url(upload_off.png) no-repeat;
 }
-#button_upload.button:active, #button_ok.button:active, #button_auth.button:active {
+#button_upload.button:active, #button_ok.button:active, #button_auth.button:active, #big_login.button:active {
 	background: url(upload_click.png) no-repeat;
 }
-#button_upload div, #button_ok div, #button_auth div {
+#button_upload div, #button_ok div, #button_auth div, #big_login div {
 	padding: 5px 0 11px 0;
 	background: transparent;
 	font-size: 21px;
@@ -212,7 +212,7 @@ div.small.button:active {
 	text-transform: none;
 	text-align: center;
 }
-#button_upload.button div, #button_ok.button div, #button_auth.button div {
+#button_upload.button div, #button_ok.button div, #button_auth.button div, #big_login.button div {
 	color: #ff0084;
 }
 #button_upload.disabled_button {

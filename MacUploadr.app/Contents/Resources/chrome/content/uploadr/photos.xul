@@ -345,9 +345,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
         </vbox>
         <hbox id="meta_button">
           <spacer flex="1" />
-          <html:div id="button_upload"
-				class="disabled_button" onclick="buttons.upload.click();">
+          <html:div id="button_upload" class="disabled_button" onclick="buttons.upload.click();">
             <html:div>&buttons.upload;</html:div>
+          </html:div>
+          <html:div id="big_login" class="button" onclick="buttons.login.click();">
+            <html:div id="big_login_inner">&login;</html:div>
           </html:div>
           <spacer flex="1" />
         </hbox>

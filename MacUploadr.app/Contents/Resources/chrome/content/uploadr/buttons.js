@@ -23,9 +23,11 @@ var buttons = {
 		},
 		enable: function() {
 			document.getElementById('login').className = 'small button';
+			document.getElementById('big_login').className = 'button';
 		},
 		disable: function() {
 			document.getElementById('login').className = 'small disabled_button';
+			document.getElementById('big_login').className = 'disabled_button';
 		}
 	},
 
@@ -50,11 +52,13 @@ var buttons = {
 			if (users.nsid && 'boolean' == typeof users.is_pro &&
 				0 < photos.count) {
 				document.getElementById('button_upload').className = 'button';
+				document.getElementById('button_upload').style.display = 'block';
 				document.getElementById('menu_upload').disabled = false;
 			}
 		},
 		disable: function() {
 			document.getElementById('button_upload').className = 'disabled_button';
+			document.getElementById('button_upload').style.display = 'none';
 			document.getElementById('menu_upload').disabled = true;
 		},
 		click: function() {
