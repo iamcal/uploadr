@@ -136,6 +136,8 @@ ThumbCallback.prototype = {
 				// Date taken
 				if (/\d{4}:\d{2}:\d{2} \d{2}:\d{2}:\d{2}/.test(thumb[3])) {
 					photos.list[this.id].date_taken = thumb[3];
+				} else if(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(thumb[3])) { //yes you can get "2008-03-15T11:39:09.00-07:00" as well!
+				    photos.list[this.id].date_taken = thumb[3].replace(/-/g, ':').replace(/T/, ' ');
 				} else {
 					var f = Cc['@mozilla.org/file/local;1'].createInstance(
 						Ci.nsILocalFile);
