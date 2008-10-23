@@ -584,7 +584,15 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
 				exif, "Exif.Photo.DateTimeDigitized", date_taken, false)
 				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
-				exif, "Exif.Image.DateTime", date_taken, false);
+				exif, "Exif.Image.DateTime", date_taken, false)
+				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
+				exif, "Exif.Photo.DateTime", date_taken, false)
+				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
+				exif, "Xmp.exif.DateTime", date_taken, false)
+				|| extract<Exiv2::ExifData, Exiv2::ExifKey>(
+				exif, "Xmp.photoshop.DateCreate", date_taken, false)
+				;
+
 
 		} catch (Exiv2::Error &) {}
 		
