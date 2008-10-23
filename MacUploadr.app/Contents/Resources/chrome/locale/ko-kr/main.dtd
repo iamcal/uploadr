@@ -40,6 +40,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY tools.add "+ 추가">
 <!ENTITY tools.remove "- 제거">
+<!ENTITY tools.clear "Remove all">
 
 <!ENTITY buttons.upload "사진 업로드">
 <!ENTITY buttons.cancel "취소">
@@ -54,8 +55,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photos.sort.default "아이템은 현재 촬영 날짜 순으로 정렬되어 있습니다.  끌어다 놓아서 재정렬하십시오.">
 <!ENTITY photos.sort.revert "촬영 날짜 순으로 아이템 재정렬">
 
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.text.1 "또는 ">
+<!ENTITY photos.init.text.2 " 을 클릭하여 컴퓨터에서 파일을 찾습니다.">
 <!ENTITY photos.init.note "참고하십시오.">
 
 <!ENTITY photos.new "그 배치를 업로드하는 중에 새로운 배치를 시작할 수 있습니다.">

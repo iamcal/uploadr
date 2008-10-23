@@ -54,8 +54,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photos.sort.default "你的項目目前按拍攝日期排序。可透過拖放作業重新排序。">
 <!ENTITY photos.sort.revert "按拍攝日期重新排序項目">
 
-<!ENTITY photos.init.text.1 "Or, click ">
-<!ENTITY photos.init.text.2 " to find files on your computer.">
+<!ENTITY photos.init.text.1 "或者，按一下「">
+<!ENTITY photos.init.text.2 "」在你的電腦上尋找檔案。">
 <!ENTITY photos.init.note "請注意：">
 
 <!ENTITY photos.new "該批次正在上載，你可以開始新批次。">
