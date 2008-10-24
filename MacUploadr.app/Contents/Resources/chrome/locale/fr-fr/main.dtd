@@ -40,6 +40,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY tools.add "+ Ajouter">
 <!ENTITY tools.remove "- Enlever">
+<!ENTITY tools.clear "Supprimer tout">
 
 <!ENTITY buttons.upload "Importer">
 <!ENTITY buttons.cancel "Annuler">
