@@ -24,6 +24,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.tools "Extras">
 <!ENTITY menu.tools.addons "Zusätze">
 <!ENTITY menu.tools.console "Konsole">
+<!ENTITY menu.tools.venkman "Venkman-Debugger">
 <!ENTITY menu.help "Hilfe">
 <!ENTITY menu.help.about "Infos zu Flickr Uploadr">
 <!ENTITY menu.help.tips "Tipps und Tricks">
@@ -40,6 +41,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY tools.add "+ Hinzufügen">
 <!ENTITY tools.remove "- Entfernen">
+<!ENTITY tools.clear "Alles entfernen">
 
 <!ENTITY buttons.upload "Hochladen">
 <!ENTITY buttons.cancel "Abbrechen">
@@ -54,8 +56,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photos.sort.default "Ihre Elemente sind derzeit nach Aufnahmedatum sortiert.  Zum Neuordnen mit der Maus ziehen und ablegen.">
 <!ENTITY photos.sort.revert "Elemente wieder nach Aufnahmedatum sortieren">
 
-<!ENTITY photos.init.text.1 "Sie können auch auf ">
-<!ENTITY photos.init.text.2 " klicken, um Dateien auf Ihrem Computer zu suchen.">
+<!ENTITY photos.init.text.1 "Oder klicken Sie ">
+<!ENTITY photos.init.text.2 " um Dateien auf Ihrem Computer zu suchen.">
 <!ENTITY photos.init.note "Hinweis:">
 
 <!ENTITY photos.new "Während diese Serie hochgeladen wird, können Sie eine neue beginnen.">
@@ -75,7 +77,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.content_type "Standardinhaltstyp:">
 <!ENTITY settings.content_type.photo "Foto/Video">
 <!ENTITY settings.content_type.screenshot "Screenshot/Screencast">
-<!ENTITY settings.content_type.other "Sonstige">
+<!ENTITY settings.content_type.other "Andere – Kunst, Zeichnungen, CGI-Bilder, usw.">
 <!ENTITY settings.safety_level "Standardsicherheitsstufe:">
 <!ENTITY settings.safety_level.safe "Unbedenklich">
 <!ENTITY settings.safety_level.moderate "Mittel">
@@ -129,9 +131,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY help "Tipps und Tricks">
 <!ENTITY help.offline "Sie können offline arbeiten.">
-<!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie bereit zum Hochladen auf Flickr sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche &#34;Fotos hochladen&#34;.">
+<!ENTITY help.offline.text.first "Uploadr ist so konzipiert, dass Sie das Organisieren und Tagging Ihrer Fotos zum großen Teil offline durchführen können.  Wenn Sie zum Hochladen auf Flickr bereit sind, melden Sie sich bei Ihrem Konto an, und klicken Sie auf die Schaltfläche &#34;Fotos hochladen&#34;.">
 <!ENTITY help.offline.text.second "Wenn Sie möchten, können Sie die ganze Zeit angemeldet bleiben.  Wenn Sie angemeldet sind, können Sie Ihre Elemente in Serien organisieren.">
 <!ENTITY help.drag "Mit der Maus ziehen und ablegen ist einfach praktisch.">
 <!ENTITY help.drag.text "Sie können die Elemente in die Reihenfolge ziehen, in der sie nach dem Hochladen auf Ihrer Fotostream-Seite angezeigt werden sollen.  Sie können jede Sortierung auch wieder rückgängig machen, sodass die Elemente wieder nach Aufnahmedatum sortiert werden.">
 <!ENTITY help.faq "Wenn Sie weitere Fragen haben, besuchen Sie bitte unsere Uploadr FAQ.">
-

@@ -24,6 +24,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.tools "Strumenti">
 <!ENTITY menu.tools.addons "Aggiunte">
 <!ENTITY menu.tools.console "Console">
+<!ENTITY menu.tools.venkman "Debugger Venkman">
 <!ENTITY menu.help "Aiuto">
 <!ENTITY menu.help.about "Informazioni sull'Uploadr di Flickr">
 <!ENTITY menu.help.tips "Trucchi e suggerimenti">
@@ -40,6 +41,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY tools.add "+ Aggiungi">
 <!ENTITY tools.remove "- Rimuovi">
+<!ENTITY tools.clear "Rimuovi tutto">
 
 <!ENTITY buttons.upload "Carica">
 <!ENTITY buttons.cancel "Annulla">
@@ -54,7 +56,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photos.sort.default "I tuoi elementi sono attualmente ordinati per data di scatto.  Trascinali per riordinarli.">
 <!ENTITY photos.sort.revert "Riordina elementi per data di scatto">
 
-<!ENTITY photos.init.text.1 "Oppure fai clic su ">
+<!ENTITY photos.init.text.1 "Oppure fai clic ">
 <!ENTITY photos.init.text.2 " per trovare file sul tuo computer.">
 <!ENTITY photos.init.note "Nota:">
 
@@ -75,7 +77,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.content_type "Tipo di contenuto predefinito:">
 <!ENTITY settings.content_type.photo "Foto e video">
 <!ENTITY settings.content_type.screenshot "Schermata/Screencast">
-<!ENTITY settings.content_type.other "Altro">
+<!ENTITY settings.content_type.other "Altro, disegni, elementi grafici, CGI, ecc.">
 <!ENTITY settings.safety_level "Livello di sicurezza predefinito:">
 <!ENTITY settings.safety_level.safe "Sicura">
 <!ENTITY settings.safety_level.moderate "Moderata">
@@ -129,9 +131,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY help "Trucchi e suggerimenti">
 <!ENTITY help.offline "Puoi lavorare ^^offline^^.">
-<!ENTITY help.offline.text.first "L’Uploadr è studiato per consentirti di effettuare la maggior parte delle operazioni di organizzazione e di inserimento dei tag offline.  Quando sei pronto per il caricamento su Flickr, accedi al tuo account e fai clic su Inserisci una foto.">
+<!ENTITY help.offline.text.first "L’Uploadr è studiato per consentirti di effettuare la maggior parte delle operazioni di organizzazione e di inserimento dei tag offline. Quando sei pronto per il caricamento su Flickr, accedi al tuo account e fai clic su Carica.">
 <!ENTITY help.offline.text.second "Puoi restare connesso in permanenza, se lo desideri.  Una volta effettuato l'accesso, puoi organizzare i tuoi elementi in set.">
 <!ENTITY help.drag "Il ^^drag-and-drop^^ è tuo amico.">
 <!ENTITY help.drag.text "Puoi trascinare gli elementi nell’ordine in cui desideri che vengano visualizzati sulla pagina del tuo album  mentre li carichi.  All’occorrenza, puoi anche annullare qualsiasi impostazione applicata in modo che gli elementi tornino a essere ordinati per data di scatto.">
 <!ENTITY help.faq "Se hai altri dubbi, leggi le ^^FAQ su Uploadr^^">
-

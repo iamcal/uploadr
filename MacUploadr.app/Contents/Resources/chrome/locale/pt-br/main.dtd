@@ -24,6 +24,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.tools "Ferramentas">
 <!ENTITY menu.tools.addons "Complementos">
 <!ENTITY menu.tools.console "Console">
+<!ENTITY menu.tools.venkman "Depurador Venkman">
 <!ENTITY menu.help "Ajuda">
 <!ENTITY menu.help.about "Sobre o Flickr Uploadr">
 <!ENTITY menu.help.tips "Dicas e truques">
@@ -40,6 +41,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY tools.add "+ Adicionar">
 <!ENTITY tools.remove "- Remover">
+<!ENTITY tools.clear "Remover todos">
 
 <!ENTITY buttons.upload "Fazer upload">
 <!ENTITY buttons.cancel "Cancelar">
@@ -54,8 +56,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY photos.sort.default "Atualmente seus itens estão ordenados pela data em que foram criados.  Arraste-os e solte-os para reordená-los.">
 <!ENTITY photos.sort.revert "Reclassificar itens pela data em que foram criados">
 
-<!ENTITY photos.init.text.1 "Ou clique em ">
-<!ENTITY photos.init.text.2 " para procurar arquivos em seu computador.">
+<!ENTITY photos.init.text.1 "Ou clicar em ">
+<!ENTITY photos.init.text.2 " para procurar arquivos no computador.">
 <!ENTITY photos.init.note "Observe que:">
 
 <!ENTITY photos.new "Você pode iniciar um novo lote enquanto este lote está sendo enviado.">
@@ -75,7 +77,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY settings.content_type "Tipo de conteúdo padrão:">
 <!ENTITY settings.content_type.photo "Foto / vídeo">
 <!ENTITY settings.content_type.screenshot "Capturas de tela / Screencasts">
-<!ENTITY settings.content_type.other "Outro">
+<!ENTITY settings.content_type.other "Outro - arte, ilustração, CGI, etc.">
 <!ENTITY settings.safety_level "Nível de segurança padrão:">
 <!ENTITY settings.safety_level.safe "Segura">
 <!ENTITY settings.safety_level.moderate "Moderado">
@@ -129,9 +131,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY help "Dicas e truques">
 <!ENTITY help.offline "Você pode ^^trabalhar off-line^^.">
-<!ENTITY help.offline.text.first "O Uploadr foi criado para que você possa fazer a maior parte do trabalho de organização e adição de tags em suas fotos off-line.  Quando estiver pronto para enviá-las ao Flickr, entre em sua conta e pressione o botão enorme Fazer upload de fotos.">
+<!ENTITY help.offline.text.first "O Uploadr foi criado para que você possa fazer a maior parte do trabalho de organização e adição de tags em suas fotos off-line.  Quando estiver pronto para enviá-las ao Flickr, entre em sua conta e pressione o botão enorme Fazer upload.">
 <!ENTITY help.offline.text.second "Você pode ficar conectado o tempo todo, se desejar.  Você pode organizar seus itens em álbuns depois de entrar.">
 <!ENTITY help.drag "^^Arrastar e soltar^^ é muito útil.">
 <!ENTITY help.drag.text "Quando enviar seus itens, arraste-os na ordem em que deseja que apareçam na página da galeria.  Se for necessário, você também pode redefinir qualquer organização que tenha feito, para que os itens voltem a ser ordenados pela data em que foram criados.">
 <!ENTITY help.faq "Se houver mais alguma dúvida, por favor, visite as ^^Perguntas freqüentes sobre o Uploadr^^.">
-
