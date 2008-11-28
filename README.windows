@@ -343,6 +343,8 @@ Running Flickr Uploadr
 Copy xulrunner-stub.exe from the xulrunner/ directory into the root
 of your app, UPLOADR/MacUploadr.app/Contents/Resources/, rename it to
 "Flickr Uploadr.exe" and double-click it to run Uploadr.
+you also need to change the resource of this file to use the flickr uploadr icon.
+You can use XN Resource editor from http://www.wilsonc.demon.co.uk/d10resourceeditor.htm
 
 You can hack the icons.ico file into the executable using Resource
 Hacker:

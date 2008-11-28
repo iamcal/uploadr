@@ -20,6 +20,9 @@ var meta = {
 	// Auto-select, which is cancellable by a click during thumbing
 	auto_select: conf.auto_select,
 
+    // Last private setting: 0=private, 1=family, 2=friends, 3=f&f
+    last_private_settings: 0,
+
 	// Load a photo's metadata from JS into the DOM
 	load: function(id) {
 
@@ -344,13 +347,20 @@ var meta = {
 		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
 
 		if (1 == parseInt(value)) {
+			meta.last_private_settings = document.getElementById(prefix + '_is_friend').checked | (document.getElementById(prefix + '_is_family').checked << 1);
 			document.getElementById(prefix + '_is_friend').checked = false;
 			document.getElementById(prefix + '_is_family').checked = false;
 			document.getElementById(prefix + '_is_friend').disabled = true;
 			document.getElementById(prefix + '_is_family').disabled = true;
 		} else {
-			document.getElementById(prefix + '_is_friend').disabled = false;
-			document.getElementById(prefix + '_is_family').disabled = false;
+		    if (document.getElementById(prefix + '_is_friend').disabled === true) {
+			    document.getElementById(prefix + '_is_friend').disabled = false;
+			    document.getElementById(prefix + '_is_friend').checked = meta.last_private_settings & 1;
+		    }
+		    if (document.getElementById(prefix + '_is_family').disabled === true) {
+			    document.getElementById(prefix + '_is_family').disabled = false;
+			    document.getElementById(prefix + '_is_family').checked = meta.last_private_settings & 2;
+		    }
 		}
 	},
 
