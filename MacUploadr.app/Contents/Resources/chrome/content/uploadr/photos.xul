@@ -115,13 +115,10 @@ xmlns:html="http://www.w3.org/1999/xhtml">
             </vbox>
             <vbox id="single_meta_column_top_right" class="column">
               <html:p id="single_who"> </html:p>
-              <radiogroup id="single_is_public" value="1" tabindex="5"
-							oncommand="meta.is_public(this.value);">
+              <radiogroup id="single_is_public" value="1" tabindex="5" oncommand="meta.is_public(this.value);">
                 <radio value="0" label="&settings.privacy.private;" />
-                <checkbox id="single_is_friend"
-                label="&settings.privacy.friend;" tabindex="6" />
-                <checkbox id="single_is_family"
-                label="&settings.privacy.family;" tabindex="7" />
+                  <checkbox id="single_is_friend" label="&settings.privacy.friend;" tabindex="6" />
+                  <checkbox id="single_is_family" label="&settings.privacy.family;" tabindex="7" />
                 <radio value="1" label="&settings.privacy.public;" />
               </radiogroup>
               <html:p style="margin: 16px 0 0 0;"> </html:p>

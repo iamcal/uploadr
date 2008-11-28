@@ -239,7 +239,6 @@ var photos = {
 				if ('extra1' == result.result) {
 					return;
 				}
-
 				// Remove videos from the path list if we're keeping photos
 				else if ('cancel' == result.result) {
 					var new_paths = [];
@@ -270,12 +269,31 @@ var photos = {
 			}
 
 		}
+//videos to be rejected for non pro is beyond silence param
+        if (v_count && users.is_pro === false) {
+            if(confirm(locale.getString('dialog.no.video.text'),
+                locale.getFormattedString('dialog.no.video.title', [users.username]),
+	            locale.getString('dialog.no.video.ok'),
+	            locale.getString('dialog.no.video.cancel'))) {
+	            launch_browser('http://' + SITE_HOST + '/upgrade/');
+	        }
+	        // anyway at that point too complicate to handle video
+	         var new_paths = [];
+		    while (paths.length) {
+			    var p = paths.shift();
+			    var path = 'object' == typeof p ? p.path : p;
+			    if (!photos.is_video(path)) {
+				    new_paths.push(p);
+			    }
+		    }
+		    paths = new_paths;
+	    }
 
 		// Now add whatever's left
 		var ii = paths.length;
 		block_normalize();
 		var ext_list = [];
-		var currentPathsLists = photos.list.map(function(x) {return x.path;});
+		var currentPathsLists = photos.list.map(function(x) {return (x ? x.path : "");});
 		
 		for (var i = 0; i < ii; ++i) {
 			var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
