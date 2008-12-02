@@ -97,7 +97,7 @@ else
 PLATFORM := mac
 
 # GraphicsMagick version for stupid directory structure
-GM_VER := 1.1.10
+GM_VER := 1.2.5
 
 # Location of Mozilla tree for the MAR tools
 MOZILLA := ~/devel/mozilla
@@ -181,10 +181,7 @@ zh-hk:
 ja-jp:
 	@echo "Building Japanese (ja-jp)"
 
-
-
 build:
-
 	@echo "Build step"
 	@# Make sure the package directory exists
 	mkdir -p $(BUILD)
