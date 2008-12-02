@@ -107,7 +107,6 @@ endif
 		-lxml2 \
 		-ljpeg -lpng -ltiff \
 		-lavformat -lavcodec -lavutil -lswscale \
-		-lintl \
 		-Wl,-read_only_relocs,suppress
 else
 	@echo "Not building the GraphicsMagick/FFmpeg XPCOM component"
