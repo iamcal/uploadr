@@ -53,7 +53,7 @@ var conf = {
 	check: 200,
 
 	// How often should the app auto-save metadata? (seconds)
-	auto_save: 60,
+	auto_save: 30,
 
 	// Should we warn users when they're about to clobber data when
 	// leaving a batch?
@@ -64,7 +64,7 @@ var conf = {
 	auto_select: false,
 
 	// Should we auto-select after rotating
-	auto_select_after_rotate: false,
+	auto_select_after_rotate: true,
 
 	// How many times (in a row) should we automatically retry a photo?
 	//   This is PER PHOTO and will be reset after each successful upload
