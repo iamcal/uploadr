@@ -48,7 +48,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
   <script src="chrome://uploadr/content/keyboard.js" />
   <script src="chrome://uploadr/content/buttons.js" />
   <script src="chrome://uploadr/content/extension.js" />
-  <script src="chrome://venkman/content/venkman-overlay.js"/>
+  <!--<script src="chrome://venkman/content/venkman-overlay.js"/>-->
   <keyset id="key">
     <key id="key_add"	modifiers="accel" key="o" oncommand="photos.add_dialog();" />
     <key id="key_upload"	modifiers="shift accel" key="u" oncommand="photos.upload();" />
@@ -78,8 +78,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
         <menupopup id="menu_UploadPopup">
           <menuitem label="&menu.upload.add;" key="key_add" accesskey="A" oncommand="photos.add_dialog();" />
           <menuitem id="menu_upload" label="&menu.upload;" key="key_upload" accesskey="U" oncommand="photos.upload();" />
+          <menuitem id="menu_mac_hide_app" label="&menu.upload.minimize;" key="key_hide" oncommand="window.minimize();" />
           <menuitem id="menu_FileQuitItem" label="&menu.upload.exit;" key="key_quit" accesskey="Q" oncommand="exit();" />
-          <menuitem label="&menu.upload.minimize;" id="menu_mac_hide_app" key="key_hide" oncommand="window.minimize();" />
         </menupopup>
       </menu>
       <menu label="&menu.edit;" accesskey="E">
