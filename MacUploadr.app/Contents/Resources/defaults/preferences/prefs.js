@@ -25,6 +25,10 @@ pref('general.useragent.locale', 'en-US');
 pref('network.protocol-handler.warn-external.http', false);
 pref('network.protocol-handler.warn-external.https', false);
 
+//allow preference
+pref("browser.preferences.animateFadeIn", false);
+pref("browser.preferences.instantApply", true);
+
 // Extension manager
 //pref('xpinstall.dialog.confirm', 'chrome://mozapps/content/xpinstall/xpinstallConfirm.xul');
 //pref('xpinstall.dialog.progress.skin', 'chrome://mozapps/content/extensions/extensions.xul?type=themes');
