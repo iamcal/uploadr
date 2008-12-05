@@ -15,6 +15,7 @@
 <!ENTITY menu.help "ヘルプ">
 <!ENTITY menu.help.about "Flickr Uploadrについて">
 <!ENTITY menu.help.tips "ヒントと攻略法">
+<!ENTITY menu.upload.minimize "Minimize">
 <!ENTITY menu.help.faq "FAQ">
 <!ENTITY menu.help.update "更新をチェック...">
 

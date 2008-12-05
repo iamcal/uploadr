@@ -15,6 +15,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.upload "Fazer upload">
 <!ENTITY menu.upload.add "Adicionar">
 <!ENTITY menu.upload.preferences "Preferências">
+<!ENTITY menu.upload.minimize "Minimizar">
 <!ENTITY menu.upload.exit "Sair">
 <!ENTITY menu.edit "Editar">
 <!ENTITY menu.edit.cut "Recortar">
