@@ -129,7 +129,7 @@ endif
 dummy:
 	@echo "Nothing happens if you don't give some arguments!"
 	@echo "  win all, mac all:   Build the whole thing"
-	@echo "  build, mar: Build a single package or update but requires"
+	@echo "  packaging, mar: Build a single package or update but requires"
 	@echo "              de-de, en-US, es-us, fr-fr, it-it, ko-kr, pt-br, or zh-hk"
 
 all: all-build all-mar
@@ -140,15 +140,15 @@ win:
 	@echo "Building for Windows"
 
 all-build:
-	make $(PLATFORM) de-de build
-	make $(PLATFORM) en-US build
-	make $(PLATFORM) es-us build
-	make $(PLATFORM) fr-fr build
-	make $(PLATFORM) it-it build
-	make $(PLATFORM) ko-kr build
-	make $(PLATFORM) pt-br build
-	make $(PLATFORM) zh-hk build
-	make $(PLATFORM) ja-jp build
+	make $(PLATFORM) de-de packaging
+	make $(PLATFORM) en-US packaging
+	make $(PLATFORM) es-us packaging
+	make $(PLATFORM) fr-fr packaging
+	make $(PLATFORM) it-it packaging
+	make $(PLATFORM) ko-kr packaging
+	make $(PLATFORM) pt-br packaging
+	make $(PLATFORM) zh-hk packaging
+	make $(PLATFORM) ja-jp packaging
 
 all-mar:
 	@make $(PLATFORM) de-de mar
@@ -181,7 +181,7 @@ zh-hk:
 ja-jp:
 	@echo "Building Japanese (ja-jp)"
 
-build:
+packaging:
 	@echo "Build step"
 	@# Make sure the package directory exists
 	mkdir -p $(BUILD)
