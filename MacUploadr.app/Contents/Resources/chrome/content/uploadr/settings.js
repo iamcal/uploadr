@@ -105,10 +105,11 @@ var settings = {
 		// the current NSID and the maximum file size string
 		var u = eval(users.list.toSource());
 		var result = {};
-		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
-			'chrome,modal', users.nsid, u, locale.getFormattedString(
-			'settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
-			[users.filesize >> 10]), result);
+		
+ 		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
+ 			'chrome', users.nsid, u, locale.getFormattedString(
+ 			'settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
+ 			[users.filesize >> 10]), result);
 
 		// If we're adding a new user, auth// and re-open the dialog
 		if (result.add_user) {
