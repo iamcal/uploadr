@@ -50,6 +50,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 				<string>DV</string>
 				<string>3gp</string>
 				<string>3GP</string>
+				<string>3g2</string>
 			</array>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
