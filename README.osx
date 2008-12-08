@@ -79,7 +79,12 @@ There are blocks to keep both a Windows and Mac key/secret in the same
 source file (you certainly don't have to, though).  This is mainly
 important for the official builds.
 
-
+Libintl static linking
+------------------------------------------------------------------------
+Because of dynamic/static linker weirdness, before building GraphicsMagick,
+and Exiv, move libintl.dylibout of the way:
+  $ sudo mv /opt/local/lib/libintl.dylib /opt/local/lib/libintl.dylib.sav
+you might need to do that for all the versions of libintl you have on your system
 
 GraphicsMagick
 ------------------------------------------------------------------------
@@ -192,7 +197,7 @@ build gm.dylib.mac and key.dylib.mac.  These architecture-dependent
 files can be combined on an Intel Mac to leave gm.dylib and key.dylib
 by running `make universal gm ; make universal key`.
 
-
+Make sure by running otool -Lv that you are not depending on libintl, which is not intalled by default on Mac Os X
 
 Running Flickr Uploadr
 ------------------------------------------------------------------------
