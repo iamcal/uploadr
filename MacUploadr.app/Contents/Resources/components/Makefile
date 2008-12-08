@@ -80,7 +80,7 @@ ifeq (mac, $(PLATFORM))
 		-I$(GECKO_SDK)/idl \
 		flIGM.idl
 endif
-	g++ -w -c -O2 -fshort-wchar\
+	g++ -w -c -O2 -fshort-wchar \
 		-o flGM.o \
 		-I$(GECKO_SDK)/include \
 		$(GM_INCLUDE) \
@@ -88,12 +88,12 @@ endif
 		$(FF_INCLUDE) \
 		$(DEFINE) \
 		flGM.cpp
-	g++ -w -c -O2 -fshort-wchar\
+	g++ -w -c -O2 -fshort-wchar \
 		-o flGMModule.o \
 		-I$(GECKO_SDK)/include \
 		$(DEFINE) \
 		flGMModule.cpp
-	g++ -dynamiclib -O2 \
+	g++ -v -dynamiclib -O2 \
 		-o gm.dylib.$(PLATFORM) \
 		flGM.o flGMModule.o \
 		-L$(GECKO_SDK)/lib \
