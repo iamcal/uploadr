@@ -17,3 +17,5 @@
 <!ENTITY  connection.label              "接続">
 <!ENTITY  connectionDesc.label          "インターネット接続に使用するプロキシを設定します。">
 <!ENTITY  connectionSettings.label      "接続設定...">
+
+<!ENTITY  dialog.ok                     "OK">

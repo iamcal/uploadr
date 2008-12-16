@@ -17,3 +17,5 @@
 <!ENTITY  connection.label              "連線">
 <!ENTITY  connectionDesc.label          "設定 &brandShortName; 要如何連到網路">
 <!ENTITY  connectionSettings.label      "設定...">
+
+<!ENTITY  dialog.ok                     "確定">

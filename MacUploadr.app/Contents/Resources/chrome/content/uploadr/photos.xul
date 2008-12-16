@@ -196,15 +196,29 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 							tooltiptext="&meta.batch.title.tooltip;" />
               <html:p title="&meta.batch.description.tooltip;"
 							>&meta.batch.description;</html:p>
+              <hbox>
+                <vbox>
+                  <spacer flex="1"/>
+                  <description>[...] +</description>
+                  <spacer flex="1"/>
+                </vbox>
               <textbox id="batch_description" multiline="true" rows="3" tabindex="2"
 							onfocus="keyboard.select_all_text(this);"
 							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.batch.description.tooltip;" />
+              </hbox>
               <html:p title="&meta.tags.tooltip;">&meta.batch.tags;</html:p>
-              <textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
+              <hbox>
+                <vbox>
+                  <spacer flex="1"/>
+                  <description>[...] +</description>
+                  <spacer flex="1"/>
+                </vbox>
+                <textbox id="batch_tags" multiline="true" rows="2" tabindex="3"
 							onfocus="keyboard.select_all_text(this);"
 							onblur="keyboard.select_all_photos();"
 							tooltiptext="&meta.tags.tooltip;" />
+              </hbox>
             </vbox>
             <vbox id="batch_meta_column_top_right" class="column">
               <html:p id="batch_who"> </html:p>
@@ -274,9 +288,10 @@ xmlns:html="http://www.w3.org/1999/xhtml">
             </vbox>
             <vbox>
               <html:p>&meta.batch.sets.added;</html:p>
-              <html:ul id="batch_sets_added" onclick="meta.remove_from_set(event);">
-                <html:li class="sets_none">&meta.sets.added.none;</html:li>
-              </html:ul>
+                  <description>[...] +</description>
+                <html:ul id="batch_sets_added" onclick="meta.remove_from_set(event);">
+                  <html:li class="sets_none">&meta.sets.added.none;</html:li>
+                </html:ul>
             </vbox>
           </hbox>
         </vbox>

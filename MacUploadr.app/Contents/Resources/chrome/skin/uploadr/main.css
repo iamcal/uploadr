@@ -542,8 +542,13 @@ div.toolbarseparator {
 	padding: 0 0 0 4px;
 	display: block;
 }
-#meta textbox, #batch_meta textbox, #no_meta textbox {
+#meta textbox, #no_meta textbox {
 	width: 180px;
+}
+
+#batch_meta textbox 
+{
+	width: 140px;
 }
 
 /* Initially, and while logged-out, don't show sets */
@@ -588,12 +593,14 @@ div.toolbarseparator {
 	background: white;
 	list-style-type: none;
 }
+
 #no_meta ul {
 	background: #f2f2f2;
 }
 #single_sets_added, #batch_sets_added {
 	border-left: 1px solid #ddd;
 }
+
 .sets_none {
 	margin: 2px;
 	color: #bbb;

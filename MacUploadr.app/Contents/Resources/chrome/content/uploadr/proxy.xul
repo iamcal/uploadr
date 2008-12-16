@@ -14,65 +14,66 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <?xml-stylesheet href="chrome://global/skin/"?>
 <prefwindow id="ProxyDialog" type="prefwindow"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	title="&ProxyDialog.title;"
-	dlgbuttons="accept,cancel"
-	onbeforeaccept="return gProxyDialog.beforeAccept();"
-	style="width: &window.width; !important;">
+	title="&ProxyDialog.title;" buttons=","
+  style="width: &window.width; !important;">
 
-	<prefpane id="ProxyDialogPane">
+  <prefpane id="ProxyDialogPane">
 
-		<preferences>
+    <preferences>
 
-			<preference id="network.proxy.type"			name="network.proxy.type"			type="int"	onchange="gProxyDialog.proxyTypeChanged();"/>
-			<preference id="network.proxy.socks"			name="network.proxy.socks"			type="string" />
-			<preference id="network.proxy.socks_port"		name="network.proxy.socks_port"			type="int" />
-			<preference id="network.proxy.socks_version"		name="network.proxy.socks_version"		type="int" />
-			<preference id="network.proxy.autoconfig_url"		name="network.proxy.autoconfig_url"		type="string" />
-			<preference id="flickr.proxy.disable_reload_button"	name="flickr.proxy.disable_reload_button"	type="bool" />
-		</preferences>
-    
-		<script type="application/x-javascript" src="chrome://uploadr/content/proxy.js"/>
+      <preference id="network.proxy.type"			name="network.proxy.type"			type="int"	onchange="gProxyDialog.proxyTypeChanged();"/>
+      <preference id="network.proxy.socks"			name="network.proxy.socks"			type="string" />
+      <preference id="network.proxy.socks_port"		name="network.proxy.socks_port"			type="int" />
+      <preference id="network.proxy.socks_version"		name="network.proxy.socks_version"		type="int" />
+      <preference id="network.proxy.autoconfig_url"		name="network.proxy.autoconfig_url"		type="string" />
+      <preference id="flickr.proxy.disable_reload_button"	name="flickr.proxy.disable_reload_button"	type="bool" />
+    </preferences>
 
-		<groupbox>
-			<caption label="&proxyTitle.label;"/>
+    <script type="application/x-javascript" src="chrome://uploadr/content/proxy.js"/>
 
-			<radiogroup id="networkProxyType" preference="network.proxy.type" onsyncfrompreference="return gProxyDialog.readProxyType();">
-				<radio value="0" label="&directTypeRadio.label;" />
-				<radio value="4" label="&WPADTypeRadio.label;" />
-				<radio value="1" label="&manualTypeRadio.label;" />
+    <groupbox>
+      <caption label="&proxyTitle.label;"/>
 
-				<grid class="indent" flex="1">
-					<columns>
-						<column/>
-						<column flex="1"/>
-					</columns>
-					<rows>
-						<row align="center">
-							<hbox pack="end">
-								<label value="&socks.label;" control="networkProxyHost"/>
-							</hbox>
-							<hbox align="center">
-								<textbox id="networkProxyHost" flex="1" preference="network.proxy.socks" />
-								<label value="&port.label;" control="networkProxyPort"/>
-								<textbox id="networkProxyPort" size="5" preference="network.proxy.socks_port" />
-							</hbox>
-						</row>
-						<row>
-							<spacer />
-							<radiogroup id="networkProxySOCKSVersion" orient="horizontal" preference="network.proxy.socks_version">
-								<radio id="networkProxySOCKSVersion4" value="4" label="&socks4.label;" />
-								<radio id="networkProxySOCKSVersion5" value="5" label="&socks5.label;" />
-							</radiogroup>
-						</row>
-					</rows>
-				</grid>
+      <radiogroup id="networkProxyType" preference="network.proxy.type" onsyncfrompreference="return gProxyDialog.readProxyType();">
+        <radio value="0" label="&directTypeRadio.label;" />
+        <radio value="4" label="&WPADTypeRadio.label;" />
+        <radio value="1" label="&manualTypeRadio.label;" />
 
-				<radio value="2" label="&autoTypeRadio.label;" />
-				<hbox class="indent" flex="1" align="center">
-					<textbox id="networkProxyAutoconfigURL" flex="1" preference="network.proxy.autoconfig_url"/>
-					<button id="autoReload" icon="refresh" label="&reload.label;" oncommand="gProxyDialog.reloadPAC();" preference="flickr.proxy.disable_reload_button"/>
-				</hbox>
-			</radiogroup>
-		</groupbox>
-	</prefpane>
+        <grid class="indent" flex="1">
+          <columns>
+            <column/>
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row align="center">
+              <hbox pack="end">
+                <label value="&socks.label;" control="networkProxyHost"/>
+              </hbox>
+              <hbox align="center">
+                <textbox id="networkProxyHost" flex="1" preference="network.proxy.socks" />
+                <label value="&port.label;" control="networkProxyPort"/>
+                <textbox id="networkProxyPort" size="5" preference="network.proxy.socks_port" />
+              </hbox>
+            </row>
+            <row>
+              <spacer />
+              <radiogroup id="networkProxySOCKSVersion" orient="horizontal" preference="network.proxy.socks_version">
+                <radio id="networkProxySOCKSVersion4" value="4" label="&socks4.label;" />
+                <radio id="networkProxySOCKSVersion5" value="5" label="&socks5.label;" />
+              </radiogroup>
+            </row>
+          </rows>
+        </grid>
+
+        <radio value="2" label="&autoTypeRadio.label;" />
+        <hbox class="indent" flex="1" align="center">
+          <textbox id="networkProxyAutoconfigURL" flex="1" preference="network.proxy.autoconfig_url"/>
+          <button id="autoReload" icon="refresh" label="&reload.label;" oncommand="gProxyDialog.reloadPAC();" preference="flickr.proxy.disable_reload_button"/>
+        </hbox>
+      </radiogroup>
+    </groupbox>
+    <div id="proxyFooter" dir="reverse">
+      <button id="closeProxy" icon="close" label="&dialog.ok;"  oncommand="gProxyDialog.beforeAccept(); return window.close();" />
+    </div>
+  </prefpane>
 </prefwindow>

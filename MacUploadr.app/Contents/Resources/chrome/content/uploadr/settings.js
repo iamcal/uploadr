@@ -104,13 +104,13 @@ var settings = {
 		// Open the settings dialog, passing a copy of the users list,
 		// the current NSID and the maximum file size string
 		var u = eval(users.list.toSource());
-		var result = {};
+		var result = {add_user:null, ok:null};
 		
  		window.openDialog('chrome://uploadr/content/settings.xul', 'dialog_settings',
- 			'chrome', users.nsid, u, locale.getFormattedString(
+ 			'chrome,modal', users.nsid, u, locale.getFormattedString(
  			'settings.resize.prompt.' + (users.is_pro ? 'pro' : 'free'),
  			[users.filesize >> 10]), result);
-
+ 	
 		// If we're adding a new user, auth// and re-open the dialog
 		if (result.add_user) {
 			users.logout(true);

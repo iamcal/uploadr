@@ -17,3 +17,5 @@
 <!ENTITY  connection.label              "연결">
 <!ENTITY  connectionDesc.label          "&brandShortName;가 인터넷에 연결하는 방법을 선택합니다.">
 <!ENTITY  connectionSettings.label      "설정...">
+
+<!ENTITY  dialog.ok                     "확인">

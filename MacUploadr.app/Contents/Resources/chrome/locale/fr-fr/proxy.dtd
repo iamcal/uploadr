@@ -17,3 +17,5 @@
 <!ENTITY  connection.label              "Connexion">
 <!ENTITY  connectionDesc.label          "Configurer la façon de se connecter à Internet de &brandShortName;">
 <!ENTITY  connectionSettings.label      "Paramètres…">
+
+<!ENTITY  dialog.ok                     "OK">
