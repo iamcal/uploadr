@@ -53,7 +53,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
     <key id="key_add"	modifiers="accel" key="o" oncommand="photos.add_dialog();" />
     <key id="key_upload"	modifiers="shift accel" key="u" oncommand="photos.upload();" />
     <key id="key_back"	keycode="VK_BACK" oncommand="photos.remove();" />
-    <key id="key_hide" modifiers="accel" key="m" oncommand="window.minimize();" />
+    <key id="key_hide" modifiers="accel" key="h" oncommand="window.hide();" />
+	<key id="key_minimize" modifiers="accel" key="m" oncommand="window.minimize();" />
     <key id="key_delete"	keycode="VK_DELETE" oncommand="photos.remove();" />
     <key id="key_cut"	modifiers="accel" key="x" oncommand="goDoCommand('cmd_cut');" />
     <key id="key_copy"	modifiers="accel" key="c" oncommand="goDoCommand('cmd_copy');" />
@@ -78,7 +79,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
         <menupopup id="menu_UploadPopup">
           <menuitem label="&menu.upload.add;" key="key_add" accesskey="A" oncommand="photos.add_dialog();" />
           <menuitem id="menu_upload" label="&menu.upload;" key="key_upload" accesskey="U" oncommand="photos.upload();" />
-          <menuitem id="menu_mac_hide_app" label="&menu.upload.minimize;" key="key_hide" oncommand="window.minimize();" />
+          <menuitem id="menu_minimize" label="&menu.upload.minimize;" key="key_minimize" oncommand="window.minimize();" />
+          <menuitem id="menu_mac_hide_app" label="&menu.upload.hide;" key="key_hide" oncommand="window.hide();" />
           <menuitem id="menu_FileQuitItem" label="&menu.upload.exit;" key="key_quit" accesskey="Q" oncommand="exit();" />
         </menupopup>
       </menu>
