@@ -16,6 +16,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.upload.add "增加">
 <!ENTITY menu.upload.preferences "偏好">
 <!ENTITY menu.upload.minimize "最小化">
+<!ENTITY menu.upload.hide "隱藏 Flickr Uploadr">
 <!ENTITY menu.upload.exit "終止">
 <!ENTITY menu.edit "編輯">
 <!ENTITY menu.edit.cut "剪下">

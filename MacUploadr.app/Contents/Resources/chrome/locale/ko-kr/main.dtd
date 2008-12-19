@@ -16,6 +16,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.upload.add "추가">
 <!ENTITY menu.upload.preferences "기본 설정">
 <!ENTITY menu.upload.minimize "최소화">
+<!ENTITY menu.upload.hide "Flickr Uploadr 숨기기">
 <!ENTITY menu.upload.exit "종료">
 <!ENTITY menu.edit "수정">
 <!ENTITY menu.edit.cut "잘라내기">

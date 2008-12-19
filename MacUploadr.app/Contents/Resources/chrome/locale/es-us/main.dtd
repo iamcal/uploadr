@@ -16,6 +16,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.upload.add "Agregar">
 <!ENTITY menu.upload.preferences "Preferencias">
 <!ENTITY menu.upload.minimize "Minimizar">
+<!ENTITY menu.upload.hide "Ocultar el Uploadr de Flickr">
 <!ENTITY menu.upload.exit "Salir">
 <!ENTITY menu.edit "Editar">
 <!ENTITY menu.edit.cut "Cortar">
