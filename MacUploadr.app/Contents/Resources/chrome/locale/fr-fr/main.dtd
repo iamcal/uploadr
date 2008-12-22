@@ -50,7 +50,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY buttons.auth "Prêt !">
 <!ENTITY buttons.ok "OK">
 
-<!ENTITY bandwidth.remaining "Quitté ce mois">
+<!ENTITY bandwidth.remaining "Restant ce mois">
 <!ENTITY bandwidth.batch "Ce lot">
 
 <!ENTITY photostream.title "Votre galerie">
