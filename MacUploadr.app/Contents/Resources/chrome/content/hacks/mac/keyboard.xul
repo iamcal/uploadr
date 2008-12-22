@@ -11,5 +11,11 @@ xmlns:html="http://www.w3.org/1999/xhtml">
 			oncommand="menu.help.tips();" />
 		<key id="key_quit" modifiers="accel" key="q"
 			oncommand="exit();" />
+    <key id="key_hide" modifiers="accel" key="h" oncommand="window.hide();" />
+    <key id="key_minimize" modifiers="accel" key="m" oncommand="window.minimize();" />
 	</keyset>
+  <menupopup id="menu_UploadPopup">
+    <menuitem id="menu_minimize" label="&menu.upload.minimize;" key="key_minimize" oncommand="window.minimize();" position="3" />
+    <menuitem id="menu_mac_hide_app" label="&menu.upload.hide;" key="key_hide" oncommand="window.hide();" position="4"/>
+  </menupopup>
 </overlay>
