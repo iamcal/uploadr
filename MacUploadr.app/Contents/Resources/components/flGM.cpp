@@ -920,13 +920,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	AVFrame * video_frame = avcodec_alloc_frame();
 	AVFrame * img_frame = avcodec_alloc_frame();
 	if (!video_frame || !img_frame) { return NS_ERROR_NULL_POINTER; }
-	int bytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
-		codec_ctx->height);
-	uint8_t * buffer = (uint8_t *)av_malloc(bytes * sizeof(uint8_t));
-	if (!buffer) { return NS_ERROR_NULL_POINTER; }
-	avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
-		codec_ctx->width, codec_ctx->height);
-
+	
 	// Report the duration
 	ostringstream out;
 	out << format_ctx->duration / AV_TIME_BASE << "###";
@@ -942,17 +936,23 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	// Seek to the exact frame we want
 	if (0 < av_seek_frame(format_ctx, stream, seek, 0))
 		return NS_ERROR_FILE_UNKNOWN_TYPE;
-	
+
 	while (0 <= av_read_frame(format_ctx, &packet)) {
 		if (packet.stream_index == stream) {
 			avcodec_decode_video(codec_ctx, video_frame, &have_frame,
-				 packet.data, packet.size);
-			
+				packet.data, packet.size);
+			int nBytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
+				codec_ctx->height);
+			uint8_t * buffer = (uint8_t *)av_malloc(nBytes * sizeof(uint8_t));
+			if (!buffer) { return NS_ERROR_NULL_POINTER; }
+			avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
+				codec_ctx->width, codec_ctx->height);
+
 			if (have_frame) {
 				//img_convert((AVPicture *)img_frame, PIX_FMT_RGB24,
 				//	(AVPicture*)video_frame, codec_ctx->pix_fmt,
 				//	codec_ctx->width, codec_ctx->height);
-				
+
 				toRGB_convert_ctx = sws_getContext(
 					codec_ctx->width, codec_ctx->height, codec_ctx->pix_fmt,
 					codec_ctx->width, codec_ctx->height, PIX_FMT_RGB24,
@@ -966,7 +966,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 				sws_scale(toRGB_convert_ctx,
 					video_frame->data, video_frame->linesize, 0, codec_ctx->height,
 					img_frame->data, img_frame->linesize);
-				
+
 				// Convert the keyframe to a PPM in a byte array
 				char header[32];
 				sprintf(header, "P6\n%d %d\n255\n", codec_ctx->width,
@@ -984,7 +984,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 						img_frame->linesize[0], b);
 					bytes_p += b;
 				}
-				
+
 				// Convert the PPM array to a JPEG on disk
 				string * thumb_s = 0;
 				try {
@@ -1041,17 +1041,17 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 					char * o = (char *)e.what();
 					while (*o) { _retval.Append(*o++); }
 				}
-				
+
 				free(bytes);
 				av_free_packet(&packet);
 				break;
 			}
+			av_free(buffer);		
 		}
 		av_free_packet(&packet);
 	}
 
 	// Clean yo' mess
-	av_free(buffer);
 	av_free(img_frame);
 	av_free(video_frame);
 	avcodec_close(codec_ctx);
