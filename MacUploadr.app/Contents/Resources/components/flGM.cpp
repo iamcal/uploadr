@@ -916,6 +916,12 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	// Load the actual codec we found and open the video stream
 	AVCodec * codec = avcodec_find_decoder(codec_ctx->codec_id);
 	if (!codec) { return NS_ERROR_NULL_POINTER; }
+
+	// Inform the codec that we can handle truncated bitstreams -- i.e.,
+    // bitstreams where frame boundaries can fall in the middle of packets
+    if(codec->capabilities & CODEC_CAP_TRUNCATED)
+        codec_ctx->flags|=CODEC_FLAG_TRUNCATED;
+
 	if (0 > avcodec_open(codec_ctx, codec)) { return NS_ERROR_NULL_POINTER; }
 	AVFrame * video_frame = avcodec_alloc_frame();
 	AVFrame * img_frame = avcodec_alloc_frame();
@@ -925,30 +931,63 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	ostringstream out;
 	out << format_ctx->duration / AV_TIME_BASE << "###";
 
+	// HACK: Need to decode a first video frame for the consequent seek to work in case of mpeg => must do some kind of initialisation in the decoder
+	AVPacket packet;
+	int have_frame = 0;
+	int nTotalBytesDecoded = 0;
+	int nBytesDecoded = 0;
+	while (!have_frame && 0 <= av_read_frame(format_ctx, &packet)) {
+		if (packet.stream_index == stream) { //use this packet
+			if(format_ctx->file_size && packet.pos > .25 * format_ctx->file_size) {// don't bother searching further
+				av_free_packet(&packet);
+				break;
+			}
+			nTotalBytesDecoded = 0;
+			while(!have_frame && nTotalBytesDecoded < packet.size) {
+				nBytesDecoded = avcodec_decode_video(codec_ctx, video_frame, &have_frame, 
+					packet.data + nTotalBytesDecoded, packet.size);
+				if (nBytesDecoded < 0) {
+					return NS_ERROR_FILE_UNKNOWN_TYPE;
+				}
+				nTotalBytesDecoded += nBytesDecoded; 
+			}
+		}
+		av_free_packet(&packet);
+	}
+	if(!have_frame) {
+		return NS_ERROR_FILE_UNKNOWN_TYPE;
+	}
 	// Play through 15% of the video
 	double dSeekInSec = (format_ctx->start_time + 0.15 * format_ctx->duration) / AV_TIME_BASE;
 	int64_t seek = dSeekInSec * (double)format_ctx->streams[stream]->time_base.den / format_ctx->streams[stream]->time_base.num;
 
-	AVPacket packet;
-	int have_frame;
+	
 	struct SwsContext *toRGB_convert_ctx = NULL;
 
 	// Seek to the exact frame we want
 	if (0 < av_seek_frame(format_ctx, stream, seek, 0))
 		return NS_ERROR_FILE_UNKNOWN_TYPE;
-
+	avcodec_flush_buffers(codec_ctx);
+	
+	have_frame = 0;
 	while (0 <= av_read_frame(format_ctx, &packet)) {
-		if (packet.stream_index == stream) {
-			avcodec_decode_video(codec_ctx, video_frame, &have_frame,
-				packet.data, packet.size);
-			int nBytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
-				codec_ctx->height);
-			uint8_t * buffer = (uint8_t *)av_malloc(nBytes * sizeof(uint8_t));
-			if (!buffer) { return NS_ERROR_NULL_POINTER; }
-			avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
-				codec_ctx->width, codec_ctx->height);
-
+		if (packet.stream_index == stream) { //use this packet
+			nTotalBytesDecoded = 0;
+			while(!have_frame && nTotalBytesDecoded < packet.size) {
+				nBytesDecoded = avcodec_decode_video(codec_ctx, video_frame, &have_frame, 
+					packet.data + nTotalBytesDecoded, packet.size);
+				if (nBytesDecoded < 0) {
+					return NS_ERROR_FILE_UNKNOWN_TYPE;
+				}
+				nTotalBytesDecoded += nBytesDecoded; 
+			}
 			if (have_frame) {
+				int nBytes = avpicture_get_size(PIX_FMT_RGB24, codec_ctx->width,
+					codec_ctx->height);
+				uint8_t * buffer = (uint8_t *)av_malloc(nBytes * sizeof(uint8_t));
+				if (!buffer) { return NS_ERROR_NULL_POINTER; }
+				avpicture_fill((AVPicture *)img_frame, buffer, PIX_FMT_RGB24,
+					codec_ctx->width, codec_ctx->height);
 				//img_convert((AVPicture *)img_frame, PIX_FMT_RGB24,
 				//	(AVPicture*)video_frame, codec_ctx->pix_fmt,
 				//	codec_ctx->width, codec_ctx->height);
@@ -1044,9 +1083,11 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 
 				free(bytes);
 				av_free_packet(&packet);
+				av_free(buffer);		
 				break;
 			}
-			av_free(buffer);		
+
+		
 		}
 		av_free_packet(&packet);
 	}
