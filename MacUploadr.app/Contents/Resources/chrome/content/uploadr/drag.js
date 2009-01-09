@@ -26,7 +26,7 @@ var drag = {
 			var paths = [];
 			var process_dir = function(files) {
 				while (files.hasMoreElements()) {
-					var f = files.getNext();
+					var f = files.getNext().QueryInterface(Ci.nsIFile);
 					if (f.isDirectory()) {
 						process_dir(f.directoryEntries);
 					} else {
