@@ -628,6 +628,7 @@ var photos = {
 		// Update the UI
 		if (from_user) {
 			status.set(locale.getString('status.uploading'));
+			document.getElementById('t_clear').className = 'disabled_button';
 			buttons.upload.disable();
 			document.getElementById('photos_sort_default')
 				.style.display = 'none';
