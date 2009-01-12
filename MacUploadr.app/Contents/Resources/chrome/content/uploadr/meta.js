@@ -455,6 +455,10 @@ var meta = {
 			var name = result.name;
 			var desc = result.desc;
 			if (!name) { return; }
+			var currentSets = meta.sets.map(function(x) {return (x ? x.title : "");});
+			if (currentSets.indexOf(name) != -1) {
+			    return;
+			}
 			meta.sets.push({
 				title: name, // Sorry
 				description: desc,
