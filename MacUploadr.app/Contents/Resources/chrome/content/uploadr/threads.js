@@ -96,9 +96,7 @@ ThumbCallback.prototype = {
 		try {
 			unblock_normalize();
 			if (conf.console.thumb) {
-				Cc['@mozilla.org/consoleservice;1']
-					.getService(Ci.nsIConsoleService)
-					.logStringMessage('GM THUMB: ' + this.result);
+				logStringMessage('GM THUMB: ' + this.result);
 			}
 
 			// Parse the returned string

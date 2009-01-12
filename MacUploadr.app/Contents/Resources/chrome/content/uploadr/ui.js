@@ -290,6 +290,13 @@ var status = {
 
 };
 
+var logStringMessage = function(msg) {
+    Cc['@mozilla.org/consoleservice;1']
+				.getService(Ci.nsIConsoleService)
+				.logStringMessage(new Date().toString() + ': ' + msg);
+};
+
+
 // Override the alert, confirm and prompt functions to take a title and
 // text for OK/Cancel buttons
 var alert = function(msg, title, ok) {

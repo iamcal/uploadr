@@ -169,9 +169,7 @@ var upload = {
 				photos.kb.sent -= photos.uploading[id].size;
 				upload.start(id);
 				if (conf.console.retry) {
-					Cc['@mozilla.org/consoleservice;1']
-						.getService(Ci.nsIConsoleService)
-						.logStringMessage('UPLOAD RETRY: id = ' + id +
+					logStringMessage('UPLOAD RETRY: id = ' + id +
 						', retry = ' + upload.retry_count);
 				}
 			}
@@ -731,9 +729,7 @@ var Upload = function(params, id) {
 Upload.prototype = {
 	run: function() {
 		if (conf.console.upload) {
-			Cc['@mozilla.org/consoleservice;1']
-				.getService(Ci.nsIConsoleService)
-				.logStringMessage('UPLOAD: ' + this.params.toSource());
+			logStringMessage('UPLOAD: ' + this.params.toSource());
 		}
 		var esc_params = api.escape_and_sign(this.params, true);
         try {
@@ -909,9 +905,7 @@ var UploadDoneCallback = function(raw, id) {
 UploadDoneCallback.prototype = {
 	run: function() {
 		if (conf.console.upload) {
-			Cc['@mozilla.org/consoleservice;1']
-				.getService(Ci.nsIConsoleService)
-				.logStringMessage('UPLOAD DONE: ' + this.raw 
+			logStringMessage('UPLOAD DONE: ' + this.raw 
 				+ ' upload cancelled : ' + upload.cancel + ' ui cancel :  ' + ui.cancel);
 		}
 		// Try to parse the response but fail gracefully

@@ -207,9 +207,7 @@ var api = {
 		if (null == browser) { browser = false; }
 		if (null == post) { post = false; }
 		if (conf.console.request) {
-			Cc['@mozilla.org/consoleservice;1']
-				.getService(Ci.nsIConsoleService)
-				.logStringMessage('API REQUEST: ' + params.toSource() +
+		    logStringMessage('API REQUEST: ' + params.toSource() +
 				', ' + url);
 		}
 
@@ -304,9 +302,7 @@ var api = {
 							Components.utils.reportError('API ERROR: ' +
 								xhr.responseText);
 						} else if (conf.console.response) {
-							Cc['@mozilla.org/consoleservice;1']
-								.getService(Ci.nsIConsoleService)
-								.logStringMessage('API RESPONSE: ' +
+							logStringMessage('API RESPONSE: ' +
 								xhr.responseText);
 						}
 

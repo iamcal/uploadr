@@ -783,9 +783,7 @@ var photos = {
     	document.getElementById('t_clear').className = 'disabled_button';
     	photos.thumb_cancel = true;
     	if (conf.console.thumb) {
-				Cc['@mozilla.org/consoleservice;1']
-					.getService(Ci.nsIConsoleService)
-					.logStringMessage('clearing');
+				logStringMessage('clearing');
 			}
         photos.list = [];
         photos.selected = [];
