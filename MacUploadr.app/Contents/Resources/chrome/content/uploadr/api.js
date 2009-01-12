@@ -19,6 +19,12 @@ var wrap = {
 		},
 		_checkToken: function(rsp) {
 			if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
+			for each (var u in users.list) {
+				if (u.current) {
+					u.token = null;
+					break;
+				}
+			}
 				users.logout(false);
 			} else {
 				users.token = rsp.getElementsByTagName('token')[0]
