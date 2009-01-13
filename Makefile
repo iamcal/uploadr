@@ -131,6 +131,7 @@ dummy:
 	@echo "  win all, mac all:   Build the whole thing"
 	@echo "  packaging, mar: Build a single package or update but requires"
 	@echo "              de-de, en-US, es-us, fr-fr, it-it, ko-kr, pt-br, or zh-hk"
+	@echo "              dev for development build: i.e. unjared content"
 
 all: all-build all-mar
 
@@ -180,6 +181,8 @@ zh-hk:
 	@echo "Building Chinese (zh-hk)"
 ja-jp:
 	@echo "Building Japanese (ja-jp)"
+dev:
+	@echo "Development Build"
 
 packaging:
 	@echo "Build step"
@@ -254,7 +257,8 @@ endif
 	mkdir $(BUILD)/jar
 	mkdir $(BUILD)/jar/content
 	mkdir $(BUILD)/jar/content/uploadr
-	cp $(SRC)/Resources/chrome/content/uploadr/*.* $(BUILD)/jar/content/uploadr/
+	cp $(SRC)/Resources/chrome/content/uploadr/*.js $(BUILD)/jar/content/uploadr/
+	cp $(SRC)/Resources/chrome/content/uploadr/*.xul $(BUILD)/jar/content/uploadr/
 	mkdir $(BUILD)/jar/content/hacks
 ifeq (mac, $(PLATFORM))
 	mkdir $(BUILD)/jar/content/hacks/mac
@@ -276,8 +280,13 @@ endif
 	cp $(SRC)/Resources/chrome/locale/branding/*.* $(BUILD)/jar/locale/branding/
 	mkdir $(BUILD)/jar/locale/$(INTL)
 	cp $(SRC)/Resources/chrome/locale/$(INTL)/*.* $(BUILD)/jar/locale/$(INTL)/
+ifeq (dev, $(filter dev, $(MAKECMDGOALS)))
+	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/chrome/chrome.manifest > \
+		$(RES)/chrome/chrome.manifest
+else
 	sed 's/en-US/$(INTL)/g' $(SRC)/Resources/chrome/chrome.manifest.prod > \
 		$(RES)/chrome/chrome.manifest
+endif
 	mkdir $(BUILD)/jar/skin
 #ifeq (mac, $(PLATFORM))
 #	mkdir $(BUILD)/jar/skin/hacks
@@ -296,12 +305,17 @@ endif
 	cp $(SRC)/Resources/chrome/skin/uploadr/*.css $(BUILD)/jar/skin/uploadr/
 	cp $(SRC)/Resources/chrome/skin/uploadr/*.gif $(BUILD)/jar/skin/uploadr/
 	cp $(SRC)/Resources/chrome/skin/uploadr/*.png $(BUILD)/jar/skin/uploadr/
+
+ifeq (dev, $(filter dev, $(MAKECMDGOALS)))
+	cd $(BUILD)/jar/ && mv content $(RES)/chrome/ && mv locale $(RES)/chrome/ && mv skin $(RES)/chrome/
+else
 ifeq (win, $(PLATFORM))
 	cd $(BUILD)/jar/ && zip uploadr.zip -r content locale skin
 else
 	cd $(BUILD)/jar/ && zip uploadr -r content locale skin
 endif
 	mv $(BUILD)/jar/uploadr.zip $(RES)/chrome/uploadr.jar
+endif
 	rm -rf $(BUILD)/jar
 
 	@# Non-JAR'd Chrome
@@ -352,11 +366,15 @@ ifeq (win, $(PLATFORM))
 		$(BUILD)/config-temp.ini > \
 		$(BUILD)/config.ini
 	rm $(BUILD)/config-temp.ini
-
+ifeq (dev, $(filter dev, $(MAKECMDGOALS)))
+	perl win_installer/utf16.pl \
+		win_installer/build_dev.nsi > \
+		$(BUILD)/build.nsi
+else
 	perl win_installer/utf16.pl \
 		win_installer/build.nsi > \
 		$(BUILD)/build.nsi
-
+endif
 	cp win_installer/vcredist_x86.exe $(BUILD)/vcredist_x86.exe
 
 	$(MAKE_NSIS) -DVERSION=$(VER) \
