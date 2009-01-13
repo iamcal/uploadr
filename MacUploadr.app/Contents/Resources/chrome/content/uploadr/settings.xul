@@ -37,7 +37,7 @@ xmlns:html="http://www.w3.org/1999/xhtml">
     </box>
   </vbox>
   <vbox flex="1" id="loggedin">
-    <groupbox flex="1">
+    <groupbox id="authorization" flex="1">
       <caption label="&settings.users;" />
       <hbox id="user_settings">
         <vbox>

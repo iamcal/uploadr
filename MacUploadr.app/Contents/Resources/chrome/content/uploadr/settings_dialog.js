@@ -19,7 +19,10 @@ var settings = {
 		if (null == settings.nsid) {
 			document.getElementById('dialog_settings').style.width = '300px';
 			document.getElementById('notloggedin').style.display = '-moz-box';
-			document.getElementById('loggedin').style.display = 'none';
+			document.getElementById('flickr_settings').style.display = 'none';
+			document.getElementById('authorization').style.display = 'none';
+            document.getElementById('sizing_settings').style.display = 'none';
+            document.getElementById('connection_settings').style.display = '-moz-done';
 		}
 
 		// Show everything for logged in users
