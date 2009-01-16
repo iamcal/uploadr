@@ -59,6 +59,27 @@ var file = {
 		_stream.close();
 	},
 
+	// Append an object into a file as JSON
+	append: function(name, data) {
+		var profile = Cc['@mozilla.org/file/directory_service;1']
+			.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile);
+		profile.append(name);
+		var _stream = Cc['@mozilla.org/network/file-output-stream;1']
+			.createInstance(Ci.nsIFileOutputStream);
+		_stream.init(profile, 0x02 /* Write-only */ | 0x08 /* Create */
+			| 0x10 /* Append */ | 0x40 /* Sync */, 0666, 0);
+		var stream = Cc['@mozilla.org/intl/converter-output-stream;1']
+			.createInstance(Ci.nsIConverterOutputStream);
+		stream.init(_stream, 'UTF-8', 0, '?'.charCodeAt(0));
+		if ('string' == typeof data) {
+			stream.writeString(data);
+		} else {
+			stream.writeString(data.toSource());
+		}
+		stream.close();
+		_stream.close();
+	},
+
 	// File size in kilobytes
 	size: function(path) {
 		try {
@@ -67,7 +88,7 @@ var file = {
 			file.initWithPath(path);
 			return 1 + Math.round(file.fileSize >> 10);
 		} catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 			return 0;
 		}
 	},
@@ -82,7 +103,7 @@ var file = {
 			    file.remove(false);
 			}
         } catch (err) {
-            Components.utils.reportError(err);
+            logErrorMessage(err);
         }
     }
 };

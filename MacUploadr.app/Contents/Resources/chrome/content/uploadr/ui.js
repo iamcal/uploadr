@@ -291,11 +291,24 @@ var status = {
 };
 
 var logStringMessage = function(msg) {
+    if(conf.console.fileLogging) {
+        return logLocally(msg);
+    }
     Cc['@mozilla.org/consoleservice;1']
 				.getService(Ci.nsIConsoleService)
-				.logStringMessage(new Date().toString() + ': ' + msg);
+				.logStringMessage(new Date().toUTCString() + ': ' + msg);
 };
 
+var logErrorMessage = function(msg) {
+    if(conf.console.fileLogging) {
+        return logLocally(msg);
+    }
+    Components.utils.reportError(new Date().toUTCString() + ': ' + msg);
+};
+
+var logLocally = function(msg) {
+    file.append('log.json', '\n\n' + new Date().toUTCString() + ': ' + msg);
+}
 
 // Override the alert, confirm and prompt functions to take a title and
 // text for OK/Cancel buttons
@@ -432,8 +445,11 @@ var exit = function(force) {
 	photos.thumb_cancel = true;
 	ui.cancel = true;
 	upload.cancel = true;
-	threads.worker.shutdown();
-	threads.uploadr.shutdown();
+	try {
+	    threads.worker.shutdown();
+	    threads.uploadr.shutdown();
+	}
+	catch (err) {}
 
 	// Finally exit
 	var e = Cc['@mozilla.org/toolkit/app-startup;1']

@@ -196,6 +196,10 @@ var wrap = {
 
 							// Error'd photo
 							if (2 == complete) {
+							    if (conf.console.error) {
+							        logErrorMessage('_checkTickets for photo ' + upload.tickets[ticket_id].id
+							        + ' returned complete=2');
+							    }
 								--upload.tickets_count;
 								upload._sync(false, upload.tickets[ticket_id].id);
 								delete upload.tickets[ticket_id];
@@ -244,6 +248,9 @@ var wrap = {
 						upload._check_tickets();
 					} else if (conf.tickets_retry_count >
 						upload.tickets_retry_count) {
+						if (conf.console.retry) {
+						    logStringMessage('_check_tickets() : tickets_retry_count = ' + upload.tickets_retry_count);
+						}
 						++upload.tickets_retry_count;
 						upload._check_tickets();
 					}
@@ -255,7 +262,6 @@ var wrap = {
 						upload.tickets = {};
 						upload.done();
 					}
-
 				}
 				unblock_exit();
 			}

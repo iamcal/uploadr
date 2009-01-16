@@ -40,7 +40,8 @@ var conf = {
 		upload: false,
 		error: true,
 		timeout: true,
-		retry: true
+		retry: true,
+		fileLogging: false
 	},
 
 	// Scrolling threshold for dragging (pixels);
@@ -153,5 +154,10 @@ var conf = {
 		// use some of the parsed options
 
 		this.version = this.app_ini.App.Version.replace(/a/, ' alpha ').replace(/b/, ' beta ');
+		
+		//reset log file if needed
+		if(conf.console.fileLogging) {
+		    file.remove('log.json');
+        }
 	},
 };

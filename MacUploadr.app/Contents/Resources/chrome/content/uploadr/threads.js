@@ -35,7 +35,7 @@ var threads = {
 				.get('resource:app', Ci.nsIFile).path);
             threads.initialized = true;
 		} catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 		}
 	}
 
@@ -69,7 +69,7 @@ Thumb.prototype = {
 
 		// The nerdy error message
 		catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 		}
 
 		// Phone home to the UI
@@ -274,14 +274,14 @@ ThumbCallback.prototype = {
 							.style.display = '-moz-box';
 					}
 				};
-				Components.utils.reportError(this.result);
+				logErrorMessage(this.result);
 			}
 
 			// After updating, make it visible again
 			img.style.visibility = 'visible';
 
 		} catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 		}
 
 		// Tell extensions that we got a new thumbnail
@@ -317,7 +317,7 @@ Rotate.prototype = {
 			var rotate = result.match(/^ok(.*)$/);
 
 			if (null == rotate) {
-				Components.utils.reportError(result);
+				logErrorMessage(result);
 			} else {
 				threads.main.dispatch(new RotateCallback(this.id, rotate[1]),
 					threads.main.DISPATCH_NORMAL);
@@ -329,7 +329,7 @@ Rotate.prototype = {
 			}
 
 		} catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 		}
 	},
 	QueryInterface: function(iid) {
@@ -374,7 +374,7 @@ Sort.prototype = {
 			threads.main.dispatch(new SortCallback(), threads.main.DISPATCH_NORMAL);
 
 		} catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 		}
 	},
 	QueryInterface: function(iid) {
@@ -455,7 +455,7 @@ Resize.prototype = {
 				threads.main.DISPATCH_NORMAL);
 
 		} catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 		}
 	},
 	QueryInterface: function(iid) {
@@ -478,7 +478,7 @@ ResizeCallback.prototype = {
 			var resize = this.result.match(/^([0-9]+)x([0-9]+)(.+)$/);
 
 			if (null == resize) {
-				Components.utils.reportError(this.result);
+				logErrorMessage(this.result);
 			} else {
 				list = photos.ready[photos.ready.length - 1];
 
@@ -494,7 +494,7 @@ ResizeCallback.prototype = {
 
 			}
 		} catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 		}
 	},
 	QueryInterface: function(iid) {
