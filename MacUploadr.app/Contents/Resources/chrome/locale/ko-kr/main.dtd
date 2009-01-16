@@ -10,6 +10,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 -->
 
+
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "사진 업로드">
@@ -26,7 +27,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.tools "도구">
 <!ENTITY menu.tools.addons "추가 기능">
 <!ENTITY menu.tools.console "콘솔">
-<!ENTITY menu.tools.venkman "벤크맨 디버거">
+<!ENTITY menu.tools.venkman "Venkman">
 <!ENTITY menu.help "도움말">
 <!ENTITY menu.help.about "Flickr Uploadr 정보">
 <!ENTITY menu.help.tips "팁과 트릭">
@@ -37,9 +38,9 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY login "로그인">
 <!ENTITY switch "사용자를 전환할까요?">
 
-<!ENTITY auth.confirm "Flickr Uploadr가 Flickr 웹사이트의 귀하 계정에 연결하는 것을 허가하려면 커다란 준비! 단추를 클릭합니다.">
+<!ENTITY auth.confirm "Flickr Uploadr가 Flickr의 나의 계정에 연결되도록 하려면, 아래 준비! 버튼을 클릭하세요. ">
 <!ENTITY auth.confirm.oops "다시 허가하겠습니까?">
-<!ENTITY auth.alternate "브라우저가 자동으로 열리지 않을 경우 이 URL을 방문한 다음 다시 돌아와서 커다란 준비! 단추를 클릭하세요.">
+<!ENTITY auth.alternate "브라우저가 자동으로 열리지 않을 시, 아래 URL을 복사해보세요. 그런 다음 돌아와서 위의 준비! 버튼을 클릭하세요.">
 
 <!ENTITY tools.add "+ 추가">
 <!ENTITY tools.remove "- 제거">
@@ -60,7 +61,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 <!ENTITY photos.init.text.1 "또는 ">
 <!ENTITY photos.init.text.2 " 을(를) 클릭하여 컴퓨터에서 파일을 찾습니다.">
-<!ENTITY photos.init.note "참고하십시오.">
+<!ENTITY photos.init.note "아래를 참고 하세요.">
 
 <!ENTITY photos.new "그 배치를 업로드하는 중에 새로운 배치를 시작할 수 있습니다.">
 
@@ -117,12 +118,12 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY meta.sets.added.none "세트를 선택하지 않았습니다">
 <!ENTITY meta.hidden "세트를 보려면 로그인하십시오">
 
-<!ENTITY meta.no.prompt "(하나 또는 여러 개의) 아이템을 선택해 제목, 태그 및 설명 추가 또는 아이템을 세트에 추가">
+<!ENTITY meta.no.prompt "하나 또는 여러 개의 아이템을 선택합니다. 그 후 제목, 태그 및 설명을 추가 하거나 아이템을 세트에 추가합니다. ">
 <!ENTITY meta.batch.prompt "이제 모든 제목을 새 제목으로 바꾸거나, 기존 설명에 추가하거나, 더 많은 태그를 추가하거나, 더 많은 세트에 추가할 수 있습니다.">
 
 <!ENTITY dialog.set.title "세트 만들기">
 <!ENTITY dialog.set.name "새 세트에 이름 붙이기:">
-<!ENTITY dialog.set.description "그리고 설명(옵션):">
+<!ENTITY dialog.set.description "설명(옵션)">
 
 <!ENTITY dialog.about "Flickr Uploadr 정보">
 <!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc.  All rights reserved.  이 프로그램은 무료 소프트웨어로서, 오직 GNU 일반 공개 사용권(GPL) 버전 2의 약관에 따라 재배포 및/또는 수정할 수 있습니다.">
@@ -138,3 +139,5 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY help.drag "^^끌어서 놓기^^는 가장 많이 사용하는 방법입니다.">
 <!ENTITY help.drag.text "아이템을 업로드할 때 포토스트림 페이지에 표시되길 원하는 순서로 아이템을 끌어올 수 있습니다.  또한 필요하면 정렬 기준을 재설정하여 촬영 날짜 순으로 아이템이 정렬되도록 되돌릴 수도 있습니다.">
 <!ENTITY help.faq "그 밖의 궁금한 점은 ^^Uploadr FAQ^^를 방문해 주십시오.">
+
+<!ENTITY photos.init.text.joined "또는 {TOKEN}을 클릭하여 컴퓨터에서 파일을 찾습니다.">

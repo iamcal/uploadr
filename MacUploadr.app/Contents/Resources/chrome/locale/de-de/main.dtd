@@ -10,6 +10,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 -->
 
+
 <!ENTITY title "Flickr Uploadr">
 
 <!ENTITY menu.upload "Hochladen">
@@ -26,7 +27,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY menu.tools "Extras">
 <!ENTITY menu.tools.addons "Zusätze">
 <!ENTITY menu.tools.console "Konsole">
-<!ENTITY menu.tools.venkman "Venkman-Debugger">
+<!ENTITY menu.tools.venkman "Venkman">
 <!ENTITY menu.help "Hilfe">
 <!ENTITY menu.help.about "Infos zu Flickr Uploadr">
 <!ENTITY menu.help.tips "Tipps und Tricks">
@@ -111,7 +112,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY meta.single.sets.add "Zu Alben hinzufügen:">
 <!ENTITY meta.batch.sets.add "Zu weiteren Alben hinzufügen:">
 <!ENTITY meta.sets.add.none "Keine Serien">
-<!ENTITY meta.sets.create "Serie erstellen...">
+<!ENTITY meta.sets.create "Album erstellen...">
 <!ENTITY meta.single.sets.added "Dies wird hinzugefügt zu:">
 <!ENTITY meta.batch.sets.added "Diese werden hinzugefügt zu:">
 <!ENTITY meta.sets.added.none "Sie haben keine Serien ausgewählt">
