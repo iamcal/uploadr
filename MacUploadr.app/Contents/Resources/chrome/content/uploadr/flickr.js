@@ -12,7 +12,7 @@
 try {
 	var key = Cc['@flickr.com/key;1'].createInstance(Ci.flIKey);
 } catch (err) {
-	Components.utils.reportError(err);
+	logErrorMessage(err);
 }
 
 function toOpenWindowByType(inType, uri) {
@@ -289,17 +289,18 @@ var api = {
 			xhr.onreadystatechange = function() {
 			    if (4 == xhr.readyState && 200 != xhr.status) {
 			        if (conf.console.error){
-			                Components.utils.reportError('STATUS: ' + xhr.status + ', calling: ' + params.method);
+			                logErrorMessage('STATUS: ' + xhr.status +
+			                ', responseText: ' + xhr.responseText + 
+			                ', calling: ' + params.toSource());
 			            }
 			    }
-				if (4 == xhr.readyState && 200 == xhr.status
-					&& xhr.responseXML) {
+				if (4 == xhr.readyState && 200 == xhr.status) {
 					try {
-						var rsp = xhr.responseXML.documentElement;
+						var rsp = xhr.responseXML ? xhr.responseXML.documentElement : false;
 						if (conf.console.error && (
 							'object' != typeof rsp
 							|| 'ok' != rsp.getAttribute('stat'))) {
-							Components.utils.reportError('API ERROR: ' +
+							logErrorMessage('API ERROR: ' +
 								xhr.responseText);
 						} else if (conf.console.response) {
 							logStringMessage('API RESPONSE: ' +
@@ -326,13 +327,19 @@ var api = {
 						}
 
 					} catch (err) {
-						Components.utils.reportError(err);
+						logErrorMessage(err);
 					}
 				}
 			};
 
 			// Send the request
 			xhr.open(post ? 'POST' : 'GET', url, true);
+			xhr:onerror = function() {
+			    if (conf.console.error){
+			        logErrorMessage('Error calling: ' + params.toSource());
+			    }
+			    xhr.abort();
+			};
 			if (post) {
 				xhr.setRequestHeader('Content-Type',
 					'multipart/form-data; boundary=' + boundary);
@@ -353,9 +360,12 @@ var api = {
 			else if (params.method) {
 				api.timeouts[params['api_sig']] = window.setTimeout(
 				function() {
+				    //we decide to timeout to try again later. Abort this otherwise, we'll hit the browser limitation of # of open requests
+				    xhr.abort();
+				    delete xhr;
 					if (conf.console.timeout) {
-						Components.utils.reportError('API TIMEOUT: ' +
-							params.method);
+						logErrorMessage('API TIMEOUT: ' +
+							params.toSource());
 					}
 					if ('function' == typeof callback) {
 						if (id) { callback(false, id); }

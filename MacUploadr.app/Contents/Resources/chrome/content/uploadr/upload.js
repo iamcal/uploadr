@@ -143,7 +143,7 @@ var upload = {
         // If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 			if (conf.console.error) {
-				Components.utils.reportError('UPLOAD ERROR: ' +
+				logErrorMessage('UPLOAD ERROR: ' +
 					'object' == typeof rsp ? rsp.toSource() : rsp);
 			}
 
@@ -200,11 +200,12 @@ var upload = {
 					'id': id,
 					'token': users.list[photos.uploading[id].nsid].token
 				};
+			
 			++upload.tickets_count;
 			if (null != upload.tickets_handle) {
 				window.clearTimeout(upload.tickets_handle);
 				upload.tickets_handle = null;
-				upload.tickets_delta = 1000;
+			upload.tickets_delta = 1000;
 			}
 			upload.tickets_retry_count = 0;
 			upload.check_tickets();
@@ -225,7 +226,7 @@ var upload = {
 
 	// Finish a synchronous upload
 	_sync: function(rsp, id) {
-
+	
 		// Stop checking progress if we're in synchronous mode
 		if ('sync' == conf.mode) {
 			if (null != upload.progress_handle) {
@@ -234,7 +235,7 @@ var upload = {
 			}
 			upload.progress_zero = 0;
 		}
-
+        
 		// How did the upload go?
 		var photo_id;
 		var stat;
@@ -269,7 +270,9 @@ var upload = {
 				if (null == set.id) {
 
 					// Queue this photo if a create call hasn't returned
-					if (set.busy) { set.add.push(photo_id); }
+					if (set.busy) { 
+					    set.add.push(photo_id); 
+					}
 
 					// Otherwise create
 					else {
@@ -413,7 +416,7 @@ var upload = {
 	// Timeout an upload after too much inactivity
 	timeout: function(id) {
 		if (conf.console.timeout) {
-			Components.utils.reportError('UPLOAD TIMEOUT: ' + id);
+			logErrorMessage('UPLOAD TIMEOUT: ' + id);
 		}
 		window.clearInterval(upload.progress_handle);
 		upload.progress_handle = null;
@@ -441,7 +444,7 @@ var upload = {
 		if (60000 > upload.tickets_delta) {
 			upload.tickets_delta *= 2;
 		}
-		if (0 < upload.tickets_count) {
+		if (!upload.cancel && 0 < upload.tickets_count) {
 			upload.tickets_handle = window.setTimeout(function() {
 				upload.check_tickets();
 			}, upload.tickets_delta);
@@ -862,11 +865,12 @@ Upload.prototype = {
 					// payload
 					threads.main.dispatch(new UploadDoneCallback(
 						this.raw, this.id), threads.main.DISPATCH_NORMAL);
+					transport.close(0); // reason is supposed to be passed as parameter!?
 
 				},
 			}, null);
 		} catch (err) {
-			Components.utils.reportError(err);
+			logErrorMessage(err);
 			threads.main.dispatch(new UploadDoneCallback(
 			    false, this.id), threads.main.DISPATCH_NORMAL);
 		}
@@ -917,7 +921,7 @@ UploadDoneCallback.prototype = {
 			    rsp = parser.parseFromString(this.raw,
 				    'text/xml').documentElement;
 		    } catch (err) {
-			    Components.utils.reportError(err);
+			    logErrorMessage(err);
 		    }
 		}
 
