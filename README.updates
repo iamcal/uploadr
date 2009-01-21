@@ -18,7 +18,7 @@ comment the Mac-specific line if you're on Windows:
   http://developer.mozilla.org/en/docs/Configuring_Build_Options
 
 Now checkout and build Mozilla:
-  $ cvs -d :pserver:anonymous:anonymous@cvs-mirror.mozilla.org:/cvsroot \
+  $ cvs -d :pserver:anonymous@cvs-mirror.mozilla.org:/cvsroot \
     co mozilla/client.mk
   $ cd mozilla
   $ make -f client.mk checkout

@@ -2,7 +2,7 @@
 
 Flickr Uploadr
 
-Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+Copyright (c) 2007-2009 Yahoo! Inc.  All rights reserved.  This library is
 free software; you can redistribute it and/or modify it under the terms of
 the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
@@ -125,7 +125,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY dialog.set.description "以及描述（可選的）：">
 
 <!ENTITY dialog.about "關於 Flickr Uploadr">
-<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc. 版權所有，不得轉載。此程式為免費軟體；你可以在 GNU General Public License（GPL）條款下重新散佈和/或修改此程式（僅限第 2 版）。">
+<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007-2009 Yahoo! Inc. 版權所有，不得轉載。此程式為免費軟體；你可以在 GNU General Public License（GPL）條款下重新散佈和/或修改此程式（僅限第 2 版）。">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner 的版權歸 © 2007 Mozilla Foundation 所有。它根據 Mozilla Public License、GNU General Public License 或 GNU Lesser General Public License 使用。">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick 的版權歸 © 2007 GraphicsMagick Group 所有。它根據 MIT/X11 授權使用。">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2 的版權歸 © 2004-2007 Andreas Hugge1 所有。它根據 GNU General Public License 使用。">

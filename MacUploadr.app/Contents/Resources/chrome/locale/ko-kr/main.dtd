@@ -2,7 +2,7 @@
 
 Flickr Uploadr
 
-Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+Copyright (c) 2007-2009 Yahoo! Inc.  All rights reserved.  This library is
 free software; you can redistribute it and/or modify it under the terms of
 the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
@@ -126,7 +126,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <!ENTITY dialog.set.description "설명(옵션)">
 
 <!ENTITY dialog.about "Flickr Uploadr 정보">
-<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007 Yahoo! Inc.  All rights reserved.  이 프로그램은 무료 소프트웨어로서, 오직 GNU 일반 공개 사용권(GPL) 버전 2의 약관에 따라 재배포 및/또는 수정할 수 있습니다.">
+<!ENTITY dialog.about.copyright.yahoo "Copyright © 2007-2009 Yahoo! Inc.  All rights reserved.  이 프로그램은 무료 소프트웨어로서, 오직 GNU 일반 공개 사용권(GPL) 버전 2의 약관에 따라 재배포 및/또는 수정할 수 있습니다.">
 <!ENTITY dialog.about.copyright.xulrunner "XULRunner는 copyright © 2007 Mozilla Foundation입니다.  Mozilla 공개 사용권, GNU 일반 공개 사용권, 또는 GNU 완화 일반 공개 사용권에 따라 사용할 수 있습니다.">
 <!ENTITY dialog.about.copyright.graphicsmagick "GraphicsMagick은 copyright © 2007 GraphicsMagick Group입니다.  MIT/X11 사용권에 따라 사용할 수 있습니다.">
 <!ENTITY dialog.about.copyright.exiv2 "Exiv2는 copyright © 2004-2007 Andreas Huggel입니다.  GNU 일반 공개 사용권에 따라 사용할 수 있습니다.">
