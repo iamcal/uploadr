@@ -380,10 +380,13 @@ endif
 	$(MAKE_NSIS) -DVERSION=$(VER) \
 		-DVERSION_DATE=$(VER_DATE) \
 		$(BUILD)/build.nsi
-
+ifeq (dev, $(filter dev, $(MAKECMDGOALS)))
+	mv $(BUILD)/FlickrUploadr-$(VER)-XX.exe \
+		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT)-dev.exe
+else
 	mv $(BUILD)/FlickrUploadr-$(VER)-XX.exe \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).exe
-
+endif
 	rm $(BUILD)/build.nsi
 	rm $(BUILD)/strings.nsh
 	rm $(BUILD)/config.ini
