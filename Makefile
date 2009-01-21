@@ -100,7 +100,7 @@ PLATFORM := mac
 GM_VER := 1.2.5
 
 # Location of Mozilla tree for the MAR tools
-MOZILLA := ~/devel/mozilla
+MOZILLA := ~/UPLOADR/mozilla
 
 # Location for build staging
 #   The base of this path must exist before running make
@@ -343,9 +343,15 @@ ifeq (mac, $(PLATFORM))
 	cp mac_installer/install-pane-$(INTL_SHORT).png $(BUILD)/.i.png
 	cp mac_installer/DS_Store $(BUILD)/.DS_Store
 	rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).dmg
+ifeq (dev, $(filter dev, $(MAKECMDGOALS)))
+	hdiutil create -srcfolder $(BUILD) -volname "Flickr Uploadr $(VER)" \
+		-format UDZO -imagekey zlib-level=9 \
+		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT)-dev.dmg
+else
 	hdiutil create -srcfolder $(BUILD) -volname "Flickr Uploadr $(VER)" \
 		-format UDZO -imagekey zlib-level=9 \
 		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).dmg
+endif
 endif
 
 	@# Create NSIS installer for Windows
