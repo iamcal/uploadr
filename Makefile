@@ -1,4 +1,4 @@
-#
+f#
 # Flickr Uploadr
 #
 # Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
@@ -422,7 +422,7 @@ endif
 	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar
 	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
-		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar \
+		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT)-$(PLATFORM).complete.mar \
 		$(BUILD)/new &> /dev/null
 #	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar
 #	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
