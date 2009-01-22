@@ -143,7 +143,7 @@ var upload = {
         // If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 			if (conf.console.error) {
-				logErrorMessage('UPLOAD ERROR: ' +
+				Components.utils.reportError(new Date().toUTCString() +'UPLOAD ERROR: ' +
 					'object' == typeof rsp ? rsp.toSource() : rsp);
 			}
 
@@ -416,7 +416,7 @@ var upload = {
 	// Timeout an upload after too much inactivity
 	timeout: function(id) {
 		if (conf.console.timeout) {
-			logErrorMessage('UPLOAD TIMEOUT: ' + id);
+			Components.utils.reportError(new Date().toUTCString() +'UPLOAD TIMEOUT: ' + id);
 		}
 		window.clearInterval(upload.progress_handle);
 		upload.progress_handle = null;
@@ -870,7 +870,7 @@ Upload.prototype = {
 				},
 			}, null);
 		} catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
 			threads.main.dispatch(new UploadDoneCallback(
 			    false, this.id), threads.main.DISPATCH_NORMAL);
 		}
@@ -921,7 +921,7 @@ UploadDoneCallback.prototype = {
 			    rsp = parser.parseFromString(this.raw,
 				    'text/xml').documentElement;
 		    } catch (err) {
-			    logErrorMessage(err);
+			    Components.utils.reportError(new Date().toUTCString() +err);
 		    }
 		}
 

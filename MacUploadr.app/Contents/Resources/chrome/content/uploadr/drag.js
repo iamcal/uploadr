@@ -56,5 +56,5 @@ try {
 	drag.flavors = new FlavourSet();
 	drag.flavors.appendFlavour('application/x-moz-file', 'nsIFile');
 } catch (err) {
-	logErrorMessage(err);
+	Components.utils.reportError(new Date().toUTCString() +err);
 }

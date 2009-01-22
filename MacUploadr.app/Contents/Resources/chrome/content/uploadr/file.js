@@ -88,7 +88,7 @@ var file = {
 			file.initWithPath(path);
 			return 1 + Math.round(file.fileSize >> 10);
 		} catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
 			return 0;
 		}
 	},
@@ -103,7 +103,7 @@ var file = {
 			    file.remove(false);
 			}
         } catch (err) {
-            logErrorMessage(err);
+            Components.utils.reportError(new Date().toUTCString() +err);
         }
     }
 };

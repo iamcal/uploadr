@@ -12,7 +12,7 @@
 try {
 	var key = Cc['@flickr.com/key;1'].createInstance(Ci.flIKey);
 } catch (err) {
-	logErrorMessage(err);
+	Components.utils.reportError(new Date().toUTCString() +err);
 }
 
 function toOpenWindowByType(inType, uri) {
@@ -289,7 +289,7 @@ var api = {
 			xhr.onreadystatechange = function() {
 			    if (4 == xhr.readyState && 200 != xhr.status) {
 			        if (conf.console.error){
-			                logErrorMessage('STATUS: ' + xhr.status +
+			                Components.utils.reportError(new Date().toUTCString() +'STATUS: ' + xhr.status +
 			                ', responseText: ' + xhr.responseText + 
 			                ', calling: ' + params.toSource());
 			            }
@@ -300,7 +300,7 @@ var api = {
 						if (conf.console.error && (
 							'object' != typeof rsp
 							|| 'ok' != rsp.getAttribute('stat'))) {
-							logErrorMessage('API ERROR: ' +
+							Components.utils.reportError(new Date().toUTCString() +'API ERROR: ' +
 								xhr.responseText);
 						} else if (conf.console.response) {
 							logStringMessage('API RESPONSE: ' +
@@ -327,7 +327,7 @@ var api = {
 						}
 
 					} catch (err) {
-						logErrorMessage(err);
+						Components.utils.reportError(new Date().toUTCString() +err);
 					}
 				}
 			};
@@ -336,7 +336,7 @@ var api = {
 			xhr.open(post ? 'POST' : 'GET', url, true);
 			xhr:onerror = function() {
 			    if (conf.console.error){
-			        logErrorMessage('Error calling: ' + params.toSource());
+			        Components.utils.reportError(new Date().toUTCString() +'Error calling: ' + params.toSource());
 			    }
 			    xhr.abort();
 			};
@@ -364,7 +364,7 @@ var api = {
 				    xhr.abort();
 				    delete xhr;
 					if (conf.console.timeout) {
-						logErrorMessage('API TIMEOUT: ' +
+						Components.utils.reportError(new Date().toUTCString() +'API TIMEOUT: ' +
 							params.toSource());
 					}
 					if ('function' == typeof callback) {

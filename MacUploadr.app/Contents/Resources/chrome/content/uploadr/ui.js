@@ -299,13 +299,6 @@ var logStringMessage = function(msg) {
 				.logStringMessage(new Date().toUTCString() + ': ' + msg);
 };
 
-var logErrorMessage = function(msg) {
-    if(conf.console.fileLogging) {
-        return logLocally(msg);
-    }
-    Components.utils.reportError(new Date().toUTCString() + ': ' + msg);
-};
-
 var logLocally = function(msg) {
     file.append('log.json', '\n\n' + new Date().toUTCString() + ': ' + msg);
 }

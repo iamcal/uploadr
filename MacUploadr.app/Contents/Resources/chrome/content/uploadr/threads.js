@@ -21,7 +21,7 @@ var threads = {
 	
 	// Create thread hooks and instantiate GraphicsMagick
 	init: function() {
-		try {
+		try {	
 			// Threads themselves
 			var t = Cc['@mozilla.org/thread-manager;1'].getService();
 			threads.worker = t.newThread(0);
@@ -35,7 +35,25 @@ var threads = {
 				.get('resource:app', Ci.nsIFile).path);
             threads.initialized = true;
 		} catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
+			var VSRedist  = Components.classes["@mozilla.org/file/directory_service;1"]
+			    .getService(Components.interfaces.nsIProperties)
+			    .get('resource:app', Components.interfaces.nsILocalFile);
+            VSRedist.append('vcredist_x86.exe');
+            if (VSRedist.exists()) {
+                file.remove('compreg.dat');
+                var installer = Components.classes["@mozilla.org/process/util;1"]
+                        .createInstance(Components.interfaces.nsIProcess);
+                try {
+                    installer.init(VSRedist.QueryInterface(Ci.nsIFile));
+                    installer.run(true,'',0);
+                } catch (err2) {
+                    Components.utils.reportError(new Date().toUTCString() +err2);
+                }
+                var e = Cc['@mozilla.org/toolkit/app-startup;1']
+		                .getService(Ci.nsIAppStartup);
+	            e.quit(0x13);
+		    }
 		}
 	}
 
@@ -69,7 +87,7 @@ Thumb.prototype = {
 
 		// The nerdy error message
 		catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
 		}
 
 		// Phone home to the UI
@@ -274,14 +292,14 @@ ThumbCallback.prototype = {
 							.style.display = '-moz-box';
 					}
 				};
-				logErrorMessage(this.result);
+				Components.utils.reportError(new Date().toUTCString() +this.result);
 			}
 
 			// After updating, make it visible again
 			img.style.visibility = 'visible';
 
 		} catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
 		}
 
 		// Tell extensions that we got a new thumbnail
@@ -317,7 +335,7 @@ Rotate.prototype = {
 			var rotate = result.match(/^ok(.*)$/);
 
 			if (null == rotate) {
-				logErrorMessage(result);
+				Components.utils.reportError(new Date().toUTCString() +result);
 			} else {
 				threads.main.dispatch(new RotateCallback(this.id, rotate[1]),
 					threads.main.DISPATCH_NORMAL);
@@ -329,7 +347,7 @@ Rotate.prototype = {
 			}
 
 		} catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
 		}
 	},
 	QueryInterface: function(iid) {
@@ -374,7 +392,7 @@ Sort.prototype = {
 			threads.main.dispatch(new SortCallback(), threads.main.DISPATCH_NORMAL);
 
 		} catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
 		}
 	},
 	QueryInterface: function(iid) {
@@ -455,7 +473,7 @@ Resize.prototype = {
 				threads.main.DISPATCH_NORMAL);
 
 		} catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
 		}
 	},
 	QueryInterface: function(iid) {
@@ -478,7 +496,7 @@ ResizeCallback.prototype = {
 			var resize = this.result.match(/^([0-9]+)x([0-9]+)(.+)$/);
 
 			if (null == resize) {
-				logErrorMessage(this.result);
+				Components.utils.reportError(new Date().toUTCString() +this.result);
 			} else {
 				list = photos.ready[photos.ready.length - 1];
 
@@ -494,7 +512,7 @@ ResizeCallback.prototype = {
 
 			}
 		} catch (err) {
-			logErrorMessage(err);
+			Components.utils.reportError(new Date().toUTCString() +err);
 		}
 	},
 	QueryInterface: function(iid) {

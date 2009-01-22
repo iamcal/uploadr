@@ -197,7 +197,7 @@ var wrap = {
 							// Error'd photo
 							if (2 == complete) {
 							    if (conf.console.error) {
-							        logErrorMessage('_checkTickets for photo ' + upload.tickets[ticket_id].id
+							        Components.utils.reportError(new Date().toUTCString() +'_checkTickets for photo ' + upload.tickets[ticket_id].id
 							        + ' returned complete=2');
 							    }
 								--upload.tickets_count;

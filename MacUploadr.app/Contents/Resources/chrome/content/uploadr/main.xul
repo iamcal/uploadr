@@ -29,6 +29,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
   <script src="chrome://global/content/globalOverlay.js" />
   <script src="chrome://global/content/nsDragAndDrop.js" />
   <script src="chrome://global/content/nsUserSettings.js" />
+  <script src="chrome://uploadr/content/ui.js" />  
   <script src="chrome://uploadr/content/conf.js" />
   <script src="chrome://uploadr/content/clh.js" />
   <script src="chrome://uploadr/content/upgrade.js" />
@@ -41,7 +42,6 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
   <script src="chrome://uploadr/content/meta.js" />
   <script src="chrome://uploadr/content/settings.js" />
   <script src="chrome://uploadr/content/users.js" />
-  <script src="chrome://uploadr/content/ui.js" />
   <script src="chrome://uploadr/content/drag.js" />
   <script src="chrome://uploadr/content/grid.js" />
   <script src="chrome://uploadr/content/mouse.js" />
