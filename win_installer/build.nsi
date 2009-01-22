@@ -102,9 +102,8 @@ Section "Install" SecInstall
 	File /oname=components\flICLH.xpt		"Flickr Uploadr\components\flICLH.xpt"
 
 	; CRT
-	File "vcredist_x86.exe"
+	File "Flickr Uploadr\vcredist_x86.exe"
 	ExecWait '"$INSTDIR\vcredist_x86.exe" /q:a /c:"VCREDI~1.EXE /q:a /c:""msiexec /i vcredist.msi /qb!"" "'
-	Delete "$INSTDIR\vcredist_x86.exe"
 
 	; XULRunner and friends
 	File /r /x .svn "Flickr Uploadr\defaults"

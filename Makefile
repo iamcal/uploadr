@@ -1,4 +1,4 @@
-f#
+#
 # Flickr Uploadr
 #
 # Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
@@ -381,7 +381,7 @@ else
 		win_installer/build.nsi > \
 		$(BUILD)/build.nsi
 endif
-	cp win_installer/vcredist_x86.exe $(BUILD)/vcredist_x86.exe
+	cp win_installer/vcredist_x86.exe $(APP)/vcredist_x86.exe
 
 	$(MAKE_NSIS) -DVERSION=$(VER) \
 		-DVERSION_DATE=$(VER_DATE) \
@@ -396,7 +396,6 @@ endif
 	rm $(BUILD)/build.nsi
 	rm $(BUILD)/strings.nsh
 	rm $(BUILD)/config.ini
-	rm $(BUILD)/vcredist_x86.exe
 endif
 
 	@# Create ??? for Linux
