@@ -289,10 +289,10 @@ var api = {
 			xhr.onreadystatechange = function() {
 			    if (4 == xhr.readyState && 200 != xhr.status) {
 			        if (conf.console.error){
-			                Components.utils.reportError(new Date().toUTCString() +'STATUS: ' + xhr.status +
+                        Components.utils.reportError(new Date().toUTCString() +'STATUS: ' + xhr.status +
 			                ', responseText: ' + xhr.responseText + 
 			                ', calling: ' + params.toSource());
-			            }
+                    }
 			    }
 				if (4 == xhr.readyState && 200 == xhr.status) {
 					try {
@@ -334,9 +334,9 @@ var api = {
 
 			// Send the request
 			xhr.open(post ? 'POST' : 'GET', url, true);
-			xhr:onerror = function() {
+			xhr.onerror = function() {
 			    if (conf.console.error){
-			        Components.utils.reportError(new Date().toUTCString() +'Error calling: ' + params.toSource());
+			        Components.utils.reportError(new Date().toUTCString() +' Error calling: ' + params.toSource());
 			    }
 			    xhr.abort();
 			};
