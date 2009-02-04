@@ -53,6 +53,8 @@ SRC := MacUploadr.app/Contents
 
 # Version number for Uploadr - this comes from application.ini
 VER := `grep ^Version= $(SRC)/Resources/application.ini | sed 's/Version=\(.*\)/\1/'`
+# Dated version for the NSIS installer - this comes from application.ini
+VER_DATE := `grep ^BuildID= $(SRC)/Resources/application.ini | sed 's/BuildID=\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1.\2.\3.\4/'`
 
 ########################################################################
 # Windows configuration
@@ -74,9 +76,6 @@ MAKE_NSIS := /c/Program\ Files/NSIS/Unicode/makensis.exe
 
 
 # below here, don't modify anything
-
-# Dated version for the NSIS installer - this comes from application.ini
-VER_DATE := `grep ^BuildID= $(SRC)/Resources/application.ini | sed 's/BuildID=\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)/\1.\2.\3.\4/'`
 
 # Location for build staging
 BUILD := $(OUT)/builds/$(INTL)
@@ -342,15 +341,16 @@ ifeq (mac, $(PLATFORM))
 	ln -s /Applications $(BUILD)/Applications
 	cp mac_installer/install-pane-$(INTL_SHORT).png $(BUILD)/.i.png
 	cp mac_installer/DS_Store $(BUILD)/.DS_Store
-	rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).dmg
+	rm -f $(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT).dmg
+	rm -f $(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT)-dev.dmg
 ifeq (dev, $(filter dev, $(MAKECMDGOALS)))
 	hdiutil create -srcfolder $(BUILD) -volname "Flickr Uploadr $(VER)" \
 		-format UDZO -imagekey zlib-level=9 \
-		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT)-dev.dmg
+		$(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT)-dev.dmg
 else
 	hdiutil create -srcfolder $(BUILD) -volname "Flickr Uploadr $(VER)" \
 		-format UDZO -imagekey zlib-level=9 \
-		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).dmg
+		$(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT).dmg
 endif
 endif
 
@@ -388,10 +388,10 @@ endif
 		$(BUILD)/build.nsi
 ifeq (dev, $(filter dev, $(MAKECMDGOALS)))
 	mv $(BUILD)/FlickrUploadr-$(VER)-XX.exe \
-		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT)-dev.exe
+		$(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT)-dev.exe
 else
 	mv $(BUILD)/FlickrUploadr-$(VER)-XX.exe \
-		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).exe
+		$(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT).exe
 endif
 	rm $(BUILD)/build.nsi
 	rm $(BUILD)/strings.nsh
@@ -418,10 +418,10 @@ endif
 ifeq (linux, $(PLATFORM))
 	@ln -s Flickr\ Uploadr $(BUILD)/new
 endif
-	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).complete.mar
+	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT).complete.mar
 	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
 		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
-		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT)-$(PLATFORM).complete.mar \
+		$(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT)-$(PLATFORM).complete.mar \
 		$(BUILD)/new &> /dev/null
 #	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar
 #	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
