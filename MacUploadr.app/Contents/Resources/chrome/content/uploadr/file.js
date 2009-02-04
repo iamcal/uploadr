@@ -30,7 +30,7 @@ var file = {
 			}
 			sstream.close();
 			fstream.close();
-			if (/\.js(?:on)?$/.test(name)) { return eval(data); }
+			if (/\.js(?:on)?$/.test(name)) { return data.length?eval(data):{}; }
 			else { return data };
 		} catch (err) {
 			if (/\.js(?:on)?$/.test(name)) { return {}; }
