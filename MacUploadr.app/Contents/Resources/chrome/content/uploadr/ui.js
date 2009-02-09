@@ -18,7 +18,7 @@ var ui = {
 
 		// Default the initial prompt to the free user case
 		document.getElementById('photos_init_prompt').firstChild.nodeValue =
-			locale.getString('photos.init.free');
+			locale.getString('photos.init.pro');
 
 
 		// The meta fields with no selection should refer to a photo
@@ -65,38 +65,19 @@ var ui = {
 			'photos.init.note.photo_size',
 			[Math.max(5, users.filesize >> 10)])));
 		notes.appendChild(li);
-		if (users.is_pro) {
+		
+		li = document.createElementNS(NS_HTML, 'li');
+		li.appendChild(document.createTextNode(locale.getFormattedString(
+			'photos.init.note.video_size', [(null == users.videosize
+			? conf.videosize : users.videosize) >> 10])));
+		notes.appendChild(li);
+		li = document.createElementNS(NS_HTML, 'li');
+		li.appendChild(document.createTextNode(locale.getString(
+			'photos.init.note.video_length')));
+		notes.appendChild(li);
 
-			// Additional notes for pro users regarding videos
-			li = document.createElementNS(NS_HTML, 'li');
-			li.appendChild(document.createTextNode(locale.getFormattedString(
-				'photos.init.note.video_size', [(null == users.videosize
-				? conf.videosize : users.videosize) >> 10])));
-			notes.appendChild(li);
-			li = document.createElementNS(NS_HTML, 'li');
-			li.appendChild(document.createTextNode(locale.getString(
-				'photos.init.note.video_length')));
-			notes.appendChild(li);
-
-			// Replace the top prompt for pro users to mention videos
-			document.getElementById('photos_init_prompt')
-				.firstChild.nodeValue = locale.getString('photos.init.pro');
-
-		} else {
-
-			// Replace the top prompt for free users to mention only photos
-			document.getElementById('photos_init_prompt')
-				.firstChild.nodeValue = locale.getString('photos.init.free');
-			
-		}
-
-		// No extra notes for offline users since we have no idea what
-		// to show them
-		if (users.nsid) {
-			document.getElementById('photos_init_note').style.display =
-				'-moz-box';
-		}
-
+		document.getElementById('photos_init_prompt')
+			.firstChild.nodeValue = locale.getString('photos.init.pro');
 	},
 
 	// Update the counters showing remaining bandwidth and batch size
@@ -220,7 +201,7 @@ var menus = {
 			window.openDialog('chrome://uploadr/content/about.xul',
 				'about-dialog', 'chrome,modal,centerscreen',
 				locale.getFormattedString('dialog.about.version',
-				[conf.version]));
+				[conf.version + ' (' + conf.app_ini.App.BuildID + ')']));
 		},
 
 		tips: function() {
@@ -439,6 +420,11 @@ var exit = function(force) {
 	ui.cancel = true;
 	upload.cancel = true;
 	try {
+//	    for each (var t in threads.workers) {
+//	        if(t) {
+//	            t.shutdown();
+//	        }
+//	    }
 	    threads.worker.shutdown();
 	    threads.uploadr.shutdown();
 	}

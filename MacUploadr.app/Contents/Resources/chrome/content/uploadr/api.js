@@ -163,6 +163,14 @@ var wrap = {
 				} else {
 					users.sets = parseInt(sets);
 				}
+				var video = user.getElementsByTagName('videos');
+				if(video.length) {
+				    if ('lots' == video[0].getAttribute('remaining')) {
+				        users.videos = -1;
+				    } else {
+				        users.videos = parseInt(video[0].getAttribute('remaining'));
+                    }
+                }
 				ui.users_updated();
 				users.update();
 			}
@@ -181,6 +189,9 @@ var wrap = {
 					wrap.photos.upload._checkTickets, token, tickets);
 			},
 			_checkTickets: function(rsp) {
+				if (conf.console.upload) {
+				    logStringMessage('UPLOAD: _checkTickets : ' + rsp);
+		        }
 				var again = false;
 				if ('object' == typeof rsp &&
 					'ok' == rsp.getAttribute('stat')) {

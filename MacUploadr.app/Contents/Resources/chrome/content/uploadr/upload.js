@@ -143,7 +143,7 @@ var upload = {
         // If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 			if (conf.console.error) {
-				Components.utils.reportError(new Date().toUTCString() +'UPLOAD ERROR: ' +
+				Components.utils.reportError(new Date().toUTCString() +' UPLOAD ERROR: ' +
 					'object' == typeof rsp ? rsp.toSource() : rsp);
 			}
 
@@ -735,12 +735,18 @@ Upload.prototype = {
 			logStringMessage('UPLOAD: ' + this.params.toSource());
 		}
 		var esc_params = api.escape_and_sign(this.params, true);
-        try {
+        if (window.navigator.platform == "Win32") {
+            return this.runWindows(esc_params);
+		}
+		try {
 		    // Stream containing the entire HTTP POST payload
 		    var boundary = '------deadbeef---deadbeef---' + Math.random();
 		    var mstream = Cc['@mozilla.org/io/multiplex-input-stream;1']
 			    .createInstance(Ci.nsIMultiplexInputStream);
 		    var sstream;
+		    var file = Cc['@mozilla.org/file/local;1']
+					    .createInstance(Ci.nsILocalFile);
+		    var indexOfFileInStream = 0;
 		    for (var p in esc_params) {
 			    sstream = Cc['@mozilla.org/io/string-input-stream;1']
 				    .createInstance(Ci.nsIStringInputStream);
@@ -750,14 +756,13 @@ Upload.prototype = {
 			    mstream.appendStream(sstream);
 			    if ('object' == typeof esc_params[p] &&
 				    null != esc_params[p]) {
+				    indexOfFileInStream = mstream.count-1;
 				    sstream = Cc['@mozilla.org/io/string-input-stream;1']
 					    .createInstance(Ci.nsIStringInputStream);
 				    sstream.setData('; filename="' + esc_params[p].filename +
 					    '"\r\nContent-Type: application/octet-stream\r\n\r\n',
 					    -1);
 				    mstream.appendStream(sstream);
-				    var file = Cc['@mozilla.org/file/local;1']
-					    .createInstance(Ci.nsILocalFile);
 				    file.initWithPath(esc_params[p].path);
 				    var fstream =
 					    Cc['@mozilla.org/network/file-input-stream;1']
@@ -799,20 +804,39 @@ Upload.prototype = {
 
 		    // POST over a raw socket connection
 		    //   http://www.xulplanet.com/tutorials/mozsdk/sockets.php
-    		
 			var service =
 				Cc['@mozilla.org/network/socket-transport-service;1']
 				.getService(Ci.nsISocketTransportService);
 			var transport = service.createTransport(null, 0,
 				UPLOAD_HOST, 80, null);
 			var ostream = transport.openOutputStream(
-				Ci.nsITransport.OPEN_BLOCKING, 0, 0);
-			var a = 0;
-			while (!upload.cancel && (a = mstream.available())) {
-				ostream.writeFrom(mstream, Math.min(a, 8192));
+//				Ci.nsITransport.OPEN_BLOCKING, 0, 0);
+				Ci.nsITransport.OPEN_BLOCKING, 2520, 128);
+			var a = mstream.available();
+			var prev = Date.now();
+			var step = 500;
+			var dataChunkSize = 8192;
+//			var dataChunkSize = a;
+			if (conf.console.upload) {
+			    logStringMessage('UPLOAD: start writeFrom');
+		    }
+			while (!upload.cancel && a) {
+			    ostream.writeFrom(mstream, Math.min(a, dataChunkSize));
+			    a = mstream.available();
+////				ostream.writeFrom(mstream, Math.min(a, 8192));
 				threads.main.dispatch(new UploadProgressCallback(a, this.id),
 				    threads.main.DISPATCH_NORMAL);
+//				step = Date.now() - prev;
+//				if( step > 750 ) {
+//				    dataChunkSize /= 2;
+//				} else if ( step < 250) {
+//				    dataChunkSize *= 2;
+//				}
+//				prev = Date.now();
 			}
+			if (conf.console.upload) {
+			    logStringMessage('UPLOAD: end writeFrom');
+		    }
 			if(upload.cancel) {
 			    ostream.close();
 			    threads.main.dispatch(new UploadDoneCallback(
@@ -881,6 +905,39 @@ Upload.prototype = {
 			return this;
 		}
 		throw Components.results.NS_ERROR_NO_INTERFACE;
+	},
+	runWindows: function(esc_params) {
+		try {
+		    // Stream containing the entire HTTP POST payload
+		    var boundary = '------deadbeef---deadbeef---' + Math.random();
+		    var preload = '';
+		    var file = Cc['@mozilla.org/file/local;1']
+					    .createInstance(Ci.nsILocalFile);
+		    var indexOfFileInStream = 0;
+		    for (var p in esc_params) {
+			    if ('object' == typeof esc_params[p] &&
+				    null != esc_params[p]) {
+				    file.initWithPath(esc_params[p].path);
+			    } else {
+			        preload += '--' + boundary +
+				        '\r\nContent-Disposition: form-data; name="' + p + '"';
+				    preload += '\r\n\r\n' + esc_params[p] + '\r\n';
+			    }
+		    }
+		    upload.progress_total = (preload.length + file.fileSize) >> 10;
+            if (conf.console.upload) {
+			    logStringMessage('UPLOAD: start native upload');
+		    }
+		    
+            var res = threads.gm.upload(this.id, conf.version, preload, file.path, UPLOAD_HOST, boundary);
+            if (conf.console.upload) {
+			    logStringMessage('UPLOAD: finished native upload');
+		    }
+		} catch (err) {
+			Components.utils.reportError(new Date().toUTCString() +err);
+			threads.main.dispatch(new UploadDoneCallback(
+			    false, this.id), threads.main.DISPATCH_NORMAL);
+		}
 	}
 };
 
@@ -920,6 +977,12 @@ UploadDoneCallback.prototype = {
 				    .createInstance(Ci.nsIDOMParser);
 			    rsp = parser.parseFromString(this.raw,
 				    'text/xml').documentElement;
+		        if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
+			        if (conf.console.error) {
+				        Components.utils.reportError(new Date().toUTCString() +' UPLOAD ERROR: ' +
+					        this.raw);
+			        }
+                }			        
 		    } catch (err) {
 			    Components.utils.reportError(new Date().toUTCString() +err);
 		    }

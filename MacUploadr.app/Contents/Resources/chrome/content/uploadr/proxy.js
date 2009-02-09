@@ -28,7 +28,10 @@ var gProxyDialog = {
 
 		document.getElementById("network.proxy.socks").disabled			= proxyTypePref.value != 1;
 		document.getElementById("network.proxy.socks_port").disabled		= proxyTypePref.value != 1;
+		document.getElementById("network.proxy.http_port").disabled		= proxyTypePref.value != 1;
+		document.getElementById("network.proxy.http").disabled			= proxyTypePref.value != 1;
 		document.getElementById("network.proxy.socks_version").disabled		= proxyTypePref.value != 1;
+		
 		document.getElementById("network.proxy.autoconfig_url").disabled	= proxyTypePref.value != 2;
 		document.getElementById("flickr.proxy.disable_reload_button").disabled	= proxyTypePref.value != 2;
 	},

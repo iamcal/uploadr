@@ -7,7 +7,17 @@
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
-
+ var UploadProgressHandler = {
+    onProgress: function(remaining, id) {
+        threads.main.dispatch(new UploadProgressCallback(remaining, id),
+		    threads.main.DISPATCH_NORMAL);
+	    },
+	onResponse: function(rsp, id) {
+	    threads.main.dispatch(new UploadDoneCallback(rsp, id),
+	        threads.main.DISPATCH_NORMAL);
+	    }
+}
+    
 var threads = {
 
     initialized: false,
@@ -15,6 +25,7 @@ var threads = {
 	worker: null,
 	uploadr: null,
 	main: null,
+	workers: [],
 
 	// GraphicsMagick XPCOM object
 	gm: null,
@@ -32,7 +43,7 @@ var threads = {
 			threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
 			threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
 				.getService(Ci.nsIProperties)
-				.get('resource:app', Ci.nsIFile).path);
+				.get('resource:app', Ci.nsIFile).path, UploadProgressHandler);
             threads.initialized = true;
 		} catch (err) {
 			Components.utils.reportError(new Date().toUTCString() +err);
@@ -116,6 +127,10 @@ ThumbCallback.prototype = {
 			if (conf.console.thumb) {
 				logStringMessage('GM THUMB: ' + this.result);
 			}
+
+//            if(threads.workers[this.id]) {
+//                threads.workers[this.id].shutdown();
+//            }
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
@@ -280,6 +295,9 @@ ThumbCallback.prototype = {
 				img.className = 'error';
 				img.parentNode.appendChild(document.createTextNode(
 					photos.list[this.id].filename));
+				if(photos.is_video(photos.list[this.id].path)) {
+				    --photos.videoCount;
+				}	
 				--photos.count;
 				++photos.errors;
 				img.onclick = function() {
@@ -306,6 +324,10 @@ ThumbCallback.prototype = {
 		extension.after_thumb.exec(this.id);
 
 		unblock_sort();
+		if(photos.sort && !_block_sort) { 
+            threads.worker.dispatch(new Sort(),
+			    threads.worker.DISPATCH_NORMAL);
+		}
 		unblock_remove();
 	},
 	QueryInterface: function(iid) {
@@ -406,9 +428,10 @@ var SortCallback = function() {
 };
 SortCallback.prototype = {
 	run: function() {
-
 		// Allow blocking sorts during loading
-		if (0 != _block_sort) { return; }
+		if (0 != _block_sort) { 
+		    return;
+		}
 
 		// Perform the sort
 		if (1 >= photos.list.length) {
@@ -443,6 +466,7 @@ SortCallback.prototype = {
 		photos.normalize();
 
 		// And finally allow them to upload
+		
 		buttons.upload.enable();
 		meta.first = false;
 

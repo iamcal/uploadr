@@ -176,21 +176,6 @@ var settings = {
 				});
 			}
 
-			// If they've changed to a free account and have videos, warn them
-			if (user && 'boolean' == typeof users.list[user.nsid].is_pro &&
-				!users.list[user.nsid].is_pro) {
-				var v_count = 0;
-				for each (var p in photos.list) {
-					if (null != p && photos.is_video(p.path)) {
-						++v_count;
-					}
-				}
-				if (v_count) {
-					alert(locale.getString('video.free.text'),
-						locale.getString('video.free.title'));
-				}
-			}
-
 			// Get permission to overwrite any changes that were made
 			if (0 < photos.count &&
 				!confirm(locale.getFormattedString('settings.overwrite.text',
@@ -282,6 +267,9 @@ var settings = {
 								if (users.nsid && !users.is_pro &&
 									0 < users.bandwidth.remaining - photos.batch_size) {
 									status.clear();
+								}
+								if(photos.is_video(photos.list[i].path)) {
+								    --photos.videoCount;
 								}
 								photos.list[i] = null;
 								--photos.count;

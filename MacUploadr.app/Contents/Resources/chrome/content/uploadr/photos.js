@@ -13,6 +13,7 @@ var photos = {
 	// Storage
 	list: [],
 	count: 0,
+	videoCount: 0,
 	errors: 0,
 	selected: [],
 	last: null,
@@ -67,6 +68,7 @@ var photos = {
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
 		var can_has_video = 'object' == typeof users.is_pro || users.is_pro;
+		can_has_video |= users.videos;
 		if (can_has_video) {
 			fp.appendFilter('Photos and Videos', '*.jpeg; *.JPEG; *.jpg; ' +
 				'*.JPG; *.gif; *.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; ' +
@@ -107,6 +109,7 @@ var photos = {
 
 	// Add a list of photos
 	add: function(paths, silent) {
+
 		if (null == silent) { silent = false; }
 		buttons.upload.disable();
 
@@ -117,6 +120,9 @@ var photos = {
 		var new_paths = [];
 		var bad = [];
 		for each (var p in paths) {
+		    if (p === null) {
+		        continue;
+		    }
 			var path = 'object' == typeof p ? p.path : p;
 
 			// Photos are always allowed
@@ -203,24 +209,9 @@ var photos = {
 				var pl = (1 == v_count ? 's' : 'p') +
 					(0 == p_count ? 'z' : 'p');
 
-				// Offline users can have video but we should warn them that
-				// we'll remove them without warning if they turn out to be
-				// a free user at upload time
-				if ('object' == typeof users.is_pro) {
-					window.openDialog(
-						'chrome://uploadr/content/video_offline.xul',
-						'dialog_video_offline', 'chrome,modal',
-						locale.getString('video.add.offline.' + pl + '.title'),
-						locale.getString('video.add.offline.' + pl + '.explain'),
-						locale.getString('video.add.offline.' + pl + '.ok'),
-						locale.getString('video.add.offline.' + pl + '.cancel'),
-						locale.getString('video.add.offline.' + pl + '.extra1'),
-						result);
-				}
-
-				// Pro users can have videos but we still need to bother
+				// users can have videos but we still need to bother
 				// those that have their defaults set to restricted
-				else if (3 == settings.safety_level) {
+				if (3 == settings.safety_level) {
 					window.openDialog(
 						'chrome://uploadr/content/video_restricted.xul',
 						'dialog_video_restricted', 'chrome,modal',
@@ -270,7 +261,7 @@ var photos = {
 
 		}
 //videos to be rejected for non pro is beyond silence param
-        if (v_count && users.is_pro === false) {
+        if (users.is_pro === false && v_count + photos.videoCount>users.videos) {
             if(confirm(locale.getString('dialog.no.video.text'),
                 locale.getFormattedString('dialog.no.video.title', [users.username]),
 	            locale.getString('dialog.no.video.ok'),
@@ -279,11 +270,16 @@ var photos = {
 	        }
 	        // anyway at that point too complicate to handle video
 	         var new_paths = [];
+	         var videoAccepted = users.videos - photos.videoCount;
 		    while (paths.length) {
 			    var p = paths.shift();
 			    var path = 'object' == typeof p ? p.path : p;
 			    if (!photos.is_video(path)) {
 				    new_paths.push(p);
+			    }
+			    else if (videoAccepted >0) {
+			        new_paths.push(p);
+			        videoAccepted--;
 			    }
 		    }
 		    paths = new_paths;
@@ -353,7 +349,6 @@ var photos = {
 			document.getElementById('photos_init').style.display = '-moz-box';
 			document.getElementById('photos_new').style.display = 'none';
 		}
-
 	},
 	_add: function(path) {
 		block_remove();
@@ -364,6 +359,9 @@ var photos = {
 		var p = new Photo(id, path);
 		photos.list.push(p);
 		++photos.count;
+		if(photos.is_video(path)) {
+		    ++photos.videoCount;
+		}
 		block_normalize();
 
 		// Create a spot for the image, leaving a spinning placeholder
@@ -382,6 +380,10 @@ var photos = {
 
 		// Create and show the thumbnail
         photos.thumb_cancel = false;
+//        threads.workers[id] = Cc['@mozilla.org/thread-manager;1'].getService().newThread(0);
+//		threads.workers[id].dispatch(new Thumb(id, conf.thumb_size, path),
+//			threads.worker.DISPATCH_NORMAL);
+
 		threads.worker.dispatch(new Thumb(id, conf.thumb_size, path),
 			threads.worker.DISPATCH_NORMAL);
 
@@ -415,7 +417,9 @@ var photos = {
 				0 < users.bandwidth.remaining - photos.batch_size) {
 				status.clear();
 			}
-
+            if(photos.is_video(photos.list[id].path)) {
+                --photos.videoCount;
+            }
 			photos.list[id] = null;
 			--photos.count;
 		}
@@ -524,11 +528,14 @@ var photos = {
 				}
 				if (photos.is_photo(p.path)) {
 					new_list.push(p);
-				} else if (!users.is_pro || (null == users.videosize
+				} else if ((!users.is_pro && users.videos == 0)|| (null == users.videosize
 					? conf.videosize : users.videosize) < p.size) {
 					photos.batch_size -= p.size;
 				} else {
 					new_list.push(p);
+					if(!users.is_pro) {
+					    users.videos--;
+					}
 				}
 			}
 			list = new_list;
@@ -585,6 +592,7 @@ var photos = {
 				photos.batch_size = 0;
 				photos.list = [];
 				photos.count = 0;
+				photos.videoCount = 0;
 				photos.selected = [];
 				photos.last = null;
 				var list = document.getElementById('photos_list');
@@ -697,6 +705,7 @@ var photos = {
 			photos.batch_size = 0;
 			photos.list = [];
 			photos.count = 0;
+			photos.videoCount = 0;
 			photos.selected = [];
 			photos.last = null;
 			var ul = document.getElementById('photos_list');
@@ -721,7 +730,7 @@ var photos = {
 		}
 
 	},
-
+    
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
 
@@ -772,7 +781,6 @@ var photos = {
 
 		// Bring in last known sets configuration
 		meta.sets = obj.sets;
-
 	},
 
     // clear photos.json
@@ -788,6 +796,7 @@ var photos = {
         photos.list = [];
         photos.selected = [];
         photos.count = 0;
+        photos.videoCount = 0;
         photos.errors = 0;
         photos.batch_size = 0;
         _block_sort = _block_remove = _block_normalize = _block_exit = 0;

@@ -21,6 +21,7 @@ var users = {
 	bandwidth: null,
 	filesize: null,
 	videosize: null,
+	videos: null,
 	sets: null,
 
 	// List of authorized users

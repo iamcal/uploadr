@@ -22,6 +22,8 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
     <preferences>
 
       <preference id="network.proxy.type"			name="network.proxy.type"			type="int"	onchange="gProxyDialog.proxyTypeChanged();"/>
+      <preference id="network.proxy.http"       name="network.proxy.http"       type="string" />
+      <preference id="network.proxy.http_port"		name="network.proxy.http_port"			type="int" />
       <preference id="network.proxy.socks"			name="network.proxy.socks"			type="string" />
       <preference id="network.proxy.socks_port"		name="network.proxy.socks_port"			type="int" />
       <preference id="network.proxy.socks_version"		name="network.proxy.socks_version"		type="int" />
@@ -45,6 +47,16 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
             <column flex="1"/>
           </columns>
           <rows>
+            <row align="center">
+              <hbox pack="end">
+                <label value="&HTTP.label;" control="networkProxyHTTPHost"/>
+              </hbox>
+              <hbox align="center">
+                <textbox id="networkProxyHTTPHost" flex="1" preference="network.proxy.http" />
+                <label value="&port.label;" control="networkProxyHTTPPort"/>
+                <textbox id="networkProxyHTTPPort" size="5" preference="network.proxy.http_port" />
+              </hbox>
+            </row>
             <row align="center">
               <hbox pack="end">
                 <label value="&socks.label;" control="networkProxyHost"/>

@@ -697,6 +697,7 @@ var meta = {
 							}
 							photos.list[id] = null;
 							--photos.count;
+							--photos.videoCount;
 						}
 
 						// Restrict photos
