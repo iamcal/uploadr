@@ -1,12 +1,12 @@
 /*
- * Flickr Uploadr
- *
- * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
- * free software; you can redistribute it and/or modify it under the terms of
- * the GNU General Public License (GPL), version 2 only.  This library is
- * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
- * GPL for more details (http://www.gnu.org/licenses/gpl.html)
- */
+* Flickr Uploadr
+*
+* Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+* free software; you can redistribute it and/or modify it under the terms of
+* the GNU General Public License (GPL), version 2 only.  This library is
+* distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
+* GPL for more details (http://www.gnu.org/licenses/gpl.html)
+*/
 
 #include <stdio.h>
 
@@ -17,11 +17,16 @@
 extern "C" __declspec(dllexport) __checkReturn int     __cdecl strcasecmp(__in_z  const char * _Str1, __in_z  const char * _Str2) {
 	return _stricmp(_Str1, _Str2);
 }
+// For upload
+#include "afxinet.h"
+//#include <Windows.h>
+const DWORD dwChunckSize = 64 * 1024;
 
-#include <Windows.h>
 extern "C" __declspec(dllimport) UINT ___lc_codepage_func(void);
 
 extern "C" unsigned int __lc_codepage = ___lc_codepage_func(); //I can't link without that !?????????????????
+
+
 #endif
 
 #include "flGM.h"
@@ -46,7 +51,8 @@ extern "C" {
 #include <string>
 #include <sys/stat.h>
 #include "nsCOMPtr.h"
-#include "nsIFile.h"
+#include "nsComponentManagerUtils.h"
+#include "nsILocalFile.h"
 #include "nsDirectoryServiceUtils.h"
 #include "nsEmbedString.h"
 
@@ -64,6 +70,15 @@ extern "C" {
 static int sws_flags = SWS_BICUBIC;
 
 using namespace std;
+
+#ifdef WIN32
+CString GenerateHeader(const CString& version, const CString& boundary) {
+	CString res;
+	CString temp = _T("User-Agent: Flickr Uploadr %s\r\nContent-Type: multipart/form-data; boundary=%s\r\n\r\n");
+	res.Format(temp, version, boundary);
+	return res;
+}
+#endif
 
 // Prototypes
 string * conv_path(const nsAString &, bool);
@@ -133,8 +148,8 @@ string * conv_path(const nsAString & utf16, bool is_dir) {
 			char temp_arr[4096];
 			*temp_arr = 0;
 			if (0 == GetTempPathA(4096, temp_arr)) {
-				delete [] wide_arr;
-				return 0;
+			delete [] wide_arr;
+			return 0;
 			}
 			*/
 
@@ -311,8 +326,8 @@ int base_orient(Exiv2::ExifData & exif, Magick::Image & img) {
 	try {
 		std::stable_sort(exif.begin(), exif.end(), Exiv2::cmpMetadataByKey); // this is the same as ExifData::sortByKey(), but stable
 		exif_get_last_value_of_key(exif, "Exif.Image.Orientation", orient) ||
-		exif_get_last_value_of_key(exif, "Exif.Panasonic.Rotation", orient) ||
-		exif_get_last_value_of_key(exif, "Exif.MinoltaCs5D.Rotation", orient);
+			exif_get_last_value_of_key(exif, "Exif.Panasonic.Rotation", orient) ||
+			exif_get_last_value_of_key(exif, "Exif.MinoltaCs5D.Rotation", orient);
 	} catch (Exiv2::Error & e) {
 		cerr << e.what();
 	}
@@ -322,29 +337,29 @@ int base_orient(Exiv2::ExifData & exif, Magick::Image & img) {
 	switch (orient) {
 		case 2:
 			img.flop();
-		break;
+			break;
 		case 3:
 			img.rotate(180.0);
-		break;
+			break;
 		case 4:
 			img.flip();
-		break;
+			break;
 		case 5:
 			img.rotate(90.0);
 			img.flip();
-		break;
+			break;
 		case 6:
 			img.rotate(90.0);
-		break;
+			break;
 		case 7:
 			img.rotate(270.0);
 			img.flip();
-		break;
+			break;
 		case 8:
 			img.rotate(270.0);
-		break;
+			break;
 		default:
-		break;
+			break;
 	}
 	return orient;
 }
@@ -371,18 +386,18 @@ void exif_update_dim(Exiv2::ExifData & exif, int w, int h) {
 		// Width
 		{
 			"Exif.Iop.RelatedImageWidth",
-			"Exif.Photo.PixelXDimension", // Only for compressed images
-			"Exif.Image.ImageWidth", // From TIFF-land
-			0
+				"Exif.Photo.PixelXDimension", // Only for compressed images
+				"Exif.Image.ImageWidth", // From TIFF-land
+				0
 		},
 
 		// Height
 		{
 			"Exif.Iop.RelatedImageLength",
-			"Exif.Photo.PixelYDimension", // Only for compressed images
-			"Exif.Image.ImageLength", // From TIFF-land
-			0
-		}
+				"Exif.Photo.PixelYDimension", // Only for compressed images
+				"Exif.Image.ImageLength", // From TIFF-land
+				0
+			}
 
 	};
 
@@ -473,14 +488,16 @@ bool extract(D & data, const char * k, nsAString & ns, bool q) {
 
 NS_IMPL_ISUPPORTS1(flGM, flIGM)
 
-flGM::flGM() {
+flGM::flGM() : m_Observer(0) {
 }
 
 flGM::~flGM() {
 }
 
 // Initialize our GraphicsMagick/ffmpeg setup
-NS_IMETHODIMP flGM::Init(const nsAString & pwd) {
+NS_IMETHODIMP flGM::Init(const nsAString & pwd, UploadObserver *observer)
+{
+	m_Observer = observer;
 
 	//Mac needs to setup GraphicsMagick
 #ifdef XP_MACOSX
@@ -565,7 +582,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			tags.Append(city);
 			tags.Append(NS_LITERAL_STRING(" ").get());
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
-		        iptc, "Iptc.Application2.ProvinceState", state, true);
+				iptc, "Iptc.Application2.ProvinceState", state, true);
 			tags.Append(state);
 			tags.Append(NS_LITERAL_STRING(" ").get());
 			extract<Exiv2::IptcData, Exiv2::IptcKey>(
@@ -595,7 +612,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 
 		} catch (Exiv2::Error &) {}
-		
+
 		ostringstream out1;
 		out1 << orient << "###";
 
@@ -642,7 +659,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 			tags.Replace(pos, 3, NS_LITERAL_STRING("{---THREE---POUND---DELIM---}").get());
 			pos = tags.Find("###", pos);
 		}
-		
+
 		// Create a new path
 		thumb_s = find_path(path_s, "-thumb");
 		if (!thumb_s) { return NS_ERROR_NULL_POINTER; }
@@ -666,17 +683,17 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		img.write(*thumb_s);
 
 		// If all went well, return stuff
-//<orient>###<width>###<height>
+		//<orient>###<width>###<height>
 		_retval.Append(NS_ConvertUTF8toUTF16(out1.str().c_str()));
-//###<date_taken>###
+		//###<date_taken>###
 		_retval.Append(date_taken);
 		_retval.Append(NS_LITERAL_STRING("###"));
-//<thumb_width>###<thumb_height>###
+		//<thumb_width>###<thumb_height>###
 		_retval.Append(NS_ConvertUTF8toUTF16(outTemp.str().c_str()));
-//<thumb_path>
+		//<thumb_path>
 		unconv_path(*thumb_s, _retval);
 		delete thumb_s; thumb_s = 0;
-//###<title>###<description>###<tags>				
+		//###<title>###<description>###<tags>				
 		_retval.Append(NS_LITERAL_STRING("###"));
 		_retval.Append(title);
 		_retval.Append(NS_LITERAL_STRING("###"));
@@ -684,10 +701,10 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		_retval.Append(NS_LITERAL_STRING("###"));
 		_retval.Append(tags);
 
-//debug
-/*		nsString nsTestString(_retval);
+		//debug
+		/*		nsString nsTestString(_retval);
 		basic_string<PRUnichar, char_traits<PRUnichar>,	allocator<PRUnichar> > blabla = nsTestString.get();
-*/
+		*/
 		return NS_OK;
 	}
 
@@ -902,7 +919,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	}
 	if (0 > av_find_stream_info(format_ctx)) { return NS_ERROR_NULL_POINTER; }
 	//dump_format(format_ctx, 0, path_s->c_str(), false);
-	
+
 	int stream = -1;
 	for (int i = 0; i < format_ctx->nb_streams; ++i) {
 		if (CODEC_TYPE_VIDEO == format_ctx->streams[i]->codec->codec_type) {
@@ -912,21 +929,21 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	}
 	if (-1 == stream) { return NS_ERROR_NULL_POINTER; }
 	AVCodecContext * codec_ctx = format_ctx->streams[stream]->codec;
-	
+
 	// Load the actual codec we found and open the video stream
 	AVCodec * codec = avcodec_find_decoder(codec_ctx->codec_id);
 	if (!codec) { return NS_ERROR_NULL_POINTER; }
 
 	// Inform the codec that we can handle truncated bitstreams -- i.e.,
-    // bitstreams where frame boundaries can fall in the middle of packets
-    if(codec->capabilities & CODEC_CAP_TRUNCATED)
-        codec_ctx->flags|=CODEC_FLAG_TRUNCATED;
+	// bitstreams where frame boundaries can fall in the middle of packets
+	if(codec->capabilities & CODEC_CAP_TRUNCATED)
+		codec_ctx->flags|=CODEC_FLAG_TRUNCATED;
 
 	if (0 > avcodec_open(codec_ctx, codec)) { return NS_ERROR_NULL_POINTER; }
 	AVFrame * video_frame = avcodec_alloc_frame();
 	AVFrame * img_frame = avcodec_alloc_frame();
 	if (!video_frame || !img_frame) { return NS_ERROR_NULL_POINTER; }
-	
+
 	// Report the duration
 	ostringstream out;
 	out << format_ctx->duration / AV_TIME_BASE << "###";
@@ -961,14 +978,14 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	double dSeekInSec = (format_ctx->start_time + 0.15 * format_ctx->duration) / AV_TIME_BASE;
 	int64_t seek = dSeekInSec * (double)format_ctx->streams[stream]->time_base.den / format_ctx->streams[stream]->time_base.num;
 
-	
+
 	struct SwsContext *toRGB_convert_ctx = NULL;
 
 	// Seek to the exact frame we want
 	if (0 < av_seek_frame(format_ctx, stream, seek, 0))
 		return NS_ERROR_FILE_UNKNOWN_TYPE;
 	avcodec_flush_buffers(codec_ctx);
-	
+
 	have_frame = 0;
 	while (0 <= av_read_frame(format_ctx, &packet)) {
 		if (packet.stream_index == stream) { //use this packet
@@ -1087,7 +1104,7 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 				break;
 			}
 
-		
+
 		}
 		av_free_packet(&packet);
 	}
@@ -1102,4 +1119,124 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 	}
 
 	return NS_OK;
+}
+
+/* void upload (in AString path); */
+NS_IMETHODIMP flGM::Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary) {
+#ifdef WIN32
+	/*nsCOMPtr<nsILocalFile> pFile; 
+	nsresult nsR = NS_NewLocalFile(path, PR_TRUE, getter_AddRefs(pFile));
+	if(NS_FAILED(nsR))
+	return nsR;
+	PRInt64 nFileSize = 0;
+	nsR = pFile->GetFileSize(&nFileSize);
+	if(NS_FAILED(nsR))
+	return nsR;*/
+	//must be a way to use nsIFileInputStream instead
+	CFile file;
+	if(FALSE == file.Open(nsString(path).get(), CFile::modeRead | CFile::shareDenyWrite)){
+		return NS_ERROR_FILE_INVALID_PATH;
+	}
+	ULONGLONG nFileSize = file.GetLength();
+
+	CInternetSession session;
+	session.EnableStatusCallback(FALSE);
+	CHttpConnection* pConnection = session.GetHttpConnection(nsString(destination).get());
+	if(!pConnection)
+		return NS_ERROR_FAILURE;
+
+	CHttpFile* pHTTP = pConnection->OpenRequest(CHttpConnection::HTTP_VERB_POST, L"/services/upload/");
+	if(!pHTTP)
+		return NS_ERROR_NULL_POINTER;
+	try {
+		if( 0 == pHTTP->AddRequestHeaders(GenerateHeader( nsString(version).get(), nsString(boundary).get() ))) {
+			DWORD dwErr= GetLastError();
+			return NS_ERROR_FAILURE;
+		}
+
+		CString fileName = file.GetFileName();
+
+		CString strPreFile;
+		strPreFile.AppendFormat(_T("--%s\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"%s\"\r\nContent-Type: application/octet-stream\r\n\r\n"),
+			nsString(boundary).get(), fileName);
+		int nPreSize = preLoad.Length() + strPreFile.GetLength();
+		nPreSize = strlen(nsCString(preLoad).get()) + strlen(CW2A(strPreFile));
+
+		CString strEndData;
+		strEndData.AppendFormat(_T("\r\n--%s--\r\n"), nsString(boundary).get());
+
+		DWORD dwFullRequestLength = nPreSize + strEndData.GetLength() + nFileSize;
+		bool bTest = (strEndData.GetLength() == strlen(CW2A(strEndData)));
+		// send request and beginning of the form
+		pHTTP->SendRequestEx(dwFullRequestLength);
+		pHTTP->Write(nsCString(preLoad).get(), preLoad.Length());
+		pHTTP->Write(CW2A(strPreFile), strPreFile.GetLength());
+
+		// read the file by chunk and write it to HTTPFile
+		// allocate the buffer between the file and the post transaction
+		void* pBuffer = malloc(dwChunckSize);
+		if(NULL == pBuffer) {
+			return NS_ERROR_OUT_OF_MEMORY;
+		}
+
+		DWORD dwReadLength = -1;
+		ULONGLONG ullWritten = 0;
+		while(dwReadLength != 0)
+		{
+			dwReadLength = file.Read(pBuffer, dwChunckSize);
+			if(0!=dwReadLength)
+				pHTTP->Write(pBuffer, dwReadLength);
+			ullWritten += dwReadLength;
+			if (m_Observer)	
+				m_Observer->OnProgress(nFileSize - file.GetPosition(), photoId);
+		}
+		bool bTest2 = (ullWritten == nFileSize);
+		pHTTP->Write(CW2A(strEndData), strEndData.GetLength());
+		//::Sleep(60000);
+		pHTTP->Flush();
+		if(NULL != pBuffer)
+			free(pBuffer);
+		//::Sleep(60000);
+		pHTTP->EndRequest();
+	}
+	catch (CInternetException & exception)
+	{
+		DWORD dwError = exception.m_dwError;
+	}
+	catch(...)
+	{
+	}
+
+	// file is uploaded
+	// Get the response and pass it back to the app
+	CString fullResponse = "";
+	DWORD dwResponseLength;
+	LPSTR szResponse;
+	DWORD dwStatusCode;
+	pHTTP->QueryInfoStatusCode(dwStatusCode);
+	while (0 != (dwResponseLength = pHTTP->GetLength())) {
+		szResponse = (LPSTR)malloc(dwResponseLength + 1);
+		szResponse[dwResponseLength] = '\0';
+		pHTTP->Read(szResponse, dwResponseLength);
+		fullResponse += szResponse;
+		free(szResponse);
+	}
+	if(m_Observer) {	
+		m_Observer->OnResponse(nsString(fullResponse),photoId);
+	}
+
+	pHTTP->Close();
+	delete pHTTP;
+	pHTTP = 0;
+	file.Close();
+	session.Close();
+	delete pConnection;
+	pConnection = 0;
+	if(fullResponse.Find(_T("<ticketid>")) != -1)
+		return NS_OK;
+	else
+		return NS_ERROR_FAILURE;
+#else
+	return NS_ERROR_UNEXPECTED;
+#endif
 }

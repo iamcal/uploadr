@@ -10,11 +10,18 @@
 
 #include "nsISupports.idl"
 
+[scriptable, uuid(038C001D-0575-4411-9E9C-B5535BE068F3)]
+interface UploadObserver : nsISupports {
+  void onProgress(in long remaining, in short photoId);
+  void onResponse(in AString rsp, in short photoId);
+};
+
 [scriptable, uuid(0e0d0b74-2c06-11dc-8314-0800200c9a66)]
 interface flIGM : nsISupports {
-	void init(in AString pwd);
+	void init(in AString pwd, in UploadObserver observer);
 	AString thumb(in long square, in AString path);
 	AString rotate(in long degrees, in AString path);
 	AString resize(in long square, in AString path);
 	AString keyframe(in long square, in AString path);
+	void upload(in short photoId, in AString version, in ACString preLoad, in AString path, in AString destination, in AString boundary);
 };

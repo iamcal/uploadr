@@ -13,6 +13,7 @@
 
 #include "flIGM.h"
 #include "nsStringAPI.h"
+#include "nsCOMPtr.h"
 
 #define GM_CONTRACTID "@flickr.com/gm;1"
 #define GM_CLASSNAME "flGM"
@@ -25,6 +26,8 @@ public:
 	flGM();
 private:
 	~flGM();
+protected:
+	nsCOMPtr<UploadObserver> m_Observer;
 };
 
 #endif
