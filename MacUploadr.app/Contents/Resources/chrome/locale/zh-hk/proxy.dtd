@@ -10,6 +10,7 @@
 <!ENTITY  autoTypeRadio.label           "Proxy 自動設定網址 (URL):(若造成無法連線請改用手動設定)">
 <!ENTITY  reload.label                  "重新載入">
 <!ENTITY  socks.label                   "SOCKS 主機:">
+<!ENTITY  HTTP.label                    "HTTP:">
 <!ENTITY  socks4.label                  "SOCKS v4">
 <!ENTITY  socks5.label                  "SOCKS v5">
 <!ENTITY  port.label                    "Port:">

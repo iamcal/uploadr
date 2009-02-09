@@ -10,6 +10,7 @@
 <!ENTITY  autoTypeRadio.label           "Automatische Proxy-Konfigurations-URL:">
 <!ENTITY  reload.label                  "Neu laden">
 <!ENTITY  socks.label                   "SOCKS-Host:">
+<!ENTITY  HTTP.label                    "HTTP:">
 <!ENTITY  socks4.label                  "SOCKS v4">
 <!ENTITY  socks5.label                  "SOCKS v5">
 <!ENTITY  port.label                    "Port:">

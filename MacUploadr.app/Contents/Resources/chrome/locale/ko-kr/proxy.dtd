@@ -10,6 +10,7 @@
 <!ENTITY  autoTypeRadio.label           "프록시 자동 설정 주소 (URL):">
 <!ENTITY  reload.label                  "새로 고침">
 <!ENTITY  socks.label                   "SOCKS 호스트:">
+<!ENTITY  HTTP.label                    "HTTP:">
 <!ENTITY  socks4.label                  "SOCKS v4">
 <!ENTITY  socks5.label                  "SOCKS v5">
 <!ENTITY  port.label                    "포트:">

@@ -10,6 +10,7 @@
 <!ENTITY  autoTypeRadio.label		"自動プロキシ設定スクリプト URL:">
 <!ENTITY  reload.label                  "再読み込み">
 <!ENTITY  socks.label                   "SOCKS ホスト:">
+<!ENTITY  HTTP.label                    "HTTP:">
 <!ENTITY  socks4.label                  "SOCKS v4">
 <!ENTITY  socks5.label                  "SOCKS v5">
 <!ENTITY  port.label                    "ポート:">
