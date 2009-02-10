@@ -24,4 +24,5 @@ interface flIGM : nsISupports {
 	AString resize(in long square, in AString path);
 	AString keyframe(in long square, in AString path);
 	void upload(in short photoId, in AString version, in ACString preLoad, in AString path, in AString destination, in AString boundary);
+	void cancel(in boolean bCancel);
 };

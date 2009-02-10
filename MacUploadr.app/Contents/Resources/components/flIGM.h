@@ -130,6 +130,9 @@ class NS_NO_VTABLE NS_SCRIPTABLE flIGM : public nsISupports {
   /* void upload (in short photoId, in AString version, in ACString preLoad, in AString path, in AString destination, in AString boundary); */
   NS_SCRIPTABLE NS_IMETHOD Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary) = 0;
 
+  /* void cancel (in boolean bCancel); */
+  NS_SCRIPTABLE NS_IMETHOD Cancel(PRBool bCancel) = 0;
+
 };
 
   NS_DEFINE_STATIC_IID_ACCESSOR(flIGM, FLIGM_IID)
@@ -141,7 +144,8 @@ class NS_NO_VTABLE NS_SCRIPTABLE flIGM : public nsISupports {
   NS_SCRIPTABLE NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval); \
   NS_SCRIPTABLE NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval); \
   NS_SCRIPTABLE NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval); \
-  NS_SCRIPTABLE NS_IMETHOD Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary); 
+  NS_SCRIPTABLE NS_IMETHOD Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary); \
+  NS_SCRIPTABLE NS_IMETHOD Cancel(PRBool bCancel); 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
 #define NS_FORWARD_FLIGM(_to) \
@@ -150,7 +154,8 @@ class NS_NO_VTABLE NS_SCRIPTABLE flIGM : public nsISupports {
   NS_SCRIPTABLE NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) { return _to Rotate(degrees, path, _retval); } \
   NS_SCRIPTABLE NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval) { return _to Resize(square, path, _retval); } \
   NS_SCRIPTABLE NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) { return _to Keyframe(square, path, _retval); } \
-  NS_SCRIPTABLE NS_IMETHOD Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary) { return _to Upload(photoId, version, preLoad, path, destination, boundary); } 
+  NS_SCRIPTABLE NS_IMETHOD Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary) { return _to Upload(photoId, version, preLoad, path, destination, boundary); } \
+  NS_SCRIPTABLE NS_IMETHOD Cancel(PRBool bCancel) { return _to Cancel(bCancel); } 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
 #define NS_FORWARD_SAFE_FLIGM(_to) \
@@ -159,7 +164,8 @@ class NS_NO_VTABLE NS_SCRIPTABLE flIGM : public nsISupports {
   NS_SCRIPTABLE NS_IMETHOD Rotate(PRInt32 degrees, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Rotate(degrees, path, _retval); } \
   NS_SCRIPTABLE NS_IMETHOD Resize(PRInt32 square, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Resize(square, path, _retval); } \
   NS_SCRIPTABLE NS_IMETHOD Keyframe(PRInt32 square, const nsAString & path, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Keyframe(square, path, _retval); } \
-  NS_SCRIPTABLE NS_IMETHOD Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary) { return !_to ? NS_ERROR_NULL_POINTER : _to->Upload(photoId, version, preLoad, path, destination, boundary); } 
+  NS_SCRIPTABLE NS_IMETHOD Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary) { return !_to ? NS_ERROR_NULL_POINTER : _to->Upload(photoId, version, preLoad, path, destination, boundary); } \
+  NS_SCRIPTABLE NS_IMETHOD Cancel(PRBool bCancel) { return !_to ? NS_ERROR_NULL_POINTER : _to->Cancel(bCancel); } 
 
 #if 0
 /* Use the code below as a template for the implementation class for this interface. */
@@ -225,6 +231,12 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 
 /* void upload (in short photoId, in AString version, in ACString preLoad, in AString path, in AString destination, in AString boundary); */
 NS_IMETHODIMP flGM::Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* void cancel (in boolean bCancel); */
+NS_IMETHODIMP flGM::Cancel(PRBool bCancel)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }

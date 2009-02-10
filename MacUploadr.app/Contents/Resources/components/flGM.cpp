@@ -71,6 +71,8 @@ static int sws_flags = SWS_BICUBIC;
 
 using namespace std;
 
+static volatile bool gbCancel = false;
+
 #ifdef WIN32
 CString GenerateHeader(const CString& version, const CString& boundary) {
 	CString res;
@@ -1124,15 +1126,6 @@ NS_IMETHODIMP flGM::Keyframe(PRInt32 square, const nsAString & path, nsAString &
 /* void upload (in AString path); */
 NS_IMETHODIMP flGM::Upload(PRInt16 photoId, const nsAString & version, const nsACString & preLoad, const nsAString & path, const nsAString & destination, const nsAString & boundary) {
 #ifdef WIN32
-	/*nsCOMPtr<nsILocalFile> pFile; 
-	nsresult nsR = NS_NewLocalFile(path, PR_TRUE, getter_AddRefs(pFile));
-	if(NS_FAILED(nsR))
-	return nsR;
-	PRInt64 nFileSize = 0;
-	nsR = pFile->GetFileSize(&nFileSize);
-	if(NS_FAILED(nsR))
-	return nsR;*/
-	//must be a way to use nsIFileInputStream instead
 	CFile file;
 	if(FALSE == file.Open(nsString(path).get(), CFile::modeRead | CFile::shareDenyWrite)){
 		return NS_ERROR_FILE_INVALID_PATH;
@@ -1141,6 +1134,14 @@ NS_IMETHODIMP flGM::Upload(PRInt16 photoId, const nsAString & version, const nsA
 
 	CInternetSession session;
 	session.EnableStatusCallback(FALSE);
+	
+	// For EndHTTPRequest not to throw when uploading big files. Go figure out why!
+	DWORD dwDataSendTimeout, dwSendTimeout, dwReceiveTimeout;
+	dwDataSendTimeout = dwSendTimeout = dwReceiveTimeout = 150000;
+	session.SetOption(INTERNET_OPTION_DATA_SEND_TIMEOUT, dwDataSendTimeout);
+	session.SetOption(INTERNET_OPTION_SEND_TIMEOUT, dwSendTimeout);
+	session.SetOption(INTERNET_OPTION_RECEIVE_TIMEOUT, dwReceiveTimeout);
+
 	CHttpConnection* pConnection = session.GetHttpConnection(nsString(destination).get());
 	if(!pConnection)
 		return NS_ERROR_FAILURE;
@@ -1148,6 +1149,7 @@ NS_IMETHODIMP flGM::Upload(PRInt16 photoId, const nsAString & version, const nsA
 	CHttpFile* pHTTP = pConnection->OpenRequest(CHttpConnection::HTTP_VERB_POST, L"/services/upload/");
 	if(!pHTTP)
 		return NS_ERROR_NULL_POINTER;
+
 	try {
 		if( 0 == pHTTP->AddRequestHeaders(GenerateHeader( nsString(version).get(), nsString(boundary).get() ))) {
 			DWORD dwErr= GetLastError();
@@ -1166,7 +1168,7 @@ NS_IMETHODIMP flGM::Upload(PRInt16 photoId, const nsAString & version, const nsA
 		strEndData.AppendFormat(_T("\r\n--%s--\r\n"), nsString(boundary).get());
 
 		DWORD dwFullRequestLength = nPreSize + strEndData.GetLength() + nFileSize;
-		bool bTest = (strEndData.GetLength() == strlen(CW2A(strEndData)));
+		//bool bTest = (strEndData.GetLength() == strlen(CW2A(strEndData)));
 		// send request and beginning of the form
 		pHTTP->SendRequestEx(dwFullRequestLength);
 		pHTTP->Write(nsCString(preLoad).get(), preLoad.Length());
@@ -1180,24 +1182,23 @@ NS_IMETHODIMP flGM::Upload(PRInt16 photoId, const nsAString & version, const nsA
 		}
 
 		DWORD dwReadLength = -1;
-		ULONGLONG ullWritten = 0;
-		while(dwReadLength != 0)
+		//ULONGLONG ullWritten = 0;
+		while(!gbCancel && (dwReadLength != 0))
 		{
 			dwReadLength = file.Read(pBuffer, dwChunckSize);
 			if(0!=dwReadLength)
 				pHTTP->Write(pBuffer, dwReadLength);
-			ullWritten += dwReadLength;
+		//	ullWritten += dwReadLength;
 			if (m_Observer)	
 				m_Observer->OnProgress(nFileSize - file.GetPosition(), photoId);
 		}
-		bool bTest2 = (ullWritten == nFileSize);
+		//bool bTest2 = (ullWritten == nFileSize);
 		pHTTP->Write(CW2A(strEndData), strEndData.GetLength());
-		//::Sleep(60000);
 		pHTTP->Flush();
 		if(NULL != pBuffer)
 			free(pBuffer);
-		//::Sleep(60000);
-		pHTTP->EndRequest();
+		if(!gbCancel) // otherwise this throws because not all the request has been sent I assume
+			pHTTP->EndRequest();
 	}
 	catch (CInternetException & exception)
 	{
@@ -1234,9 +1235,18 @@ NS_IMETHODIMP flGM::Upload(PRInt16 photoId, const nsAString & version, const nsA
 	pConnection = 0;
 	if(fullResponse.Find(_T("<ticketid>")) != -1)
 		return NS_OK;
-	else
+	else if(!gbCancel)
 		return NS_ERROR_FAILURE;
+	else
+		return NS_ERROR_ABORT;
 #else
 	return NS_ERROR_UNEXPECTED;
 #endif
+}
+
+/* void cancel (in boolean bCancel); */
+NS_IMETHODIMP flGM::Cancel(PRBool bCancel)
+{
+	gbCancel = (bCancel == PR_TRUE);
+    return NS_OK;
 }
