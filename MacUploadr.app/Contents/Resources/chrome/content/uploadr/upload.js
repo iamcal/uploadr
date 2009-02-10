@@ -166,7 +166,7 @@ var upload = {
 				upload.retry_count) {
 				++upload.stats.errors;
 				++upload.retry_count;
-				photos.kb.sent -= photos.uploading[id].size;
+				//photos.kb.sent -= photos.uploading[id].size;
 				upload.start(id);
 				if (conf.console.retry) {
 					logStringMessage('UPLOAD RETRY: id = ' + id +
@@ -928,7 +928,7 @@ Upload.prototype = {
             if (conf.console.upload) {
 			    logStringMessage('UPLOAD: start native upload');
 		    }
-		    
+		    threads.gm.cancel(upload.cancel);
             var res = threads.gm.upload(this.id, conf.version, preload, file.path, UPLOAD_HOST, boundary);
             if (conf.console.upload) {
 			    logStringMessage('UPLOAD: finished native upload');

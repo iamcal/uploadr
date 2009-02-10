@@ -9,8 +9,13 @@
  */
  var UploadProgressHandler = {
     onProgress: function(remaining, id) {
-        threads.main.dispatch(new UploadProgressCallback(remaining, id),
-		    threads.main.DISPATCH_NORMAL);
+        if(upload.cancel) {
+            threads.gm.cancel(true);
+        }
+        else {
+            threads.main.dispatch(new UploadProgressCallback(remaining, id),
+		        threads.main.DISPATCH_NORMAL);
+            }
 	    },
 	onResponse: function(rsp, id) {
 	    threads.main.dispatch(new UploadDoneCallback(rsp, id),
