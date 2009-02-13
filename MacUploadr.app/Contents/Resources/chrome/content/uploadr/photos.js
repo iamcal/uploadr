@@ -19,6 +19,7 @@ var photos = {
 	last: null,
 	sort: true,
 	batch_size: 0,
+	video_batch_size: 0,
 	thumb_cancel: false,
 
 	// Upload tracking
@@ -67,22 +68,16 @@ var photos = {
 			.createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
 			Ci.nsIFilePicker.modeOpenMultiple);
-		var can_has_video = 'object' == typeof users.is_pro || users.is_pro;
-		can_has_video |= users.videos;
-		if (can_has_video) {
-			fp.appendFilter('Photos and Videos', '*.jpeg; *.JPEG; *.jpg; ' +
+		fp.appendFilter('Photos and Videos', '*.jpeg; *.JPEG; *.jpg; ' +
 				'*.JPG; *.gif; *.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; ' +
 				'*.TIF; *.bmp; *.BMP; *.mp4; *.MP4; *.mpeg; *.MPEG; *.mpg; ' +
 				'*.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; *.dv; ' +
 				'*.DV; *.3gp; *.3GP; *.3g2; *.m4v; *.M4V');
-		}
 		fp.appendFilter('Photos', '*.jpeg; *.JPEG; *.jpg; *.JPG; *.gif; ' +
 			'*.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; *.TIF; *.bmp; *.BMP');
-		if (can_has_video) {
-			fp.appendFilter('Videos', '*.mp4; *.MP4; *.mpeg; *.MPEG; ' +
+		fp.appendFilter('Videos', '*.mp4; *.MP4; *.mpeg; *.MPEG; ' +
 				'*.mpg; *.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; ' +
 				'*.dv; *.DV; *.3gp; *.3GP; *3g2; *.m4v; *.M4V');
-		}
 		fp.displayDirectory = def;
 		var res = fp.show();
 		if (Ci.nsIFilePicker.returnOK == res) {
@@ -299,6 +294,8 @@ var photos = {
 				p = Cc['@mozilla.org/network/protocol;1?name=file']
 					.getService(Ci.nsIFileProtocolHandler)
 					.getFileFromURLSpec(p).path;
+//				p = Cc["@mozilla.org/network/io-service;1"]
+//                    .getService(Components.interfaces.nsIIOService).newURI(p).QueryInterface(Ci.nsIFileURL).file.path
 			}
 			if(currentPathsLists.indexOf(p) === -1) {
 			    ext_list.push(photos._add(p));
@@ -413,8 +410,11 @@ var photos = {
 
 			// Free the size of this file
 			photos.batch_size -= photos.list[id].size;
+			if(photos.is_video(photos.list[id].path)) {
+			    photos.video_batch_size -= photos.list[id].size;
+			}
 			if (users.nsid && !users.is_pro && users.bandwidth &&
-				0 < users.bandwidth.remaining - photos.batch_size) {
+				0 < users.bandwidth.remaining - photos.batch_size + photos.video_batch_size) {
 				status.clear();
 			}
             if(photos.is_video(photos.list[id].path)) {
@@ -531,6 +531,7 @@ var photos = {
 				} else if ((!users.is_pro && users.videos == 0)|| (null == users.videosize
 					? conf.videosize : users.videosize) < p.size) {
 					photos.batch_size -= p.size;
+					photos.video_batch_size -= p.size;
 				} else {
 					new_list.push(p);
 					if(!users.is_pro) {
@@ -590,6 +591,7 @@ var photos = {
 				photos.ready.push(ready);
 				photos.ready_size.push(ready_size);
 				photos.batch_size = 0;
+				photos.video_batch_size = 0;
 				photos.list = [];
 				photos.count = 0;
 				photos.videoCount = 0;
@@ -703,6 +705,7 @@ var photos = {
 		}
 		if (from_user) {
 			photos.batch_size = 0;
+			photos.video_batch_size = 0;
 			photos.list = [];
 			photos.count = 0;
 			photos.videoCount = 0;
@@ -799,6 +802,7 @@ var photos = {
         photos.videoCount = 0;
         photos.errors = 0;
         photos.batch_size = 0;
+        photos.video_batch_size = 0;
         _block_sort = _block_remove = _block_normalize = _block_exit = 0;
         file.remove('photos.json');
         // Remove photos from UI

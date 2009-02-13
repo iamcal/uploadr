@@ -264,8 +264,9 @@ var settings = {
 								var li = document.getElementById('photo' + i);
 								li.parentNode.removeChild(li);
 								photos.batch_size -= photos.list[i].size;
+								photos.video_batch_size -= photos.list[i].size;
 								if (users.nsid && !users.is_pro &&
-									0 < users.bandwidth.remaining - photos.batch_size) {
+									0 < users.bandwidth.remaining - photos.batch_size + photos.video_batch_size) {
 									status.clear();
 								}
 								if(photos.is_video(photos.list[i].path)) {

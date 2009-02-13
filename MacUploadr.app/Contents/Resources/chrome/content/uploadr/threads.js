@@ -49,6 +49,7 @@ var threads = {
 			threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
 				.getService(Ci.nsIProperties)
 				.get('resource:app', Ci.nsIFile).path, UploadProgressHandler);
+			new Date(); // hack so that new Date() works on worker threads. It must initialised some stuff and needs to be called on the main thread first!?
             threads.initialized = true;
 		} catch (err) {
 			Components.utils.reportError(new Date().toUTCString() +err);
@@ -103,7 +104,7 @@ Thumb.prototype = {
 
 		// The nerdy error message
 		catch (err) {
-			Components.utils.reportError(new Date().toUTCString() +err);
+			Components.utils.reportError(new Date().toUTCString() + err);
 		}
 
 		// Phone home to the UI
@@ -287,6 +288,9 @@ ThumbCallback.prototype = {
 				photos.list[this.id].size = file.size(
 					photos.list[this.id].path);
 				photos.batch_size += photos.list[this.id].size;
+				if(photos.is_video(photos.list[this.id].path)) {
+				    photos.video_batch_size += photos.list[this.id].size;
+				}
 				ui.bandwidth_updated();
 
 			}

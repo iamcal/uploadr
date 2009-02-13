@@ -104,11 +104,11 @@ var ui = {
 		var batch = document.getElementById('bw_batch_mb');
 		batch.firstChild.nodeValue =
 			locale.getFormattedString('mb', [Math.round(
-			photos.batch_size / 102.4) / 10]);
+			(photos.batch_size) / 102.4) / 10]);
 		if (users.bandwidth) {
-			if (photos.batch_size > users.bandwidth.remaining) {
+			if (photos.batch_size - photos.video_batch_size > users.bandwidth.remaining) {
 				batch.className = 'exhausted';
-			} else if (photos.batch_size + (6 << 10)
+			} else if (photos.batch_size - photos.video_batch_size + (6 << 10)
 				> users.bandwidth.remaining) {
 				batch.className = 'almost';
 			} else {
