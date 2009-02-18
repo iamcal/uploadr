@@ -164,8 +164,8 @@ var meta = {
 					if (60 <= sec) {
 						min = parseInt(sec / 60);
 						sec = sec % 60;
-						if (10 > sec) { sec = '0' + sec; }
 					}
+                    if (10 > sec) { sec = '0' + sec; }
 					document.getElementById('meta_duration').value =
 						locale.getFormattedString('meta.duration', [min, sec]);
 				} else {
