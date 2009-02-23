@@ -24,6 +24,10 @@ Checkout from Subversion:
 XULRunner
 ------------------------------------------------------------------------
 
+you'll have to build it until 1.9.1 is released
+Good luck!
+instead of sudo mv, rsync -rl ?
+
 XULRunner trunk builds:
   ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
 
