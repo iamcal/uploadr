@@ -1,5 +1,0 @@
-mk_add_options MOZ_CO_PROJECT=all
-ac_add_options --with-macos-sdk=/Developer/SDKs/MacOSX10.4u.sdk
-ac_add_options --disable-javaxpcom
-ac_add_options --enable-application=xulrunner
-ac_add_options --enable-update-packaging
