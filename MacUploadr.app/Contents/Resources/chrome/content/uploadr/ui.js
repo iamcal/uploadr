@@ -420,11 +420,11 @@ var exit = function(force) {
 	ui.cancel = true;
 	upload.cancel = true;
 	try {
-//	    for each (var t in threads.workers) {
-//	        if(t) {
-//	            t.shutdown();
-//	        }
-//	    }
+	    for each (var t in threads.workers) {
+	        if(t) {
+	            t.shutdown();
+	        }
+	    }
 	    threads.worker.shutdown();
 	    threads.uploadr.shutdown();
 	}

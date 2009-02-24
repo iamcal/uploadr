@@ -377,12 +377,13 @@ var photos = {
 
 		// Create and show the thumbnail
         photos.thumb_cancel = false;
-//        threads.workers[id] = Cc['@mozilla.org/thread-manager;1'].getService().newThread(0);
-//		threads.workers[id].dispatch(new Thumb(id, conf.thumb_size, path),
-//			threads.worker.DISPATCH_NORMAL);
 
-		threads.worker.dispatch(new Thumb(id, conf.thumb_size, path),
+        threads.workers[id] = Cc['@mozilla.org/thread-manager;1'].getService().newThread(0);
+		threads.workers[id].dispatch(new Thumb(id, conf.thumb_size, path),
 			threads.worker.DISPATCH_NORMAL);
+        
+//		threads.worker.dispatch(new Thumb(id, conf.thumb_size, path),
+//			threads.worker.DISPATCH_NORMAL);
 
 		return p;
 	},

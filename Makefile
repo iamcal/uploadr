@@ -220,6 +220,7 @@ endif
 
 	@# XULRunner
 	cp $(SRC)/Resources/application.ini $(RES)/
+	cp $(SRC)/Resources/chrome/locale/$(INTL)/updater.ini $(RES)/
 	cp $(SRC)/Resources/LICENSE.txt $(RES)/
 ifeq (mac, $(PLATFORM))
 	cp -R $(SRC)/Frameworks/XUL.framework $(APP)/Contents/Frameworks/

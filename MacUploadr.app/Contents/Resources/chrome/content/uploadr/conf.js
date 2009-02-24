@@ -108,6 +108,7 @@ var conf = {
 
 	// Load are parse the application.ini file
 	load_ini: function(){
+//			window.openDialog('http://beta2.flickr.com','_blank','modal');
 
 		var f = Components.classes["@mozilla.org/file/directory_service;1"]
 			.getService(Components.interfaces.nsIProperties)

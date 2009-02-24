@@ -13,15 +13,29 @@ Start by satisfying prerequisites for your platform:
   http://developer.mozilla.org/en/docs/Windows_Build_Prerequisites
   http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prerequisites
 
-Configure your build, using the UPLOADR/mozconfig file.  Make sure to
-comment the Mac-specific line if you're on Windows:
-  http://developer.mozilla.org/en/docs/Configuring_Build_Options
-
+NEW
+	get mozilla-build: http://ftp.mozilla.org/pub/mozilla.org/mozilla/libraries/win32/MozillaBuildSetup-1.3.exe
+	Open a shell window by running: c:\mozilla-build\start-msvc8.bat
+	cd /c
+	hg clone http://hg.mozilla.org/mozilla-central mozilla for latest
+	hg clone http://hg.mozilla.org/releases/mozilla-1.9.1 mozilla for 1.9.1
+OLD
 Now checkout and build Mozilla:
   $ cvs -d :pserver:anonymous@cvs-mirror.mozilla.org:/cvsroot \
     co mozilla/client.mk
+
+Configure your build, using the UPLOADR/mozconfig file.  Make sure to
+comment the Mac-specific line if you're on Windows:
+  http://developer.mozilla.org/en/docs/Configuring_Build_Options
+  
   $ cd mozilla
+
+NEW
+	hg pull -r default
+	hg update  
+OLD  
   $ make -f client.mk checkout
+
   $ make -f client.mk build
 
 Once you have your Mozilla tree built, the Packaging section in the \

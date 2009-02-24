@@ -520,6 +520,12 @@ NS_IMETHODIMP flGM::Init(const nsAString & pwd, UploadObserver *observer)
 	// Register all video codecs
 	av_register_all();
 
+	MagickLib::ExceptionInfo exception;
+	const MagickLib::MagickInfo *info;
+	GetExceptionInfo(&exception);
+	info = GetMagickInfo(NULL, &exception);
+
+
 	return NS_OK;
 }
 
