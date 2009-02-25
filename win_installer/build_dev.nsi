@@ -104,6 +104,7 @@ Section "Install" SecInstall
 	File /r /x .svn "Flickr Uploadr\defaults"
 	File /r /x .svn "Flickr Uploadr\xulrunner"
 	File "Flickr Uploadr\application.ini"
+	File "Flickr Uploadr\updater.ini"	
 	File "Flickr Uploadr\LICENSE.txt"
 	File "Flickr Uploadr\icons.ico"
 	File "Flickr Uploadr\magic.mgk"
