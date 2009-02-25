@@ -6,7 +6,7 @@
 <!ENTITY previous.tooltip "Encontrar la anterior aparición de la frase">
 <!ENTITY findCloseButton.tooltip "Cerrar barra de búsqueda">
 <!ENTITY highlight.label "Resaltar todo">
-<!ENTITY highlight.accesskey "a">
+<!ENTITY highlight.accesskey "R">
 <!ENTITY highlight.tooltiptext "Resaltar todas las apariciones de la frase">
 <!ENTITY caseSensitiveCheckbox.label "Coincidencia de mayúsculas/minúsculas">
 <!ENTITY caseSensitiveCheckbox.accesskey "C">

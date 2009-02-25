@@ -1,8 +1,8 @@
 <!ENTITY addons.title                     "Complementos">
 
 <!-- Default window size for the addon manager in pixels -->
-<!ENTITY em.width                         "520">
-<!ENTITY em.height                        "371">
+<!ENTITY em.width                         "547">
+<!ENTITY em.height                        "400">
 
 <!ENTITY cmd.info.commandKey              "I">
 <!ENTITY cmd.options.commandKey           ",">
@@ -23,7 +23,7 @@
 <!ENTITY cmd.checkUpdatesAllAddon.tooltip "Localizar atualizações de suas extensões">
 <!ENTITY cmd.checkUpdatesAllTheme.tooltip "Localizar atualizações de seus temas">
 <!ENTITY cmd.installLocalFile.label       "Instalar…">
-<!ENTITY cmd.installLocalFile.accesskey   "n">
+<!ENTITY cmd.installLocalFile.accesskey   "I">
 <!ENTITY cmd.installFileAddon.tooltip     "Instalar um complemento">
 <!ENTITY cmd.installFileTheme.tooltip     "Instalar um tema">
 <!ENTITY cmd.installUpdatesAll.label      "Instalar atualizações">
@@ -112,6 +112,7 @@
 <!ENTITY insecureUpdate.label             "Não fornece um método seguro de atualização.">
 <!ENTITY needsDependencies.label          "Necessita itens adicionais.">
 <!ENTITY blocklisted.label                "Desativado para sua proteção.">
+<!ENTITY softBlocklisted.label            "Sabida causa de problemas de segurança ou estabilidade.">
 <!ENTITY toBeDisabled.label               "Este complemento será desativado quando o &brandShortName; for reiniciado.">
 <!ENTITY toBeEnabled.label                "Este complemento será ativado quando o &brandShortName; for reiniciado.">
 <!ENTITY toBeInstalled.label              "Este complemento será instalado quando o &brandShortName; for reiniciado.">
@@ -150,7 +151,7 @@
 <!ENTITY previewNoPreviewImage.label      "O tema não possui uma imagem para visualização.">
 <!ENTITY moreInfo.label                   "Mais informações">
 <!ENTITY infoNoAddonSelected.label        "Nenhuma atualização selecionada">
-<!ENTITY infoNoUpdateInfo.label           "Esta atualização não possui nenhuma informação adicional.">
+<!ENTITY infoNoUpdateInfo.label           "Esta atualização não possui informações adicionais.">
 <!ENTITY infoUpdateInfoError.label        "Houve um erro durante o carregamento de informações sobre esta atualização">
 
 <!ENTITY updateSuccess.label              "Atualização concluída com êxito.">
@@ -162,9 +163,12 @@
 <!ENTITY installFinishing.label           "Instalando…">
 <!ENTITY installFailure.label             "Falha na instalação">
 
-<!ENTITY progressStatus.label             "Verificando atualizações">
+<!ENTITY progressStatus.label             "Verificando atualizações…">
 
-<!ENTITY eula.title                       "Acordo de Licença para Usuário Final">
-<!ENTITY eula.width                       "560px">
-<!ENTITY eula.height                      "400px">
-<!ENTITY eula.accept                      "Aceitar e instalar…">
+<!ENTITY eula.title                       "Acordo de licença para o usuário final">
+<!ENTITY eula.width                       "560.0px">
+<!ENTITY eula.height                      "400.0px">
+<!ENTITY eula.accept                      "Aceitar e instalar">
+
+<!ENTITY blocklist.blocked.label          "Bloqueado">
+<!ENTITY blocklist.checkbox.label         "Desativar">

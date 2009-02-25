@@ -45,7 +45,7 @@ for my $locale(keys %{$locales}){
 
 	chdir "$dir/build";
 
-	`7z.exe a -r -tzip $locale.zip locale -mx1`;
+	`'C:/Program Files/7-Zip/7z.exe' a -r -tzip $locale.zip locale -mx1`;
 	`mv $locale.zip ../$locale.jar`;
 
 	`rm -r $dir/build/locale`;

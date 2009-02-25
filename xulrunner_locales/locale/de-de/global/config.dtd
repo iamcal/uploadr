@@ -45,8 +45,7 @@
 
 <!ENTITY filterPrefs.label "Filter:">
 <!ENTITY filterPrefs.accesskey "F">
-<!ENTITY showAll.label "Alles anzeigen">
-<!ENTITY showAll.accesskey "A">
+<!ENTITY focusFilter.key "f">
 
 <!-- Columns -->
 <!ENTITY prefColumn.label "Einstellungsname">
@@ -59,7 +58,7 @@
 <!ENTITY columnChooser.tooltip "Klicken Sie, um die anzuzeigenden Spalten auszuwählen"> 
 
 <!-- Context Menu -->
-<!ENTITY copyPref.key "K">
+<!ENTITY copyPref.key "C">
 <!ENTITY copyPref.label "Kopieren">
 <!ENTITY copyPref.accesskey "K">
 <!ENTITY copyName.label "Namen kopieren">

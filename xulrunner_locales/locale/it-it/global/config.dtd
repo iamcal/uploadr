@@ -19,7 +19,7 @@
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s):
-   -   
+   -   Francesco Lodolo (flod) - Italian (it) Localization <francesco.lodolo@gmail.com>
    -
    - Alternatively, the contents of this file may be used under the terms of
    - either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -41,8 +41,7 @@
 <!ENTITY aboutWarningCheckbox.label "Visualizza nuovamente questo avviso in futuro">
 <!ENTITY filterPrefs.label "Filtro:">
 <!ENTITY filterPrefs.accesskey "F">
-<!ENTITY showAll.label "Mostra tutto">
-<!ENTITY showAll.accesskey "t">
+<!ENTITY focusFilter.key "f">
 <!ENTITY prefColumn.label "Nome Parametro">
 <!ENTITY lockColumn.label "Stato">
 <!ENTITY typeColumn.label "Tipo">
@@ -59,9 +58,9 @@
 <!ENTITY modify.label "Modifica">
 <!ENTITY modify.accesskey "M">
 <!ENTITY toggle.label "Imposta">
-<!ENTITY toggle.accesskey "i">
-<!ENTITY reset.label "Azzera">
-<!ENTITY reset.accesskey "A">
+<!ENTITY toggle.accesskey "s">
+<!ENTITY reset.label "Ripristina">
+<!ENTITY reset.accesskey "R">
 <!ENTITY new.label "Nuovo">
 <!ENTITY new.accesskey "N">
 <!ENTITY string.label "Stringa">

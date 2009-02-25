@@ -24,10 +24,20 @@
 <!ENTITY closeCmd.accesskey "F">
 <!ENTITY closeCmd.commandkey "W">
 
+<!-- LOCALIZATION NOTE :
+textEnlarge.commandkey3, textReduce.commandkey2 and
+textReset.commandkey2 are alternative acceleration keys for zoom.
+If shift key is needed with your locale popular keyboard for them,
+you can use these alternative items. Otherwise, their values should be empty.
+-->
+
 <!ENTITY textEnlarge.commandkey "+">
 <!ENTITY textEnlarge.commandkey2 "=">
+<!ENTITY textEnlarge.commandkey3 "">
 <!ENTITY textReduce.commandkey "-">
+<!ENTITY textReduce.commandkey2 "">
 <!ENTITY textReset.commandkey "0">
+<!ENTITY textReset.commandkey2 "">
 
 <!ENTITY goToLineCmd.label "Aller à la ligne…">
 <!ENTITY goToLineCmd.accesskey "A">
@@ -54,7 +64,14 @@
 <!ENTITY findOnCmd.label     "Rechercher dans la page…">
 <!ENTITY findOnCmd.accesskey "h">
 <!ENTITY findOnCmd.commandkey "f">
-<!ENTITY findAgainCmd.label  "Rechercher à nouveau">
-<!ENTITY findAgainCmd.accesskey "n">
+<!ENTITY findAgainCmd.label  "Rechercher le suivant">
+<!ENTITY findAgainCmd.accesskey "v">
 <!ENTITY findAgainCmd.commandkey "g">
 <!ENTITY findAgainCmd.commandkey2 "VK_F3">
+
+<!ENTITY backCmd.label "Page précédente">
+<!ENTITY backCmd.accesskey "p">
+<!ENTITY forwardCmd.label "Page suivante">
+<!ENTITY forwardCmd.accesskey "s">
+<!ENTITY goBackCmd.commandKey "[">
+<!ENTITY goForwardCmd.commandKey "]">

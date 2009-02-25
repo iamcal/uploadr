@@ -35,7 +35,7 @@
    -
    - ***** END LICENSE BLOCK ***** -->
 
-<!ENTITY errorConsole.title "Fehler-Konsole">
+<!ENTITY errorConsole.title "Fehlerkonsole">
 
 <!ENTITY errFile.label   "Quelldatei:">
 <!ENTITY errLine.label   "Zeile:">

@@ -29,19 +29,20 @@ file names and tall enough to hint that there are more downloads in the list -->
 <!ENTITY cmd.goToDownloadPage.accesskey	"G">
 <!ENTITY cmd.copyDownloadLink.label	"ダウンロードした URL をコピー">
 <!ENTITY cmd.copyDownloadLink.accesskey	"L">
-<!ENTITY cmd.removeFromList.label	"このダウンロード履歴を消去">
+<!ENTITY cmd.removeFromList.label	"リストから削除">
 <!ENTITY cmd.removeFromList.accesskey	"e">
 
 <!ENTITY cmd.close.commandKey		"w">
 <!ENTITY cmd.close2.commandKey		"j">
 <!ENTITY cmd.close2Unix.commandKey	"y">
-<!ENTITY cmd.clearList.label		"ダウンロード履歴を消去">
-<!ENTITY cmd.clearList.tooltip		"ファイルのダウンロード履歴をすべて消去します">
+<!ENTITY cmd.clearList.label		"履歴の消去">
+<!ENTITY cmd.clearList.tooltip		"ファイルのダウンロード履歴を消去します">
 <!ENTITY cmd.clearList.accesskey	"C">
 <!ENTITY cmd.find.commandKey		"f">
+<!ENTITY cmd.search.commandKey		"k">
 
 <!ENTITY closeWhenDone.label		"ダウンロードが完了時に閉じる">
-<!ENTITY closeWhenDone.tooltip		"すべてのファイルのダウンロードが完了したときに、ダウンロードマネージャを閉じます"><!-- (^^; -->
+<!ENTITY closeWhenDone.tooltip		"すべてのファイルのダウンロードが完了したときに、ダウンロードマネージャを閉じます">
 
 <!ENTITY showFolder.label		"保存フォルダを表示する">
 <!ENTITY searchBox.label		"検索...">

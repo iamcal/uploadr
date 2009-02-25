@@ -20,7 +20,7 @@
    -
    - Contributor(s):
    -  Samir Gehani <sgehani@netscape.com> (Original Author)
-   -   
+   -   Francesco Lodolo (flod) - Italian (it) Localization <francesco.lodolo@gmail.com>
    -
    - Alternatively, the contents of this file may be used under the terms of
    - either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -38,12 +38,12 @@
 <!ENTITY print.label "Stampa…">
 <!ENTITY print.accesskey "S">
 <!ENTITY pageSetup.label "Imposta pagina…">
-<!ENTITY pageSetup.accesskey "I">
+<!ENTITY pageSetup.accesskey "m">
 <!ENTITY page.label "Pagina:">
-<!ENTITY page.accesskey "a">
+<!ENTITY page.accesskey "P">
 <!ENTITY of.label "di">
 <!ENTITY scale.label "Scala:">
-<!ENTITY scale.accesskey "l">
+<!ENTITY scale.accesskey "a">
 <!ENTITY portrait.label "Verticale">
 <!ENTITY portrait.accesskey "V">
 <!ENTITY landscape.label "Orizzontale">

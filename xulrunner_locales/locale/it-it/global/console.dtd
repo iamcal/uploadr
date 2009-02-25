@@ -20,7 +20,7 @@
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s):
-   -   
+   -   Francesco Lodolo (flod) - Italian (it) Localization <francesco.lodolo@gmail.com>
    -
    - Alternatively, the contents of this file may be used under the terms of
    - either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -46,18 +46,18 @@
 <!ENTITY warnings.label "Avvisi">
 <!ENTITY warnings.accesskey "A">
 <!ENTITY messages.label "Messaggi">
-<!ENTITY messages.accesskey "s">
+<!ENTITY messages.accesskey "M">
 <!ENTITY clear.label "Svuota">
-<!ENTITY clear.accesskey "v">
+<!ENTITY clear.accesskey "S">
 <!ENTITY codeEval.label "Codice:">
 <!ENTITY codeEval.accesskey "o">
 <!ENTITY evaluate.label "Valuta">
-<!ENTITY evaluate.accesskey "v">
+<!ENTITY evaluate.accesskey "V">
 <!ENTITY copyCmd.label "Copia">
 <!ENTITY copyCmd.accesskey "C">
 <!ENTITY copyCmd.commandkey "C">
 <!ENTITY sortFirst.label "Ordina primo > ultimo">
-<!ENTITY sortFirst.accesskey "p">
+<!ENTITY sortFirst.accesskey "n">
 <!ENTITY sortLast.label "Ordina ultimo > primo">
 <!ENTITY sortLast.accesskey "u">
 <!ENTITY closeCmd.commandkey "w">

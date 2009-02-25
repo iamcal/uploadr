@@ -17,12 +17,4 @@ window {
 }
 
 
-/* see bug-jp 4494 */
-prefpane {
-  opacity: 1.0;
-}
-/* workaround for Vista's Meiryo font */
-#aboutDialog #userAgent {
-  min-height: 5em;
-}
 

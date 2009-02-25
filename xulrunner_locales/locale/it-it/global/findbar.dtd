@@ -1,5 +1,5 @@
 <!ENTITY next.label "Successivo">
-<!ENTITY next.accesskey "u">
+<!ENTITY next.accesskey "S">
 <!ENTITY next.tooltip "Trova l'occorrenza successiva del testo da cercare">
 <!ENTITY previous.label "Precedente">
 <!ENTITY previous.accesskey "P">
@@ -9,4 +9,4 @@
 <!ENTITY highlight.accesskey "n">
 <!ENTITY highlight.tooltiptext "Evidenzia tutte le ripetizioni del testo da cercare">
 <!ENTITY caseSensitiveCheckbox.label "Maiuscole/minuscole">
-<!ENTITY caseSensitiveCheckbox.accesskey "i">
+<!ENTITY caseSensitiveCheckbox.accesskey "M">

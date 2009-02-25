@@ -3,7 +3,7 @@
 <!ENTITY undoCmd.label			"元に戻す">
 <!ENTITY undoCmd.key			"Z">
 <!ENTITY undoCmd.accesskey		"u">
-<!ENTITY redoCmd.label			"やり直す">
+<!ENTITY redoCmd.label			"やり直し">
 <!ENTITY redoCmd.key			"Y">
 <!ENTITY redoCmd.accesskey		"r">
 <!ENTITY cutCmd.label			"切り取り">

@@ -1,5 +1,5 @@
 <!ENTITY addons.title "Componenti aggiuntivi">
-<!ENTITY em.width "520">
+<!ENTITY em.width "550">
 <!ENTITY em.height "380">
 <!ENTITY cmd.info.commandKey "i">
 <!ENTITY cmd.options.commandKey ",">
@@ -25,9 +25,9 @@
 <!ENTITY cmd.restartApp2.label "Riavvia &brandShortName;">
 <!ENTITY cmd.restartApp2.accesskey "R">
 <!ENTITY cmd.restartApp2.tooltip "Riavviare &brandShortName; per rendere effettive le modifiche">
-<!ENTITY cmd.skip.label "Salta">
-<!ENTITY cmd.skip.accesskey "S">
-<!ENTITY cmd.skip.tooltip "Salta questi aggiornamenti">
+<!ENTITY cmd.skip.label "Tralascia">
+<!ENTITY cmd.skip.accesskey "a">
+<!ENTITY cmd.skip.tooltip "Tralascia questi aggiornamenti">
 <!ENTITY cmd.continue.label "Continua">
 <!ENTITY cmd.continue.accesskey "C">
 <!ENTITY cmd.continue.tooltip "Continua ad avviare &brandShortName;">
@@ -48,13 +48,13 @@
 <!ENTITY cmd.optionsUnix.tooltip "Modifica le preferenze dell'estensione selezionata">
 <!ENTITY cmd.enable.label "Attiva">
 <!ENTITY cmd.enable.accesskey "t">
-<!ENTITY cmd.enable.tooltip "Attiva questo componente al prossimo riavvio di &brandShortName;">
+<!ENTITY cmd.enable.tooltip "Attiva questo componente al prossimo avvio di &brandShortName;">
 <!ENTITY cmd.disable.label "Disattiva">
 <!ENTITY cmd.disable.accesskey "D">
-<!ENTITY cmd.disable.tooltip "Disattiva questo componente al prossimo riavvio di &brandShortName;">
+<!ENTITY cmd.disable.tooltip "Disattiva questo componente al prossimo avvio di &brandShortName;">
 <!ENTITY cmd.uninstall.label "Disinstalla">
 <!ENTITY cmd.uninstall2.accesskey "s">
-<!ENTITY cmd.uninstall2.tooltip "Disinstalla questo componente al prossimo riavvio di &brandShortName;">
+<!ENTITY cmd.uninstall2.tooltip "Disinstalla questo componente al prossimo avvio di &brandShortName;">
 <!ENTITY cmd.cancelUninstall.label "Annulla disinstallazione">
 <!ENTITY cmd.cancelUninstall.accesskey "A">
 <!ENTITY cmd.cancelUninstall.tooltip "Annulla la disinstallazione di questo componente">
@@ -96,15 +96,16 @@
 <!ENTITY insecureUpdate.label "Non fornisce aggiornamenti sicuri.">
 <!ENTITY needsDependencies.label "Richiede elementi aggiuntivi.">
 <!ENTITY blocklisted.label "Disattivato per proteggere il computer.">
-<!ENTITY toBeDisabled.label "Questo componente verrà disattivato al prossimo riavvio di &brandShortName;.">
-<!ENTITY toBeEnabled.label "Questo componente verrà attivato al prossimo riavvio di &brandShortName;.">
-<!ENTITY toBeInstalled.label "Questo componente verrà installato al prossimo riavvio di &brandShortName;.">
-<!ENTITY toBeUninstalled.label "Questo componente verrà disinstallato al prossimo riavvio di &brandShortName;.">
-<!ENTITY toBeUpdated.label "Questo componente verrà aggiornato al prossimo riavvio di &brandShortName;.">
+<!ENTITY softBlocklisted.label "Identificato come causa di problemi di stabilità o sicurezza.">
+<!ENTITY toBeDisabled.label "Questo componente verrà disattivato al prossimo avvio di &brandShortName;.">
+<!ENTITY toBeEnabled.label "Questo componente verrà attivato al prossimo avvio di &brandShortName;.">
+<!ENTITY toBeInstalled.label "Questo componente verrà installato al prossimo avvio di &brandShortName;.">
+<!ENTITY toBeUninstalled.label "Questo componente verrà disinstallato al prossimo avvio di &brandShortName;.">
+<!ENTITY toBeUpdated.label "Questo componente verrà aggiornato al prossimo avvio di &brandShortName;.">
 <!ENTITY getExtensions.label "Scarica estensioni">
 <!ENTITY getThemes.label "Scarica temi">
 <!ENTITY getPlugins.label "Scarica plugin">
-<!ENTITY searchAddons.label "Ricerca tutti i componenti aggiuntivi">
+<!ENTITY searchAddons.label "Cerca componenti">
 <!ENTITY browseAddons.label "Visualizza tutti i componenti aggiuntivi">
 <!ENTITY searchFailed.label "&brandShortName; non è in grado di recuperare i componenti aggiuntivi">
 <!ENTITY recommendedHeader.label "Consigliati">
@@ -118,11 +119,11 @@
 <!ENTITY cancelSearch.button "Annulla">
 <!ENTITY searchFailed.button "OK">
 <!ENTITY searchResultHomepage.value "Ulteriori informazioni">
-<!ENTITY searchBox.label "Ricerca tutti i componenti aggiuntivi">
+<!ENTITY searchBox.label "Cerca componenti">
 <!ENTITY recommendedResults.label "Visualizza tutti i componenti aggiuntivi consigliati">
 <!ENTITY searchResultConnecting.label "Connessione in corso…">
 <!ENTITY searchResultInstalling.label "Installazione in corso…">
-<!ENTITY searchResultFailed.label "Installazione fallita">
+<!ENTITY searchResultFailed.label "Installazione non riuscita">
 <!ENTITY searchResultInstalled.label "Installazione completata">
 <!ENTITY addonTypeExtension.label "Estensioni">
 <!ENTITY addonTypeTheme.label "Temi">
@@ -140,9 +141,11 @@
 <!ENTITY installWaiting.label "Attendere…">
 <!ENTITY installIncompatibleUpdate.label "Controllo compatibilità…">
 <!ENTITY installFinishing.label "Installazione in corso…">
-<!ENTITY installFailure.label "Installazione fallita.">
+<!ENTITY installFailure.label "Installazione non riuscita.">
 <!ENTITY progressStatus.label "Ricerca aggiornamenti">
 <!ENTITY eula.title "Licenza per l'utente finale (EULA)">
 <!ENTITY eula.width "560px">
 <!ENTITY eula.height "400px">
 <!ENTITY eula.accept "Accetta e installa…">
+<!ENTITY blocklist.blocked.label "Bloccato">
+<!ENTITY blocklist.checkbox.label "Disattiva">
