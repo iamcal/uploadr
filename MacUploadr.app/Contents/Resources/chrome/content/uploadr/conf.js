@@ -44,6 +44,9 @@ var conf = {
 		fileLogging: false
 	},
 
+    // Size of threads pool for thumbnailing
+    maxThreadsCount: 5,
+
 	// Scrolling threshold for dragging (pixels);
 	scroll: 20,
 

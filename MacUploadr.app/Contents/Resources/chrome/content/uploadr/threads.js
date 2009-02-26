@@ -30,7 +30,7 @@ var threads = {
 	worker: null,
 	uploadr: null,
 	main: null,
-	workers: [],
+	workerPool: null,
 
 	// GraphicsMagick XPCOM object
 	gm: null,
@@ -41,6 +41,8 @@ var threads = {
 			// Threads themselves
 			var t = Cc['@mozilla.org/thread-manager;1'].getService();
 			threads.worker = t.newThread(0);
+			threads.workerPool = Cc['@mozilla.org/thread-pool;1'].createInstance(Ci.nsIThreadPool);
+			threads.workerPool.threadLimit = conf.maxThreadsCount;
 			threads.uploadr = t.newThread(0);
 			threads.main = t.mainThread;
 
@@ -133,10 +135,6 @@ ThumbCallback.prototype = {
 			if (conf.console.thumb) {
 				logStringMessage('GM THUMB: ' + this.result);
 			}
-
-//            if(threads.workers[this.id]) {
-//                threads.workers[this.id].shutdown();
-//            }
 
 			// Parse the returned string
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
@@ -481,7 +479,6 @@ SortCallback.prototype = {
 
 		// Tell extensions that photos were sorted
 		extension.after_reorder.exec(false);
-
 	},
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
