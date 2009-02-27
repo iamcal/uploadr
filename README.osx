@@ -26,7 +26,14 @@ XULRunner
 
 you'll have to build it until 1.9.1 is released
 Good luck!
-instead of sudo mv, rsync -rl ?
+
+finish with :
+make -C obj-xulrunner/ppc/xulrunner/installer/ CHOWN_ROOT=~/UPLOADR/chown_root CHOWN_REVERT=~/UPLOADR/chown_revert
+install the resulting xulrunner-1.9.1b3pre.en-US.mac-pkg.dmg
+
+
+(rsync -rl mozilla/obj-xulrunner/ppc/dist/universal/xulrunner/XUL.framework/ MacUploadr.app/Contents/Frameworks)
+
 
 XULRunner trunk builds:
   ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/nightly/latest-trunk/
@@ -205,6 +212,7 @@ Make sure by running otool -Lv that you are not depending on libintl, which is n
 
 Running Flickr Uploadr
 ------------------------------------------------------------------------
+cp MacUploadr.app/Contents/Frameworks/Versions/1.9..../xulrunner-bin MacUploadr.app/Contents/MacOS/xulrunner ???
 
 The app can be launched by double-clicking on MacUploadr.app in Finder.
 
