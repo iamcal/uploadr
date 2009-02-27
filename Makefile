@@ -64,6 +64,7 @@ PLATFORM := win
 
 # Location of Mozilla tree for the MAR tools
 MOZILLA := /c/mozilla
+MARTOOLDIR := /c/mozilla
 
 # Location for application bundle staging
 APPNAME := Flickr\ Uploadr
@@ -100,6 +101,7 @@ GM_VER := 1.2.5
 
 # Location of Mozilla tree for the MAR tools
 MOZILLA := ~/UPLOADR/mozilla
+MARTOOLDIR := ~/UPLOADR/mozilla/obj-xulrunner/ppc
 
 # Location for build staging
 #   The base of this path must exist before running make
@@ -420,12 +422,12 @@ ifeq (linux, $(PLATFORM))
 	@ln -s Flickr\ Uploadr $(BUILD)/new
 endif
 	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT).complete.mar
-	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
+	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MARTOOLDIR)/modules/libmar/tool" \
 		$(MOZILLA)/tools/update-packaging/make_full_update.sh \
 		$(OUT)/FlickrUploadr-$(VER)-$(VER_DATE)-$(INTL_SHORT)-$(PLATFORM).complete.mar \
 		$(BUILD)/new &> /dev/null
 #	@rm -f $(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar
-#	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MOZILLA)/modules/libmar/tool" \
+#	@PATH="$(PATH):$(MOZILLA)/other-licenses/bsdiff:$(MARTOOLDIR)/modules/libmar/tool" \
 #		$(MOZILLA)/tools/update-packaging/make_incremental_update.sh \
 #		$(OUT)/FlickrUploadr-$(VER)-$(INTL_SHORT).partial.mar \
 #		$(BUILD)/old $(BUILD)/new &> /dev/null
