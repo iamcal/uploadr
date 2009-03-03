@@ -78,7 +78,7 @@ var buttons = {
 				locale.getString('upload.cancel.cancel'))) {
 				ui.cancel = true;
 				upload.cancel = true;
-				upload._start(false, upload.progress_id);
+				upload._start(upload.genErr(), upload.progress_id);
 			}
 		}
 	}

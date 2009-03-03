@@ -296,7 +296,7 @@ var api = {
 			    }
 				if (4 == xhr.readyState && 200 == xhr.status) {
 					try {
-						var rsp = xhr.responseXML ? xhr.responseXML.documentElement : false;
+						var rsp = xhr.responseXML ? xhr.responseXML.documentElement : upload.genErr();
 						if (conf.console.error && (
 							'object' != typeof rsp
 							|| 'ok' != rsp.getAttribute('stat'))) {

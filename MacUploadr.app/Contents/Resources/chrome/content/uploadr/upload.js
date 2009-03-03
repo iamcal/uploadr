@@ -17,6 +17,8 @@
 // The upload API
 var upload = {
 
+    // general error/cancel string
+    genErrorString: "<?xml version=\"1.0\" encoding=\"utf-8\" ?><rsp stat=\"fail\"><err code=\"3\" msg=\"General upload failure\" /></rsp>",
 	// Count how many times a we've retried
 	retry_count: 0,
 	tickets_retry_count: 0,
@@ -59,9 +61,21 @@ var upload = {
 
     startTime : 0,
     
+    // Generate general error XML document element
+    genErr: function() {
+        var xml = document.implementation.createDocument("", "", null);
+        var rspElem = xml.createElement("rsp");
+        rspElem.setAttribute("stat", "fail");
+        var errElem = xml.createElement("err");
+        errElem.setAttribute("code", "3");
+        errElem.setAttribute("msg", "General upload failure");
+        rspElem.appendChild(errElem);
+        xml.appendChild(rspElem);
+        return xml.documentElement;
+    },
+    
 	// Upload a photo
 	start: function(id) {
-	    
 	    //reset upload progress
 	    upload.progress_id = -1;
 
@@ -139,12 +153,14 @@ var upload = {
 			upload.progress_handle = null;
 		}
 		upload.progress_zero = 0;
-
         // If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 			if (conf.console.error) {
-				Components.utils.reportError(new Date().toUTCString() +' UPLOAD ERROR: ' +
-					'object' == typeof rsp ? rsp.toSource() : rsp);
+			    if ('object' != typeof rsp) {
+				    Components.utils.reportError(new Date().toUTCString() +' UPLOAD ERROR: ' + rsp);
+				} else {
+                    Components.utils.reportError(new Date().toUTCString() +' UPLOAD ERROR: ' + new XMLSerializer().serializeToString(rsp));
+                }
 			}
 
 			// Make sure this isn't a bandwidth error, as those are
@@ -162,7 +178,7 @@ var upload = {
 			}
 
 			// Still have available retries
-			if (!upload.cancel && conf.auto_retry_count >
+			if (!ui.cancel && !upload.cancel && conf.auto_retry_count >
 				upload.retry_count) {
 				++upload.stats.errors;
 				++upload.retry_count;
@@ -188,7 +204,6 @@ var upload = {
 					upload.done();
 				}
 			}
-
 			return;
 		}
 
@@ -421,7 +436,7 @@ var upload = {
 		window.clearInterval(upload.progress_handle);
 		upload.progress_handle = null;
 		upload.cancel = true;
-		upload._start(false, id);
+		upload._start(upload.genErr(), id);
 	},
 
 	// Check tickets exponentially
@@ -718,7 +733,9 @@ var upload = {
 		}
 
 		// Otherwise drop the recovered photos into the current batch
-		else { photos.add(upload.try_again); }
+		else {
+		    photos.add(upload.try_again); 
+		}
 		upload.try_again = [];
 
 	}
@@ -840,7 +857,7 @@ Upload.prototype = {
 			if(upload.cancel) {
 			    ostream.close();
 			    threads.main.dispatch(new UploadDoneCallback(
-			       false, this.id), threads.main.DISPATCH_NORMAL);
+			       upload.genErrorString, this.id), threads.main.DISPATCH_NORMAL);
 			       return; // we are done
 			 }
 			var _istream = transport.openInputStream(0,0,0);
@@ -896,7 +913,7 @@ Upload.prototype = {
 		} catch (err) {
 			Components.utils.reportError(new Date().toUTCString() +err);
 			threads.main.dispatch(new UploadDoneCallback(
-			    false, this.id), threads.main.DISPATCH_NORMAL);
+			    upload.genErrorString, this.id), threads.main.DISPATCH_NORMAL);
 		}
 
 	},
@@ -934,9 +951,12 @@ Upload.prototype = {
 			    logStringMessage('UPLOAD: finished native upload');
 		    }
 		} catch (err) {
-			Components.utils.reportError(new Date().toUTCString() +err);
+			if(!upload.cancel) {
+			    Components.utils.reportError(new Date().toUTCString() +err);
+			}
 			threads.main.dispatch(new UploadDoneCallback(
-			    false, this.id), threads.main.DISPATCH_NORMAL);
+			    upload.genErrorString,
+			     this.id), threads.main.DISPATCH_NORMAL);
 		}
 	}
 };
@@ -970,7 +990,7 @@ UploadDoneCallback.prototype = {
 				+ ' upload cancelled : ' + upload.cancel + ' ui cancel :  ' + ui.cancel);
 		}
 		// Try to parse the response but fail gracefully
-		var rsp = false;
+		var rsp = upload.genErr();
 		if(this.raw) {
 		    try {
 			    var parser = Cc['@mozilla.org/xmlextras/domparser;1']

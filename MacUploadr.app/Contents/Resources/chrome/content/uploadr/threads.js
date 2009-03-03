@@ -9,7 +9,7 @@
  */
  var UploadProgressHandler = {
     onProgress: function(remaining, id) {
-        if(upload.cancel) {
+        if(upload.cancel || ui.cancel) {
             threads.gm.cancel(true);
         }
         else {
