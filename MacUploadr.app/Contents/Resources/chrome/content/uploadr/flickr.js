@@ -327,7 +327,7 @@ var api = {
 						}
 
 					} catch (err) {
-						Components.utils.reportError(new Date().toUTCString() +err);
+						Components.utils.reportError(new Date().toUTCString() + err + (params.method ? (" calling back from " + params.method) : ""));
 					}
 				}
 			};

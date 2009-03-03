@@ -780,7 +780,9 @@ var photos = {
 		photos.add(list, true);
 
 		// Bring in last known sets configuration
-		meta.sets = obj.sets;
+		if(obj.sets) {
+		    meta.sets = obj.sets;
+		}
 	},
 
     // clear photos.json
