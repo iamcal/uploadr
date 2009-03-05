@@ -12,6 +12,7 @@ This is not for the faint of heart.
 Start by satisfying prerequisites for your platform:
   http://developer.mozilla.org/en/docs/Windows_Build_Prerequisites
   http://developer.mozilla.org/en/docs/Mac_OS_X_Build_Prerequisites
+  including https://developer.mozilla.org/Talk:en/Mac_OS_X_Build_Prerequisites#PKG_CONFIG_path
 
 NEW
 	get mozilla-build: http://ftp.mozilla.org/pub/mozilla.org/mozilla/libraries/win32/MozillaBuildSetup-1.3.exe

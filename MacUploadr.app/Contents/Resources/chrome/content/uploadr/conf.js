@@ -97,10 +97,6 @@ var conf = {
 	//   Changing this will require CSS tweaks
 	thumb_size: 100,
 
-	// Maximum size of a video upload (kilobytes)
-	//   This is used as a fallback if no one is logged in
-	videosize: 150 << 10,
-
 	// Upload mode
 	//   Must be 'sync' or 'async'
 	//   'sync' is very very deprecated

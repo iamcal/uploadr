@@ -129,8 +129,7 @@ var photos = {
 			// Videos are allowed for now as long as they aren't too big
 			else if (photos.is_video(path)) {
 				++v_count;
-				if (file.size(path) > (null == users.videosize
-					? conf.videosize : users.videosize)) {
+				if (users.videosize > 0 && file.size(path) > users.videosize) {
 					var filename = path.match(/([^\/\\]*)$/);
 					big_videos.push(null == filename ? path : filename[1]);
 				} else {
@@ -188,8 +187,7 @@ var photos = {
 					locale.getString('video.add.big.' + pl + '.title'),
 					locale.getFormattedString(
 						'video.add.big.' + pl + '.explain',
-						[(null == users.videosize
-						? conf.videosize : users.videosize) >> 10]
+						[users.videosize >> 10]
 					),
 					1 == v_count ? '' : big_videos.join(', '),
 					locale.getString('video.add.big.' + pl + '.ok'));
@@ -256,8 +254,8 @@ var photos = {
 
 		}
 //videos to be rejected for non pro is beyond silence param
-        if (users.is_pro === false && v_count + photos.videoCount>users.videos) {
-            if(confirm(locale.getString('dialog.no.video.text'),
+        if (users.is_pro === false && v_count + photos.videoCount>users.nbVids.remaining) {
+            if(confirm(locale.getFormattedString('dialog.no.video.text', [users.nbVids.remaining+users.nbVids.uploaded]),
                 locale.getFormattedString('dialog.no.video.title', [users.username]),
 	            locale.getString('dialog.no.video.ok'),
 	            locale.getString('dialog.no.video.cancel'))) {
@@ -265,7 +263,7 @@ var photos = {
 	        }
 	        // anyway at that point too complicate to handle video
 	         var new_paths = [];
-	         var videoAccepted = users.videos - photos.videoCount;
+	         var videoAccepted = users.nbVids.remaining - photos.videoCount;
 		    while (paths.length) {
 			    var p = paths.shift();
 			    var path = 'object' == typeof p ? p.path : p;
@@ -515,7 +513,7 @@ var photos = {
 		// Decide if we're already in the midst of an upload
 		var not_started = 0 == photos.uploading.length;
 
-		// Drop videos if we're a free user or they're over 100MB
+		// Drop videos if we're a free user or they're over the allowed size
 		//   They will have been warned that this is coming
 		if (from_user) {
 			var new_list = [];
@@ -525,14 +523,14 @@ var photos = {
 				}
 				if (photos.is_photo(p.path)) {
 					new_list.push(p);
-				} else if ((!users.is_pro && users.videos == 0)|| (null == users.videosize
-					? conf.videosize : users.videosize) < p.size) {
+				} else if ((!users.is_pro && users.nbVids.remaining == 0) || (users.videosize > 0 &&
+					users.videosize < p.size)) {
 					photos.batch_size -= p.size;
 					photos.video_batch_size -= p.size;
 				} else {
 					new_list.push(p);
 					if(!users.is_pro) {
-					    users.videos--;
+					    users.nbVids.remaining--;
 					}
 				}
 			}

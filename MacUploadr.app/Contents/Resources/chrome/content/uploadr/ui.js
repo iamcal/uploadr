@@ -66,11 +66,12 @@ var ui = {
 			[Math.max(5, users.filesize >> 10)])));
 		notes.appendChild(li);
 		
-		li = document.createElementNS(NS_HTML, 'li');
-		li.appendChild(document.createTextNode(locale.getFormattedString(
-			'photos.init.note.video_size', [(null == users.videosize
-			? conf.videosize : users.videosize) >> 10])));
-		notes.appendChild(li);
+		if(users.videosize > 0) {
+		    li = document.createElementNS(NS_HTML, 'li');
+		    li.appendChild(document.createTextNode(locale.getFormattedString(
+			    'photos.init.note.video_size', [users.videosize >> 10])));
+		    notes.appendChild(li);
+		}
 		li = document.createElementNS(NS_HTML, 'li');
 		li.appendChild(document.createTextNode(locale.getString(
 			'photos.init.note.video_length')));

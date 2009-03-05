@@ -156,21 +156,25 @@ var wrap = {
 				if (videosize.length) {
 					users.videosize = parseInt(videosize[0]
 						.getAttribute('maxkb'));
-				} else { users.videosize = conf.videosize; }
+				} else { users.videosize = -1; }
+				var nbVids = user.getElementsByTagName('videos')[0];
+				if(nbVids) { //!users.is_pro
+				    users.nbVids = {
+				        uploaded: parseInt(nbVids.getAttribute('uploaded')),
+				        remaining: parseInt(nbVids.getAttribute('remaining'))
+				    };
+				    if(users.nbVids.remaining == 'lots') {
+				        users.nbVids.remaining = -1;
+                    }				        
+				} else {
+				    users.nbVids= {remaining : -1};
+				}
 				var sets = user.getElementsByTagName('sets')[0].getAttribute('remaining');
 				if ('lots' == sets) {
 					users.sets = -1;
 				} else {
 					users.sets = parseInt(sets);
 				}
-				var video = user.getElementsByTagName('videos');
-				if(video.length) {
-				    if ('lots' == video[0].getAttribute('remaining')) {
-				        users.videos = -1;
-				    } else {
-				        users.videos = parseInt(video[0].getAttribute('remaining'));
-                    }
-                }
 				ui.users_updated();
 				users.update();
 			}
@@ -346,9 +350,11 @@ var wrap = {
 
 				// Translate photos in the batch to this list
 				for each (var p in photos.list) {
-					for (var i in p.sets) {
-						p.sets[i] = sets_map[p.sets[i]];
-					}
+				    if(p != null) {
+					    for (var i in p.sets) {
+						    p.sets[i] = sets_map[p.sets[i]];
+					    }
+                    }
 				}
 				meta.sets = new_sets;
 
