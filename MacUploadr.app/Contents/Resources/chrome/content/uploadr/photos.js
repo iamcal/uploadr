@@ -732,10 +732,11 @@ var photos = {
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
 
-		// This action is blocked during loading but will always
-		// happen at the end of loading
-		if (_block_normalize) { return; }
-
+//		// This action is blocked during loading but will always
+//		// happen at the end of loading
+// JDE - I do not see this happening reliably and don't get why this needs to be blocked
+// unblocking to make sure the photos are always in order
+//		if (_block_normalize) { return; }
 		var list = document.getElementById('photos_list')
 			.getElementsByTagName('li');
 		var old_list = photos.list;

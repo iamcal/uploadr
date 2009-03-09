@@ -358,9 +358,11 @@ var unblock_sort = function() {
 var _block_normalize = 0;
 var block_normalize = function() {
 	++_block_normalize;
+//	logStringMessage("block_normalize " + _block_normalize);
 };
 var unblock_normalize = function() {
 	--_block_normalize;
+//	logStringMessage("block_normalize " + _block_normalize);
 };
 var _block_exit = 0;
 var block_exit = function() {
