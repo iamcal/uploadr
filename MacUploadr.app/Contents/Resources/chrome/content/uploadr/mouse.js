@@ -22,12 +22,14 @@ var mouse = {
 		e = mouse.resolve(e);
 
 		// Save old metadata
+		block_normalize();
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
 		} else if (1 < photos.selected.length) {
 			meta.abandon();
 		}
-
+        unblock_normalize();
+        
 		// If we clicked on an image that isn't an error and isn't loading
 		if (e.target.src && 'error' != e.target.className
 			&& 'loading' != e.target.className) {
@@ -44,7 +46,9 @@ var mouse = {
 						imgs[i].className = '';
 					}
 				}
+				block_normalize();
 				photos.selected = [];
+				unblock_normalize();
 			}
 
 			// Get the ID of the photo clicked
@@ -52,6 +56,7 @@ var mouse = {
 
 			// If shift is held, select every image between the image 
 			// clicked and the image last clicked
+			block_normalize();
 			if (null != photos.last && e.shiftKey) {
 				var inc = id < photos.last ? 1 : -1;
 				for (var i = id; i != photos.last; i += inc) {
@@ -64,8 +69,7 @@ var mouse = {
 					} catch (err) {}
 				}
 			}
-
-			// If ctrl or command is held, select or deselect this without
+ 			// If ctrl or command is held, select or deselect this without
 			// changing others
 			else if (e.ctrlKey || e.metaKey) {
 				if ('' == img.className) {
@@ -89,7 +93,6 @@ var mouse = {
 				img.className = 'selected';
 				photos.selected = [id];
 			}
-
 			// Save the image last clicked
 			photos.last = id;
 	
@@ -100,12 +103,11 @@ var mouse = {
 			} else {
 				meta.batch();
 			}
-
+            unblock_normalize();
 		}
 		// If we clicked the revert to sorted button
 		else if (e.target.id && 'photos_sort_revert' == e.target.id) {
 			buttons.upload.disable();
-			block_normalize();
 			threads.worker.dispatch(new Sort(),
 				threads.worker.DISPATCH_NORMAL);
 			document.getElementById('photos_sort_default')
@@ -122,7 +124,9 @@ var mouse = {
 		// If we clicked on whitespace, hide the thumbnail and metadata,
 		// and disable buttons
 		else {
+			block_normalize();
 			photos.selected = [];
+			unblock_normalize();
 			var imgs = document.getElementsByTagName('img');
 			var ii = imgs.length;
 			for (var i = 0; i < ii; ++i) {
@@ -276,12 +280,13 @@ var mouse = {
 				}
 
 				// Make the selected photos look like they're being dragged
+				block_normalize();
 				for each (var id in photos.selected) {
 					document.getElementById('photo' + id)
 						.getElementsByTagName('img')[0].className =
 						'selected dragging';
 				}
-
+                unblock_normalize();
 				mouse.dragging = 2;
 			}
 
@@ -296,7 +301,9 @@ var mouse = {
 
 				// Show the cursor follower
 				var follower = document.getElementById('drag_follower');
+				block_normalize();
 				follower.firstChild.nodeValue = photos.selected.length;
+				unblock_normalize();
 				follower.style.left = (e.clientX + pos.x.value +
 					OFFSET_X + 10) + 'px';
 				follower.style.top = (e.clientY + pos.y.value +
@@ -429,6 +436,7 @@ var mouse = {
 			if (3 == mouse.dragging) {
 
 				// Reorder the photo list
+				block_normalize();
 				photos.selected.sort(function(a, b) {
 					return a < b;
 				});
@@ -450,6 +458,7 @@ var mouse = {
 					}
 
 				}
+				unblock_normalize();
 				photos.normalize();
 
 				// Stop showing feedback on the cursor
@@ -495,12 +504,13 @@ var mouse = {
 			ds.style.display = 'none';
 
 			// Save old metadata
+			block_normalize();
 			if (1 == photos.selected.length) {
 				meta.save(photos.selected[0]);
 			} else if (1 < photos.selected.length) {
 				meta.abandon();
 			}
-
+            
 			// Find new selection
 			var p = photos.list;
 			photos.selected = [];
@@ -531,7 +541,7 @@ var mouse = {
 					meta.batch();
 				}
 			}
-
+			unblock_normalize();
 		}
 
 		mouse.anchor = null;

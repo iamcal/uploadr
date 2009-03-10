@@ -131,7 +131,6 @@ ThumbCallback.prototype = {
 	if (photos.thumb_cancel === true)
 	    return;
 		try {
-			unblock_normalize();
 			if (conf.console.thumb) {
 				logStringMessage('GM THUMB: ' + this.result);
 			}
@@ -326,12 +325,14 @@ ThumbCallback.prototype = {
 		} catch (err) {
 			Components.utils.reportError(new Date().toUTCString() +err);
 		}
-
+        unblock_normalize();
 		// Tell extensions that we got a new thumbnail
 		extension.after_thumb.exec(this.id);
+		// and synch the view as well
+		photos.normalize();
 
 		unblock_sort();
-		if(photos.sort && !_block_sort) { 
+		if(photos.sort && !_block_sort) { // hack hack :(
             threads.worker.dispatch(new Sort(),
 			    threads.worker.DISPATCH_NORMAL);
 		}
@@ -392,9 +393,7 @@ var RotateCallback = function(id, path) {
 };
 RotateCallback.prototype = {
 	run: function() {
-		unblock_normalize();
 		photos.list[this.id].path = this.path;
-
 		// Tell extensions that this photo was edited (rotated)
 		extension.after_edit.exec([this.id]);
 
@@ -441,6 +440,7 @@ SortCallback.prototype = {
 		}
 
 		// Perform the sort
+		block_normalize();
 		if (1 >= photos.list.length) {
 			if (1 == photos.list.length) { buttons.upload.enable(); }
 			unblock_normalize();
@@ -571,7 +571,7 @@ var EnableUploadCallback = function() {
 };
 EnableUploadCallback.prototype = {
 	run: function() {
-		unblock_normalize();
+	    photos.normalize();
 		buttons.upload.enable();
 		meta.first = false;
 	},

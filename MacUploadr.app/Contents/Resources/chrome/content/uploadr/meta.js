@@ -35,7 +35,7 @@ var meta = {
 				ul[i].className = 'sets_plus';
 			}
 		}
-
+		block_normalize();
 		// Load the defaults for a partial batch
 		if (null == id) {
 
@@ -119,6 +119,7 @@ var meta = {
 		else {
 			var p = photos.list[id];
 			if (null == p) {
+			    unblock_normalize();
 				return;
 			}
 
@@ -210,23 +211,24 @@ var meta = {
 			}
 			document.getElementById('single_sets_create').style.display =
 				meta.created_sets == users.sets ? 'none' : 'block';
-
 		}
 
 		// Send the selected photos list to extensions
 		extension.after_select.exec(photos.selected);
-
+		unblock_normalize();
 	},
 
 	// Save photo metadata from the DOM into JS
 	save: function(id) {
 
 		// Save a partial batch into the selected photos
+		block_normalize();
 		if (null == id) {
 			var ii = photos.selected.length;
 			for (var i = 0; i < ii; ++i) {
 				var p = photos.list[photos.selected[i]];
 				if (null == p) {
+					unblock_normalize();
 					return;
 				}
 
@@ -265,7 +267,6 @@ var meta = {
 				if (0 != safety_level) {
 					p.safety_level = safety_level;
 				}
-
 			}
 		}
 
@@ -273,6 +274,7 @@ var meta = {
 		else {
 			var p = photos.list[id];
 			if (null == p) {
+			    unblock_normalize();
 				return;
 			}
 			p.title = document.getElementById('single_title').value;
@@ -288,7 +290,7 @@ var meta = {
 
 		// Send the selected photos list to extensions
 		extension.after_edit.exec(photos.selected);
-
+		unblock_normalize();
 	},
 
 	// Enable the right-side metadata column on the photos page
@@ -316,12 +318,14 @@ var meta = {
 
 		// Only allow rotation for photos or mixed selections
 		var have_photos = false;
+		block_normalize();
 		for each (var i in photos.selected) {
 			if (null == photos.list[i]) {
 				continue;
 			}
 			have_photos = photos.is_photo(photos.list[i].path) ? true : have_photos;
 		}
+		unblock_normalize();
 		if (have_photos) {
 			document.getElementById('t_rotate_l').className = 'enabled';
 			document.getElementById('t_rotate_r').className = 'enabled';
@@ -344,8 +348,10 @@ var meta = {
 	is_public: function(value) {
 
 		// Single photo or group of photos?
+	    block_normalize();
 		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
-
+        unblock_normalize();
+        
 		if (1 == parseInt(value)) {
 			meta.last_private_settings = document.getElementById(prefix + '_is_friend').checked | (document.getElementById(prefix + '_is_family').checked << 1);
 			document.getElementById(prefix + '_is_friend').checked = false;
@@ -367,8 +373,11 @@ var meta = {
 	// If a user leaves a partial batch before committing, warn them
 	//   If conf.confirm_save_batch is off, this will always save rather than abandon
 	abandon: function() {
+	    block_normalize();
+	    var batchSelected = (1 < photos.selected.length);
+	    unblock_normalize();
 		if ('-moz-box' == document.getElementById('batch_meta').style.display &&
-			1 < photos.selected.length) {
+			1 < batchSelected) {
 			if (conf.confirm_save_batch) {
 				if (confirm(locale.getString('meta.abandon.text'),
 					locale.getString('meta.abandon.title'),
@@ -479,7 +488,9 @@ var meta = {
 				li.appendChild(document.createTextNode(name));
 				ul.insertBefore(li, ul.firstChild);
 			}
+			block_normalize();
 			var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+			unblock_normalize();
 			meta.add_to_set({target:
 				document.getElementById(prefix + '_sets_add').firstChild});
 			if (meta.created_sets == users.sets) {
@@ -503,6 +514,7 @@ var meta = {
 		var title = li.firstChild.nodeValue;
 
 		// Add each selected photo to this set
+		block_normalize();
 		var ii = photos.selected.length;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[photos.selected[i]];
@@ -510,9 +522,10 @@ var meta = {
 				p.sets.push(set_index);
 			}
 		}
-
+        
 		// Update the UI
 		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+		unblock_normalize();
 		var ul = document.getElementById(prefix + '_sets_added');
 		if ('sets_none' == ul.firstChild.className) {
 			ul.removeChild(ul.firstChild);
@@ -537,6 +550,7 @@ var meta = {
 		var name = li.firstChild.nodeValue;
 
 		// Remove each selected photo from this set
+		block_normalize();
 		var ii = photos.selected.length;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[photos.selected[i]];
@@ -550,10 +564,11 @@ var meta = {
 			}
 			p.sets = new_sets;
 		}
-
+        
 		// Update the UI
 		li.parentNode.removeChild(li);
 		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
+		unblock_normalize();
 		var ul = document.getElementById(prefix + '_sets_added');
 		if (0 == ul.getElementsByTagName('li').length) {
 			li = document.createElementNS(NS_HTML, 'li');
@@ -603,6 +618,7 @@ var meta = {
 
 		// Go through photos and turn null/NaN into these defaults
 		//   Null/NaN shows up on photos added before a user was logged in
+		block_normalize();
 		var ii = photos.list.length;
 		for (var i = 0; i < ii; ++i) {
 			var p = photos.list[i];
@@ -614,7 +630,7 @@ var meta = {
 				}
 			}
 		}
-
+        unblock_normalize();
 	},
 
 	// Only show sets to logged-in users
@@ -638,6 +654,7 @@ var meta = {
 			// Tally up photos and videos
 			var p_count = 0;
 			var v_count = 0;
+			block_normalize();
 			for each (var id in photos.selected) {
 				var p = photos.list[id];
 				if (null == p) {
@@ -649,7 +666,7 @@ var meta = {
 					++v_count;
 				}
 			}
-
+            unblock_normalize();
 			// If there are videos then bother them
 			if (v_count) {
 				var result = {};
@@ -681,6 +698,7 @@ var meta = {
 				// Remove selected videos and restrict selected photos
 				if ('cancel' == result.result) {
 					var new_selected = [];
+					block_normalize();
 					for each (var id in photos.selected) {
 						if (null == photos.list[id]) { continue; }
 
@@ -722,7 +740,7 @@ var meta = {
 						meta.disable();
 						photos._remove();
 					}
-
+                    unblock_normalize();
 					// If remove is blocked then we know photos.normalize
 					// will be called as it is unblocked
 					//   We're breaking the rules a bit here but the rules
@@ -737,6 +755,7 @@ var meta = {
 				else if ('ok' == result.result && result.safety_level) {
 
 					// Update the safety level of only the videos
+					block_normalize();
 					for each (var id in photos.selected) {
 						if (null == photos.list[id]) { continue; }
 						if (photos.is_video(photos.list[id].path)) {
@@ -746,13 +765,11 @@ var meta = {
 							photos.list[id].safety_level = 3;
 						}
 					}
-
 					// If just one video is selected adjust the safety level
 					if (1 == photos.selected.length) {
 						document.getElementById('single_safety_level')
 							.value = result.safety_level;
 					}
-
 					// If multiple photos are selected, indicate the safety
 					// level inconsistency in the display
 					else {
@@ -762,7 +779,7 @@ var meta = {
 						safety_level.selectedItem.label =
 							locale.getString('video.safety_level.mixed');
 					}
-
+					unblock_normalize();
 				}
 
 			}

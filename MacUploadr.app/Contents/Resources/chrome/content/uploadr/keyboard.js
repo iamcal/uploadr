@@ -33,6 +33,7 @@ var keyboard = {
 			if (0 == photos.count) {
 				return;
 			}
+			block_normalize();
 			photos.selected = [];
 			var list = document.getElementById('photos_list').getElementsByTagName('li');
 			var ii = list.length;
@@ -43,6 +44,7 @@ var keyboard = {
 					photos.selected.push(parseInt(list[i].id.replace('photo', '')));
 				}
 			}
+			unblock_normalize();
 			meta.batch();
 		} else {
 			keyboard._select_all.select();
@@ -74,6 +76,7 @@ var keyboard = {
 				return;
 			}
 			var i = photos.last + inc;
+			block_normalize();
 			var next = photos.list[i];
 			i = photos.last + inc;
 			var ii = photos.list.length;
@@ -91,6 +94,7 @@ var keyboard = {
 				});
 				img.scrollIntoView(inc > 0);
 			}
+			unblock_normalize();
 		}
 
 	}

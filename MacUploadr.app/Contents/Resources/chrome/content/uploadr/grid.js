@@ -18,6 +18,7 @@ var grid = {
 
 	// How many photos are in each full row?
 	width: function() {
+		block_normalize();
 		var p = photos.list;
 		var top = -1;
 		var width = 0;
@@ -31,6 +32,7 @@ var grid = {
 				++width;
 			}
 		}
+		unblock_normalize();
 		return 0;
 	},
 
@@ -54,6 +56,7 @@ var grid = {
 		}
 
 		// Walk the photos and see which are in the box
+		block_normalize();
 		var p = photos.list;
 		for (var i = p.length; i >= 0; --i) {
 			if (null != p[i]) {
@@ -72,7 +75,7 @@ var grid = {
 				}
 			}
 		}
-
+        unblock_normalize();
 	}
 
 };

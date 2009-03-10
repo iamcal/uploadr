@@ -194,7 +194,7 @@ var wrap = {
 			},
 			_checkTickets: function(rsp) {
 				if (conf.console.upload) {
-				    logStringMessage('UPLOAD: _checkTickets : ' + rsp);
+				    logStringMessage('UPLOAD: _checkTickets : ' + new XMLSerializer().serializeToString(rsp));
 		        }
 				var again = false;
 				if ('object' == typeof rsp &&
@@ -257,26 +257,33 @@ var wrap = {
 				}
 
 				if (again) {
-
-					// Valid response or still have retries remaining
-					if ('object' == typeof rsp) {
-						upload._check_tickets();
-					} else if (conf.tickets_retry_count >
-						upload.tickets_retry_count) {
-						if (conf.console.retry) {
-						    logStringMessage('_check_tickets() : tickets_retry_count = ' + upload.tickets_retry_count);
-						}
-						++upload.tickets_retry_count;
-						upload._check_tickets();
-					}
-
-					// Need to call it quits
-					else {
-						upload.cancel = true;
+				    if(ui.cancel) {
+                        upload.cancel = true;
 						upload.tickets_count = 0;
 						upload.tickets = {};
 						upload.done();
-					}
+				    }
+                    else {
+					    // Valid response or still have retries remaining
+					    if ('object' == typeof rsp) {
+						    upload._check_tickets();
+					    } else if (conf.tickets_retry_count >
+						    upload.tickets_retry_count) {
+						    if (conf.console.retry) {
+						        logStringMessage('_check_tickets() : tickets_retry_count = ' + upload.tickets_retry_count);
+						    }
+						    ++upload.tickets_retry_count;
+						    upload._check_tickets();
+					    }
+
+					    // Need to call it quits
+					    else {
+						    upload.cancel = true;
+						    upload.tickets_count = 0;
+						    upload.tickets = {};
+						    upload.done();
+					    }
+                    }
 				}
 				unblock_exit();
 			}
@@ -349,6 +356,7 @@ var wrap = {
 				}
 
 				// Translate photos in the batch to this list
+				block_normalize();
 				for each (var p in photos.list) {
 				    if(p != null) {
 					    for (var i in p.sets) {
@@ -356,6 +364,7 @@ var wrap = {
 					    }
                     }
 				}
+				unblock_normalize();
 				meta.sets = new_sets;
 
 				// Update the lists of available sets
@@ -386,6 +395,7 @@ var wrap = {
 				}
 
 				// Update selected photos
+				block_normalize();
 				if (photos.selected.length) {
 					var prefix = 1 == photos.selected.length ?
 						'single' : 'batch';
@@ -401,7 +411,7 @@ var wrap = {
 							.className = 'sets_disabled';
 					}
 				}
-
+                unblock_normalize();
 			}
 			status.clear();
 		}

@@ -41,6 +41,8 @@ var photos = {
 	ready: [],
 	ready_size: [],
 
+    normalizeTimeoutId: null,
+    
 	// Let the user select some files, thumbnail them and track them
 	//   Patch for saving our place in the directory structure from
 	//   Zoolcar9 at http://pastebin.mozilla.org/279359
@@ -307,13 +309,12 @@ var photos = {
 			    }
             }
 		}
-
+        
 		// Do extension stuff after we've added all of the photos but
 		// before the list we've saved potentially becomes invalid
 		extension.after_add.exec(ext_list);
 
 		// Update the UI
-		photos.normalize();
 		if (photos.count + photos.errors) {
 		    document.getElementById('t_clear').className = 'button';
 			if (photos.sort) {
@@ -339,25 +340,28 @@ var photos = {
 				.style.visibility = 'visible';
 			mouse.show_photos();
 		} else {
-			unblock_normalize();
 			document.getElementById('t_clear').className = 'disabled_button';
 			document.getElementById('photos_init').style.display = '-moz-box';
 			document.getElementById('photos_new').style.display = 'none';
 		}
+		unblock_normalize();
+		photos.normalize();
+		
 	},
 	_add: function(path) {
 		block_remove();
 		block_sort();
 
 		// Add the original image to the list and set our status
+		block_normalize();
 		var id = photos.list.length;
 		var p = new Photo(id, path);
 		photos.list.push(p);
+		unblock_normalize();
 		++photos.count;
 		if(photos.is_video(path)) {
 		    ++photos.videoCount;
 		}
-		block_normalize();
 
 		// Create a spot for the image, leaving a spinning placeholder
 		//   Add images to the start of the list because this is our best
@@ -376,6 +380,7 @@ var photos = {
 		// Create and show the thumbnail
         photos.thumb_cancel = false;
 
+        block_normalize();
         threads.workerPool.dispatch(new Thumb(id, conf.thumb_size, path),
             threads.workerPool.DISPATCH_NORMAL);
 
@@ -389,8 +394,12 @@ var photos = {
 		if (0 < _block_remove) { return; }
 
 		// Nothing to do if somehow there are no selected photos
+		block_normalize();
 		var ii = photos.selected.length;
-		if (0 == ii) { return; }
+		if (0 == ii) { 
+		    unblock_normalize();
+		    return;
+		}
 
 		// Tell extensions which photos we're removing
 		extension.before_remove.exec(photos.selected);
@@ -418,12 +427,15 @@ var photos = {
 			photos.list[id] = null;
 			--photos.count;
 		}
+		unblock_normalize();
 		ui.bandwidth_updated();
 		photos.normalize();
 		meta.disable();
 
 		// Clear the selection
+		block_normalize();
 		photos.selected = [];
+		unblock_normalize();
 		mouse.click({target: {}});
 
 		photos._remove();
@@ -454,9 +466,13 @@ var photos = {
 	rotate: function(degrees) {
 
 		// Prevent silliness
+		block_normalize();
 		var s = photos.selected;
 		var ii = s.length;
-		if (0 == ii) { return; }
+		if (0 == ii) {
+		    unblock_normalize();
+		    return;
+		}
 		photos.selected = [];
 		mouse.click({target: {}});
 
@@ -464,7 +480,6 @@ var photos = {
 		// the rotate job
 		buttons.upload.disable();
 		for (var i = 0; i < ii; ++i) {
-			block_normalize();
 			var p = photos.list[s[i]];
 			if (photos.is_photo(p.path)) {
 				block_sort();
@@ -475,11 +490,13 @@ var photos = {
 				img.setAttribute('width', 16);
 				img.setAttribute('height', 8);
 				img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
+				block_normalize();
 				threads.worker.dispatch(new Rotate(p.id, degrees,
 					conf.thumb_size, p.path),
 					threads.worker.DISPATCH_NORMAL);
 			}
 		}
+		unblock_normalize();
 		threads.worker.dispatch(new EnableUpload(),
 			threads.worker.DISPATCH_NORMAL);
 
@@ -590,7 +607,9 @@ var photos = {
 				photos.list = [];
 				photos.count = 0;
 				photos.videoCount = 0;
+				block_normalize();
 				photos.selected = [];
+				unblock_normalize();
 				photos.last = null;
 				var list = document.getElementById('photos_list');
 				while (list.hasChildNodes()) {
@@ -704,7 +723,9 @@ var photos = {
 			photos.list = [];
 			photos.count = 0;
 			photos.videoCount = 0;
+			block_normalize();
 			photos.selected = [];
+			unblock_normalize();
 			photos.last = null;
 			var ul = document.getElementById('photos_list');
 			while (ul.hasChildNodes()) {
@@ -731,12 +752,17 @@ var photos = {
     
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
-
-//		// This action is blocked during loading but will always
-//		// happen at the end of loading
-// JDE - I do not see this happening reliably and don't get why this needs to be blocked
-// unblocking to make sure the photos are always in order
-//		if (_block_normalize) { return; }
+        if(typeof photos.normalizeTimeoutId == "number") { // clear any pending photos.normalize() call
+		    window.clearTimeout(photos.normalizeTimeoutId);
+		    photos.normailzeTimeoutId = null;
+		}
+		if (_block_normalize) {
+		    photos.normalizeTimeoutId = window.setTimeout(function() {
+		        photos.normalize();
+		    }, 100);
+		    return;
+		}
+		block_normalize();
 		var list = document.getElementById('photos_list')
 			.getElementsByTagName('li');
 		var old_list = photos.list;
@@ -756,8 +782,8 @@ var photos = {
 				.className) {
 				photos.selected.push(new_id);
 			}
-
 		}
+		unblock_normalize();
 	},
 
 	// Load saved metadata
@@ -817,6 +843,7 @@ var photos = {
 	// Save all metadata to disk
 	save: function() {
 		if (0 != _block_exit) { return; }
+		block_normalize();
 		if (1 == photos.selected.length) {
 			meta.save(photos.selected[0]);
 		}
@@ -825,6 +852,7 @@ var photos = {
 			sets: meta.sets,
 			list: photos.list
 		});
+		unblock_normalize();
 	},
 
 	// Decide if a given path is a photo

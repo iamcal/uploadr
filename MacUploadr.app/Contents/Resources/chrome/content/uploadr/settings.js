@@ -187,6 +187,7 @@ var settings = {
 			}
 
 			// Save metadata
+			block_normalize();
 			if (1 == photos.selected.length) {
 				meta.save(photos.selected[0]);
 			} else if (1 < photos.selected.length) {
@@ -207,13 +208,14 @@ var settings = {
 					photo.safety_level = settings.safety_level;
 				}
 			}
-
+            unblock_normalize();
 			// Videos can't be restricted so either update them or delete them
 			if (3 == settings.safety_level) {
 
 				// Tally up videos
 				var p_count = 0;
 				var v_count = 0;
+				block_normalize();
 				for each (var p in photos.list) {
 					if (null == p) {
 						continue;
@@ -224,7 +226,7 @@ var settings = {
 						++v_count;
 					}
 				}
-
+                unblock_normalize();
 				// If there are videos, bother them
 				if (v_count) {
 					var result = {};
@@ -255,6 +257,7 @@ var settings = {
 
 					// Remove selected videos
 					if ('cancel' == result.result) {
+						block_normalize();
 						var ii = photos.list.length;
 						for (var i = 0; i < ii; ++i) {
 							if (null == photos.list[i]) {
@@ -276,6 +279,7 @@ var settings = {
 								--photos.count;
 							}
 						}
+						unblock_normalize();
 						ui.bandwidth_updated();
 
 						// If remove is blocked then we know photos.normalize
@@ -290,6 +294,7 @@ var settings = {
 
 					// Set a different safety level for videos
 					else if ('ok' == result.result && result.safety_level) {
+						block_normalize();
 						var ii = photos.list.length;
 						for (var i = 0; i < ii; ++i) {
 							if (null != photos.list[i] &&
@@ -297,6 +302,7 @@ var settings = {
 								photos.list[i].safety_level = result.safety_level;
 							}
 						}
+						unblock_normalize();
 					}
 
 				}
@@ -304,6 +310,7 @@ var settings = {
 			}
 
 			// Refresh visible photo metadata if necessary
+			block_normalize();
 			if (1 == photos.selected.length) {
 				meta.load(photos.selected[0]);
 				meta.enable();
@@ -311,7 +318,7 @@ var settings = {
 				meta.load();
 				meta.batch();
 			}
-
+            unblock_normalize();
 		}
 
 	}

@@ -193,7 +193,7 @@ var upload = {
 			// Out of retry attempts, this time we really die
 			else {
 				upload.retry_count = 0;
-				if (null != photos.uploading[id]) {
+				if (null != photos.uploading[id] && !ui.cancel) {
 					photos.uploading[id].progress_bar.done(false);
 					++photos.fail;
 					photos.failed.push(photos.uploading[id]);
@@ -339,8 +339,10 @@ var upload = {
 
 		} else if ('fail' == stat) {
 			photos.uploading[id].progress_bar.done(false);
-			++photos.fail;
-			photos.failed.push(photos.uploading[id]);
+			if(!ui.cancel) {
+			    ++photos.fail;
+			    photos.failed.push(photos.uploading[id]);
+			}
 			if (upload.bandwidth(rsp)) { return; }
 		}
 
@@ -494,11 +496,12 @@ var upload = {
 						.style.display = 'block';
 				}
 			}
+			block_normalize();
 			for (var i  = 0; i < ii; ++i) {
 				photos._add(f[i].path);
 				photos.list[photos.list.length - 1] = f[i];
 			}
-
+            
 			// Add back any queued batches
 			while (photos.ready.length) {
 				var r = photos.ready.shift();
@@ -508,7 +511,8 @@ var upload = {
 					photos.list[photos.list.length - 1] = r[i];
 				}
 			}
-
+            unblock_normalize();
+            
 			photos.uploading = [];
 			photos.uploaded = [];
 			photos.failed = [];
@@ -533,6 +537,9 @@ var upload = {
 
 	// Start to clean up after an upload finishes
 	done: function() {
+	    if(conf.console.upload) {
+	        logStringMessage('done');
+	    }
 		if (null != upload.progress_handle) {
 			window.clearInterval(upload.progress_handle);
 			upload.progress_handle = null;
@@ -589,6 +596,9 @@ var upload = {
 
 	// Finally give the user feedback on their upload
 	finalize: function() {
+	    if(conf.console.upload) {
+    	    logStringMessage('finalize');
+		}
 		status.clear();
 
 		// An upload must be done before it can be finalized
