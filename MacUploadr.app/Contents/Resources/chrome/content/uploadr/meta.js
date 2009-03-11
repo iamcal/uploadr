@@ -377,7 +377,7 @@ var meta = {
 	    var batchSelected = (1 < photos.selected.length);
 	    unblock_normalize();
 		if ('-moz-box' == document.getElementById('batch_meta').style.display &&
-			1 < batchSelected) {
+			batchSelected) {
 			if (conf.confirm_save_batch) {
 				if (confirm(locale.getString('meta.abandon.text'),
 					locale.getString('meta.abandon.title'),
