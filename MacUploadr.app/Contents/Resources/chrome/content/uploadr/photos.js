@@ -531,9 +531,9 @@ var photos = {
 		var not_started = 0 == photos.uploading.length;
 
 		// Drop videos if we're a free user or they're over the allowed size
-		//   They will have been warned that this is coming
 		if (from_user) {
 			var new_list = [];
+			var nbVideosToUpload = 0;
 			for each (var p in list) {
 				if (null == p) {
 					continue;
@@ -542,6 +542,22 @@ var photos = {
 					new_list.push(p);
 				} else if ((!users.is_pro && users.nbVids.remaining == 0) || (users.videosize > 0 &&
 					users.videosize < p.size)) {
+					if(!users.is_pro && users.nbVids.remaining == 0) {
+					    if(confirm(locale.getFormattedString('dialog.no.video.text', [users.nbVids.remaining+users.nbVids.uploaded+nbVideosToUpload]),
+                            locale.getFormattedString('dialog.no.video.title', [users.username]),
+	                        locale.getString('dialog.no.video.ok'),
+	                        locale.getString('dialog.upgrade.cancel'))) {
+	                            launch_browser('http://' + SITE_HOST + '/upgrade/');
+	                            return;
+                            }					    
+					} else {
+					    window.openDialog('chrome://uploadr/content/video_big.xul',
+					        'dialog_video_big', 'chrome,modal',
+					        locale.getString('video.add.big.sz.title') + ' : ' + p.title,
+					        locale.getFormattedString('video.add.big.sz.explain', [users.videosize >> 10]), 
+					        '',
+					        locale.getString('video.add.big.sz.ok'));
+					}
 					photos.batch_size -= p.size;
 					photos.video_batch_size -= p.size;
 				} else {
@@ -549,6 +565,7 @@ var photos = {
 					if(!users.is_pro) {
 					    users.nbVids.remaining--;
 					}
+					nbVideosToUpload++;
 				}
 			}
 			list = new_list;
