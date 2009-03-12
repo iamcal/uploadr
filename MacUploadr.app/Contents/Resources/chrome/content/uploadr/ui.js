@@ -12,6 +12,8 @@
 var ui = {
 
     cancel: false,
+    confirmUp: false,
+    promptUp: false,
     
 	// Called at app startup
 	init: function() {
@@ -292,16 +294,26 @@ var alert = function(msg, title, ok) {
 		'chrome,modal', msg, title, ok);
 };
 var confirm = function(msg, title, ok, cancel) {
+    if(ui.confirmUp)
+        return false; // we can't have prompt over prompt
+
+    ui.confirmUp = true;
 	var result = {result: false};
 	window.openDialog('chrome://uploadr/content/confirm.xul',
 		'dialog_confirm', 'chrome,modal', msg, title, ok, cancel, result);
+	ui.confirmUp = false;
 	return result.result;
 };
 var prompt = function(msg, title, ok, cancel) {
+	if(ui.promptUp) {
+        window.setTimeout(prompt, 100, msg, title, ok, cancel);
+    }
+    ui.promptUp = true;
 	var result = {result: false};
 	window.openDialog('chrome://uploadr/content/prompt.xul', 'dialog_prompt',
 		'chrome,modal', msg, title, ok, cancel, result);
-	return result.result;
+	ui.promptUp = false;	
+	return result.result; // prompt checks for return value???
 };
 
 // Open a browser window to the given URL

@@ -751,6 +751,7 @@ var photos = {
 			ui.bandwidth_updated();
 		}
 
+        mouse.toggle();
         upload.startTime = new Date().getTime();
         
 		// Kick off the first batch job if we haven't started

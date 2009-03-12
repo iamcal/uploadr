@@ -568,24 +568,34 @@ var upload = {
 		// Hold failed photos for trying again
 		var f = photos.failed;
 		var ii = f.length;
+		var currentPathsLists = upload.try_again.map(function(x) {return (x ? x.path : "");});
+
 		if (0 != ii) {
 			for (var i  = 0; i < ii; ++i) {
-				upload.try_again.push(f[i]);
+			    if(currentPathsLists.indexOf(f[i].path) === -1) {
+				    upload.try_again.push(f[i]);
+				}
 			}
 		}
 
 		// Re-add photos we didn't get to
 		if (upload.cancel) {
+		    currentPathsLists = upload.try_again.map(function(x) {return (x ? x.path : "");});
 			for each (var p in photos.uploading) {
-				if (null != p && !p.photo_id) { upload.try_again.push(p); }
+				if (null != p && !p.photo_id && (currentPathsLists.indexOf(p.path) === -1)) { 
+				    upload.try_again.push(p); 
+				}
 			}
 
 			// Add back any queued batches
+			currentPathsLists = upload.try_again.map(function(x) {return (x ? x.path : "");});
 			while (photos.ready.length) {
 				var r = photos.ready.shift();
 				ii = r.length;
 				for (var i  = 0; i < ii; ++i) {
-					upload.try_again.push(r[i]);
+			        if(currentPathsLists.indexOf(r[i].path) === -1) {
+					    upload.try_again.push(r[i]);
+                    }
 				}
 			}
 
@@ -693,9 +703,7 @@ var upload = {
 
 		// If requested, open the site
 		if (go_to_flickr) {
-			launch_browser('http://' + SITE_HOST + '/photos/upload/done/?b=' +
-				upload.timestamps.earliest + '-' + upload.timestamps.latest +
-				'-' + users.nsid);
+			launch_browser('http://' + SITE_HOST + '/photos/' + users.nsid);
 		}
 
 		// Really finally actually done, so reset
@@ -1007,12 +1015,6 @@ UploadDoneCallback.prototype = {
 				    .createInstance(Ci.nsIDOMParser);
 			    rsp = parser.parseFromString(this.raw,
 				    'text/xml').documentElement;
-		        if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
-			        if (conf.console.error) {
-				        Components.utils.reportError(new Date().toUTCString() +' UPLOAD ERROR: ' +
-					        this.raw);
-			        }
-                }			        
 		    } catch (err) {
 			    Components.utils.reportError(new Date().toUTCString() +err);
 		    }
