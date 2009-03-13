@@ -368,13 +368,19 @@ var unblock_sort = function() {
 	--_block_sort;
 };
 var _block_normalize = 0;
+var isNormalizing = false;
 var block_normalize = function() {
+    while(isNormalizing) {
+        logStringMessage('block_normalize while already normalizing');
+        Components.classes["@mozilla.org/thread-manager;1"]
+            .getService(Components.interfaces.nsIThreadManager)
+            .currentThread.processNextEvent(true);
+    }    
 	++_block_normalize;
-//	logStringMessage("block_normalize " + _block_normalize);
 };
+
 var unblock_normalize = function() {
 	--_block_normalize;
-//	logStringMessage("block_normalize " + _block_normalize);
 };
 var _block_exit = 0;
 var block_exit = function() {

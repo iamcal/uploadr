@@ -374,13 +374,11 @@ var photos = {
 		var li = document.createElementNS(NS_HTML, 'li');
 		li.id = 'photo' + id;
 		li.appendChild(img);
+		block_normalize();
 		var list = document.getElementById('photos_list');
 		list.insertBefore(li, list.firstChild);
-
 		// Create and show the thumbnail
         photos.thumb_cancel = false;
-
-        block_normalize();
         threads.workerPool.dispatch(new Thumb(id, conf.thumb_size, path),
             threads.workerPool.DISPATCH_NORMAL);
 
@@ -517,6 +515,7 @@ var photos = {
 		}
 
 		// Remove error indicators
+		block_normalize();
 		var li = document.getElementById('photos_list')
 			.getElementsByTagName('li');
 		var ii = li.length;
@@ -526,7 +525,8 @@ var photos = {
 				img.onclick();
 			}
 		}
-
+        unblock_normalize();
+        
 		// Decide if we're already in the midst of an upload
 		var not_started = 0 == photos.uploading.length;
 
@@ -628,10 +628,12 @@ var photos = {
 				photos.selected = [];
 				unblock_normalize();
 				photos.last = null;
+				block_normalize();
 				var list = document.getElementById('photos_list');
 				while (list.hasChildNodes()) {
 					list.removeChild(list.firstChild);
 				}
+				unblock_normalize();
 				ui.bandwidth_updated();
 				threads.worker.dispatch(new RetryUpload(true),
 					threads.worker.DISPATCH_NORMAL);
@@ -744,10 +746,12 @@ var photos = {
 			photos.selected = [];
 			unblock_normalize();
 			photos.last = null;
+			block_normalize();
 			var ul = document.getElementById('photos_list');
 			while (ul.hasChildNodes()) {
 				ul.removeChild(ul.firstChild);
 			}
+			unblock_normalize();
 			ui.bandwidth_updated();
 		}
 
@@ -770,17 +774,15 @@ var photos = {
     
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
-        if(typeof photos.normalizeTimeoutId == "number") { // clear any pending photos.normalize() call
-		    window.clearTimeout(photos.normalizeTimeoutId);
-		    photos.normailzeTimeoutId = null;
-		}
-		if (_block_normalize) {
+		if (isNormalizing || _block_normalize) {
 		    photos.normalizeTimeoutId = window.setTimeout(function() {
 		        photos.normalize();
 		    }, 100);
 		    return;
 		}
-		block_normalize();
+		isNormalizing = true;
+		document.getElementById('photos').style.display = 'none';
+		document.getElementById('normalizing').style.display = '-moz-box';
 		var list = document.getElementById('photos_list')
 			.getElementsByTagName('li');
 		var old_list = photos.list;
@@ -801,7 +803,9 @@ var photos = {
 				photos.selected.push(new_id);
 			}
 		}
-		unblock_normalize();
+		document.getElementById('photos').style.display = '-moz-box';
+		document.getElementById('normalizing').style.display = 'none';
+		isNormalizing = false;
 	},
 
 	// Load saved metadata
@@ -848,10 +852,12 @@ var photos = {
         _block_sort = _block_remove = _block_normalize = _block_exit = 0;
         file.remove('photos.json');
         // Remove photos from UI
+        block_normalize();
         var list = document.getElementById('photos_list');
 		while (list.hasChildNodes()) {
 		    list.removeChild(list.firstChild);
         }
+        unblock_normalize();
         document.getElementById('photos_init').style.display = '-moz-box';
         ui.bandwidth_updated();
         meta.disable();

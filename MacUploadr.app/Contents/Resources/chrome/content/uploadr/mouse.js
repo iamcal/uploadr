@@ -37,6 +37,7 @@ var mouse = {
 
 			// Without modifier keys, start with nothing selected
 			if (!(e.shiftKey || e.ctrlKey || e.metaKey)) {
+				block_normalize();
 				var imgs = document.getElementById('photos_list')
 					.getElementsByTagName('img');
 				var ii = imgs.length;
@@ -46,7 +47,6 @@ var mouse = {
 						imgs[i].className = '';
 					}
 				}
-				block_normalize();
 				photos.selected = [];
 				unblock_normalize();
 			}
@@ -303,7 +303,6 @@ var mouse = {
 				var follower = document.getElementById('drag_follower');
 				block_normalize();
 				follower.firstChild.nodeValue = photos.selected.length;
-				unblock_normalize();
 				follower.style.left = (e.clientX + pos.x.value +
 					OFFSET_X + 10) + 'px';
 				follower.style.top = (e.clientY + pos.y.value +
@@ -320,7 +319,7 @@ var mouse = {
 					target = document.getElementById('photos_list')
 						.lastChild;
 				}
-
+                
 				// Which side of the list item are we on?
 				var left = e.clientX < (target.offsetLeft +
 					target.getElementsByTagName('img')[0].width / 2);
@@ -341,6 +340,7 @@ var mouse = {
 					}
 					target = tmp;
 				}
+				unblock_normalize();
 
 				// Show indicator of drop position
 				if (left && target != list.getElementsByTagName('li')[0]) {
@@ -432,11 +432,11 @@ var mouse = {
 
 		// If we're reordering
 		if (null == mouse.anchor) {
+		    block_normalize();
 			var list = document.getElementById('photos_list');
 			if (3 == mouse.dragging) {
 
 				// Reorder the photo list
-				block_normalize();
 				photos.selected.sort(function(a, b) {
 					return a < b;
 				});
@@ -458,7 +458,6 @@ var mouse = {
 					}
 
 				}
-				unblock_normalize();
 				photos.normalize();
 
 				// Stop showing feedback on the cursor
@@ -479,6 +478,7 @@ var mouse = {
 				extension.after_reorder.exec(true);
 
 			}
+			unblock_normalize();
 			mouse.dragging = 0;
 			mouse.target = null;
 			mouse.left = false;
