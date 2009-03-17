@@ -398,7 +398,8 @@ var photos = {
 		    unblock_normalize();
 		    return;
 		}
-
+        document.getElementById('photos').style.display = 'none';
+		document.getElementById('normalizing').style.display = '-moz-box';
 		// Tell extensions which photos we're removing
 		extension.before_remove.exec(photos.selected);
 
@@ -437,6 +438,8 @@ var photos = {
 		mouse.click({target: {}});
 
 		photos._remove();
+		document.getElementById('photos').style.display = '-moz-box';
+		document.getElementById('normalizing').style.display = 'none';
 	},
 
 	// Allow upload only if there are photos

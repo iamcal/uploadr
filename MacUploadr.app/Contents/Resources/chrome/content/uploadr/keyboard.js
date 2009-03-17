@@ -75,14 +75,16 @@ var keyboard = {
 			if ('photos' != pages.current() || null == photos.last) {
 				return;
 			}
-			var i = photos.last + inc;
+			
 			block_normalize();
+			var i = photos.last + inc;
 			var next = photos.list[i];
-			i = photos.last + inc;
 			var ii = photos.list.length;
 			while (null == next && i >= 0 && i < ii) {
+			    // I do not think we are supposed to be in this loop.
+			    // but let's make sure we can get out of it.
+				i += inc;
 				next = photos.list[i];
-				i = photos.last + inc;
 			}
 			if (null != next) {
 				var img = document.getElementById('photo' + next.id).getElementsByTagName('img')[0];
