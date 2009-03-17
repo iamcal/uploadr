@@ -577,6 +577,7 @@ var photos = {
 			var resizing = false;
 			var ready = [];
 			var ready_size = 0;
+			threads.readyToResize = false;
 			for each (var p in list) {
 				if (null != p) {
 					if (photos.is_photo(p.path)) {
@@ -634,6 +635,7 @@ var photos = {
 					list.removeChild(list.firstChild);
 				}
 				unblock_normalize();
+				threads.readyToResize = true;
 				ui.bandwidth_updated();
 				threads.worker.dispatch(new RetryUpload(true),
 					threads.worker.DISPATCH_NORMAL);

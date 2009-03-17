@@ -275,68 +275,69 @@ var upload = {
 				// timestamps here
 
 			}
-			photos.uploading[id].photo_id = photo_id;
-			photos.uploaded.push(photos.uploading[id]);
+			if (null != photos.uploading[id]) {
+			    photos.uploading[id].photo_id = photo_id;
+			    photos.uploaded.push(photos.uploading[id]);
 
-			// Add to sets
-			for each (var i in photos.uploading[id].sets) {
-				var token = users.list[photos.uploading[id].nsid].token;
-				var set = photos.sets[photos.uploading[id].nsid][i];
-				if (null == set.id) {
+			    // Add to sets
+			    for each (var i in photos.uploading[id].sets) {
+				    var token = users.list[photos.uploading[id].nsid].token;
+				    var set = photos.sets[photos.uploading[id].nsid][i];
+				    if (null == set.id) {
 
-					// Queue this photo if a create call hasn't returned
-					if (set.busy) { 
-					    set.add.push(photo_id); 
-					}
+					    // Queue this photo if a create call hasn't returned
+					    if (set.busy) { 
+					        set.add.push(photo_id); 
+					    }
 
-					// Otherwise create
-					else {
-						block_exit();
-						set.busy = true;
-						var _nsid = photos.uploading[id].nsid;
-						++photos.sets_out;
-						flickr.photosets.create(function(rsp) {
-							var nsid = _nsid;
+					    // Otherwise create
+					    else {
+						    block_exit();
+						    set.busy = true;
+						    var _nsid = photos.uploading[id].nsid;
+						    ++photos.sets_out;
+						    flickr.photosets.create(function(rsp) {
+							    var nsid = _nsid;
 
-							// Failure just fails and moves on
-							if ('object' != typeof rsp
-								|| 'ok' != rsp.getAttribute('stat')) {
-								photos.sets_fail = true;
-								// TODO: Retry or at least deal with set.add
-							}
+							    // Failure just fails and moves on
+							    if ('object' != typeof rsp
+								    || 'ok' != rsp.getAttribute('stat')) {
+								    photos.sets_fail = true;
+								    // TODO: Retry or at least deal with set.add
+							    }
 
-							// Success needs to update sets list and other
-							// photos
-							else {
-								set.id = rsp.getElementsByTagName(
-									'photoset')[0].getAttribute('id');
-								for each (var p in set.add) {
-									wrap.photosets.addPhoto(token, set.id, p);
-								}
-								set.busy = false;
+							    // Success needs to update sets list and other
+							    // photos
+							    else {
+								    set.id = rsp.getElementsByTagName(
+									    'photoset')[0].getAttribute('id');
+								    for each (var p in set.add) {
+									    wrap.photosets.addPhoto(token, set.id, p);
+								    }
+								    set.busy = false;
 
-								// If we're still the same user as is
-								// uploading, update the main sets list
-								if (users.nsid == nsid) {
-									meta.sets[i].id = set.id;
-								}
+								    // If we're still the same user as is
+								    // uploading, update the main sets list
+								    if (users.nsid == nsid) {
+									    meta.sets[i].id = set.id;
+								    }
 
-							}
+							    }
 
-							--photos.sets_out;
-							unblock_exit();
-							upload.finalize();
-						}, token, set.title, set.description, photo_id);
-					}
-				}
+							    --photos.sets_out;
+							    unblock_exit();
+							    upload.finalize();
+						    }, token, set.title, set.description, photo_id);
+					    }
+				    }
 
-				// Add photo to set
-				else {
-					wrap.photosets.addPhoto(token, set.id, photo_id);
-				}
+				    // Add photo to set
+				    else {
+					    wrap.photosets.addPhoto(token, set.id, photo_id);
+				    }
 
-			}
-
+			    }
+            }
 		} else if ('fail' == stat) {
 			photos.uploading[id].progress_bar.done(false);
 			if(!ui.cancel) {

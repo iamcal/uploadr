@@ -31,6 +31,7 @@ var threads = {
 	uploadr: null,
 	main: null,
 	workerPool: null,
+	readyToResize: false,
 
 	// GraphicsMagick XPCOM object
 	gm: null,
@@ -498,6 +499,7 @@ Resize.prototype = {
 		try {
 
 			// Resize the image and callback to the UI thread
+			//var result = "800x600"+this.path;
 			var result = threads.gm.resize(this.square, this.path);
 			threads.main.dispatch(new ResizeCallback(this.id, result),
 				threads.main.DISPATCH_NORMAL);
@@ -520,7 +522,14 @@ var ResizeCallback = function(id, result) {
 ResizeCallback.prototype = {
 	run: function() {
 		try {
-
+            if(!threads.readyToResize) {
+			    // Main thread is not ready yet to handle Resizecallbacks
+			    window.setTimeout(function(id, result) {
+			        threads.main.dispatch(new ResizeCallback(id, result),
+				        threads.main.DISPATCH_NORMAL);
+			    }, 100, this.id, this.result);
+			    return;
+			}
 			// Parse the returned string
 			//   <width>x<height><path>
 			var resize = this.result.match(/^([0-9]+)x([0-9]+)(.+)$/);
