@@ -390,6 +390,18 @@ var escape_utf8 = function(data, url) {
 	if ('' == data || null == data || undefined == data) {
 		return '';
 	}
+// JDE - How about something like:	
+//	logStringMessage("escape_utf8 [in] " + data);
+//	var res;
+//	if(url) {
+//	    res = encodeURIComponent(data);
+//	} else {
+//	    res = encodeURI(data);
+//	}
+//	logStringMessage("escape_utf8 [out] " + res);
+//	return res;
+	 
+	    
 	var chars = '0123456789abcdef';
 	data = data.toString();
 	var buffer = [];

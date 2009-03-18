@@ -795,7 +795,7 @@ Upload.prototype = {
 				    indexOfFileInStream = mstream.count-1;
 				    sstream = Cc['@mozilla.org/io/string-input-stream;1']
 					    .createInstance(Ci.nsIStringInputStream);
-				    sstream.setData('; filename="' + esc_params[p].filename +
+				    sstream.setData('; filename="' + encodeURI(esc_params[p].filename) +
 					    '"\r\nContent-Type: application/octet-stream\r\n\r\n',
 					    -1);
 				    mstream.appendStream(sstream);

@@ -200,7 +200,10 @@ ThumbCallback.prototype = {
 				img.setAttribute('height', thumb[5]);
 				var thumbPath = thumb[6].replace(/^\s+|\s+$/g, '')
 				        .replace(/\{---THREE---POUND---DELIM---\}/g, '###');
-				img.src = 'file:///' + escape(thumbPath);
+				img.src = 'file:///' + encodeURIComponent(thumbPath);
+				if (conf.console.thumb) {
+				    logStringMessage('GM THUMB: path ' + img.src + " " + thumbPath);
+			    }
 				photos.list[this.id].thumb = thumbPath;
 
 				// Make video icons for videos
