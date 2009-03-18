@@ -497,9 +497,9 @@ var Resize = function(id, square, path) {
 Resize.prototype = {
 	run: function() {
 		try {
-
 			// Resize the image and callback to the UI thread
-			//var result = "800x600"+this.path;
+            if(ui.cancel)
+		        return;
 			var result = threads.gm.resize(this.square, this.path);
 			threads.main.dispatch(new ResizeCallback(this.id, result),
 				threads.main.DISPATCH_NORMAL);
@@ -522,6 +522,8 @@ var ResizeCallback = function(id, result) {
 ResizeCallback.prototype = {
 	run: function() {
 		try {
+		    if(ui.cancel)
+		        return;
             if(!threads.readyToResize) {
 			    // Main thread is not ready yet to handle Resizecallbacks
 			    window.setTimeout(function(id, result) {

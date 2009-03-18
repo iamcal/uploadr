@@ -516,7 +516,11 @@ var photos = {
 			'button_upload').className) {
 			return;
 		}
-
+		if(ui.cancel) {
+            upload.cancel = true;
+			return upload.done();
+		}
+		
 		// Remove error indicators
 		block_normalize();
 		var li = document.getElementById('photos_list')
