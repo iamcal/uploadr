@@ -494,7 +494,7 @@ var upload = {
 					document.getElementById('photos_sort_default')
 						.style.display = 'none';
 					document.getElementById('photos_sort_revert')
-						.style.display = 'block';
+						.style.display = 'inline';
 				}
 			}
 			block_normalize();

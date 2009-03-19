@@ -55,8 +55,8 @@ xmlns:html="http://www.w3.org/1999/xhtml">
           </html:tr>
         </html:table>
         <html:div id="photos_sorting_controls">
-          <html:p id="photos_sort_default">&photos.sort.default;</html:p>
-          <html:p id="photos_sort_revert" class="link">&photos.sort.revert;</html:p>
+          <html:span id="photos_sort_default">&photos.sort.default;</html:span>
+          <html:span id="photos_sort_revert" class="link">&photos.sort.revert;</html:span>
         </html:div>
         <stack id="photos_stack">
           <html:ul id="photos_list"></html:ul>

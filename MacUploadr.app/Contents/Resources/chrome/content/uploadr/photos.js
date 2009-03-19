@@ -330,7 +330,7 @@ var photos = {
 				document.getElementById('photos_sort_default')
 					.style.display = 'none';
 				document.getElementById('photos_sort_revert')
-					.style.display = 'block';
+					.style.display = 'inline';
 			}
 			document.getElementById('photos_init')
 				.style.display = 'none';

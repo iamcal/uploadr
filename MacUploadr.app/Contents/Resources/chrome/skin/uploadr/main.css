@@ -411,8 +411,11 @@ div.toolbarseparator {
 }
 
 /* Sort indicators */
-#photos_sort_default, #photos_sort_revert {
+#photos_sort_default, #photos_sort_revert 
+{
 	display: none;
+}
+#photos_sorting_controls {
 	height: 28px;
 	margin: 0;
 	padding: 0;
