@@ -261,7 +261,7 @@ endif
 	mkdir $(BUILD)/jar/content/uploadr
 	cp $(SRC)/Resources/chrome/content/uploadr/*.js $(BUILD)/jar/content/uploadr/
 	cp $(SRC)/Resources/chrome/content/uploadr/*.xul $(BUILD)/jar/content/uploadr/
-	cp $(SRC)/Resources/chrome/content/uploadr/*.dtd $(BUILD)/jar/content/uploadr/
+#	cp $(SRC)/Resources/chrome/content/uploadr/*.dtd $(BUILD)/jar/content/uploadr/
 	mkdir $(BUILD)/jar/content/hacks
 ifeq (mac, $(PLATFORM))
 	mkdir $(BUILD)/jar/content/hacks/mac
