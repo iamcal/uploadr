@@ -21,7 +21,6 @@ extern "C" __declspec(dllexport) __checkReturn int     __cdecl strcasecmp(__in_z
 #include "afxinet.h"
 //#include <Windows.h>
 const DWORD dwChunckSize = 64 * 1024;
-
 extern "C" __declspec(dllimport) UINT ___lc_codepage_func(void);
 
 extern "C" unsigned int __lc_codepage = ___lc_codepage_func(); //I can't link without that !?????????????????
@@ -49,6 +48,7 @@ extern "C" {
 #include <stdlib.h>
 #include <sstream>
 #include <string>
+#include <cctype>       // std::tolower
 #include <sys/stat.h>
 #include "nsCOMPtr.h"
 #include "nsComponentManagerUtils.h"
@@ -674,8 +674,12 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 		delete path_s; path_s = 0;
 
 		// If this image is a TIFF, force the thumbnail to be a JPEG
-		if (thumb_s->rfind(".tif") + 6 > thumb_s->length()) {
-			thumb_s->append(".jpg");
+		std::string thumbLowerCase(*thumb_s);
+		//thumbLowerCase.resize(thumbPath.length());
+		std::transform(thumb_s->begin(), thumb_s->end(), thumbLowerCase.begin(), tolower);
+		if (thumbLowerCase.rfind(".tif") + 6 > thumbLowerCase.length() ||
+			thumbLowerCase.rfind(".bmp") + 6 > thumbLowerCase.length()) {
+				thumb_s->append(".jpg");
 		}
 
 		// Find the sharpen sigma as the website does
@@ -1256,3 +1260,9 @@ NS_IMETHODIMP flGM::Cancel(PRBool bCancel)
 	gbCancel = (bCancel == PR_TRUE);
     return NS_OK;
 }
+
+/* void sleep (in long tick); */
+//NS_IMETHODIMP flGM::Sleep(PRInt32 tick)
+//{
+//	return PR_Sleep(tick);
+//}
