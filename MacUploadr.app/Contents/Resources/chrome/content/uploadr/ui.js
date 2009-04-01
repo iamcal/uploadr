@@ -201,6 +201,7 @@ var menus = {
 	help: {
 
 		about: function() {
+		    //photos.normalize();
 			window.openDialog('chrome://uploadr/content/about.xul',
 				'about-dialog', 'chrome,modal,centerscreen',
 				locale.getFormattedString('dialog.about.version',
@@ -381,6 +382,9 @@ var block_normalize = function() {
 
 var unblock_normalize = function() {
 	--_block_normalize;
+	if(_block_normalize < 0) {
+	    logStringMessage("extra unblock_normalize :-(");
+	}
 };
 var _block_exit = 0;
 var block_exit = function() {

@@ -783,13 +783,19 @@ var photos = {
     
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
+		if(conf.console.normalize) {
+		    logStringMessage('normalize');
+		}
 		if (isNormalizing || _block_normalize) {
 		    photos.normalizeTimeoutId = window.setTimeout(function() {
 		        photos.normalize();
-		    }, 100);
+		    }, 500);
 		    return;
 		}
 		isNormalizing = true;
+		if(conf.console.normalize) {
+		    logStringMessage('normalize [in]');
+		}
 		document.getElementById('photos').style.display = 'none';
 		document.getElementById('normalizing').style.display = '-moz-box';
 		var list = document.getElementById('photos_list')
@@ -814,6 +820,9 @@ var photos = {
 		}
 		document.getElementById('photos').style.display = '-moz-box';
 		document.getElementById('normalizing').style.display = 'none';
+		if(conf.console.normalize) {
+		    logStringMessage('normalize [out]');
+		}
 		isNormalizing = false;
 	},
 

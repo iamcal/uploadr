@@ -41,7 +41,9 @@ var conf = {
 		error: true,
 		timeout: true,
 		retry: true,
-		fileLogging: false
+		fileLogging: false,
+		sort: false,
+		normalize: false
 	},
 
     // Size of threads pool for thumbnailing

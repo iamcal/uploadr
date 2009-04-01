@@ -438,15 +438,29 @@ var SortCallback = function() {
 };
 SortCallback.prototype = {
 	run: function() {
+		if(conf.console.sort) {
+		    logStringMessage('sort');
+		}
 		// Allow blocking sorts during loading
 		if (0 != _block_sort) { 
+		    window.setTimeout(function() {
+		        threads.main.dispatch(new SortCallback(), threads.main.DISPATCH_NORMAL);
+		    }, 500 );
 		    return;
 		}
 
 		// Perform the sort
 		block_normalize();
+		if(conf.console.sort) {
+		    logStringMessage('sort [in] ' + _block_normalize);
+		}
 		if (1 >= photos.list.length) {
-			if (1 == photos.list.length) { buttons.upload.enable(); }
+			if (1 == photos.list.length) { 
+			    buttons.upload.enable(); 
+			}
+            if(conf.console.sort) {
+		        logStringMessage('sort [out]');
+		    }
 			unblock_normalize();
 			return;
 		}
@@ -474,7 +488,10 @@ SortCallback.prototype = {
 			}
 		}
 		unblock_normalize();
-		photos.normalize();
+        if(conf.console.sort) {
+            logStringMessage('sort [out]');
+	    }
+	    photos.normalize();
 
 		// And finally allow them to upload
 		
