@@ -675,8 +675,7 @@ NS_IMETHODIMP flGM::Thumb(PRInt32 square, const nsAString & path, nsAString & _r
 
 		// If this image is a TIFF, force the thumbnail to be a JPEG
 		std::string thumbLowerCase(*thumb_s);
-		//thumbLowerCase.resize(thumbPath.length());
-		std::transform(thumb_s->begin(), thumb_s->end(), thumbLowerCase.begin(), tolower);
+		std::transform(thumb_s->begin(), thumb_s->end(), thumbLowerCase.begin(), (int(*)(int))tolower);
 		if (thumbLowerCase.rfind(".tif") + 6 > thumbLowerCase.length() ||
 			thumbLowerCase.rfind(".bmp") + 6 > thumbLowerCase.length()) {
 				thumb_s->append(".jpg");
