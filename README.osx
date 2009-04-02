@@ -71,6 +71,7 @@ These SDKs are from the Gecko 1.8/1.9 series and so are only safe to use
 if the XPCOM components use only frozen interfaces.  Fortunately,
 Uploadr currently falls into this category.
 
+Beware https://developer.mozilla.org/en/Gecko_SDK#Issues_with_the_OS_X_SDK
 
 API Keys
 ------------------------------------------------------------------------
@@ -105,10 +106,7 @@ Install prerequisites with MacPorts:
   $ sudo port install tiff configure.flags=-O3
   $ sudo port install libpng
 
-Download GraphicsMagick source (try and stick with 1.1.10):
-  ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/1.1/GraphicsMagick-1.1.10.tar.bz2
-
-jde - trying 1.2.5 (ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/1.2/GraphicsMagick-1.2.5.tar.bz2) to match WINDOWS
+in trunk, using 1.3.5 release
 
 Configure and install GraphicsMagick:
   $ ./configure \
@@ -144,7 +142,7 @@ Download Exiv2 source from:
 In Unix-land, it's easy!
   $ sudo port install libiconv
   $ sudo port install expat
-  $ sudo port install xml2 (jde - does not exist: so libxml2?)
+  $ sudo port install xml2
   $ ./configure --prefix=/opt/local --disable-shared --with-expat=/opt/local
   $ make && sudo make install
 
@@ -152,7 +150,7 @@ Again because of static linker weirdness, after building Exiv2, move the
 dynamic libraries out of the way:
   $ sudo mv /opt/local/lib/libiconv.dylib /opt/local/lib/libiconv.dylib.sav
   $ sudo mv /opt/local/lib/libexpat.dylib /opt/local/lib/libexpat.dylib.sav
-  $ sudo mv /opt/local/lib/libxml2.dylib /opt/local/lib/libxml2.dylib.sav
+  $ sudo mv /opt/local/lib/libxml2.dylib /opt/local/lib/libxml2.dylib.sav ???
 
 
 FFmpeg
@@ -164,30 +162,9 @@ Check out the most recent version of FFmpeg:
 
 Then build:
   $ ./configure --disable-ffserver --disable-ffplay --enable-gpl \
-    --disable-vhook --disable-mmx --enable-static --disable-shared  \
-    --extra-cflags=-fno-common --disable-debug --enable-swscale
+    --disable-mmx --enable-static --disable-shared  \
+    --extra-cflags=-fno-common --disable-debug
   $ make && sudo make install
-
-jde : encountered:
-> make(6189) malloc: *** vm_allocate(size=4272951296) failed (error
-> code=3)
-> make(6189) malloc: *** error: can't allocate region
-> make(6189) malloc: *** set a breakpoint in szone_error to debug
-> make: *** virtual memory exhausted.  Stop.
->
-
-$ which make
-/usr/bin/make
-$ make --version
-GNU Make 3.80
-
-port install gmake
-$ which gmake
-/opt/local/bin/gmake
-$ gmake --version
-GNU Make 3.81
-
-and used gmake instead of make
 
 
 Building XPCOM components
@@ -208,7 +185,8 @@ build gm.dylib.mac and key.dylib.mac.  These architecture-dependent
 files can be combined on an Intel Mac to leave gm.dylib and key.dylib
 by running `make universal gm ; make universal key`.
 
-Make sure by running otool -Lv that you are not depending on libintl, which is not intalled by default on Mac Os X
+Make sure by running otool -Lv that you are not depending on 
+, which is not intalled by default on Mac Os X
 
 Running Flickr Uploadr
 ------------------------------------------------------------------------
