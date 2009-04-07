@@ -1,0 +1,116 @@
+package data{
+	import com.adobe.serialization.json.JSON;
+	
+	import flash.events.Event;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	
+	public class FlickrAPI{
+		private var loader:URLLoader;		
+		//http://api.flickr.com/services/rest/?method=flickr.photos.search&jump_to=11144&user_id=34427469121@N01&per_page=200&extras=o_dims,rotation,original_format,media&&api_key=697df769a56c3cda609d386ff7ab7272&auth_hash=27941b7f51453ba152d5473fac40e0da
+		//http://www.flickr.com/services/rest/?method=flickr.photos.search&cb=1212435758660&format=rest&auth_token=&auth_hash=a6232277e690a9b9d426131cdc2f49eb&api_key=3ebaf4970cebdcddfd72f639e0de3842&src=flash&extras=o%5Fdims%2Crotation%2Coriginal%5Fformat%2Cmedia&tags=urban&tag_mode=all&per_page=200&page=1&sort=
+
+		
+		private var response_function:Function;
+		private var offsite_key_fetched:Boolean;
+		private var method:String;
+		
+		private var error_function:Function;
+		
+		public function FlickrAPI(error:Function = null){
+			this.error_function = error;
+			this.loader = new URLLoader;
+			this.loader.addEventListener(Event.COMPLETE, responseLoaded);
+			this.loader.addEventListener(flash.events.HTTPStatusEvent.HTTP_STATUS, httpStatus);
+			if(Globals.VARS.offsite)
+				this.getOffsiteKey();
+		}
+	
+	
+		private function getOffsiteKey(){
+
+		}
+		
+		public function httpStatus(e){
+		
+		}
+			
+		public function call(method, params, response:Function, error:Function=null){
+			if(Globals.VARS.offsite && !this.offsite_key_fetched){
+				
+			}
+			var param_string = ""
+			for (var j in params){
+				if(params[j])
+					param_string+= j+"=" + params[j]+'&';
+			}
+			
+			this.method = method;
+			var url = Globals.api_host + "method=" + method + "&" + param_string + "api_key=" + Globals.API_KEY;
+			if(!Globals.VARS.offsite)
+				url+="&auth_hash=" + Globals.AUTH_HASH;
+			this.response_function = response;
+			if(error) 
+				this.error_function = error; 
+			//if(this.method != "flickr.favorites.add" && this.method != "flickr.favories.remove" && Globals.USE_LOCAL_CACHE){
+				//this.responseLoaded(response);
+			//}
+			//else{
+				trace('url: ' + url);
+				this.loader.load(new URLRequest(url));
+			//}
+		}
+		
+		private function responseLoaded(response){
+			var rawData = this.loader.data.split("jsonFlickrApi(").join("");
+
+			//decode the data to ActionScript using the JSON API
+			var obj:Object = JSON.decode(rawData);
+			
+			this.response_function(obj);
+			return;
+			
+			var result_xml = new XML();
+			
+			var lst = new Array();
+			
+			
+			if(result_xml.rsp.@stat == 'fail'){
+				if(this.error_function)
+					this.error_function(result_xml);
+				return;
+			}
+			
+			//TODO:generic data extraction, shouldn't do this for every data type
+			if(method =='flickr.photos.getInfo'){
+				var item = result_xml.photo[0];
+				//trace(item);
+				var inf = new Info(item.@id, item.@isfavorite, item.owner.@nsid, item.owner.@username, item.title, item.description, item.urls.url, int(item.comments));
+				this.response_function(inf);
+			}
+			else if(method == 'flickr.favorites.add' || method == 'flickr.favorites.remove'){
+				//TODO: check to make sure its <rsp stat='ok'>, if not message that favorite did not work
+			}
+			else{
+				//try{
+					for each (var item:XML in result_xml.children()[0].photo){
+						if(item.@media_status == "ready")
+							lst.push(new Photo(item.@id, item.@farm, item.@server, item.@secret, item.@originalsecret, item.@originalformat, item.@o_height, item.@o_width, item.@media, item.@title, item.@iconserver, item.@iconfarm, item.@rotation));
+					}
+					if(lst.length == 0){
+						if(this.error_function) this.error_function(result_xml);
+					}
+					else{
+						//NOTE: perpage vs per_page bug in api, just set to 200 for now..
+						this.response_function(lst, result_xml.*.@total, result_xml.*.@page, 200, result_xml.*.@owner[0] /*result_xml.*.@perpage*/);
+					}
+				//}
+				
+				//catch(e:Error){
+					//if (this.error_function) this.error_function(result_xml);
+				//}
+			}
+		}
+		
+	}
+}

@@ -68,7 +68,7 @@ var wrap = {
 					'frob': users.frob,
 				}, null, 'http://' + SITE_HOST + '/services/auth/' +
 					(fresh ? 'fresh/' : ''), true);
-				document.getElementById('auth_url').value = url;
+				//document.getElementById('auth_url').value = url;
 				pages.go('auth');
 			}
 			buttons.login.enable();
@@ -368,6 +368,7 @@ var wrap = {
 				meta.sets = new_sets;
 
 				// Update the lists of available sets
+				/*
 				var ii = meta.sets.length;
 				var prefixes = ['single', 'batch'];
 				for each (var prefix in prefixes) {
@@ -411,7 +412,9 @@ var wrap = {
 							.className = 'sets_disabled';
 					}
 				}
-                unblock_normalize();
+				unblock_normalize();
+				*/
+
 			}
 			status.clear();
 		}

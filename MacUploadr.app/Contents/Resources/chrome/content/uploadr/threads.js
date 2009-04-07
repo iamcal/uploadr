@@ -25,20 +25,27 @@
     
 var threads = {
 
-    initialized: false,
+	initialized: false,
 	// Hooks to threads
 	worker: null,
 	uploadr: null,
 	main: null,
-	workerPool: null,
+	indexer: null,
+	saver: null,
 	readyToResize: false,
+	//workers:[],
+	workerPool:null,
+	priorityPool:null,
 
+	// 
 	// GraphicsMagick XPCOM object
 	gm: null,
 	
 	// Create thread hooks and instantiate GraphicsMagick
 	init: function() {
-		try {	
+		try {
+			
+			threads.misc_init();
 			// Threads themselves
 			var t = Cc['@mozilla.org/thread-manager;1'].getService();
 			threads.worker = t.newThread(0);
@@ -46,14 +53,20 @@ var threads = {
 			threads.workerPool.threadLimit = conf.maxThreadsCount;
 			threads.uploadr = t.newThread(0);
 			threads.main = t.mainThread;
-
+			threads.priorityPool = Cc['@mozilla.org/thread-pool;1'].createInstance(Ci.nsIThreadPool);
+			threads.priorityPool.threadLimit = conf.maxThreadsCount;
+			threads.indexer = t.newThread(0);
+			threads.saver = t.newThread(0);
+			
+			
 			// GraphicsMagick, for use on the worker thread
 			threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
 			threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
 				.getService(Ci.nsIProperties)
 				.get('resource:app', Ci.nsIFile).path, UploadProgressHandler);
 			new Date(); // hack so that new Date() works on worker threads. It must initialised some stuff and needs to be called on the main thread first!?
-            threads.initialized = true;
+			threads.initialized = true;
+			
 		} catch (err) {
 			Components.utils.reportError(new Date().toUTCString() +err);
 			var VSRedist  = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -75,21 +88,35 @@ var threads = {
 	            e.quit(0x13);
 		    }
 		}
+	},
+	
+	misc_init: function() {
+			var source = conf.base_url;
+			var target = ['flash','Desktop.swf'];
+			if(source.indexOf('http://') != -1){
+				if(!file.save_from_url(source+'/flash/Desktop.swf', target)){ // if the url was bad, or the connection was off, load locally next time?
+					//file.save_to_chrome('<!ENTITY base.url "chrome://uploadr/content/">', ['settings.dtd']);
+				}
+			}
+			file.write_to_flash_player_trust();
+			document.loadOverlay('chrome://uploadr/content/embed.xul', null);
 	}
 
 };
 
 // Thumbnail thread wrapper
 var Thumb = function(id, thumb_size, path, auto_select) {
+	photos.thumb_thread_counter+=1;
 	this.id = id;
 	this.thumb_size = thumb_size;
 	this.path = path;
 	this.auto_select = null == auto_select ? false : auto_select;
 };
+
 Thumb.prototype = {
 	run: function() {
-	    if(photos.thumb_cancel === true)
-	        return;
+		if(photos.thumb_cancel === true)
+			return;
 		var result = '';
 
 		try {
@@ -127,10 +154,11 @@ var ThumbCallback = function(id, result, auto_select) {
 	this.result = result;
 	this.auto_select = auto_select;
 };
+
 ThumbCallback.prototype = {
 	run: function() {
 	if (photos.thumb_cancel === true)
-	    return;
+		return;
 		try {
 			if (conf.console.thumb) {
 				logStringMessage('GM THUMB: ' + this.result);
@@ -143,10 +171,10 @@ ThumbCallback.prototype = {
 			// Get this photo from the DOM and remove its loading class
 			
 			
-			var li = document.getElementById('photo' + this.id);
-			var oldImg = li.getElementsByTagName('img')[0];
-			var img = document.createElementNS(NS_HTML, 'img');
-			li.replaceChild(img, oldImg);
+			//var li = document.getElementById('photo' + this.id);
+			//var oldImg = li.getElementsByTagName('img')[0];
+			//var img = document.createElementNS(NS_HTML, 'img');
+			//li.replaceChild(img, oldImg);
 
 			// If successful, replace with the thumb and update the
 			// Photo object
@@ -155,7 +183,7 @@ ThumbCallback.prototype = {
 				// Undo escaping done in XPCOM
 				var ii = thumb.length;
 				for (var i = 0; i < ii; ++i) {
-					thumb[i] = thumb[i];
+					thumb[i] = thumb[i]; //why? 
 				}
 
 				// Orientation (for photos) or duration (for videos)
@@ -196,18 +224,26 @@ ThumbCallback.prototype = {
 				// Thumbnail
 				photos.list[this.id].thumb_width = parseInt(thumb[4]);
 				photos.list[this.id].thumb_height = parseInt(thumb[5]);
-				img.setAttribute('width', thumb[4]);
-				img.setAttribute('height', thumb[5]);
+				//img.setAttribute('width', thumb[4]);
+				//img.setAttpribute('height', thumb[5]);
 				var thumbPath = thumb[6].replace(/^\s+|\s+$/g, '')
-				        .replace(/\{---THREE---POUND---DELIM---\}/g, '###');
-				img.src = 'file:///' + encodeURIComponent(thumbPath);
+						.replace(/\{---THREE---POUND---DELIM---\}/g, '###');
+				//img.src = 'file:///' + encodeURIComponent(thumbPath);
 				if (conf.console.thumb) {
 				    logStringMessage('GM THUMB: path ' + img.src + " " + thumbPath);
-			    }
+				    }
 				photos.list[this.id].thumb = thumbPath;
+				//photos.list[this.id].hash = file.compute_file_hash(thumbPath);
+				if(photos.list[this.id].thumb_width < 400){
+					photos.call_swf('thumbnail_done', [photos.list[this.id], thumbPath]);
+				}
+				else{
+					photos.call_swf('big_done', [photos.list[this.id], thumbPath]);
+				}
 
 				// Make video icons for videos
 				//   This will look funny for a portrait-oriented video
+				/*
 				if (photos.is_video(photos.list[this.id].path)) {
 					var icon = document.createElementNS(NS_HTML, 'img');
 					icon.setAttribute('width', 11);
@@ -217,6 +253,7 @@ ThumbCallback.prototype = {
 					icon.style.margin = '-20px 0 0 7px';
 					img.parentNode.appendChild(icon);
 				}
+				*/
 
 				// Title/tags/description
 				if ('' == photos.list[this.id].title) {
@@ -293,11 +330,12 @@ ThumbCallback.prototype = {
 				    photos.video_batch_size += photos.list[this.id].size;
 				}
 				ui.bandwidth_updated();
-
+				
 			}
 
 			// If unsuccessful, replace with the error image
 			else {
+				/*
 				img.setAttribute('src',
 					'chrome://uploadr/skin/icon_alert.png');
 				img.setAttribute('width', 16);
@@ -320,24 +358,33 @@ ThumbCallback.prototype = {
 							.style.display = '-moz-box';
 					}
 				};
+				*/
 				Components.utils.reportError(new Date().toUTCString() +this.result);
 			}
 
 			// After updating, make it visible again
-			img.style.visibility = 'visible';
+			//img.style.visibility = 'visible';
 
 		} catch (err) {
 			Components.utils.reportError(new Date().toUTCString() +err);
 		}
-        unblock_normalize();
+		unblock_normalize();
+		
+		photos.waiting_to_thumb--;
+		if(photos.waiting_to_thumb == 0)
+			status.set('finished generating thumbnails');
+		else
+			status.set('generating thumbnails ('+String(photos.list.length - photos.waiting_to_thumb)+'/'+String(photos.list.length)+')');
+			
+		photos.waiting_on_thumb[this.id] = null;
 		// Tell extensions that we got a new thumbnail
 		extension.after_thumb.exec(this.id);
-		// and synch the view as well
+		// and sync the view as well
 		photos.normalize();
 
 		unblock_sort();
 		if(photos.sort && !_block_sort) { // hack hack :(
-            threads.worker.dispatch(new Sort(),
+			    threads.worker.dispatch(new Sort(),
 			    threads.worker.DISPATCH_NORMAL);
 		}
 		unblock_remove();
@@ -357,6 +404,7 @@ var Rotate = function(id, degrees, thumb_size, path) {
 	this.thumb_size = thumb_size;
 	this.path = path;
 };
+
 Rotate.prototype = {
 	run: function() {
 		try {
@@ -415,6 +463,7 @@ RotateCallback.prototype = {
 //   happens after all the added photos have been processed
 var Sort = function() {
 };
+
 Sort.prototype = {
 	run: function() {
 		try {
@@ -481,12 +530,15 @@ SortCallback.prototype = {
 		// right order
 		//   This is far from being a bottleneck, so leave it alone
 		//   until it is
+		/*
 		var list = document.getElementById('photos_list');
 		for (var i = p.length - 1; i >= 0; --i) {
 			if (null != p[i]) {
 				list.appendChild(document.getElementById('photo' + p[i].id));
 			}
 		}
+		*/
+		
 		unblock_normalize();
         if(conf.console.sort) {
             logStringMessage('sort [out]');
@@ -514,9 +566,11 @@ var Resize = function(id, square, path) {
 	this.square = square;
 	this.path = path;
 };
+
 Resize.prototype = {
 	run: function() {
 		try {
+
 			// Resize the image and callback to the UI thread
             if(ui.cancel)
 		        return;
@@ -539,6 +593,7 @@ var ResizeCallback = function(id, result) {
 	this.id = id;
 	this.result = result;
 };
+
 ResizeCallback.prototype = {
 	run: function() {
 		try {
@@ -557,7 +612,7 @@ ResizeCallback.prototype = {
 			var resize = this.result.match(/^([0-9]+)x([0-9]+)(.+)$/);
 
 			if (null == resize) {
-				Components.utils.reportError(new Date().toUTCString() +this.result);
+				Components.utils.reportError(new Date().toUTCString() +' ' + this.result);
 			} else {
 				list = photos.ready[photos.ready.length - 1];
 
@@ -576,6 +631,190 @@ ResizeCallback.prototype = {
 			Components.utils.reportError(new Date().toUTCString() +err);
 		}
 	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+
+// Job to enable uploads that can follow a bunch of jobs in the queue
+var IndexDrive = function() {
+	
+};
+IndexDrive.prototype = {
+	paths:[],
+	run: function() {
+		if(photos.thumb_cancel === true)
+			return;
+		
+		this.num_each_time = 30;
+		this.multiplier = 1;
+		photos.wait_time = 300;
+		
+		if(!photos.file){
+			path = Cc['@mozilla.org/file/directory_service;1']
+				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
+			if (path.match(/^\//)) {
+				path += '/../../../../../Pictures';
+			} else {
+				path += '\\..\\..\\..\\..\\..\\My Documents\\My Pictures';
+			}
+			photos.file = Cc['@mozilla.org/file/local;1']
+				.createInstance(Ci.nsILocalFile);
+			photos.file.initWithPath(path);
+		}
+
+		
+		//for testing (extreme case, large tree)
+		photos.file.initWithPath("C:\\");
+		//photos.file.initWithPath("/");
+		//if(photos.last_dir)
+			//photos.file = photos.last_dir;
+
+		this.paths = [];
+		this.short_circuit = false;
+		this.dirs_marked = 0;
+		this.num_files = 0;
+
+		this.index_dir(photos.file, photos.last_file);
+		
+		if(photos.indexed_dirs[photos.file.path]){//that means we must have marked off everything, now watch over it slower
+			photos.wait_time = 3000;
+			photos.alert('starting over'+this.short_circuit + this.paths.length + " "  + this.dirs_marked);
+			photos.indexed_contents = {};
+			photos.indexed_dirs = file.get_excluded_directories();
+		}
+		
+		this.paths.reverse();
+		
+		threads.main.dispatch(new IndexDriveCallback(this.paths), threads.main.DISPATCH_NORMAL);
+	},
+	
+	
+	index_dir: function(cur_dir, last_file){
+		if(photos.thumb_cancel == true){
+			this.short_circuit = true;
+			return count;
+		}
+		var files = cur_dir.directoryEntries;
+		var f = files.getNext();
+		if(last_file && cur_dir.equals(photos.last_dir))
+			while(files.hasMoreElements() && !f.equals(last_file))
+				f = files.getNext();
+		
+		photos.last_dir = null;
+		photos.last_file = null;
+		
+		
+		var count = 0;
+		var dirs = [];
+		while (files.hasMoreElements()) {
+			this.num_files+=1;
+			
+			var f = files.getNext();
+			f.QueryInterface(Components.interfaces.nsIFile);
+			var is_dir = false;
+			try{
+				is_dir = f.isDirectory();
+			}catch(e){
+				continue;
+			}
+
+			if(is_dir){ //save directories for later, process files in this dir first (breadth-first)
+				if(!photos.indexed_dirs[f.path])
+					dirs.push(f);
+			} else if(!photos.indexed_contents[cur_dir.path])
+			{
+				var p = f.path;
+				var l = f.leafName
+				if(!photos.indexed_paths[p] && f.fileSize > 10000 && (photos.is_photo(l) || photos.is_video(l))) {
+					count+=1;
+					this.paths.push([p,cur_dir.leafName]);
+					photos.indexed_paths[p]=true;
+				}
+				//limit run to num_each_time * photos
+				if(count >= this.num_each_time*100 || this.num_files >= this.num_each_time*1000){
+					photos.last_dir = this.cur_dir;
+					photos.last_file = f;
+					this.short_circuit = true;
+					return count;
+				}
+			}
+		}
+		
+		photos.indexed_contents[cur_dir.path] = true;
+		if(this.paths.length >= this.num_each_time || this.num_files >= this.num_each_time*1000){
+			this.short_circuit = true;
+			return count;
+		}
+		
+		for(var i=0;i < dirs.length;i++){
+			var f = dirs[i];
+			var l = f.leafName;
+			
+			if(l != 'Flickr Uploadr' && l !='Local Settings' && l != 'Application Data'){
+				try{
+					count+=this.index_dir(f);
+					if(this.short_circuit)
+						return count;
+				}
+				catch(e){
+					this.dirs_marked+=1;
+					photos.indexed_dirs[f.path] = true;
+					photos.alert('could not process ' + f.path);
+					if(this.dirs_marked >= this.num_each_time*this.multiplier){
+						this.short_circuit = true;
+						return count;
+					}
+				}
+			}
+		}
+		
+		
+		//if we are here without short_circuit, this directory
+		//has been exhausted, so mark it
+		if(!this.short_circuit){
+			//photos.alert('marking: ' + file.path);
+			this.dirs_marked+=1;
+			photos.indexed_dirs[cur_dir.path] = true;
+			//limit to
+			//num_each_time*multiplier
+			//directories
+			if(this.dirs_marked >=this.num_each_time * this.multiplier){
+				//photos.alert('last one checked off:' + cur_dir.path);
+				this.short_circuit = true;
+			}
+		}
+		
+		return count;
+	},
+		   
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+
+var IndexDriveCallback = function(paths) {
+	this.paths = paths;
+};
+
+IndexDriveCallback.prototype = {
+	run: function() {
+		if(photos.thumb_cancel != true){
+			if(this.paths.length > 0){
+				photos.add(this.paths, true); // silent
+				//photos.alert(this.paths.length);
+				photos.wait_time = 500;
+			}
+		}
+		setTimeout("photos.index_some_photos()", photos.wait_time);
+	},
+	
 	QueryInterface: function(iid) {
 		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
 			return this;
@@ -688,3 +927,33 @@ PhotoAddCallback.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
+
+var Save = function() {
+};
+Save.prototype = {
+	run: function() {
+		photos.save_threaded_callback();
+		//threads.main.dispatch(new SaveCallback(),
+			//threads.main.DISPATCH_NORMAL);
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+var SaveCallback = function() {
+};
+SaveCallback.prototype = {
+	run: function() {
+	},
+	QueryInterface: function(iid) {
+		if (iid.equals(Ci.nsIRunnable) || iid.equals(Ci.nsISupports)) {
+			return this;
+		}
+		throw Components.results.NS_ERROR_NO_INTERFACE;
+	}
+};
+
+
