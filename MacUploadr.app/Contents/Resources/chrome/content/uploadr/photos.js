@@ -8,18 +8,37 @@
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
 
+
 var photos = {
 
 	// Storage
 	list: [],
 	count: 0,
 	videoCount: 0,
+	the_swf:null,
+	file:null,
 	errors: 0,
 	selected: [],
 	last: null,
 	sort: true,
 	batch_size: 0,
 	video_batch_size: 0,
+	calling_swf: false,
+	to_call_swf: [],
+	wait_time: 2000,
+	num_each_time: 10,
+	multiplier: 1,
+	thumb_queue: [],
+	thumb_thread_counter: 0,
+	waiting_to_thumb: 0,
+	waiting_on_thumb: {},
+	last_file: null,
+	last_dir: null,
+	indexed_paths: {},
+	indexed_contents: {},
+	added_paths: {},
+	indexed_dirs: file.get_excluded_directories(),
+	flash: {},
 	thumb_cancel: false,
 
 	// Upload tracking
@@ -28,6 +47,9 @@ var photos = {
 	add_to_set: [],
 	failed: [],
 	sets: {},
+	
+	to_add: [],
+	
 	ok: 0,
 	fail: 0,
 	sets_fail: false,
@@ -43,6 +65,38 @@ var photos = {
 
     normalizeTimeoutId: null,
     
+	call_swf: function(func_name, args){
+		if(!photos.calling_swf){
+			photos.calling_swf = true;
+			if(!photos.the_swf){
+				photos.the_swf = document.getElementById('the_swf');
+			}
+			var f = photos.the_swf[func_name];
+			var R;
+			if(f){
+				R = f.apply(photos.the_swf, args);
+			}
+			else
+				Components.utils.reportError(String("could not find swf function " + func_name));
+				//photos.alert("could not find swf function " + func_name);
+			photos.calling_swf = false;
+			return R;
+		}
+		else{
+			photos.to_call_swf.push([func_name, args]);
+		}
+	},
+	
+	get_big_file: function(id){
+		threads.priorityPool.dispatch(new Thumb(id, 800, photos.list[id].path),
+		    threads.priorityPool.DISPATCH_NORMAL);
+        },
+		     
+	index_some_photos: function(){
+		//photos.alert('start..');
+		threads.indexer.dispatch(new IndexDrive(), threads.worker.DISPATCH_NORMAL);
+	},
+	      
 	// Let the user select some files, thumbnail them and track them
 	//   Patch for saving our place in the directory structure from
 	//   Zoolcar9 at http://pastebin.mozilla.org/279359
@@ -87,7 +141,8 @@ var photos = {
 			var paths = [];
 			while (files.hasMoreElements()) {
 				var arg = files.getNext().QueryInterface(Ci.nsILocalFile).path;
-				paths.push(arg);
+				arg = arg.replace(/\\/g, '\/');
+				paths.unshift(arg);
 			}
 			photos.add(paths);
 
@@ -104,11 +159,15 @@ var photos = {
 		}
 	},
 
+	add_threaded: function(paths) {
+		for(var i=0;i<paths.length;i++)
+			threads.worker.dispatch(new PhotoAdd(paths[i]), threads.worker.DISPATCH_NORMAL);
+	},
+	
 	// Add a list of photos
 	add: function(paths, silent) {
-
 		if (null == silent) { silent = false; }
-		buttons.upload.disable();
+		//buttons.upload.disable();
 
 		// Tally up photos and videos and remove large videos
 		var p_count = 0;
@@ -117,15 +176,15 @@ var photos = {
 		var new_paths = [];
 		var bad = [];
 		for each (var p in paths) {
-		    if (p === null) {
-		        continue;
-		    }
+			var P = p;
+			p = p[0];
+
 			var path = 'object' == typeof p ? p.path : p;
 
 			// Photos are always allowed
 			if (photos.is_photo(path)) {
 				++p_count;
-				new_paths.push(p);
+				new_paths.push(P);
 			}
 
 			// Videos are allowed for now as long as they aren't too big
@@ -135,15 +194,15 @@ var photos = {
 					var filename = path.match(/([^\/\\]*)$/);
 					big_videos.push(null == filename ? path : filename[1]);
 				} else {
-					new_paths.push(p);
+					new_paths.push(P);
 				}
 			}
-
+			
 			// Warn about files that are being dropped
-			else if (path.length) {
-				var filename = path.match(/([^\/\\]*)$/);
-				bad.push(null == filename ? path : filename[1]);
-			}
+			//else if (path.length) {
+				//var filename = path.match(/([^\/\\]*)$/);
+				//bad.push(null == filename ? path : filename[1]);
+			//}
 
 		}
 		paths = new_paths;
@@ -230,9 +289,12 @@ var photos = {
 					var new_paths = [];
 					while (paths.length) {
 						var p = paths.shift();
+						P = p;
+						p = p[0];
+
 						var path = 'object' == typeof p ? p.path : p;
 						if (!photos.is_video(path)) {
-							new_paths.push(p);
+							new_paths.push(P);
 						}
 					}
 					paths = new_paths;
@@ -242,12 +304,12 @@ var photos = {
 				else if ('ok' == result.result && result.safety_level) {
 					var ii = paths.length;
 					for (var i = 0; i < ii; ++i) {
-						var p = 'object' == typeof paths[i] ?
-							paths[i].path : paths[i];
+						var p = 'object' == typeof paths[i][0] ?
+							paths[i][0].path : paths[i][0];
 						if (photos.is_video(p)) {
-							paths[i] = 'object' == typeof paths[i] ?
-								paths[i] : {'path': p};
-							paths[i].safety_level = result.safety_level;
+							paths[i][0] = 'object' == typeof paths[i][0] ?
+								paths[i][0] : {'path': p};
+							paths[i][0].safety_level = result.safety_level;
 						}
 					}
 				}
@@ -282,39 +344,53 @@ var photos = {
 
 		// Now add whatever's left
 		var ii = paths.length;
+		var to_flash = [];
 		block_normalize();
 		var ext_list = [];
-		var currentPathsLists = photos.list.map(function(x) {return (x ? x.path : "");});
 		
-		for (var i = 0; i < ii; ++i) {
-			var p = 'object' == typeof paths[i] ? paths[i].path : paths[i];
+		for (var i = ii-1; i >= 0; --i) {
+			var p = 'object' == typeof paths[i][0] ? paths[i][0].path : paths[i][0];
 
 			// Resolve the path and add the photo
 			if (/^file:\/\//.test(p)) {
 				p = Cc['@mozilla.org/network/protocol;1?name=file']
 					.getService(Ci.nsIFileProtocolHandler)
 					.getFileFromURLSpec(p).path;
-//				p = Cc["@mozilla.org/network/io-service;1"]
-//                    .getService(Components.interfaces.nsIIOService).newURI(p).QueryInterface(Ci.nsIFileURL).file.path
+			
 			}
-			if(currentPathsLists.indexOf(p) === -1) {
-			    ext_list.push(photos._add(p));
+		
+			if(!photos.added_paths[p]) {
+			    photos.added_paths[p] = true;
+			    var P = photos._add(p, paths[i][1]);
+			    ext_list.push(P);
+			    to_flash.push([P,paths[i][1]]);
 
 			    // Photos can be passed as an object which already has metadata
-			    if ('object' == typeof paths[i]) {
-				    for (var k in paths[i]) {
+			    if ('object' == typeof paths[i][0]) {
+				    for (var k in paths[i][0]) {
 					    if ('id' == k) { continue; }
-					    photos.list[photos.list.length - 1][k] = paths[i][k];
+					    photos.list[photos.list.length - 1][k] = paths[i][0][k];
 				    }
 			    }
-            }
+			}
 		}
-        
+		
+		
+		if(to_flash.length > 0)
+			photos.call_swf('add_files', [to_flash]);
+		
+		for(var i=0;i<to_flash.length;i++){
+			photos.waiting_to_thumb++;
+			threads.workerPool.dispatch(new Thumb(to_flash[i][0].id, conf.thumb_size, to_flash[i][0].path),
+			   threads.workerPool.DISPATCH_NORMAL);
+		}
+
 		// Do extension stuff after we've added all of the photos but
 		// before the list we've saved potentially becomes invalid
 		extension.after_add.exec(ext_list);
 
 		// Update the UI
+		/*
 		if (photos.count + photos.errors) {
 		    document.getElementById('t_clear').className = 'button';
 			if (photos.sort) {
@@ -344,9 +420,10 @@ var photos = {
 			document.getElementById('photos_init').style.display = '-moz-box';
 			document.getElementById('photos_new').style.display = 'none';
 		}
+		*/
 		unblock_normalize();
 		photos.normalize();
-		
+
 	},
 	_add: function(path) {
 		block_remove();
@@ -356,16 +433,18 @@ var photos = {
 		block_normalize();
 		var id = photos.list.length;
 		var p = new Photo(id, path);
+		//p.hash = file.compute_file_hash(path);
 		photos.list.push(p);
 		unblock_normalize();
 		++photos.count;
-		if(photos.is_video(path)) {
-		    ++photos.videoCount;
+		if(photos.is_video(path)){
+			++photos.videoCount;
+			p.is_video = true;
 		}
-
 		// Create a spot for the image, leaving a spinning placeholder
 		//   Add images to the start of the list because this is our best
 		//   guess for ordering newest to oldest
+		/*
 		var img = document.createElementNS(NS_HTML, 'img');
 		img.className = 'loading';
 		img.setAttribute('width', 16);
@@ -374,15 +453,36 @@ var photos = {
 		var li = document.createElementNS(NS_HTML, 'li');
 		li.id = 'photo' + id;
 		li.appendChild(img);
-		block_normalize();
 		var list = document.getElementById('photos_list');
 		list.insertBefore(li, list.firstChild);
-		// Create and show the thumbnail
-        photos.thumb_cancel = false;
-        threads.workerPool.dispatch(new Thumb(id, conf.thumb_size, path),
-            threads.workerPool.DISPATCH_NORMAL);
+		*/
 
+		// Create and show the thumbnail
+		photos.thumb_cancel = false;
+		photos.waiting_on_thumb[p.id] = true;
+		//if(!threads.workers[0])
+			//threads.workers[0] = Cc['@mozilla.org/thread-manager;1'].getService().newThread(0);
+		//threads.workers[0].dispatch(new Thumb(id, conf.thumb_size, path),
+			//threads.worker.DISPATCH_NORMAL);
+			//
+		
+		
+		
+		
+		
+		//threads.worker.dispatch(new Thumb(id, conf.thumb_size, path),
+			//threads.worker.DISPATCH_NORMAL);
+		
+		
+		// Add the original image to the list and set our status
+		//var id = photos.list.length;
+		//var p = new Photo(id, path);
 		return p;
+		
+	},
+	      
+	alert: function(s){
+		Components.utils.reportError(String(s));
 	},
 
 	// Remove selected photos
@@ -392,54 +492,41 @@ var photos = {
 		if (0 < _block_remove) { return; }
 
 		// Nothing to do if somehow there are no selected photos
-		block_normalize();
 		var ii = photos.selected.length;
-		if (0 == ii) { 
-		    unblock_normalize();
-		    return;
-		}
-        document.getElementById('photos').style.display = 'none';
-		document.getElementById('normalizing').style.display = '-moz-box';
+		if (0 == ii) { return; }
+
 		// Tell extensions which photos we're removing
 		extension.before_remove.exec(photos.selected);
 
 		// Remove selected photos
 		for (var i = 0; i < ii; ++i) {
 			var id = photos.selected[i];
+			/*
 			var li = document.getElementById('photo' + id);
 			if(li) {
 			    li.parentNode.removeChild(li);
 			}
+			*/
 
 			// Free the size of this file
 			photos.batch_size -= photos.list[id].size;
-			if(photos.is_video(photos.list[id].path)) {
-			    photos.video_batch_size -= photos.list[id].size;
-			}
 			if (users.nsid && !users.is_pro && users.bandwidth &&
-				0 < users.bandwidth.remaining - photos.batch_size + photos.video_batch_size) {
+				0 < users.bandwidth.remaining - photos.batch_size) {
 				status.clear();
 			}
-            if(photos.is_video(photos.list[id].path)) {
-                --photos.videoCount;
-            }
+
 			photos.list[id] = null;
 			--photos.count;
 		}
-		unblock_normalize();
 		ui.bandwidth_updated();
 		photos.normalize();
 		meta.disable();
 
 		// Clear the selection
-		block_normalize();
 		photos.selected = [];
-		unblock_normalize();
 		mouse.click({target: {}});
 
 		photos._remove();
-		document.getElementById('photos').style.display = '-moz-box';
-		document.getElementById('normalizing').style.display = 'none';
 	},
 
 	// Allow upload only if there are photos
@@ -449,6 +536,7 @@ var photos = {
 		} else {
 			photos.sort = true;
 			buttons.upload.disable();
+			/*
 			document.getElementById('photos_sort_default')
 				.style.display = 'none';
 			document.getElementById('photos_sort_revert')
@@ -460,6 +548,7 @@ var photos = {
 			}
 			document.getElementById('no_meta_prompt')
 				.style.visibility = 'hidden';
+				*/
 		}
 	},
 
@@ -467,7 +556,6 @@ var photos = {
 	rotate: function(degrees) {
 
 		// Prevent silliness
-		block_normalize();
 		var s = photos.selected;
 		var ii = s.length;
 		if (0 == ii) {
@@ -485,12 +573,15 @@ var photos = {
 			if (photos.is_photo(p.path)) {
 				block_sort();
 				photos.batch_size -= p.size;
+				
+				/*
 				var img = document.getElementById('photo' + p.id)
 					.getElementsByTagName('img')[0];
 				img.className = 'loading';
 				img.setAttribute('width', 16);
 				img.setAttribute('height', 8);
 				img.src = 'chrome://uploadr/skin/balls-16x8-trans.gif';
+				*/
 				block_normalize();
 				threads.worker.dispatch(new Rotate(p.id, degrees,
 					conf.thumb_size, p.path),
@@ -503,25 +594,38 @@ var photos = {
 
 	},
 
-	// Upload photos
+	//   Upload photos
 	//   The arguments will either both be null or both be set
 	//   If they're both set, this is an automated call to upload by the
 	//   queue
 	upload: function(list, size) {
 		var from_user = null == list;
 		if (from_user) { list = photos.list; }
+		
+		var new_list = [];
+		for(var j in list){
+			photos.alert('id: ' + list[j][0]);
+			new_list[j] = photos.list[list[j][0]];
+			new_list[j].is_public = list[j][1];
+			new_list[j].title = list[j][2];
+		}
+		list = new_list;
 
 		// Don't upload if this is a user action and the button is disabled
+		/*
 		if (from_user && 'disabled_button' == document.getElementById(
 			'button_upload').className) {
 			return;
 		}
+		*/
+		
 		if(ui.cancel) {
-            upload.cancel = true;
+			upload.cancel = true;
 			return upload.done();
 		}
-		
+
 		// Remove error indicators
+		/*
 		block_normalize();
 		var li = document.getElementById('photos_list')
 			.getElementsByTagName('li');
@@ -532,15 +636,15 @@ var photos = {
 				img.onclick();
 			}
 		}
-        unblock_normalize();
-        
+		unblock_normalize();
+		*/
+
 		// Decide if we're already in the midst of an upload
 		var not_started = 0 == photos.uploading.length;
 
 		// Drop videos if we're a free user or they're over the allowed size
 		if (from_user) {
 			var new_list = [];
-			var nbVideosToUpload = 0;
 			for each (var p in list) {
 				if (null == p) {
 					continue;
@@ -590,6 +694,7 @@ var photos = {
 					if (photos.is_photo(p.path)) {
 
 						// Resize because of user settings
+						/*
 						if (null != settings.resize &&
 							-1 != settings.resize &&
 							(p.width > settings.resize ||
@@ -611,6 +716,7 @@ var photos = {
 						else {
 							ready_size += p.size;
 						}
+						*/
 
 					}
 
@@ -637,10 +743,11 @@ var photos = {
 				unblock_normalize();
 				photos.last = null;
 				block_normalize();
-				var list = document.getElementById('photos_list');
-				while (list.hasChildNodes()) {
-					list.removeChild(list.firstChild);
-				}
+				//var list = document.getElementById('photos_list');
+				//while (list.hasChildNodes()) {
+					//list.removeChild(list.firstChild);
+				//}
+				//
 				unblock_normalize();
 				threads.readyToResize = true;
 				ui.bandwidth_updated();
@@ -648,6 +755,7 @@ var photos = {
 					threads.worker.DISPATCH_NORMAL);
 
 				// Give some meaningful feedback
+				/*
 				if (not_started) {
 					document.getElementById('footer').style.display =
 						'-moz-box';
@@ -672,6 +780,7 @@ var photos = {
 					meta.disable();
 					photos.sets[users.nsid] = meta.sets;
 				}
+				*/
 
 				return;
 			}
@@ -679,25 +788,25 @@ var photos = {
 
 		// Update the UI
 		if (from_user) {
-			status.set(locale.getString('status.uploading'));
-			document.getElementById('t_clear').className = 'disabled_button';
-			buttons.upload.disable();
-			document.getElementById('photos_sort_default')
-				.style.display = 'none';
-			document.getElementById('photos_sort_revert')
-				.style.display = 'none';
-			document.getElementById('photos_init')
-				.style.display = 'none';
-			document.getElementById('photos_new')
-				.style.display = '-moz-box';
-			document.getElementById('no_meta_prompt')
-				.style.visibility = 'hidden';
-			meta.disable();
-			photos.sets[users.nsid] = meta.sets;
+			//status.set(locale.getString('status.uploading'));
+			//buttons.upload.disable();
+			//document.getElementById('photos_sort_default')
+				//.style.display = 'none';
+			//document.getElementById('photos_sort_revert')
+				//.style.display = 'none';
+			//document.getElementById('photos_init')
+				//.style.display = 'none';
+			//document.getElementById('photos_new')
+				//.style.display = '-moz-box';
+			//document.getElementById('no_meta_prompt')
+				//.style.visibility = 'hidden';
+			
+			//meta.disable();
+			//photos.sets[users.nsid] = meta.sets;
 		}
 
 		// We're really going to start or queue a batch, so do extension stuff
-		extension.before_upload.exec(list);
+		//extension.before_upload.exec(list);
 
 		// Take the list of photos into upload mode and reset the UI
 		var ready = [];
@@ -717,6 +826,7 @@ var photos = {
 				photos.uploading.push(p);
 
 				// Setup progress bar for this photo and show it in the queue
+				/*
 				var img = document.createElementNS(NS_HTML, 'img');
 				img.src = 'file:///' + encodeURIComponent(p.thumb);
 				img.width = p.thumb_width;
@@ -731,6 +841,7 @@ var photos = {
 				var li = document.createElementNS(NS_HTML, 'li');
 				li.appendChild(stack);
 				document.getElementById('queue_list').appendChild(li);
+				*/
 
 			}
 
@@ -745,6 +856,7 @@ var photos = {
 				photos.kb.total += size;
 			}
 		}
+		
 		if (from_user) {
 			photos.batch_size = 0;
 			photos.video_batch_size = 0;
@@ -755,17 +867,18 @@ var photos = {
 			photos.selected = [];
 			unblock_normalize();
 			photos.last = null;
-			block_normalize();
-			var ul = document.getElementById('photos_list');
-			while (ul.hasChildNodes()) {
-				ul.removeChild(ul.firstChild);
-			}
-			unblock_normalize();
-			ui.bandwidth_updated();
+			//block_normalize();
+			//var ul = document.getElementById('photos_list');
+			//while (ul.hasChildNodes()) {
+				//ul.removeChild(ul.firstChild);
+			//}
+			//unblock_normalize();
+			//ui.bandwidth_updated();
 		}
 
-        mouse.toggle();
-        upload.startTime = new Date().getTime();
+		//mouse.toggle();
+		
+		upload.startTime = new Date().getTime();
         
 		// Kick off the first batch job if we haven't started
 		if (not_started && !upload.processing) {
@@ -780,7 +893,7 @@ var photos = {
 		}
 
 	},
-    
+
 	// Normalize the photo list and selected list with the DOM
 	normalize: function() {
 		if(conf.console.normalize) {
@@ -796,6 +909,8 @@ var photos = {
 		if(conf.console.normalize) {
 		    logStringMessage('normalize [in]');
 		}
+		
+		/*
 		document.getElementById('photos').style.display = 'none';
 		document.getElementById('normalizing').style.display = '-moz-box';
 		var list = document.getElementById('photos_list')
@@ -824,43 +939,91 @@ var photos = {
 		    logStringMessage('normalize [out]');
 		}
 		isNormalizing = false;
+		*/
+		
 	},
 
-	// Load saved metadata
-	load: function() {
-		var obj = file.read('photos.json');
 
+	// Load saved metadata
+	load: function(){
+		
+		var obj = file.read('photos.json');
+		
+		if(obj.indexed_paths)
+			photos.indexed_paths = obj.indexed_paths;
+		
+		if(obj.list)
+			photos.list = obj.list
+				
+		for(var i=0;i<photos.list.length;i++)
+			photos.added_paths[photos.list[i].path] = true;
+		
+		
+				
+		
+		/*
+		photos.the_swf = document.getElementById('the_swf');
+		var sets = obj.flash['sets'];
+		for(var i=0;i<sets.length;i++){
+			var sl = {'sets':sets.slice(i,i+1)};
+			photos.the_swf.load(sl);
+			nsWaitForDelay(150);
+		}
+		*/
+		
+		photos.call_swf('load', [obj.flash]);
+		
+		photos.index_some_photos();
+		
+		
+		//thumbnail photos not thumbnailed last time
+		for(var i=0; i<photos.list.length; i++){
+			if(!photos.list[i].thumb){
+				photos.waiting_to_thumb++;
+				threads.workerPool.dispatch(
+				new Thumb(photos.list[i].id, 
+					conf.thumb_size, 
+					photos.list[i].path), 
+					threads.worker.DISPATCH_NORMAL);
+			}
+		}
+			
+		//alert('still'+obj.flash);
+		
+		
 		// Don't bother if there are no photos
-		if ('undefined' == typeof obj.list) { return; }
+		//if ('undefined' == typeof obj.list) { return; }
 
 		// Add the previous batch of photos
-		var list = obj.list;
-		if (list.length) {
-			photos.sort = obj.sort;
-			document.getElementById('photos_init').style.display = 'none';
-			document.getElementById('photos_new').style.display = 'none';
-			document.getElementById('no_meta_prompt')
-				.style.visibility = 'visible';
-		}
-		photos.add(list, true);
+		//var list = obj.list;
+		//if (list.length) {
+			//photos.sort = obj.sort;
+			//document.getElementById('photos_init').style.display = 'none';
+			//document.getElementById('photos_new').style.display = 'none';
+			//document.getElementById('no_meta_prompt')
+				//.style.visibility = 'visible';
+		//}
+		//photos.add(list, true);
 
 		// Bring in last known sets configuration
-		if(obj.sets) {
-		    meta.sets = obj.sets;
-		}
+		//if(obj.sets){
+		//meta.sets = obj.sets;
+		//}
+
 	},
 
     // clear photos.json
     // this is desperate move when the uploadr is in unusable state
     removeAll: function() {
-        if (document.getElementById('t_clear').className == 'disabled_button')
-            return;
-    	document.getElementById('t_clear').className = 'disabled_button';
+        //if (document.getElementById('t_clear').className == 'disabled_button')
+            //return;
+    	//document.getElementById('t_clear').className = 'disabled_button';
     	photos.thumb_cancel = true;
     	if (conf.console.thumb) {
 				logStringMessage('clearing');
 			}
         photos.list = [];
+	photos.indexed_paths = {},
         photos.selected = [];
         photos.count = 0;
         photos.videoCount = 0;
@@ -869,7 +1032,9 @@ var photos = {
         photos.video_batch_size = 0;
         _block_sort = _block_remove = _block_normalize = _block_exit = 0;
         file.remove('photos.json');
+	photos.call_swf('reset', []);
         // Remove photos from UI
+	/*
         block_normalize();
         var list = document.getElementById('photos_list');
 		while (list.hasChildNodes()) {
@@ -877,43 +1042,82 @@ var photos = {
         }
         unblock_normalize();
         document.getElementById('photos_init').style.display = '-moz-box';
+	*/
         ui.bandwidth_updated();
-        meta.disable();
-        buttons.upload.disable();
+        //meta.disable();
+        //buttons.upload.disable();
     },
     
+	
 	// Save all metadata to disk
+	save_threaded:function(){
+		//photos.flash = photos.the_swf.get_flash_obj();
+		photos.flash = photos.call_swf('get_flash_obj', []);
+		threads.worker.dispatch(new Save(), threads.worker.DISPATCH_NORMAL);
+	},
+	save_threaded_callback:function(){
+		//Components.utils.reportError('savingthreaded');
+		file.write('photos.json', {
+			//sort: photos.sort,
+			//sets: meta.sets,
+			list: photos.list,
+			indexed_paths:photos.indexed_paths,
+			flash:photos.flash//photos.flash
+			//waiting_on_thumb:waiting_on_thumb
+		});
+		
+	},
+	
 	save: function() {
 		if (0 != _block_exit) { return; }
 		block_normalize();
-		if (1 == photos.selected.length) {
-			meta.save(photos.selected[0]);
-		}
+		//if (1 == photos.selected.length) {
+			//meta.save(photos.selected[0]);
+		//}
+		      
+		photos.saving = true;
+		photos.thumb_cancel = true;
+		Components.utils.reportError('saving');
 		file.write('photos.json', {
-			sort: photos.sort,
-			sets: meta.sets,
-			list: photos.list
+			//sort: photos.sort,
+			//sets: meta.sets,
+			list: photos.list,
+			indexed_paths:photos.indexed_paths,
+			//flash:photos.the_swf.get_flash_obj()//photos.flash
+			flash:photos.call_swf('get_flash_obj', [])//photos.flash
+			//waiting_on_thumb:waiting_on_thumb
 		});
 		unblock_normalize();
+		photos.saving = false;
+		photos.thumb_cancel = false;
 	},
 
 	// Decide if a given path is a photo
 	is_photo: function(path) {
-		return /\.(jpe?g|tiff?|gif|png|bmp)$/i.test(path);
+		if(!path) return false;
+		var ext = path.substring(path.lastIndexOf('.')+1, path.length).toLowerCase();
+		return ext == "jpeg" || ext == "jpg" || ext == "gif" || ext == "bmp" || ext == "tiff" || ext == "tif" || ext == "png";
+			  
+		//return /\.(jpe?g|tiff?|gif|png|bmp)$/i.test(path);
 	},
 
 	// Similarly, is it a video
 	is_video: function(path) {
-		return /\.(mp4|mpe?g|avi|wmv|mov|dv|3gp|3g2|m4v)$/i.test(path);
+		  if(!path) return false;
+		  var ext = path.substring(path.lastIndexOf('.')+1, path.length).toLowerCase();
+		  return ext == 'mp4' || ext == 'mpg' || ext == 'mpeg' || ext == 'avi' || ext == 'dv' || ext == 'm4v' || ext == '3gp' || ext == 'mov' ||ext == 'wmv';
+		//return /\.(mp4|mpe?g|avi|wmv|mov|dv|3gp|m4v)$/i.test(path);
 	}
 
 };
 
 // Setup auto-saving of metadata in case of crashes
 //   See photos.save for problems related to the auto-save interval
+/*
 window.setInterval(function() {
 	photos.save();
 }, 1000 * conf.auto_save);
+*/
 
 // Photo properties
 var Photo = function(id, path) {
@@ -939,6 +1143,7 @@ var Photo = function(id, path) {
 	this.safety_level = settings.safety_level;
 	this.hidden = settings.hidden;
 	this.sets = [];
+	this.is_video = null;
 	this.progress_bar = null;
 	this.nsid = null;
 	this.photo_id = null;

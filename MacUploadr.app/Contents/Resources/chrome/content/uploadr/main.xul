@@ -3,51 +3,67 @@
 
 Flickr Uploadr
 
-Copyright (c) 2007-2009 Yahoo! Inc.  All rights reserved.  This library is
+Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
 free software; you can redistribute it and/or modify it under the terms of
 the GNU General Public License (GPL), version 2 only.  This library is
 distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
 GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
 -->
+<!DOCTYPE window [
+  <!ENTITY % mainDTD SYSTEM "chrome://uploadr/locale/main.dtd">
+  %mainDTD;
+  <!ENTITY % settingsDTD SYSTEM "chrome://uploadr/content/settings.dtd">
+  %settingsDTD;
+]>
+
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://uploadr/skin/main.css" type="text/css"?>
 <!--<?xml-stylesheet href="chrome://hacks/skin/hacks.css" type="text/css"?>-->
-<?xul-overlay href="chrome://uploadr/content/photos.xul"?>
-<?xul-overlay href="chrome://uploadr/content/help.xul"?>
+<!--<?xul-overlay href="chrome://uploadr/content/photos.xul"?>-->
+<?xul-overlay href="&base.url;help.xul"?>
 <?xul-overlay href="chrome://hacks/content/keyboard.xul"?>
-<!DOCTYPE window SYSTEM "chrome://uploadr/locale/main.dtd">
+
+
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	onload="conf.load_ini(); threads.init(); users.load(); photos.load(); ui.init(); ui.users_updated();"
+	onload="conf.load_ini('&base.url;'); threads.init(); users.load();    ui.users_updated();"
 	onclose="return exit();" persist="screenX screenY width height sizemode"
->
+>	
+<!-- removed photos.load(); ui.init(); from onload, flash calls them-->
+
   <stringbundleset>
     <stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
+    <stringbundle id="locale" src="chrome://uploadr/content/main.prefs" />
   </stringbundleset>
+  <head>
+	  
   <script src="chrome://global/content/globalOverlay.js" />
   <script src="chrome://global/content/nsDragAndDrop.js" />
   <script src="chrome://global/content/nsUserSettings.js" />
-  <script src="chrome://uploadr/content/ui.js" />  
-  <script src="chrome://uploadr/content/conf.js" />
-  <script src="chrome://uploadr/content/clh.js" />
-  <script src="chrome://uploadr/content/upgrade.js" />
-  <script src="chrome://uploadr/content/file.js" />
-  <script src="chrome://uploadr/content/threads.js" />
-  <script src="chrome://uploadr/content/flickr.js" />
-  <script src="chrome://uploadr/content/api.js" />
-  <script src="chrome://uploadr/content/upload.js" />
-  <script src="chrome://uploadr/content/photos.js" />
-  <script src="chrome://uploadr/content/meta.js" />
-  <script src="chrome://uploadr/content/settings.js" />
-  <script src="chrome://uploadr/content/users.js" />
-  <script src="chrome://uploadr/content/drag.js" />
-  <script src="chrome://uploadr/content/grid.js" />
-  <script src="chrome://uploadr/content/mouse.js" />
-  <script src="chrome://uploadr/content/keyboard.js" />
-  <script src="chrome://uploadr/content/buttons.js" />
-  <script src="chrome://uploadr/content/extension.js" />
+  
+  <script src="&base.url;conf.js" />
+  <script src="&base.url;clh.js" />
+  <script src="&base.url;threads.js" />
+  <script src="&base.url;upgrade.js" />
+  <script src="&base.url;file.js" />
+  <script src="&base.url;flickr.js" />
+  <script src="&base.url;api.js" />
+  <script src="&base.url;upload.js" />
+  <script src="&base.url;photos.js" />
+  <script src="&base.url;meta.js" />
+  <script src="&base.url;settings.js" />
+  <script src="&base.url;users.js" />
+  <script src="&base.url;ui.js" />
+  <script src="&base.url;drag.js" />
+  <script src="&base.url;grid.js" />
+  <script src="&base.url;mouse.js" />
+  <script src="&base.url;keyboard.js" />
+  <script src="&base.url;buttons.js" />
+  <script src="&base.url;extension.js" />
+  
+  </head>
   <!--<script src="chrome://venkman/content/venkman-overlay.js"/>-->
   <keyset id="key">
     <key id="key_add"	modifiers="accel" key="o" oncommand="photos.add_dialog();" />
@@ -77,6 +93,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
         <menupopup id="menu_UploadPopup">
           <menuitem label="&menu.upload.add;" key="key_add" accesskey="A" oncommand="photos.add_dialog();" />
           <menuitem id="menu_upload" label="&menu.upload;" key="key_upload" accesskey="U" oncommand="photos.upload();" />
+          <menuitem label="Clear Index" accesskey="X" oncommand="photos.removeAll();photos.load();ui.init()" />
           <menuitem id="menu_FileQuitItem" label="&menu.upload.exit;" key="key_quit" accesskey="Q" oncommand="exit();" />
         </menupopup>
       </menu>
@@ -111,55 +128,14 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
   </toolbox>
   <vbox flex="1">
 
-    <!-- Header -->
-    <hbox id="head">
-      <hbox id="tools">
-        <vbox>
-          <spacer flex="1" />
-          <html:div id="t_add" class="button" onclick="photos.add_dialog();">
-            <html:div>&tools.add;</html:div>
-          </html:div>
-          <spacer flex="1" />
-        </vbox>
-        <vbox>
-          <spacer flex="1" />
-          <html:div id="t_remove" class="disabled_button" onclick="photos.remove();">
-            <html:div>&tools.remove;</html:div>
-          </html:div>
-          <spacer flex="1" />
-        </vbox>
-        <vbox>
-          <spacer flex="1" />
-          <html:div id="t_clear" class="disabled_button" onclick="photos.removeAll();">
-            <html:div>&tools.clear;</html:div>
-          </html:div>
-          <spacer flex="1" />
-        </vbox>
-        <html:div class="toolbarseparator" />
-        <vbox>
-          <html:div id="t_rotate_l" class="disabled" onclick="photos.rotate(-90);" />
-        </vbox>
-        <vbox>
-          <html:div id="t_rotate_r" class="disabled" onclick="photos.rotate(90);" />
-        </vbox>
-      </hbox>
-      <box>
-        <html:p id="free"> </html:p>
-      </box>
-      <box flex="1" />
-      <vbox id="bw_remaining">
-        <html:p>&bandwidth.remaining;</html:p>
-        <html:h3 id="bw_remaining_mb"> </html:h3>
-      </vbox>
-      <vbox id="bw_batch">
-        <html:p>&bandwidth.batch;</html:p>
-        <html:h3 id="bw_batch_mb"> </html:h3>
-      </vbox>
-      <box id="logo" />
-    </hbox>
+    
+	  
+	  <stack flex="1">
+    <vbox  id="page_photos" flex="1">
+	    <html:embed id="the_swf" flex="1"/>
+    </vbox>
+    
 
-    <!-- Placeholder for photos and metadata overlay -->
-    <vbox id="page_photos" flex="1" />
 
     <!-- Page to show during authorization -->
     <vbox id="page_auth" flex="1">
@@ -180,6 +156,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 
     <!-- Placeholder for help page -->
     <vbox id="page_help" flex="1" />
+    </stack>
 
     <!-- Upload progress bar and (hidden) upload queue -->
     <hbox id="footer" class="photos">

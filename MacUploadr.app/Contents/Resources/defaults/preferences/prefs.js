@@ -12,6 +12,11 @@ pref('browser.chromeURL', 'chrome://uploadr/content/dock.xul');
 pref('browser.dom.window.dump.enabled', true);
 pref('javascript.options.showInConsole', true);
 pref('javascript.options.strict', true);
+pref('browser.cache.disk.enable', false);
+pref('nglayout.debug.disable_xul_cache', true);
+pref('nglayout.debug.disable_xul_fastload', true);
+
+
 
 // Software updates
 pref('app.update.url', 'https://secure.flickr.com/services/uploadr/updates/?product=%PRODUCT%&version=%VERSION%&build_id=%BUILD_ID%&build_target=%BUILD_TARGET%&locale=%LOCALE%&');
@@ -45,4 +50,4 @@ pref('general.skins.selectedSkin', 'uploadr');
 pref('extensions.update.url', 'https://secure.flickr.com/services/uploadr/extensions/?reqVersion=%REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=%ITEM_MAXAPPVERSION%&status=%ITEM_STATUS%&appID=%APP_ID%&appVersion=%APP_VERSION%&appOS=%APP_OS%&appABI=%APP_ABI%');
 pref('extensions.getMoreExtensionsURL', 'http://flickr.com/tools/uploadr/');
 pref('extensions.getMoreThemesURL', 'http://flickr.com/tools/uploadr/');
-pref('extensions.getMorePluginsURL', 'http://flickr.com/tools/uploadr/');
+//pref('extensions.getMorePluginsURL', 'http://flickr.com/tools/uploadr/');

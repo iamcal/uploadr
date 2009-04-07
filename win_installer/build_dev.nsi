@@ -39,6 +39,28 @@ Page custom CustomPageA
 	LangString "${NAME}" "${LANG_${LANG}}" "${VALUE}"
 !macroend
 
+Function WriteToFile
+ Exch $0 ;file to write to
+ Exch
+ Exch $1 ;text to write
+ 
+  FileOpen $0 $0 w #open file
+   #FileSeek $0 0 END #go to end
+   FileWrite $0 $1 #write to file
+  FileClose $0
+ 
+ Pop $1
+ Pop $0
+FunctionEnd
+ 
+!macro WriteToFile String File
+ Push "${String}"
+ Push "${File}"
+  Call WriteToFile
+!macroend
+
+!define WriteToFile "!insertmacro WriteToFile"
+
 !include "strings.nsh"
 !insertmacro MUI_LANGUAGE "${LANG_NAME}"
 
@@ -85,6 +107,7 @@ Section "Install" SecInstall
 
 	; Chrome
 	File /r	"Flickr Uploadr\chrome"
+	
 
 	; XPCOM components
 	CreateDirectory "$INSTDIR\components"
@@ -126,6 +149,7 @@ Section "Install" SecInstall
 	WriteRegStr HKCR "SystemFileAssociations\image\shell\edit.FlickrUploadr\command" "" '"$INSTDIR\Flickr Uploadr.exe" "%1"'
 	WriteRegStr HKCR "SystemFileAssociations\video\shell\edit.FlickrUploadr" "" "$(send)"
 	WriteRegStr HKCR "SystemFileAssociations\video\shell\edit.FlickrUploadr\command" "" '"$INSTDIR\Flickr Uploadr.exe" "%1"'
+	${WriteToFile} "$INSTDIR" "$APPDATA\Macromedia\Flash Player\#Security\FlashPlayerTrust\flickruploadr.cfg"
 
 SectionEnd
 

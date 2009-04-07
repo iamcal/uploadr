@@ -19,5 +19,7 @@ var clh = function(silent, queue) {
 			.getService(Ci.flICLH);
 		queue = comp.getQueue();
 	}
-	photos.add(queue.split('|||||'), silent);
+	var Q = queue.split('|||||');
+	if(Q.length > 0)
+		photos.add(Q, silent);
 };

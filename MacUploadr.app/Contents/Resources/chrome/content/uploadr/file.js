@@ -39,10 +39,15 @@ var file = {
 	},
 
 	// Write an object into a file as JSON
-	write: function(name, data) {
-		var profile = Cc['@mozilla.org/file/directory_service;1']
-			.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile);
-		profile.append(name);
+	write: function(name, data, f) {
+		if(!f){
+			var profile = Cc['@mozilla.org/file/directory_service;1']
+				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile);
+			profile.append(name);
+		}
+		else{
+			profile = f;
+		}
 		var _stream = Cc['@mozilla.org/network/file-output-stream;1']
 			.createInstance(Ci.nsIFileOutputStream);
 		_stream.init(profile, 0x02 /* Write-only */ | 0x08 /* Create */
@@ -79,6 +84,27 @@ var file = {
 		stream.close();
 		_stream.close();
 	},
+	
+	write_to_flash_player_trust: function(){
+		
+		var f = Cc['@mozilla.org/file/directory_service;1']
+			.getService(Ci.nsIProperties).get('Desk', Ci.nsIFile);
+		
+		var install_path = Cc['@mozilla.org/file/directory_service;1']
+			.getService(Ci.nsIProperties).get('AChrom', Ci.nsIFile).path;
+		
+		if(install_path.match(/^\//)){//if on mac
+			var fil = Cc['@mozilla.org/file/local;1']
+				.createInstance(Ci.nsILocalFile);
+			fil.initWithPath(f.path+'/../Library/Preferences/Macromedia/Flash Player/#Security/FlashPlayerTrust/')
+			fil.append('flickr_uploadr.cfg');
+			//f.append(name);
+			if(!fil.exists()){
+				fil.create(fil.NORMAL_FILE_TYPE, 0666);
+				file.write('flickr_uploadr.cfg', install_path, fil);
+			}
+		}
+	},
 
 	// File size in kilobytes
 	size: function(path) {
@@ -93,17 +119,114 @@ var file = {
 		}
 	},
 
-    // Delete
-    remove: function(name) {
-        try {
-            var file = Cc['@mozilla.org/file/directory_service;1']
+	// Delete
+	remove: function(name) {
+		try {
+			var file = Cc['@mozilla.org/file/directory_service;1']
 				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile);
 			file.append(name);
 			if (file.exists()) {
-			    file.remove(false);
+				file.remove(false);
 			}
-        } catch (err) {
-            Components.utils.reportError(new Date().toUTCString() +err);
-        }
-    }
+		} catch (err) {
+		    Components.utils.reportError(new Date().toUTCString() +err);
+		}
+	},
+	      
+	save_from_url: function(url, file_name){
+		var ioserv = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService); 
+		var channel = ioserv.newChannel(url+'?'+Math.random(), 0, null); 
+		var stream = channel.open(); 
+		
+		if (channel instanceof Components.interfaces.nsIHttpChannel && channel.responseStatus != 200) { 
+			return false; 
+		}
+		
+		var bstream = Components.classes["@mozilla.org/binaryinputstream;1"] 
+		.createInstance(Components.interfaces.nsIBinaryInputStream); 
+		bstream.setInputStream(stream); 
+		
+
+		var size = 0;
+		var file_data = "";
+		while(size = bstream.available()) {
+			file_data += bstream.readBytes(size);
+		}
+		file.save_to_chrome(file_data, file_name)
+		return true;
+	},
+	
+	save_to_chrome: function(data, file_name){
+		var profile = Cc['@mozilla.org/file/directory_service;1']
+			.getService(Ci.nsIProperties).get('AChrom', Ci.nsILocalFile);
+		
+		profile.append('content');
+		profile.append('uploadr');
+		try{
+			for(var i=0;i<file_name.length;i++)
+				profile.append(file_name[i]);
+		}
+		catch(err){
+			profile.initWithPath(profile.path + file_name);
+		}
+		
+		var stream = Cc["@mozilla.org/network/file-output-stream;1"].createInstance(Ci.nsIFileOutputStream);
+		stream.init(profile, 0x02 | 0x08 | 0x20, 0600, 0); // write, create, truncate
+					
+		stream.write(data, data.length);
+		
+		if (stream instanceof Ci.nsISafeOutputStream) {
+			stream.finish();
+		} else {
+			stream.close();
+		}
+		
+		
+	},
+	      
+	compute_file_hash: function(path){
+		var f = Components.classes["@mozilla.org/file/local;1"]
+				  .createInstance(Components.interfaces.nsILocalFile);
+		f.initWithPath(path);
+		var istream = Components.classes["@mozilla.org/network/file-input-stream;1"]           
+					.createInstance(Components.interfaces.nsIFileInputStream);
+		// open for reading
+		istream.init(f, 0x01, 0444, 0);
+		var ch = Components.classes["@mozilla.org/security/hash;1"]
+				   .createInstance(Components.interfaces.nsICryptoHash);
+		// we want to use the MD5 algorithm
+		ch.init(ch.MD5);
+		// this tells updateFromStream to read the entire file
+		const PR_UINT32_MAX = 0xffffffff;
+		ch.updateFromStream(istream, PR_UINT32_MAX);
+		// pass false here to get binary data back
+		var hash = ch.finish(false);
+
+		// return the two-digit hexadecimal code for a byte
+		function toHexString(charCode)
+		{
+		  return ("0" + charCode.toString(16)).slice(-2);
+		}
+
+		// convert the binary hash data to a hex string.
+		var s = [toHexString(hash.charCodeAt(i)) for (i in hash)].join("");
+		// s now contains your hash in hex
+		return s;
+	},
+	      
+	get_standard_path: function(s){
+		try{
+	      var f = Cc['@mozilla.org/file/directory_service;1'].getService(Ci.nsIProperties).get(s, Ci.nsIFile)
+		}catch(e){
+		Components.utils.reportError(String(s));
+			Components.utils.reportError(e);
+			return '';
+		}
+	      return f.path;
+        },
+	      
+	get_excluded_directories: function(){
+		return [file.get_standard_path('AChrom'), file.get_standard_path('TmpD'), file.get_standard_path('ProfLD')]
+	}
+	      
 };
