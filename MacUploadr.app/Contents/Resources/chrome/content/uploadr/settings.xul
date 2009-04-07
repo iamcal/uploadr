@@ -19,8 +19,6 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
   %mainDTD;
   <!ENTITY % proxyDTD SYSTEM "chrome://uploadr/locale/proxy.dtd">
   %proxyDTD;
-  <!ENTITY % settingsDTD SYSTEM "chrome://uploadr/content/settings.dtd">
-  %settingsDTD;
 ]>
 <dialog id="dialog_settings" title="&settings;" buttons="accept,cancel"
 ondialogaccept="settings.ok(); return true;"
@@ -28,15 +26,15 @@ ondialogcancel="settings.cancel(); return true;" onload="settings.load();"
 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 xmlns:html="http://www.w3.org/1999/xhtml">
   <stringbundleset>
-	<stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
+    <stringbundle id="locale" src="chrome://uploadr/locale/main.properties" />
   </stringbundleset>
-  <script src="&base.url;settings_dialog.js" />
+  <script src="chrome://uploadr/content/settings_dialog.js" />
   <vbox flex="1" id="notloggedin">
-	<html:h3>&settings.notloggedin;</html:h3>
-	<box align="center">
-	  <button label="&login;"
+    <html:h3>&settings.notloggedin;</html:h3>
+    <box align="center">
+      <button label="&login;"
 		oncommand="settings.add_user();" />
-	</box>
+    </box>
   </vbox>
   <vbox flex="1" id="loggedin">
     <groupbox id="authorization" flex="1">
@@ -120,10 +118,6 @@ xmlns:html="http://www.w3.org/1999/xhtml">
           <radio value="3" label="&settings.content_type.other;" />
         </radiogroup>
       </groupbox>
-	</hbox>
-	  <groupbox id="base_url" flex="1">
-		<caption label="Get uploader from" />
-		<html:input onchange="settings.base_url(value);" value="&base.url;" id="base_url"></html:input>
-	  </groupbox>
+    </hbox>
   </vbox>
 </dialog>

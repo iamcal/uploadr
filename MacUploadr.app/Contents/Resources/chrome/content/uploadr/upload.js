@@ -76,12 +76,10 @@ var upload = {
     
 	// Upload a photo
 	start: function(id) {
-	    
 	    //reset upload progress
 	    upload.progress_id = -1;
 
 		// Update the UI
-		/*
 		if (null == upload.progress_bar) {
 			document.getElementById('footer').style.display = '-moz-box';
 			upload.progress_bar = new ProgressBar('progress_bar');
@@ -89,7 +87,6 @@ var upload = {
 			progress_text.className = 'spinning';
 			progress_text.value = '';
 		}
-		*/
 
 		var photo = photos.uploading[id];
 
@@ -156,8 +153,6 @@ var upload = {
 			upload.progress_handle = null;
 		}
 		upload.progress_zero = 0;
-		photos.call_swf('update_upload_progress', [photos.uploading[id].id, 1]);
-
         // If no ticket came back, fail this photo
 		if ('object' != typeof rsp || 'ok' != rsp.getAttribute('stat')) {
 			if (conf.console.error) {
@@ -214,7 +209,7 @@ var upload = {
 
 		// Otherwise, spin for a ticket
 		if (null != photos.uploading[id]) {
-			//photos.uploading[id].progress_bar.done(true);
+			photos.uploading[id].progress_bar.done(true);
 			upload.tickets[rsp.getElementsByTagName('ticketid')[0]
 				.firstChild.nodeValue] = {
 					'id': id,
@@ -225,7 +220,7 @@ var upload = {
 			if (null != upload.tickets_handle) {
 				window.clearTimeout(upload.tickets_handle);
 				upload.tickets_handle = null;
-				upload.tickets_delta = 1000;
+			upload.tickets_delta = 1000;
 			}
 			upload.tickets_retry_count = 0;
 			upload.check_tickets();
@@ -246,7 +241,7 @@ var upload = {
 
 	// Finish a synchronous upload
 	_sync: function(rsp, id) {
-
+	
 		// Stop checking progress if we're in synchronous mode
 		if ('sync' == conf.mode) {
 			if (null != upload.progress_handle) {
@@ -255,7 +250,7 @@ var upload = {
 			}
 			upload.progress_zero = 0;
 		}
-
+        
 		// How did the upload go?
 		var photo_id;
 		var stat;
@@ -269,7 +264,7 @@ var upload = {
 		}
 		if ('ok' == stat) {
 			if (null != photos.uploading[id]) {
-				//photos.uploading[id].progress_bar.done(true);
+				photos.uploading[id].progress_bar.done(true);
 				++photos.ok;
 			}
 			if ('object' == typeof rsp) {
@@ -413,30 +408,25 @@ var upload = {
 		    var currentTime = new Date().getTime();
 		    status.set(locale.getString('status.uploading') + ' ' + 
 		        (1000 * photos.kb.sent / (currentTime-upload.startTime)).toFixed(1) + ' KB/s');
-        	//photos.uploading[id].progress_bar.update(1 -
-				//a / upload.progress_total);
+        	photos.uploading[id].progress_bar.update(1 -
+				a / upload.progress_total);
 		}
-		
-			photos.call_swf('update_upload_progress', [photos.uploading[id].id, 1-a/upload.progress_total]);
-			
 		var percent = Math.max(0, Math.min(1,
 			photos.kb.sent / photos.kb.total));
-		
 		if (null != upload.progress_bar) {
-			//upload.progress_bar.update(percent);
+			upload.progress_bar.update(percent);
 		}
-		
 		if (100 == Math.round(100 * percent)) {
-			//document.getElementById('progress_text').value =
-				//locale.getString('upload.waiting.status');
+			document.getElementById('progress_text').value =
+				locale.getString('upload.waiting.status');
 			upload.processing = true;
 		} else {
-			//document.getElementById('progress_text').value =
-				//locale.getFormattedString('upload.progress.status', [
-					//id + 1,
-					//photos.uploading.length,
-					//Math.round(100 * percent)
-				//]);
+			document.getElementById('progress_text').value =
+				locale.getFormattedString('upload.progress.status', [
+					id + 1,
+					photos.uploading.length,
+					Math.round(100 * percent)
+				]);
 		}
 
 	},
@@ -484,27 +474,27 @@ var upload = {
 		if ('object' == typeof rsp && rsp.getElementsByTagName('err')[0] &&
 			6 == parseInt(rsp.getElementsByTagName('err')[0]
 			.getAttribute('code'))) {
-			//document.getElementById('progress').style.display = 'none';
+			document.getElementById('progress').style.display = 'none';
 			var f = photos.failed;
 			for each (var p in photos.uploading) {
 				if (null != p && -1 == f.indexOf(p.path)) { f.push(p); }
 			}
 			var ii = f.length;
 			if (0 != ii) {
-				//document.getElementById('photos_init')
-					//.style.display = 'none';
-				//document.getElementById('photos_new')
-					//.style.display = 'none';
+				document.getElementById('photos_init')
+					.style.display = 'none';
+				document.getElementById('photos_new')
+					.style.display = 'none';
 				if (photos.sort) {
-					//document.getElementById('photos_sort_default')
-						//.style.display = 'block';
-					//document.getElementById('photos_sort_revert')
-						//.style.display = 'none';
+					document.getElementById('photos_sort_default')
+						.style.display = 'block';
+					document.getElementById('photos_sort_revert')
+						.style.display = 'none';
 				} else {
-					//document.getElementById('photos_sort_default')
-						//.style.display = 'none';
-					//document.getElementById('photos_sort_revert')
-						//.style.display = 'inline';
+					document.getElementById('photos_sort_default')
+						.style.display = 'none';
+					document.getElementById('photos_sort_revert')
+						.style.display = 'inline';
 				}
 			}
 			block_normalize();
@@ -522,7 +512,7 @@ var upload = {
 					photos.list[photos.list.length - 1] = r[i];
 				}
 			}
-			unblock_normalize();
+            unblock_normalize();
             
 			photos.uploading = [];
 			photos.uploaded = [];
@@ -559,7 +549,7 @@ var upload = {
 
 		// Update the UI
 		if (null != upload.progress_bar) {
-		    //upload.progress_bar.update(1);
+		    upload.progress_bar.update(1);
 		}
 		var text = document.getElementById('progress_text');
 		if (0 == photos.fail) {
@@ -570,10 +560,10 @@ var upload = {
 			text.value = locale.getString('upload.error.status');
 		}
 		mouse.show_photos();
-		//var queue = document.getElementById('queue_list');
-		//while (queue.hasChildNodes()) {
-			//queue.removeChild(queue.firstChild);
-		//}
+		var queue = document.getElementById('queue_list');
+		while (queue.hasChildNodes()) {
+			queue.removeChild(queue.firstChild);
+		}
 		status.clear();
 
 		// Hold failed photos for trying again
@@ -617,6 +607,9 @@ var upload = {
 
 	// Finally give the user feedback on their upload
 	finalize: function() {
+	    if(conf.console.upload) {
+    	    logStringMessage('finalize');
+		}
 		status.clear();
 
 		// An upload must be done before it can be finalized
@@ -706,15 +699,12 @@ var upload = {
         }
         
 		// Hide the progress bar now that the user has realized we're done
-		//document.getElementById('progress_bar').style.width = '0';
-		//document.getElementById('footer').style.display = 'none';
+		document.getElementById('progress_bar').style.width = '0';
+		document.getElementById('footer').style.display = 'none';
 
 		// If requested, open the site
 		if (go_to_flickr) {
 			launch_browser('http://' + SITE_HOST + '/photos/' + users.nsid);
-			//launch_browser('http://' + SITE_HOST + '/photos/upload/done/?b=' +
-				//upload.timestamps.earliest + '-' + upload.timestamps.latest +
-				//'-' + users.nsid);
 		}
 
 		// Really finally actually done, so reset

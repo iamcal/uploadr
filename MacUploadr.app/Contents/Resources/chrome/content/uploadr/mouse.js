@@ -28,7 +28,7 @@ var mouse = {
 		} else if (1 < photos.selected.length) {
 			meta.abandon();
 		}
-		unblock_normalize();
+        unblock_normalize();
         
 		// If we clicked on an image that isn't an error and isn't loading
 		if (e.target.src && 'error' != e.target.className
@@ -103,7 +103,7 @@ var mouse = {
 			} else {
 				meta.batch();
 			}
-			unblock_normalize();
+            unblock_normalize();
 		}
 		// If we clicked the revert to sorted button
 		else if (e.target.id && 'photos_sort_revert' == e.target.id) {
@@ -286,7 +286,7 @@ var mouse = {
 						.getElementsByTagName('img')[0].className =
 						'selected dragging';
 				}
-				unblock_normalize();
+                unblock_normalize();
 				mouse.dragging = 2;
 			}
 
@@ -432,7 +432,7 @@ var mouse = {
 
 		// If we're reordering
 		if (null == mouse.anchor) {
-			block_normalize();
+		    block_normalize();
 			var list = document.getElementById('photos_list');
 			if (3 == mouse.dragging) {
 
@@ -543,6 +543,7 @@ var mouse = {
 			}
 			unblock_normalize();
 		}
+
 		mouse.anchor = null;
 	},
 
@@ -552,13 +553,13 @@ var mouse = {
 	_photos_visible: true,
 	show_photos: function() {
 		mouse._photos_visible = true;
-		document.getElementById('the_swf').style.visibility = 'visible';
+		document.getElementById('page_photos').style.display = '-moz-box';
 		document.getElementById('page_queue').style.display = 'none';
 		document.getElementById('footer').className = 'photos';
 	},
 	show_queue: function() {
 		mouse._photos_visible = false;
-		document.getElementById('the_swf').style.visibility = 'hidden';
+		document.getElementById('page_photos').style.display = 'none';
 		document.getElementById('page_queue').style.display = '-moz-box';
 		document.getElementById('footer').className = 'queue';
 	},

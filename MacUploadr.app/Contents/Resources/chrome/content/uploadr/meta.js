@@ -84,64 +84,21 @@ var meta = {
 			}
 
 			// Blank slate metadata
-			var s = photos.selected;
-			var title = photos.list[s[0]].title;
-			var description = photos.list[s[0]].description;
-			var tags = photos.list[s[0]].tags;
-			var is_public = photos.list[s[0]].is_public;
-			var is_friend = photos.list[s[0]].is_friend;
-			var is_family = photos.list[s[0]].is_family;
-			var content_type = photos.list[s[0]].content_type;
-			var hidden = photos.list[s[0]].hidden;
-			var safety_level = photos.list[s[0]].safety_level;
-			for(var j in s){
-				if(title != photos.list[s[j]].title)
-					title = '';
-				if(description != photos.list[s[j]].description)
-					description = '';
-				if(tags != photos.list[s[j]].tags)
-					tags = '';
-				if(is_public != photos.list[s[j]].is_public)
-					is_public = 2;
-				if(is_friend != photos.list[s[j]].is_friend)
-					is_friend = 0;
-				if(is_family != photos.list[s[j]].is_family)
-					is_family = 0;
-				if(content_type != photos.list[s[j]].content_type)
-					content_type = 0;
-				if(hidden != photos.list[s[j]].hidden)
-					hidden = 0;
-				if(safety_level != photos.list[s[j]].safety_level)
-					safety_level = 0;
-			}
-			
-			document.getElementById('batch_title').value = title;
-			document.getElementById('batch_description').value = description;
-			document.getElementById('batch_tags').value = tags;
-			document.getElementById('batch_is_public').value = is_public;
-			
-			if(is_public!=0){
-				var is_friend = document.getElementById('batch_is_friend');
-				is_friend.checked = false;
-				is_friend.disabled = true;
-				var is_family = document.getElementById('batch_is_family');
-				is_family.checked = false;
-				is_family.disabled = true;
-			}
-			else{
-				var is_friend = document.getElementById('batch_is_friend');
-				is_friend.checked = is_friend;
-				is_friend.disabled = !is_friend;
-				var is_family = document.getElementById('batch_is_family');
-				is_family.checked = is_family;
-				is_family.disabled = !is_family;
-			}
-			
-			document.getElementById('batch_content_type').value = content_type;
-			document.getElementById('batch_hidden').value = hidden;
+			document.getElementById('batch_title').value = '';
+			document.getElementById('batch_description').value = '';
+			document.getElementById('batch_tags').value = '';
+			document.getElementById('batch_is_public').value = 2;
+			var is_friend = document.getElementById('batch_is_friend');
+			is_friend.checked = false;
+			is_friend.disabled = true;
+			var is_family = document.getElementById('batch_is_family');
+			is_family.checked = false;
+			is_family.disabled = true;
+			document.getElementById('batch_content_type').value = 0;
+			document.getElementById('batch_hidden').value = 0;
 			var safety_level = document.getElementById('batch_safety_level');
 			safety_level.value = 0;
-			//safety_level.selectedItem.label = '';
+			safety_level.selectedItem.label = '';
 
 			// Clear the old sets list
 			ul = document.getElementById('batch_sets_added');
@@ -317,7 +274,7 @@ var meta = {
 		else {
 			var p = photos.list[id];
 			if (null == p) {
-				unblock_normalize();
+			    unblock_normalize();
 				return;
 			}
 			p.title = document.getElementById('single_title').value;
@@ -391,9 +348,9 @@ var meta = {
 	is_public: function(value) {
 
 		// Single photo or group of photos?
-		block_normalize();
+	    block_normalize();
 		var prefix = 1 == photos.selected.length ? 'single' : 'batch';
-		unblock_normalize();
+        unblock_normalize();
         
 		if (1 == parseInt(value)) {
 			meta.last_private_settings = document.getElementById(prefix + '_is_friend').checked | (document.getElementById(prefix + '_is_family').checked << 1);
@@ -673,7 +630,7 @@ var meta = {
 				}
 			}
 		}
-		unblock_normalize();
+        unblock_normalize();
 	},
 
 	// Only show sets to logged-in users
@@ -709,7 +666,7 @@ var meta = {
 					++v_count;
 				}
 			}
-			unblock_normalize();
+            unblock_normalize();
 			// If there are videos then bother them
 			if (v_count) {
 				var result = {};
@@ -783,7 +740,7 @@ var meta = {
 						meta.disable();
 						photos._remove();
 					}
-					unblock_normalize();
+                    unblock_normalize();
 					// If remove is blocked then we know photos.normalize
 					// will be called as it is unblocked
 					//   We're breaking the rules a bit here but the rules

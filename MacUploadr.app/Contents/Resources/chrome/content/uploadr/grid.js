@@ -75,7 +75,7 @@ var grid = {
 				}
 			}
 		}
-		unblock_normalize();
+        unblock_normalize();
 	}
 
 };

@@ -86,7 +86,6 @@ var users = {
 			wrap.photosets.getList(users.token, users.nsid);
 
 			// Update the UI
-			/*
 			document.getElementById('username').firstChild.nodeValue =
 				locale.getFormattedString('username', [users.username]) + '  ';
 			document.getElementById('switch').style.display = 'inline';
@@ -95,7 +94,6 @@ var users = {
 			buttons.upload.enable();
 			status.set(locale.getString('status.ready'));
 			meta.login();
-			*/
 
 			// Check the command line
 			clh(false);
@@ -126,7 +124,6 @@ var users = {
 		users.sets = null;
 
 		// Update the UI
-		/*
 		document.getElementById('username').firstChild.nodeValue =
 			locale.getString('notloggedin') + '  ';
 		document.getElementById('switch').style.display = 'none';
@@ -139,8 +136,6 @@ var users = {
 		document.getElementById('buddyicon').src =
 			'http://flickr.com/images/buddyicon.jpg';
 		document.getElementById('photostream_pro').style.display = 'none';
-		*/
-		photos.call_swf('logged_in', [null]);
 
 	},
 
@@ -169,7 +164,6 @@ var users = {
 				users.token, users.is_pro, users.bandwidth, users.filesize,
 				users.nbVids, users.videosize, users.sets);
 		}
-		photos.call_swf("logged_in", [users.list[users.nsid]]);
 
 	},
 
@@ -198,14 +192,7 @@ var users = {
 	// Save users to a file
 	save: function() {
 		file.write('users.json', users.list);
-	},
-	      
-	current_user:function(){
-		if(!users.nsid)
-			return null
-		else
-			return users.list[users.nsid];
-        }
+	}
 
 };
 

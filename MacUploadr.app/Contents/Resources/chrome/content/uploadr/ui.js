@@ -1,34 +1,33 @@
-/* * Flickr Uploadr
+/*
+ * Flickr Uploadr
  *
  * Copyright (c) 2007-2009 Yahoo! Inc.  All rights reserved.  This library is
  * free software; you can redistribute it and/or modify it under the terms of
- 
  * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
  * GPL for more details (http://www.gnu.org/licenses/gpl.html)
  */
 
 // A bit of a catch-all, but better than it was before
-//var the_swf = {};
-
 var ui = {
 
     cancel: false,
+    confirmUp: false,
+    promptUp: false,
     
 	// Called at app startup
 	init: function() {
 
 		// Default the initial prompt to the free user case
-		//document.getElementById('photos_init_prompt').firstChild.nodeValue =
-			//locale.getString('photos.init.free');
+		document.getElementById('photos_init_prompt').firstChild.nodeValue =
+			locale.getString('photos.init.pro');
 
 
 		// The meta fields with no selection should refer to a photo
-		//document.getElementById('no_who').firstChild.nodeValue = 
-			//locale.getString('meta.single.who.photo');
+		document.getElementById('no_who').firstChild.nodeValue = 
+			locale.getString('meta.single.who.photo');
 
 		// Sneaky reformatting of help text
-		/*
 		for each (var id in ['help_offline', 'help_drag']) {
 			var node = document.getElementById(id);
 			var parts = node.firstChild.nodeValue.split('^^');
@@ -50,7 +49,6 @@ var ui = {
 		span.appendChild(document.createTextNode(parts[1]));
 		node.appendChild(span);
 		node.appendChild(document.createTextNode(parts[2]));
-		*/
 
 	},
 
@@ -60,7 +58,6 @@ var ui = {
 		ui.bandwidth_updated();
 
 		// Notes in the empty photo pane
-		/*
 		var notes = document.getElementById('photos_init_notes');
 		while (notes.hasChildNodes()) {
 			notes.removeChild(notes.firstChild);
@@ -84,15 +81,11 @@ var ui = {
 
 		document.getElementById('photos_init_prompt')
 			.firstChild.nodeValue = locale.getString('photos.init.pro');
-			*/
 	},
 
 	// Update the counters showing remaining bandwidth and batch size
 	bandwidth_updated: function() {
 
-		//short circuit
-		return;
-		
 		// Counter for remaining bandwidth
 		if (users.bandwidth && !users.is_pro) {
 			var remaining = document.getElementById('bw_remaining_mb');
@@ -152,23 +145,11 @@ var pages = {
 			} else {
 				display = 'none';
 			}
-			//this is different so that flash hiding/showing will work without reseting the swf
-			var p = document.getElementById('page_' + pages._list[i])
-			if(display == 'none'){
-				p.style.visibility = 'hidden';
-				if(pages._list[i]!='photos')
-					p.style.display = display
-			}
-			else{
-				p.style.visibility = 'visible'
-				p.style.display = display;
-			//document.getElementById('page_' + pages._list[i])
-				//.style.display = display;
-			}
+			document.getElementById('page_' + pages._list[i])
+				.style.display = display;
 		}
 
 		// Only the photos page has the toolbar
-		/*
 		if ('photos' == id) {
 			document.getElementById('tools').style.display = '-moz-box';
 			document.getElementById('bw_batch').style.display = '-moz-box';
@@ -176,7 +157,6 @@ var pages = {
 			document.getElementById('tools').style.display = 'none';
 			document.getElementById('bw_batch').style.display = 'none';
 		}
-		*/
 
 	},
 
@@ -221,6 +201,7 @@ var menus = {
 	help: {
 
 		about: function() {
+		    //photos.normalize();
 			window.openDialog('chrome://uploadr/content/about.xul',
 				'about-dialog', 'chrome,modal,centerscreen',
 				locale.getFormattedString('dialog.about.version',
@@ -390,26 +371,21 @@ var unblock_sort = function() {
 var _block_normalize = 0;
 var isNormalizing = false;
 var block_normalize = function() {
-	/*
     while(isNormalizing) {
         logStringMessage('block_normalize while already normalizing');
         Components.classes["@mozilla.org/thread-manager;1"]
             .getService(Components.interfaces.nsIThreadManager)
             .currentThread.processNextEvent(true);
     }    
-    */
 	++_block_normalize;
 };
 
 var unblock_normalize = function() {
 	--_block_normalize;
-	/*
 	if(_block_normalize < 0) {
 	    logStringMessage("extra unblock_normalize :-(");
 	}
-	*/
 };
-
 var _block_exit = 0;
 var block_exit = function() {
 	++_block_exit;
@@ -432,45 +408,13 @@ var exit = function(force) {
 		locale.getString('dialog.exit.cancel'))) {
 		return false;
 	}
-	
-	// Shutdown threads
-	try{
-		photos.thumb_cancel = true;
-		ui.cancel = true;
-		upload.cancel = true;
-	}
-	catch(e){
-		Components.utils.reportError(e);
-	}
-	
-	try{
-		threads.worker.shutdown();
-		threads.indexer.shutdown();
-		threads.uploadr.shutdown();
-		threads.workerPool.shutdown();
-		threads.priorityPool.shutdown();
-	}
-	catch(e){
-		Components.utils.reportError(e);
-	}
-	
-	//grab stuff from swf
-	//the_swf = document.getElementById('the_swf');
-	photos.flash = photos.call_swf('get_flash_obj', []);
-	
 
 	// Save state
-	try{
-		photos.save();
-		settings.save();
-		users.save();
-	}
-	catch(e){
-		Components.utils.reportError(e);
-	}
+	photos.save();
+	settings.save();
+	users.save();
 
 	// Remove the images and TEMP directories if there are no photos left
-	/*
 	if (0 == photos.count) {
 		try {
 			var profile = Cc['@mozilla.org/file/directory_service;1']
@@ -495,21 +439,21 @@ var exit = function(force) {
 			}
 		} catch (err) {}
 	}
-	*/
 
-	
-	try{
-		threads.saver.shutdown();
+	// Shutdown threads
+	photos.thumb_cancel = true;
+	ui.cancel = true;
+	upload.cancel = true;
+	try {
+	    threads.worker.shutdown();
+	    threads.workerPool.shutdown();
+	    threads.uploadr.shutdown();
 	}
-	catch(e){
-		Components.utils.reportError(e);
-	}
-	
+	catch (err) {}
 
 	// Finally exit
 	var e = Cc['@mozilla.org/toolkit/app-startup;1']
 		.getService(Ci.nsIAppStartup);
-	
 	e.quit(Ci.nsIAppStartup.eForceQuit);
 
 };

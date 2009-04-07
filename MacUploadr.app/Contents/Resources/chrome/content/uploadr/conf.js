@@ -1,7 +1,7 @@
 /*
  * Flickr Uploadr
  *
- * Copyright (c) 2007-2008 Yahoo! Inc.  All rights reserved.  This library is
+ * Copyright (c) 2007-2009 Yahoo! Inc.  All rights reserved.  This library is
  * free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License (GPL), version 2 only.  This library is
  * distributed WITHOUT ANY WARRANTY, whether express or implied. See the GNU
@@ -29,7 +29,6 @@ var conf = {
 
 	// What version am I?
 	version: '3.x',
-	base_url:'',
 
 	app_ini: {},
 
@@ -47,8 +46,9 @@ var conf = {
 		normalize: false
 	},
 
-	// Size of threads pool for thumbnailing
-	maxThreadsCount: 1,
+    // Size of threads pool for thumbnailing
+    maxThreadsCount: 5,
+
 	// Scrolling threshold for dragging (pixels);
 	scroll: 20,
 
@@ -79,6 +79,8 @@ var conf = {
 	// How many times should checkTickets retry before giving up?
 	tickets_retry_count: 10,
 
+
+
 	//
 	// Feature switches
 	//
@@ -87,13 +89,15 @@ var conf = {
 	//   Using XHR for uploads (socket_uploadr: false) is deprecated
 	socket_uploadr: true,
 
+
+
 	//
 	// Not advised to change below here
 	//
 
 	// Size of thumbnails
 	//   Changing this will require CSS tweaks
-	thumb_size: 200,
+	thumb_size: 100,
 
 	// Upload mode
 	//   Must be 'sync' or 'async'
@@ -104,10 +108,9 @@ var conf = {
 	scrollbar_width: 14,
 
 	// Load are parse the application.ini file
-	load_ini: function(bu){
+	load_ini: function(){
+//			window.openDialog('http://beta2.flickr.com','_blank','modal');
 
-		conf.base_url = bu;
-		
 		var f = Components.classes["@mozilla.org/file/directory_service;1"]
 			.getService(Components.interfaces.nsIProperties)
 			.get('resource:app', Components.interfaces.nsILocalFile);
@@ -149,7 +152,7 @@ var conf = {
 			}
 		}
 
-		
+
 		// use some of the parsed options
 
 		this.version = this.app_ini.App.Version.replace(/a/, ' alpha ').replace(/b/, ' beta ');

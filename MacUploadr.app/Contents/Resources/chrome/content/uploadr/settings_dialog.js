@@ -131,9 +131,6 @@ var settings = {
 	resize: function(value) {
 		settings.list[settings.nsid].settings.resize = parseInt(value);
 	},
-	base_url: function(value){
-		settings.list[settings.nsid].settings.base_url = value;
-  	},
 	config_proxy: function(){
 		window.openDialog('chrome://uploadr/content/proxy.xul', 'dialog_proxy', 'chrome,titlebar,toolbar,centerscreen,modal');
 	}
