@@ -711,7 +711,9 @@ var upload = {
 
 		// If requested, open the site
 		if (go_to_flickr) {
-			launch_browser('http://' + SITE_HOST + '/photos/' + users.nsid);
+			launch_browser('http://' + SITE_HOST + '/photos/upload/done/?b=' +
+				upload.timestamps.earliest + '-' + upload.timestamps.latest +
+				'-' + users.nsid);
 			//launch_browser('http://' + SITE_HOST + '/photos/upload/done/?b=' +
 				//upload.timestamps.earliest + '-' + upload.timestamps.latest +
 				//'-' + users.nsid);
