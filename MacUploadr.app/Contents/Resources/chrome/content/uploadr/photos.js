@@ -25,6 +25,7 @@ var photos = {
 	video_batch_size: 0,
 	calling_swf: false,
 	to_call_swf: [],
+	to_thumb: [],
 	wait_time: 2000,
 	num_each_time: 10,
 	multiplier: 1,
@@ -381,9 +382,11 @@ var photos = {
 		
 		for(var i=0;i<to_flash.length;i++){
 			photos.waiting_to_thumb++;
-			threads.workerPool.dispatch(new Thumb(to_flash[i][0].id, conf.thumb_size, to_flash[i][0].path),
-			   threads.workerPool.DISPATCH_NORMAL);
+			photos.to_thumb.unshift(to_flash[i][0]);
+			//threads.workerPool.dispatch(new Thumb(to_flash[i][0].id, conf.thumb_size, to_flash[i][0].path),
+			   //threads.workerPool.DISPATCH_NORMAL);
 		}
+		photos.next_thumbnail();
 
 		// Do extension stuff after we've added all of the photos but
 		// before the list we've saved potentially becomes invalid
@@ -479,6 +482,15 @@ var photos = {
 		//var p = new Photo(id, path);
 		return p;
 		
+	},
+	      
+	      
+	next_thumbnail: function(){
+		if(photos.to_thumb.length > 0 && photos.thumb_thread_counter ==0){
+			var t = photos.to_thumb.pop();
+			threads.workerPool.dispatch(new Thumb(t.id, conf.thumb_size, t.path),
+			   threads.workerPool.DISPATCH_NORMAL);
+		}
 	},
 	      
 	alert: function(s){
@@ -980,16 +992,17 @@ var photos = {
 		for(var i=0; i<photos.list.length; i++){
 			if(!photos.list[i].thumb){
 				photos.waiting_to_thumb++;
-				threads.workerPool.dispatch(
-				new Thumb(photos.list[i].id, 
-					conf.thumb_size, 
-					photos.list[i].path), 
-					threads.worker.DISPATCH_NORMAL);
+				photos.to_thumb.unshift(photos.list[i]);
+				//threads.workerPool.dispatch(
+				//new Thumb(photos.list[i].id, 
+					//conf.thumb_size, 
+					//photos.list[i].path), 
+					//threads.worker.DISPATCH_NORMAL);
 			}
 		}
+				
+		photos.next_thumbnail();
 			
-		//alert('still'+obj.flash);
-		
 		
 		// Don't bother if there are no photos
 		//if ('undefined' == typeof obj.list) { return; }

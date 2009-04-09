@@ -153,6 +153,7 @@ Thumb.prototype = {
 	}
 };
 var ThumbCallback = function(id, result, auto_select) {
+	photos.thumb_thread_counter-=1;
 	this.id = id;
 	this.result = result;
 	this.auto_select = auto_select;
@@ -160,8 +161,11 @@ var ThumbCallback = function(id, result, auto_select) {
 
 ThumbCallback.prototype = {
 	run: function() {
-	if (photos.thumb_cancel === true)
-		return;
+		if (photos.thumb_cancel === true)
+			return;
+		
+		setTimeout("photos.next_thumbnail()", 300);
+		
 		try {
 			if (conf.console.thumb) {
 				logStringMessage('GM THUMB: ' + this.result);
@@ -682,7 +686,7 @@ IndexDrive.prototype = {
 		
 		if(photos.indexed_dirs[photos.file.path]){//that means we must have marked off everything, now watch over it slower
 			photos.wait_time = 3000
-			photos.alert('clearing index, starting over');
+			//photos.alert('clearing index, starting over');
 			photos.indexed_contents = {};
 			photos.indexed_dirs = file.get_excluded_directories();
 			photos.last_dir = null;
