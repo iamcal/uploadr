@@ -164,7 +164,7 @@ ThumbCallback.prototype = {
 		if (photos.thumb_cancel === true)
 			return;
 		
-		setTimeout("photos.next_thumbnail()", 300);
+		setTimeout("photos.next_thumbnail()", 600);
 		
 		try {
 			if (conf.console.thumb) {
