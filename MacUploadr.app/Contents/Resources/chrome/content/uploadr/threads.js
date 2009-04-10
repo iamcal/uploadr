@@ -60,33 +60,37 @@ var threads = {
 			
 			
 			// GraphicsMagick, for use on the worker thread
-			threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
-			threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
-				.getService(Ci.nsIProperties)
-				.get('resource:app', Ci.nsIFile).path, UploadProgressHandler);
+			try {
+			    threads.gm = Cc['@flickr.com/gm;1'].createInstance(Ci.flIGM);
+			    threads.gm.init(Cc['@mozilla.org/file/directory_service;1']
+				    .getService(Ci.nsIProperties)
+				    .get('resource:app', Ci.nsIFile).path, UploadProgressHandler);
+                } catch (err) {
+			    Components.utils.reportError(new Date().toUTCString() +err);
+			    var VSRedist  = Components.classes["@mozilla.org/file/directory_service;1"]
+			        .getService(Components.interfaces.nsIProperties)
+			        .get('resource:app', Components.interfaces.nsILocalFile);
+                VSRedist.append('vcredist_x86.exe');
+                if (VSRedist.exists()) {
+                    file.remove('compreg.dat');
+                    var installer = Components.classes["@mozilla.org/process/util;1"]
+                            .createInstance(Components.interfaces.nsIProcess);
+                    try {
+                        installer.init(VSRedist.QueryInterface(Ci.nsIFile));
+                        installer.run(true,'',0);
+                    } catch (err2) {
+                        Components.utils.reportError(new Date().toUTCString() +err2);
+                    }
+                    var e = Cc['@mozilla.org/toolkit/app-startup;1']
+		                    .getService(Ci.nsIAppStartup);
+	                e.quit(0x13);
+		        }
+		    }
 			new Date(); // hack so that new Date() works on worker threads. It must initialised some stuff and needs to be called on the main thread first!?
 			threads.initialized = true;
 			
 		} catch (err) {
 			Components.utils.reportError(new Date().toUTCString() +err);
-			var VSRedist  = Components.classes["@mozilla.org/file/directory_service;1"]
-			    .getService(Components.interfaces.nsIProperties)
-			    .get('resource:app', Components.interfaces.nsILocalFile);
-            VSRedist.append('vcredist_x86.exe');
-            if (VSRedist.exists()) {
-                file.remove('compreg.dat');
-                var installer = Components.classes["@mozilla.org/process/util;1"]
-                        .createInstance(Components.interfaces.nsIProcess);
-                try {
-                    installer.init(VSRedist.QueryInterface(Ci.nsIFile));
-                    installer.run(true,'',0);
-                } catch (err2) {
-                    Components.utils.reportError(new Date().toUTCString() +err2);
-                }
-                var e = Cc['@mozilla.org/toolkit/app-startup;1']
-		                .getService(Ci.nsIAppStartup);
-	            e.quit(0x13);
-		    }
 		}
 	},
 	

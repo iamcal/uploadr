@@ -116,47 +116,19 @@ var photos = {
 				path += '\\..\\..\\..\\..\\..\\My Documents\\My Pictures';
 			}
 		}
-		var def = Cc['@mozilla.org/file/local;1']
-			.createInstance(Ci.nsILocalFile);
-		def.initWithPath(path);
 
 		// Open the file picker
 		var fp = Cc['@mozilla.org/filepicker;1']
 			.createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
-			Ci.nsIFilePicker.modeOpenMultiple);
-		fp.appendFilter('Photos and Videos', '*.jpeg; *.JPEG; *.jpg; ' +
-				'*.JPG; *.gif; *.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; ' +
-				'*.TIF; *.bmp; *.BMP; *.mp4; *.MP4; *.mpeg; *.MPEG; *.mpg; ' +
-				'*.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; *.dv; ' +
-				'*.DV; *.3gp; *.3GP; *.3g2; *.m4v; *.M4V');
-		fp.appendFilter('Photos', '*.jpeg; *.JPEG; *.jpg; *.JPG; *.gif; ' +
-			'*.GIF; *.png; *.PNG; *.tiff; *.TIFF; *.tif; *.TIF; *.bmp; *.BMP');
-		fp.appendFilter('Videos', '*.mp4; *.MP4; *.mpeg; *.MPEG; ' +
-				'*.mpg; *.MPG; *.avi; *.AVI; *.wmv; *.WMV; *.mov; *.MOV; ' +
-				'*.dv; *.DV; *.3gp; *.3GP; *3g2; *.m4v; *.M4V');
+			Ci.nsIFilePicker.modeGetFolder);
+		var def = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+		def.initWithPath(path);
 		fp.displayDirectory = def;
 		var res = fp.show();
 		if (Ci.nsIFilePicker.returnOK == res) {
-			var files = fp.files;
-			var paths = [];
-			while (files.hasMoreElements()) {
-				var arg = files.getNext().QueryInterface(Ci.nsILocalFile).path;
-				arg = arg.replace(/\\/g, '\/');
-				paths.unshift(arg);
-			}
-			photos.add(paths);
-
-			// Save our place in the filesystem
-			if (arg.match(/^\//)) {
-				path = arg.replace(/\/[^\/]+$/, '').toString();
-			} else {
-			 	path = arg.replace(/\\[^\\]+$/, '').toString();
-			}
-			nsPreferences.setUnicharPref('flickr.add_directory', path);
-
-		} else if (photos.count) {
-			buttons.upload.enable();
+			photos.removeAll();photos.load(fp.file.path);ui.init();
+			nsPreferences.setUnicharPref('flickr.add_directory', fp.file.path);
 		}
 	},
 
@@ -957,15 +929,21 @@ var photos = {
 
 
 	// Load saved metadata
-	load: function(){
+	load: function(path){
 		
-		var obj = file.read('photos.json');
+		var obj = !path ? file.read('photos.json') : {};
 		
 		if(obj.indexed_paths)
-			photos.indexed_paths = obj.indexed_paths;
+		    photos.indexed_paths = obj.indexed_paths;
+	    
+	    if(path) {
+	        photos.file = Cc['@mozilla.org/file/local;1']
+				.createInstance(Ci.nsILocalFile);
+			photos.file.initWithPath(path);
+	    }
 		
 		if(obj.list)
-			photos.list = obj.list
+			photos.list = obj.list;
 				
 		for(var i=0;i<photos.list.length;i++)
 			photos.added_paths[photos.list[i].path] = true;
