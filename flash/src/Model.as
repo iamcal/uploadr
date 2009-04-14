@@ -13,6 +13,7 @@ package {
 	
 	public class Model{
 	
+	
 		public var current_tags:Object;
 		public var user:Object;
 		
@@ -35,7 +36,7 @@ package {
 		public var sets:Array = new Array();
 		
 		public var current_id:String;
-		public var current:Array;
+		public var current:Array = new Array();
 		public var current_by_id:Object;
 		
 		
@@ -58,18 +59,16 @@ package {
 		
 		public var initialized:Boolean;
 		
-		
-		
 		public var selected:Array;
 		public var selection_by_id:Object = {};
 		
-		private var views:Array;
+		private var views:Array = new Array();
 		private var timer:Timer;
 		//private var api:FlickrAPI;
 		private var wait_to_switch_to_id;
 		private var look_larger;
 		
-		public var tag_sections:Array;
+		public var tag_sections:Array = new Array();
 		
 		
 		
@@ -78,11 +77,6 @@ package {
 		private var api_extras:String = 'o_dims,rotation,original_format,media,icon_server,date_taken,tags,description';
 		
 		public function Model(){
-			
-			this.initVars();
-			
-			
-			
 			
 			this.mode = "date";
 			
@@ -99,20 +93,15 @@ package {
 			//this.api = new FlickrAPI(this.onError);
 		}
 		
-		private function initVars(){
-			this.views = new Array();
-			this.tag_sections = new Array();
-		}
-		
 		public function reset(){
-			this.initVars();
 			this.sets_by_id = new Object();
 			this.tags_by_id = new Object();
 			this.all = new Object();
 			this.sets = new Array();
 			this.current_by_id = new Object();
 			this.current_id = null;
-			this.current = null;
+			this.current = new Array();
+			this.tag_sections = new Array();
 			this.set_data = new Array();
 			this.tag_data = new Array();
 			this.selection = new Array();
@@ -123,9 +112,10 @@ package {
 			this.photos = new Array();
 			this.updateSets();
 			this.updateList();
-			this.refreshMode();
 			this.dispatch("ListChanged");
+			this.refreshMode();
 			this.dispatch("CurrentChanged");
+			this.dispatch("Reset");
 		}
 		
 		
@@ -461,7 +451,7 @@ package {
 				
 			this.current_tags = new Object();
 			
-			//this.updateDatesTags();
+			this.updateDatesTags();
 				
 			//this.updateCurrentById();
 			this.clearSections();
@@ -475,7 +465,7 @@ package {
 			
 			for(var i=0; i < this.current.length; i++){
 				if(this.current[i].tags){
-						var ts:Array = this.current[i].tags.split(" ");
+					var ts:Array = this.current[i].tags.split(" ");
 					for(var k=0; k<ts.length;k++){
 						if(!this.current_tags[ts[k]])
 							this.current_tags[ts[k]] = new Array();

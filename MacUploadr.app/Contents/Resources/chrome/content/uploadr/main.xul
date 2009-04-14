@@ -89,11 +89,10 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
   </keyset>
   <toolbox id="menu">
     <menubar>
-      <menu label="&menu.upload;" accesskey="U">
+      <menu label="Desktop" accesskey="D">
         <menupopup id="menu_UploadPopup">
-          <menuitem label="&menu.upload.add;" key="key_add" accesskey="A" oncommand="photos.add_dialog();" />
-          <menuitem id="menu_upload" label="&menu.upload;" key="key_upload" accesskey="U" oncommand="photos.upload();" />
-          <menuitem label="Clear Index" accesskey="X" oncommand="photos.removeAll();photos.load();ui.init()" />
+          <menuitem label="Choose Folder to Index" key="key_add" accesskey="C" oncommand="photos.add_dialog();" />
+          <menuitem label="Re-Index" accesskey="R" oncommand="photos.removeAll();" />
           <menuitem id="menu_FileQuitItem" label="&menu.upload.exit;" key="key_quit" accesskey="Q" oncommand="exit();" />
         </menupopup>
       </menu>

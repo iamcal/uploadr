@@ -26,7 +26,7 @@ package widget{
 		
 		private function refresh_progress(){
 			for(var j in this.grid.items){
-				if(this.m.all[j].progress >=0)
+				if(this.m.all[j] && this.m.all[j].progress >=0)
 					this.grid.items[j].progress = this.m.all[j].progress;
 			}
 		}
@@ -39,6 +39,10 @@ package widget{
 			}
 			this.grid.refresh();
 			this.grid.scroll_bar.refresh();
+		}
+		
+		public function m_Reset(){
+			this.grid.clear();
 		}
 		
 		public function m_CurrentChanged(){

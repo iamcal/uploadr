@@ -211,6 +211,10 @@ package widget{
 			this.refresh();
 		}
 
+		public function clear(){
+			this.removed_items = {};
+		}
+		
 		public function addItem(p:Object, no_refresh=false){
 			if(!this.removed_items[p.id]){
 				var photo_item = this.items_holder.addChild(new PhotoItem(p, true));

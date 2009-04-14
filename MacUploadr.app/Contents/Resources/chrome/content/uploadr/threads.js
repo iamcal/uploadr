@@ -179,6 +179,8 @@ ThumbCallback.prototype = {
 			//   <orient>###<width>###<height>###<date_taken>###<thumb_width>###<thumb_height>###<thumb_path>###<title>###<description>###<tags>
 			var thumb = this.result.split('###');
 
+			if(!photos.list[this.id])//cancelled
+				return;
 			// Get this photo from the DOM and remove its loading class
 			
 			
@@ -246,6 +248,7 @@ ThumbCallback.prototype = {
 				photos.list[this.id].thumb = thumbPath;
 				//photos.list[this.id].hash = file.compute_file_hash(thumbPath);
 				if(photos.list[this.id].thumb_width < 400){
+					logStringMessage(this.id);
 					photos.call_swf('thumbnail_done', [photos.list[this.id], thumbPath]);
 				}
 				else{
@@ -654,6 +657,7 @@ ResizeCallback.prototype = {
 var IndexDrive = function() {
 	
 };
+
 IndexDrive.prototype = {
 	paths:[],
 	run: function() {
@@ -661,6 +665,8 @@ IndexDrive.prototype = {
 			return;
 		
 		
+		
+			
 		if(!photos.file){
 			path = Cc['@mozilla.org/file/directory_service;1']
 				.getService(Ci.nsIProperties).get('ProfD', Ci.nsIFile).path;
@@ -680,7 +686,7 @@ IndexDrive.prototype = {
 		//photos.file.initWithPath("/");
 		//if(photos.last_dir)
 			//photos.file = photos.last_dir;
-
+		
 		this.paths = [];
 		this.short_circuit = false;
 		this.dirs_marked = 0;
@@ -964,5 +970,4 @@ SaveCallback.prototype = {
 		throw Components.results.NS_ERROR_NO_INTERFACE;
 	}
 };
-
 

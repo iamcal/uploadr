@@ -94,7 +94,6 @@ var photos = {
         },
 		     
 	index_some_photos: function(){
-		//photos.alert('start..');
 		threads.indexer.dispatch(new IndexDrive(), threads.worker.DISPATCH_NORMAL);
 	},
 	      
@@ -117,7 +116,7 @@ var photos = {
 			}
 		}
 
-		// Open the file picker
+		// Open the directory picker
 		var fp = Cc['@mozilla.org/filepicker;1']
 			.createInstance(Ci.nsIFilePicker);
 		fp.init(window, locale.getString('dialog.add'),
@@ -126,8 +125,17 @@ var photos = {
 		def.initWithPath(path);
 		fp.displayDirectory = def;
 		var res = fp.show();
+		
 		if (Ci.nsIFilePicker.returnOK == res) {
-			photos.removeAll();photos.load(fp.file.path);ui.init();
+			photos.file = Cc['@mozilla.org/file/local;1']
+				.createInstance(Ci.nsILocalFile);
+			photos.file.initWithPath(fp.file.path);
+			logStringMessage("!!" + photos.file.path);
+			
+			photos.removeAll();
+			
+			photos.index_some_photos();
+			
 			nsPreferences.setUnicharPref('flickr.add_directory', fp.file.path);
 		}
 	},
@@ -349,8 +357,9 @@ var photos = {
 		}
 		
 		
-		if(to_flash.length > 0)
+		if(to_flash.length > 0){
 			photos.call_swf('add_files', [to_flash]);
+		}
 		
 		for(var i=0;i<to_flash.length;i++){
 			photos.waiting_to_thumb++;
@@ -929,18 +938,15 @@ var photos = {
 
 
 	// Load saved metadata
-	load: function(path){
+	load: function(){
 		
-		var obj = !path ? file.read('photos.json') : {};
+		var obj = file.read('photos.json');
 		
 		if(obj.indexed_paths)
 		    photos.indexed_paths = obj.indexed_paths;
+		else
+	            photos.indexed_paths = {};
 	    
-	    if(path) {
-	        photos.file = Cc['@mozilla.org/file/local;1']
-				.createInstance(Ci.nsILocalFile);
-			photos.file.initWithPath(path);
-	    }
 		
 		if(obj.list)
 			photos.list = obj.list;
@@ -1006,20 +1012,29 @@ var photos = {
     // clear photos.json
     // this is desperate move when the uploadr is in unusable state
     removeAll: function() {
+		       
         //if (document.getElementById('t_clear').className == 'disabled_button')
             //return;
     	//document.getElementById('t_clear').className = 'disabled_button';
+		       
     	photos.thumb_cancel = true;
     	if (conf.console.thumb) {
-				logStringMessage('clearing');
-			}
+		logStringMessage('clearing');
+	}
         photos.list = [];
 	photos.indexed_paths = {},
+	photos.added_paths = {},
+	photos.indexed_dirs = file.get_excluded_directories();
+	photos.last_dir = null;
+	photos.last_file = null;
+	photos.indexed_contents = {},
+        photos.to_thumb = [];
         photos.selected = [];
         photos.count = 0;
         photos.videoCount = 0;
         photos.errors = 0;
         photos.batch_size = 0;
+        photos.waiting_to_thumb = 0;
         photos.video_batch_size = 0;
         _block_sort = _block_remove = _block_normalize = _block_exit = 0;
         file.remove('photos.json');
@@ -1035,6 +1050,7 @@ var photos = {
         document.getElementById('photos_init').style.display = '-moz-box';
 	*/
         ui.bandwidth_updated();
+	photos.thumb_cancel = false;
         //meta.disable();
         //buttons.upload.disable();
     },
