@@ -130,7 +130,6 @@ var photos = {
 			photos.file = Cc['@mozilla.org/file/local;1']
 				.createInstance(Ci.nsILocalFile);
 			photos.file.initWithPath(fp.file.path);
-			logStringMessage("!!" + photos.file.path);
 			
 			photos.removeAll();
 			
