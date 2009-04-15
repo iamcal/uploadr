@@ -248,7 +248,6 @@ ThumbCallback.prototype = {
 				photos.list[this.id].thumb = thumbPath;
 				//photos.list[this.id].hash = file.compute_file_hash(thumbPath);
 				if(photos.list[this.id].thumb_width < 400){
-					logStringMessage(this.id);
 					photos.call_swf('thumbnail_done', [photos.list[this.id], thumbPath]);
 				}
 				else{
