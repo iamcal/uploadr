@@ -28,7 +28,7 @@ GPL for more details (http://www.gnu.org/licenses/gpl.html)
 <window id="main" title="&title;" width="960" height="700" windowtype="app"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	onload="conf.load_ini('&base.url;'); threads.init(); users.load();    ui.users_updated();"
+	onload="conf.load_ini('&base.url;'); threads.init();"
 	onclose="return exit();" persist="screenX screenY width height sizemode"
 >	
 <!-- removed photos.load(); ui.init(); from onload, flash calls them-->

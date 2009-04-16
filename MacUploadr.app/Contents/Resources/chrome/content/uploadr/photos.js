@@ -954,6 +954,8 @@ var photos = {
 			photos.added_paths[photos.list[i].path] = true;
 		
 		
+		users.load();
+		ui.users_updated();
 				
 		
 		/*
